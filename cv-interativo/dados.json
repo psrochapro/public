@@ -1,0 +1,43 @@
+{
+  "perfil": {
+    "nome": "Paulo Sergio Rocha",
+    "titulo": "Especialista em Processos e Business Intelligence",
+    "foto": "link-para-sua-foto.jpg",
+    "resumo": "Profissional sênior focado em transformar eficiência operacional em vantagem competitiva. Especialista em BI capaz de implementar sistemas de medição automatizados e promover cultura data-driven.",
+    "contatos": {
+      "portfolio": "https://zapppsr.github.io",
+      "linkedin": "#"
+    }
+  },
+  "pilares_estrategicos": [
+    { "tema": "Business Intelligence", "tempo": "10 Anos", "experiencia": "Construção de +170 painéis e +1.000 abas de insights validados." },
+    { "tema": "Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação de BSC do zero, Matriz SWOT e Mapas Estratégicos." },
+    { "tema": "Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Manutenção de sistemas ISO 9001, PNQ e padronização de processos." },
+    { "tema": "IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais via IA para automação." }
+  ],
+  "competencias": {
+    "estratégia": ["Balanced Scorecard (BSC)", "Gestão de Projetos", "Indicadores (KPIs)"],
+    "processos": ["Mapeamento de Processos", "Lean Office", "Mapeamento de Fluxo de Valor"],
+    "tecnologia": ["Power BI", "DAX Avançado", "SQL", "Modelagem Tabular", "Python Assistido"],
+    "idiomas": ["Inglês Fluente (Nível C1/C2)"]
+  },
+  "formacao_academica": [
+    { "nivel": "Pós-Graduação", "curso": "Especialização em Gestão de Empresas", "inst": "UNISUL", "periodo": "2011-2012" },
+    { "nivel": "Graduação", "curso": "Bacharel em Letras Inglês", "inst": "UFSC", "periodo": "1998-2004" },
+    { "nivel": "Técnico", "curso": "Técnico em Mecânica", "inst": "IFSC", "periodo": "1986-1989" }
+  ],
+  "especializacoes_bi": [
+    { "curso": "Mastering DAX (Presencial Londres)", "inst": "SQLBI", "ano": 2016 },
+    { "curso": "Power BI World Tour (Montreal)", "inst": "PBIWG", "ano": 2018 },
+    { "curso": "Optimizing DAX", "inst": "SQLBI", "ano": 2020 },
+    { "curso": "Mastering Tabular", "inst": "SQLBI", "ano": 2022 }
+  ],
+  "certificacoes_idioma": [
+    { "cert": "Cambridge CAE", "resultado": "C1 - Advanced", "ano": 2014 },
+    { "cert": "Beet Language Center", "resultado": "C1 a C2+ (England)", "ano": 2014 }
+  ],
+  "cursos_recentes_2026": [
+    { "nome": "Automação de Processos via RPA", "inst": "Enap", "carga": "25h" },
+    { "nome": "Abordagem Lean aplicada à Transf. Digital", "inst": "Enap", "carga": "25h" }
+  ]
+}
