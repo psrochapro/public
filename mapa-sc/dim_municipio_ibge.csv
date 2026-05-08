@@ -1,0 +1,294 @@
+﻿sk_municipio,nm_municipio,nm_pais,nm_estado,nm_uf,longitude,latitude,cd_ibge,Match_Type_IBGE,Match_Score_IBGE
+1,Abdon Batista,Brasil,Santa Catarina,SC,"-51,02527221","-27,6089871",4200051,Exact,100
+2,Abelardo Luz,Brasil,Santa Catarina,SC,"-52,33648238","-26,56303102",4200101,Exact,100
+3,Agrolândia,Brasil,Santa Catarina,SC,"-49,82565339","-27,40051659",4200200,Exact,100
+4,Agronômica,Brasil,Santa Catarina,SC,"-49,71836889","-27,26971611",4200309,Exact,100
+5,Água Doce,Brasil,Santa Catarina,SC,"-51,55909656","-27,00409166",4200408,Exact,100
+6,Águas de Chapecó,Brasil,Santa Catarina,SC,"-52,98725101","-27,07621291",4200507,Exact,100
+7,Águas Frias,Brasil,Santa Catarina,SC,"-52,85941945","-26,88022754",4200556,Exact,100
+8,Águas Mornas,Brasil,Santa Catarina,SC,"-48,8405384","-27,70659719",4200606,Exact,100
+9,Alfredo Wagner,Brasil,Santa Catarina,SC,"-49,3438123","-27,7053963",4200705,Exact,100
+10,Alto Bela Vista,Brasil,Santa Catarina,SC,"-51,91103685","-27,43113788",4200754,Exact,100
+11,Anchieta,Brasil,Santa Catarina,SC,"-53,33327018","-26,53568086",4200804,Exact,100
+12,Angelina,Brasil,Santa Catarina,SC,"-48,98347606","-27,5822574",4200903,Exact,100
+13,Anita Garibaldi,Brasil,Santa Catarina,SC,"-51,13119387","-27,68377729",4201000,Exact,100
+14,Anitápolis,Brasil,Santa Catarina,SC,"-49,13159937","-27,9098869",4201109,Exact,100
+15,Antônio Carlos,Brasil,Santa Catarina,SC,"-48,76496003","-27,51337105",4201208,Exact,100
+16,Apiúna,Brasil,Santa Catarina,SC,"-49,39163763","-27,0418126",4201257,Exact,100
+17,Arabutã,Brasil,Santa Catarina,SC,"-52,14859926","-27,1574037",4201273,Exact,100
+18,Araquari,Brasil,Santa Catarina,SC,"-48,69270741","-26,37595155",4201307,Exact,100
+19,Araranguá,Brasil,Santa Catarina,SC,"-49,48096652","-28,93575201",4201406,Exact,100
+20,Armazém,Brasil,Santa Catarina,SC,"-49,01291108","-28,25870547",4201505,Exact,100
+21,Arroio Trinta,Brasil,Santa Catarina,SC,"-51,33412392","-26,93256486",4201604,Exact,100
+22,Arvoredo,Brasil,Santa Catarina,SC,"-52,45778884","-27,0735336",4201653,Exact,100
+23,Ascurra,Brasil,Santa Catarina,SC,"-49,38636343","-26,95477584",4201703,Exact,100
+24,Atalanta,Brasil,Santa Catarina,SC,"-49,77945667","-27,420536",4201802,Exact,100
+25,Aurora,Brasil,Santa Catarina,SC,"-49,64362791","-27,29902949",4201901,Exact,100
+26,Balneário Camboriú,Brasil,Santa Catarina,SC,"-48,63461748","-26,99181861",4202008,Exact,100
+27,Balneário Arroio do Silva,Brasil,Santa Catarina,SC,"-49,4057028","-28,9804025",4201950,Exact,100
+28,Balneário Barra do Sul,Brasil,Santa Catarina,SC,"-48,60664588","-26,45642957",4202057,Exact,100
+29,Balneário Gaivota,Brasil,Santa Catarina,SC,"-49,59089378","-29,1645213",4202073,Exact,100
+30,Balneário Piçarras,Brasil,Santa Catarina,SC,"-48,67505135","-26,76917054",4212809,Exact,100
+31,Balneário Rincão,Brasil,Santa Catarina,SC,"-49,236111","-28,834444",4220000,Exact,100
+32,Bandeirante,Brasil,Santa Catarina,SC,"-53,64104959","-26,7689379",4202081,Exact,100
+33,Barra Bonita,Brasil,Santa Catarina,SC,"-53,44130254","-26,6522936",4202099,Exact,100
+34,Barra Velha,Brasil,Santa Catarina,SC,"-48,68386427","-26,63436141",4202107,Exact,100
+35,Bela Vista do Toldo,Brasil,Santa Catarina,SC,"-50,46478824","-26,2762283",4202131,Exact,100
+36,Benedito Novo,Brasil,Santa Catarina,SC,"-49,36440275","-26,7775076",4202206,Exact,100
+37,Biguaçu,Brasil,Santa Catarina,SC,"-48,65448893","-27,49432274",4202305,Exact,100
+38,Blumenau,Brasil,Santa Catarina,SC,"-49,05763088","-26,91610771",4202404,Exact,100
+39,Bocaina do Sul,Brasil,Santa Catarina,SC,"-49,94589791","-27,7431983",4202438,Exact,100
+40,Bom Jardim da Serra,Brasil,Santa Catarina,SC,"-49,62497775","-28,3379472",4202503,Exact,100
+41,Bom Jesus,Brasil,Santa Catarina,SC,"-52,39301596","-26,7359234",4202537,Exact,100
+42,Bom Jesus do Oeste,Brasil,Santa Catarina,SC,"-53,09535028","-26,6918116",4202578,Exact,100
+43,Bom Retiro,Brasil,Santa Catarina,SC,"-49,48983377","-27,798671",4202602,Exact,100
+44,Bombinhas,Brasil,Santa Catarina,SC,"-48,52134513","-27,1442547",4202453,Exact,100
+45,Botuverá,Brasil,Santa Catarina,SC,"-49,07848436","-27,20210686",4202701,Exact,100
+46,Braço do Norte,Brasil,Santa Catarina,SC,"-49,16454771","-28,28003887",4202800,Exact,100
+47,Braço do Trombudo,Brasil,Santa Catarina,SC,"-49,89090794","-27,36425135",4202859,Exact,100
+48,Brunópolis,Brasil,Santa Catarina,SC,"-50,83592077","-27,3183622",4202875,Exact,100
+49,Brusque,Brasil,Santa Catarina,SC,"-48,91516301","-27,09831023",4202909,Exact,100
+50,Caçador,Brasil,Santa Catarina,SC,"-51,01903476","-26,77534767",4203006,Exact,100
+51,Caibi,Brasil,Santa Catarina,SC,"-53,2505272","-27,07305393",4203105,Exact,100
+52,Calmon,Brasil,Santa Catarina,SC,"-51,0966349","-26,60467718",4203154,Exact,100
+53,Camboriú,Brasil,Santa Catarina,SC,"-48,64999585","-27,0264565",4203204,Exact,100
+54,Campo Alegre,Brasil,Santa Catarina,SC,"-49,26334448","-26,19065928",4203303,Exact,100
+55,Campo Belo do Sul,Brasil,Santa Catarina,SC,"-50,76199375","-27,89665739",4203402,Exact,100
+56,Campo Erê,Brasil,Santa Catarina,SC,"-53,09015517","-26,3945511",4203501,Exact,100
+57,Campos Novos,Brasil,Santa Catarina,SC,"-51,22367299","-27,39905298",4203600,Exact,100
+58,Canelinha,Brasil,Santa Catarina,SC,"-48,78927313","-27,27241479",4203709,Exact,100
+59,Canoinhas,Brasil,Santa Catarina,SC,"-50,39784871","-26,17880701",4203808,Exact,100
+60,Capão Alto,Brasil,Santa Catarina,SC,"-50,51147929","-27,94168528",4203253,Exact,100
+61,Capinzal,Brasil,Santa Catarina,SC,"-51,61136276","-27,34427846",4203907,Exact,100
+62,Capivari de Baixo,Brasil,Santa Catarina,SC,"-48,96057507","-28,44904551",4203956,Exact,100
+63,Catanduvas,Brasil,Santa Catarina,SC,"-51,6589481","-27,07203522",4204004,Exact,100
+64,Caxambu do Sul,Brasil,Santa Catarina,SC,"-52,88047489","-27,16128178",4204103,Exact,100
+65,Celso Ramos,Brasil,Santa Catarina,SC,"-51,33599382","-27,6347386",4204152,Exact,100
+66,Cerro Negro,Brasil,Santa Catarina,SC,"-50,87006226","-27,7958281",4204178,Exact,100
+67,Chapadão do Lageado,Brasil,Santa Catarina,SC,"-49,54432595","-27,5852983",4204194,Exact,100
+68,Chapecó,Brasil,Santa Catarina,SC,"-52,61703111","-27,10683702",4204202,Exact,100
+69,Cocal do Sul,Brasil,Santa Catarina,SC,"-49,32712872","-28,60302287",4204251,Exact,100
+70,Concórdia,Brasil,Santa Catarina,SC,"-52,02397107","-27,23365878",4204301,Exact,100
+71,Cordilheira Alta,Brasil,Santa Catarina,SC,"-52,60325127","-26,98508129",4204350,Exact,100
+72,Coronel Freitas,Brasil,Santa Catarina,SC,"-52,70915146","-26,90325141",4204400,Exact,100
+73,Coronel Martins,Brasil,Santa Catarina,SC,"-52,66969929","-26,5116376",4204459,Exact,100
+74,Correia Pinto,Brasil,Santa Catarina,SC,"-50,36376055","-27,58480834",4204558,Exact,100
+75,Corupá,Brasil,Santa Catarina,SC,"-49,226737","-26,43196632",4204509,Exact,100
+76,Criciúma,Brasil,Santa Catarina,SC,"-49,36593956","-28,67357225",4204608,Exact,100
+77,Cunha Porã,Brasil,Santa Catarina,SC,"-53,17384557","-26,89172708",4204707,Exact,100
+78,Cunhataí,Brasil,Santa Catarina,SC,"-53,09329049","-26,9731397",4204756,Exact,100
+79,Curitibanos,Brasil,Santa Catarina,SC,"-50,58260104","-27,28298251",4204806,Exact,100
+80,Descanso,Brasil,Santa Catarina,SC,"-53,50462887","-26,81787022",4204905,Exact,100
+81,Dionísio Cerqueira,Brasil,Santa Catarina,SC,"-53,63139512","-26,26648853",4205001,Exact,100
+82,Dona Emma,Brasil,Santa Catarina,SC,"-49,71689775","-26,98630061",4205100,Exact,100
+83,Doutor Pedrinho,Brasil,Santa Catarina,SC,"-49,47929336","-26,720461",4205159,Exact,100
+84,Entre Rios,Brasil,Santa Catarina,SC,"-52,56253397","-26,7236211",4205175,Exact,100
+85,Ermo,Brasil,Santa Catarina,SC,"-49,64340498","-28,9850818",4205191,Exact,100
+86,Erval Velho,Brasil,Santa Catarina,SC,"-51,4434329","-27,27389548",4205209,Exact,100
+87,Faxinal dos Guedes,Brasil,Santa Catarina,SC,"-52,2714154","-26,85978672",4205308,Exact,100
+88,Flor do Sertão,Brasil,Santa Catarina,SC,"-53,34489144","-26,77943233",4205357,Exact,100
+89,Florianópolis,Brasil,Santa Catarina,SC,"-48,54763738","-27,58779555",4205407,Exact,100
+90,Formosa do Sul,Brasil,Santa Catarina,SC,"-52,79345003","-26,6485234",4205431,Exact,100
+91,Forquilhinha,Brasil,Santa Catarina,SC,"-49,46886105","-28,74241535",4205456,Exact,100
+92,Fraiburgo,Brasil,Santa Catarina,SC,"-50,92507924","-27,02344696",4205506,Exact,100
+93,Frei Rogério,Brasil,Santa Catarina,SC,"-50,80640825","-27,1747515",4205555,Exact,100
+94,Galvão,Brasil,Santa Catarina,SC,"-52,68200208","-26,4554762",4205605,Exact,100
+95,Garopaba,Brasil,Santa Catarina,SC,"-48,61255668","-28,02089593",4205704,Exact,100
+96,Garuva,Brasil,Santa Catarina,SC,"-48,84984186","-26,02207551",4205803,Exact,100
+97,Gaspar,Brasil,Santa Catarina,SC,"-48,96770657","-26,91836851",4205902,Exact,100
+98,Governador Celso Ramos,Brasil,Santa Catarina,SC,"-48,57816656","-27,31864591",4206009,Exact,100
+99,Grão Pará,Brasil,Santa Catarina,SC,"-49,21999604","-28,18398653",4206108,Exact,100
+100,Gravatal,Brasil,Santa Catarina,SC,"-49,03947026","-28,32913072",4206207,Exact,100
+101,Guabiruba,Brasil,Santa Catarina,SC,"-48,98356045","-27,06032524",4206306,Exact,100
+102,Guaraciaba,Brasil,Santa Catarina,SC,"-53,52208972","-26,60034757",4206405,Exact,100
+103,Guaramirim,Brasil,Santa Catarina,SC,"-48,99210427","-26,47444513",4206504,Exact,100
+104,Guarujá do Sul,Brasil,Santa Catarina,SC,"-53,52544511","-26,3849206",4206603,Exact,100
+105,Guatambú,Brasil,Santa Catarina,SC,"-52,78384013","-27,13691087",4206652,Exact,100
+106,HERVAL D OESTE,Brasil,Santa Catarina,SC,"-51,49621531","-27,17030318",4206702,Fuzzy,100
+107,Ibiam,Brasil,Santa Catarina,SC,"-51,2394277","-27,18058348",4206751,Exact,100
+108,Ibicaré,Brasil,Santa Catarina,SC,"-51,36845026","-27,09154902",4206801,Exact,100
+109,Ibirama,Brasil,Santa Catarina,SC,"-49,52202776","-27,05354088",4206900,Exact,100
+110,Içara,Brasil,Santa Catarina,SC,"-49,30082258","-28,70708401",4207007,Exact,100
+111,Ilhota,Brasil,Santa Catarina,SC,"-48,82501401","-26,90462518",4207106,Exact,100
+112,Imaruí,Brasil,Santa Catarina,SC,"-48,81467172","-28,3438499",4207205,Exact,100
+113,Imbituba,Brasil,Santa Catarina,SC,"-48,6692842","-28,23995111",4207304,Exact,100
+114,Imbuia,Brasil,Santa Catarina,SC,"-49,42772934","-27,49460425",4207403,Exact,100
+115,Indaial,Brasil,Santa Catarina,SC,"-49,24014046","-26,906256",4207502,Exact,100
+116,Iomerê,Brasil,Santa Catarina,SC,"-51,2406191","-27,00107805",4207577,Exact,100
+117,Ipira,Brasil,Santa Catarina,SC,"-51,77085362","-27,40970885",4207601,Exact,100
+118,Iporã do Oeste,Brasil,Santa Catarina,SC,"-53,53951188","-26,99601668",4207650,Exact,100
+119,Ipuaçu,Brasil,Santa Catarina,SC,"-52,45429691","-26,6325601",4207684,Exact,100
+120,Ipumirim,Brasil,Santa Catarina,SC,"-52,14054087","-27,06832636",4207700,Exact,100
+121,Iraceminha,Brasil,Santa Catarina,SC,"-53,27605779","-26,824065",4207759,Exact,100
+122,Irani,Brasil,Santa Catarina,SC,"-51,90410792","-27,01618669",4207809,Exact,100
+123,Irati,Brasil,Santa Catarina,SC,"-52,89501136","-26,6572269",4207858,Exact,100
+124,Irineópolis,Brasil,Santa Catarina,SC,"-50,80390005","-26,2366129",4207908,Exact,100
+125,Itá,Brasil,Santa Catarina,SC,"-52,32918252","-27,28177872",4208005,Exact,100
+126,Itaiópolis,Brasil,Santa Catarina,SC,"-49,9087562","-26,33712641",4208104,Exact,100
+127,Itajaí,Brasil,Santa Catarina,SC,"-48,65702321","-26,90742624",4208203,Exact,100
+128,Itapema,Brasil,Santa Catarina,SC,"-48,61739939","-27,09593788",4208302,Exact,100
+129,Itapiranga,Brasil,Santa Catarina,SC,"-53,71480206","-27,17537509",4208401,Exact,100
+130,Itapoá,Brasil,Santa Catarina,SC,"-48,60416761","-26,00604789",4208450,Exact,100
+131,Ituporanga,Brasil,Santa Catarina,SC,"-49,6034147","-27,41485849",4208500,Exact,100
+132,Jaborá,Brasil,Santa Catarina,SC,"-51,74335384","-27,17285309",4208609,Exact,100
+133,Jacinto Machado,Brasil,Santa Catarina,SC,"-49,76176866","-29,00141861",4208708,Exact,100
+134,Jaguaruna,Brasil,Santa Catarina,SC,"-49,04912899","-28,62496369",4208807,Exact,100
+135,Jaraguá do Sul,Brasil,Santa Catarina,SC,"-49,07629882","-26,49048435",4208906,Exact,100
+136,Jardinópolis,Brasil,Santa Catarina,SC,"-52,85889926","-26,7205694",4208955,Exact,100
+137,Joaçaba,Brasil,Santa Catarina,SC,"-51,50668973","-27,17394453",4209003,Exact,100
+138,Joinville,Brasil,Santa Catarina,SC,"-48,84940914","-26,30451765",4209102,Exact,100
+139,José Boiteux,Brasil,Santa Catarina,SC,"-49,62380669","-26,95468262",4209151,Exact,100
+140,Jupiá,Brasil,Santa Catarina,SC,"-52,73438054","-26,3937028",4209177,Exact,100
+141,Lacerdópolis,Brasil,Santa Catarina,SC,"-51,56286637","-27,26460009",4209201,Exact,100
+142,Lages,Brasil,Santa Catarina,SC,"-50,33022242","-27,81725946",4209300,Exact,100
+143,Laguna,Brasil,Santa Catarina,SC,"-48,78138862","-28,48358595",4209409,Exact,100
+144,Lajeado Grande,Brasil,Santa Catarina,SC,"-52,56603485","-26,8609423",4209458,Exact,100
+145,Laurentino,Brasil,Santa Catarina,SC,"-49,75526366","-27,2123881",4209508,Exact,100
+146,Lauro Muller,Brasil,Santa Catarina,SC,"-49,39430727","-28,39358517",4209607,Exact,100
+147,Lebon Régis,Brasil,Santa Catarina,SC,"-50,69182786","-26,92911401",4209706,Exact,100
+148,Leoberto Leal,Brasil,Santa Catarina,SC,"-49,2894015","-27,5063895",4209805,Exact,100
+149,Lindóia do Sul,Brasil,Santa Catarina,SC,"-52,08092264","-27,04746448",4209854,Exact,100
+150,Lontras,Brasil,Santa Catarina,SC,"-49,54482935","-27,15748656",4209904,Exact,100
+151,Luiz Alves,Brasil,Santa Catarina,SC,"-48,92604677","-26,72111079",4210001,Exact,100
+152,Luzerna,Brasil,Santa Catarina,SC,"-51,46794604","-27,12989607",4210035,Exact,100
+153,Macieira,Brasil,Santa Catarina,SC,"-51,37612198","-26,8552124",4210050,Exact,100
+154,Mafra,Brasil,Santa Catarina,SC,"-49,80103753","-26,11522849",4210100,Exact,100
+155,Major Gercino,Brasil,Santa Catarina,SC,"-48,95335396","-27,41866041",4210209,Exact,100
+156,Major Vieira,Brasil,Santa Catarina,SC,"-50,33298684","-26,35752654",4210308,Exact,100
+157,Maracajá,Brasil,Santa Catarina,SC,"-49,45437632","-28,85031461",4210407,Exact,100
+158,Maravilha,Brasil,Santa Catarina,SC,"-53,17481882","-26,76162395",4210506,Exact,100
+159,Marema,Brasil,Santa Catarina,SC,"-52,62713541","-26,8004219",4210555,Exact,100
+160,Massaranduba,Brasil,Santa Catarina,SC,"-48,98874466","-26,59545801",4210605,Exact,100
+161,Matos Costa,Brasil,Santa Catarina,SC,"-51,15745144","-26,4741154",4210704,Exact,100
+162,Meleiro,Brasil,Santa Catarina,SC,"-49,62984936","-28,83244582",4210803,Exact,100
+163,Mirim Doce,Brasil,Santa Catarina,SC,"-50,06856371","-27,2012051",4210852,Exact,100
+164,Modelo,Brasil,Santa Catarina,SC,"-53,0535008","-26,77804208",4210902,Exact,100
+165,Mondaí,Brasil,Santa Catarina,SC,"-53,39868403","-27,10361169",4211009,Exact,100
+166,Monte Carlo,Brasil,Santa Catarina,SC,"-50,97410468","-27,2176788",4211058,Exact,100
+167,Monte Castelo,Brasil,Santa Catarina,SC,"-50,22627143","-26,4563625",4211108,Exact,100
+168,Morro da Fumaça,Brasil,Santa Catarina,SC,"-49,21325651","-28,65478784",4211207,Exact,100
+169,Morro Grande,Brasil,Santa Catarina,SC,"-49,71879998","-28,7997195",4211256,Exact,100
+170,Navegantes,Brasil,Santa Catarina,SC,"-48,6491829","-26,89743912",4211306,Exact,100
+171,Nova Veneza,Brasil,Santa Catarina,SC,"-49,50312358","-28,6382326",4211603,Exact,100
+172,Nova Erechim,Brasil,Santa Catarina,SC,"-52,91128667","-26,9012734",4211405,Exact,100
+173,Nova Itaberaba,Brasil,Santa Catarina,SC,"-52,81124405","-26,94288988",4211454,Exact,100
+174,Nova Trento,Brasil,Santa Catarina,SC,"-48,92579543","-27,28777117",4211504,Exact,100
+175,Novo Horizonte,Brasil,Santa Catarina,SC,"-52,83403339","-26,44617199",4211652,Exact,100
+176,Orleans,Brasil,Santa Catarina,SC,"-49,29142629","-28,36046897",4211702,Exact,100
+177,Otacílio Costa,Brasil,Santa Catarina,SC,"-50,11231469","-27,50384618",4211751,Exact,100
+178,Ouro,Brasil,Santa Catarina,SC,"-51,62056218","-27,34248817",4211801,Exact,100
+179,Paial,Brasil,Santa Catarina,SC,"-52,50108875","-27,2551578",4211876,Exact,100
+180,Painel,Brasil,Santa Catarina,SC,"-50,11300974","-27,9145182",4211892,Exact,100
+181,Palhoça,Brasil,Santa Catarina,SC,"-48,67028792","-27,64704368",4211900,Exact,100
+182,Palma Sola,Brasil,Santa Catarina,SC,"-53,27997725","-26,34650813",4212007,Exact,100
+183,Palmeira,Brasil,Santa Catarina,SC,"-50,15900141","-27,58226207",4212056,Exact,100
+184,Palmitos,Brasil,Santa Catarina,SC,"-53,16226729","-27,07025055",4212106,Exact,100
+185,Papanduva,Brasil,Santa Catarina,SC,"-50,1632042","-26,39398307",4212205,Exact,100
+186,Paraíso,Brasil,Santa Catarina,SC,"-53,67531413","-26,61526297",4212239,Exact,100
+187,Passo de Torres,Brasil,Santa Catarina,SC,"-49,72514527","-29,3234599",4212254,Exact,100
+188,Passos Maia,Brasil,Santa Catarina,SC,"-52,0617238","-26,7808891",4212270,Exact,100
+189,Paulo Lopes,Brasil,Santa Catarina,SC,"-48,68149541","-27,9498162",4212304,Exact,100
+190,Pedras Grandes,Brasil,Santa Catarina,SC,"-49,18648755","-28,43721765",4212403,Exact,100
+191,Penha,Brasil,Santa Catarina,SC,"-48,64757291","-26,76886109",4212502,Exact,100
+192,Peritiba,Brasil,Santa Catarina,SC,"-51,90981467","-27,37730928",4212601,Exact,100
+193,Pescaria Brava,Brasil,Santa Catarina,SC,"-48,895556","-28,424722",4212650,Exact,100
+194,Petrolândia,Brasil,Santa Catarina,SC,"-49,69486862","-27,52812683",4212700,Exact,100
+195,Pinhalzinho,Brasil,Santa Catarina,SC,"-52,98225325","-26,84881433",4212908,Exact,100
+196,Pinheiro Preto,Brasil,Santa Catarina,SC,"-51,23053648","-27,04513462",4213005,Exact,100
+197,Piratuba,Brasil,Santa Catarina,SC,"-51,75864983","-27,41595355",4213104,Exact,100
+198,Planalto Alegre,Brasil,Santa Catarina,SC,"-52,86735203","-27,0694598",4213153,Exact,100
+199,Pomerode,Brasil,Santa Catarina,SC,"-49,17419753","-26,7448264",4213203,Exact,100
+200,Ponte Alta,Brasil,Santa Catarina,SC,"-50,37710065","-27,4677841",4213302,Exact,100
+201,Ponte Alta do Norte,Brasil,Santa Catarina,SC,"-50,46540427","-27,1690292",4213351,Exact,100
+202,Ponte Serrada,Brasil,Santa Catarina,SC,"-52,01453751","-26,8749128",4213401,Exact,100
+203,Porto Belo,Brasil,Santa Catarina,SC,"-48,60275674","-27,14946621",4213500,Exact,100
+204,Porto União,Brasil,Santa Catarina,SC,"-51,08160463","-26,2300049",4213609,Exact,100
+205,Pouso Redondo,Brasil,Santa Catarina,SC,"-49,95565214","-27,25108628",4213708,Exact,100
+206,Praia Grande,Brasil,Santa Catarina,SC,"-49,96059198","-29,1957764",4213807,Exact,100
+207,Presidente Getúlio,Brasil,Santa Catarina,SC,"-49,62208617","-27,04140824",4214003,Exact,100
+208,Presidente Castello Branco,Brasil,Santa Catarina,SC,"-51,81137554","-27,2199422",4213906,Exact,100
+209,Presidente Nereu,Brasil,Santa Catarina,SC,"-49,40329277","-27,2873292",4214102,Exact,100
+210,Princesa,Brasil,Santa Catarina,SC,"-53,59810588","-26,44433521",4214151,Exact,100
+211,Quilombo,Brasil,Santa Catarina,SC,"-52,72760957","-26,74005555",4214201,Exact,100
+212,Rancho Queimado,Brasil,Santa Catarina,SC,"-49,00843238","-27,67720886",4214300,Exact,100
+213,Rio das Antas,Brasil,Santa Catarina,SC,"-51,07601994","-26,89706744",4214409,Exact,100
+214,Rio do Campo,Brasil,Santa Catarina,SC,"-50,13958891","-26,94230843",4214508,Exact,100
+215,Rio do Oeste,Brasil,Santa Catarina,SC,"-49,80286222","-27,19116652",4214607,Exact,100
+216,Rio do Sul,Brasil,Santa Catarina,SC,"-49,64323753","-27,21790323",4214805,Exact,100
+217,Rio dos Cedros,Brasil,Santa Catarina,SC,"-49,27237944","-26,74912982",4214706,Exact,100
+218,Rio Fortuna,Brasil,Santa Catarina,SC,"-49,1050938","-28,13259139",4214904,Exact,100
+219,Rio Negrinho,Brasil,Santa Catarina,SC,"-49,51729508","-26,25532503",4215000,Exact,100
+220,Rio Rufino,Brasil,Santa Catarina,SC,"-49,7775918","-27,8632355",4215059,Exact,100
+221,Riqueza,Brasil,Santa Catarina,SC,"-53,32528621","-27,0675942",4215075,Exact,100
+222,Rodeio,Brasil,Santa Catarina,SC,"-49,30470723","-26,94350167",4215109,Exact,100
+223,Romelândia,Brasil,Santa Catarina,SC,"-53,3201584","-26,67946356",4215208,Exact,100
+224,Salete,Brasil,Santa Catarina,SC,"-50,00173073","-26,97524433",4215307,Exact,100
+225,Saltinho,Brasil,Santa Catarina,SC,"-53,05863125","-26,6085589",4215356,Exact,100
+226,Salto Veloso,Brasil,Santa Catarina,SC,"-51,40520808","-26,90316461",4215406,Exact,100
+227,Sangão,Brasil,Santa Catarina,SC,"-49,13402986","-28,63322292",4215455,Exact,100
+228,Santa Cecília,Brasil,Santa Catarina,SC,"-50,42290162","-26,95690074",4215505,Exact,100
+229,Santa Helena,Brasil,Santa Catarina,SC,"-53,61998787","-26,93984392",4215554,Exact,100
+230,Santa Rosa de Lima,Brasil,Santa Catarina,SC,"-49,1250913","-28,0356056",4215604,Exact,100
+231,Santa Rosa do Sul,Brasil,Santa Catarina,SC,"-49,71762637","-29,13528822",4215653,Exact,100
+232,Santa Terezinha,Brasil,Santa Catarina,SC,"-50,00552919","-26,7809824",4215679,Exact,100
+233,Santa Terezinha do Progresso,Brasil,Santa Catarina,SC,"-53,19984696","-26,6197756",4215687,Exact,100
+234,Santiago do Sul,Brasil,Santa Catarina,SC,"-52,67594948","-26,6348091",4215695,Exact,100
+235,Santo Amaro da Imperatriz,Brasil,Santa Catarina,SC,"-48,78023992","-27,68974776",4215703,Exact,100
+236,São Bento do Sul,Brasil,Santa Catarina,SC,"-49,3869789","-26,24948542",4215802,Exact,100
+237,São Bernardino,Brasil,Santa Catarina,SC,"-52,96553874","-26,4732782",4215752,Exact,100
+238,São Bonifácio,Brasil,Santa Catarina,SC,"-48,92931196","-27,8964967",4215901,Exact,100
+239,São Carlos,Brasil,Santa Catarina,SC,"-53,01739427","-27,07863508",4216008,Exact,100
+240,São Cristovão do Sul,Brasil,Santa Catarina,SC,"-50,43462893","-27,28294667",4216057,Exact,100
+241,São Domingos,Brasil,Santa Catarina,SC,"-52,53722747","-26,55783037",4216107,Exact,100
+242,São Francisco do Sul,Brasil,Santa Catarina,SC,"-48,63757076","-26,24401788",4216206,Exact,100
+243,São João Batista,Brasil,Santa Catarina,SC,"-48,85700428","-27,29588056",4216305,Exact,100
+244,São João do Itaperiú,Brasil,Santa Catarina,SC,"-48,76776539","-26,61745405",4216354,Exact,100
+245,São João do Oeste,Brasil,Santa Catarina,SC,"-53,59596668","-27,09748263",4216255,Exact,100
+246,São João do Sul,Brasil,Santa Catarina,SC,"-49,80657139","-29,22347979",4216404,Exact,100
+247,São Joaquim,Brasil,Santa Catarina,SC,"-49,93674176","-28,2947125",4216503,Exact,100
+248,São José,Brasil,Santa Catarina,SC,"-48,61602272","-27,59031208",4216602,Exact,100
+249,São José do Cedro,Brasil,Santa Catarina,SC,"-53,50012411","-26,4560603",4216701,Exact,100
+250,São José do Cerrito,Brasil,Santa Catarina,SC,"-50,58138618","-27,6685865",4216800,Exact,100
+251,São Lourenço do Oeste,Brasil,Santa Catarina,SC,"-52,85133367","-26,35519016",4216909,Exact,100
+252,São Ludgero,Brasil,Santa Catarina,SC,"-49,17568432","-28,32689553",4217006,Exact,100
+253,São Martinho,Brasil,Santa Catarina,SC,"-48,97778625","-28,16449529",4217105,Exact,100
+254,São Miguel da Boa Vista,Brasil,Santa Catarina,SC,"-53,25455638","-26,6944751",4217154,Exact,100
+255,São Miguel do Oeste,Brasil,Santa Catarina,SC,"-53,51883941","-26,72642718",4217204,Exact,100
+256,São Pedro de Alcântara,Brasil,Santa Catarina,SC,"-48,78766959","-27,5671701",4217253,Exact,100
+257,Saudades,Brasil,Santa Catarina,SC,"-52,99556973","-26,91975695",4217303,Exact,100
+258,Schroeder,Brasil,Santa Catarina,SC,"-49,07325969","-26,42097591",4217402,Exact,100
+259,Seara,Brasil,Santa Catarina,SC,"-52,30285483","-27,14569762",4217501,Exact,100
+260,Serra Alta,Brasil,Santa Catarina,SC,"-53,04627634","-26,72477337",4217550,Exact,100
+261,Siderópolis,Brasil,Santa Catarina,SC,"-49,42054093","-28,59510242",4217600,Exact,100
+262,Sombrio,Brasil,Santa Catarina,SC,"-49,63421036","-29,10913276",4217709,Exact,100
+263,Sul Brasil,Brasil,Santa Catarina,SC,"-52,9642048","-26,7369362",4217758,Exact,100
+264,Taió,Brasil,Santa Catarina,SC,"-50,00509646","-27,1179373",4217808,Exact,100
+265,Tangará,Brasil,Santa Catarina,SC,"-51,24591438","-27,1010111",4217907,Exact,100
+266,Tigrinhos,Brasil,Santa Catarina,SC,"-53,15754198","-26,6894748",4217956,Exact,100
+267,Tijucas,Brasil,Santa Catarina,SC,"-48,63207056","-27,23945361",4218004,Exact,100
+268,Timbé do Sul,Brasil,Santa Catarina,SC,"-49,84411776","-28,83251749",4218103,Exact,100
+269,Timbó,Brasil,Santa Catarina,SC,"-49,27771229","-26,82290257",4218202,Exact,100
+270,Timbó Grande,Brasil,Santa Catarina,SC,"-50,67467414","-26,61782849",4218251,Exact,100
+271,Três Barras,Brasil,Santa Catarina,SC,"-50,30541937","-26,11409634",4218301,Exact,100
+272,Treviso,Brasil,Santa Catarina,SC,"-49,45593338","-28,51848486",4218350,Exact,100
+273,Treze de Maio,Brasil,Santa Catarina,SC,"-49,14481531","-28,55814004",4218400,Exact,100
+274,Treze Tílias,Brasil,Santa Catarina,SC,"-51,41467467","-26,99853631",4218509,Exact,100
+275,Trombudo Central,Brasil,Santa Catarina,SC,"-49,79247823","-27,30301953",4218608,Exact,100
+276,Tubarão,Brasil,Santa Catarina,SC,"-49,00526808","-28,48003395",4218707,Exact,100
+277,Tunápolis,Brasil,Santa Catarina,SC,"-53,64145974","-26,97222359",4218756,Exact,100
+278,Turvo,Brasil,Santa Catarina,SC,"-49,68086575","-28,9247492",4218806,Exact,100
+279,União do Oeste,Brasil,Santa Catarina,SC,"-52,85149646","-26,761737",4218855,Exact,100
+280,Urubici,Brasil,Santa Catarina,SC,"-49,58820561","-28,0045549",4218905,Exact,100
+281,Urupema,Brasil,Santa Catarina,SC,"-49,87321124","-27,9526858",4218954,Exact,100
+282,Urussanga,Brasil,Santa Catarina,SC,"-49,31910792","-28,5199662",4219002,Exact,100
+283,Vargeão,Brasil,Santa Catarina,SC,"-52,15410565","-26,86398332",4219101,Exact,100
+284,Vargem,Brasil,Santa Catarina,SC,"-50,97815063","-27,4899701",4219150,Exact,100
+285,Vargem Bonita,Brasil,Santa Catarina,SC,"-51,74474018","-27,0032416",4219176,Exact,100
+286,Vidal Ramos,Brasil,Santa Catarina,SC,"-49,36821917","-27,3957787",4219200,Exact,100
+287,Videira,Brasil,Santa Catarina,SC,"-51,15170528","-27,00612907",4219309,Exact,100
+288,Vitor Meireles,Brasil,Santa Catarina,SC,"-49,83075196","-26,8815776",4219358,Exact,100
+289,Witmarsum,Brasil,Santa Catarina,SC,"-49,80420338","-26,9267427",4219408,Exact,100
+290,Xanxerê,Brasil,Santa Catarina,SC,"-52,40466714","-26,8745845",4219507,Exact,100
+291,Xavantina,Brasil,Santa Catarina,SC,"-52,34285051","-27,07025015",4219606,Exact,100
+292,Xaxim,Brasil,Santa Catarina,SC,"-52,53493252","-26,9637195",4219705,Exact,100
+293,Zortéa,Brasil,Santa Catarina,SC,"-51,54956631","-27,45025141",4219853,Exact,100
