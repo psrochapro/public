@@ -1,42 +1,35 @@
-// URL Base do seu GitHub
-const BASE_URL = "https://raw.githubusercontent.com/zapppsr/zapppsr.github.io/main/";
+// Usamos "./" para buscar os arquivos na mesma pasta do servidor/GitHub Pages
+const BASE_URL = "./";
 
 const svg = d3.select("#svg-mapa");
 const g = svg.append("g");
 
-// Função para exibir erro na tela caso algo falhe
-function exibirErro(mensagem) {
-    console.error(mensagem);
-    d3.select("#select-mun").html(`<option>${mensagem}</option>`);
-}
+// Função auxiliar para limpar nomes de colunas do CSV (remove espaços e caracteres BOM)
+const limparChaves = (data) => {
+    return data.map(d => {
+        const novoObj = {};
+        for (let key in d) {
+            const chaveLimpa = key.trim().replace(/^\ufeff/, "");
+            novoObj[chaveLimpa] = d[key];
+        }
+        return novoObj;
+    });
+};
 
 Promise.all([
     d3.json(BASE_URL + "sc.json"),
     d3.csv(BASE_URL + "dim_municipio_ibge.csv")
-]).then(([topoData, csvData]) => {
+]).then(([topoData, csvRaw]) => {
     
-    // 1. Limpeza dos dados do CSV (Remove espaços e caracteres invisíveis do cabeçalho)
-    const cleanedCsvData = csvData.map(d => {
-        const novoObjeto = {};
-        for (let key in d) {
-            // Remove o caractere BOM (\ufeff) e espaços
-            const novaChave = key.trim().replace(/^\ufeff/, "");
-            novoObjeto[novaChave] = d[key];
-        }
-        return novoObjeto;
-    });
+    console.log("Arquivos carregados com sucesso!");
 
+    // 1. Limpar e preparar dados do CSV
+    const csvData = limparChaves(csvRaw);
     const select = d3.select("#select-mun");
     select.html('<option value="">Selecione um município...</option>');
 
-    // 2. Filtrar e ordenar a lista
-    const listaValida = cleanedCsvData.filter(d => d.nm_municipio && d.cd_ibge);
-    
-    if (listaValida.length === 0) {
-        exibirErro("Erro: CSV vazio ou colunas inválidas.");
-        return;
-    }
-
+    // Filtrar apenas linhas válidas e ordenar por nome
+    const listaValida = csvData.filter(d => d.nm_municipio && d.cd_ibge);
     listaValida.sort((a, b) => a.nm_municipio.localeCompare(b.nm_municipio));
 
     listaValida.forEach(d => {
@@ -45,9 +38,9 @@ Promise.all([
             .text(d.nm_municipio);
     });
 
-    // 3. Converter TopoJSON (O seu arquivo usa 'sc')
-    if (!topoData.objects || !topoData.objects.sc) {
-        exibirErro("Erro: Objeto 'sc' não encontrado no JSON.");
+    // 2. Configurar o Mapa (TopoJSON usa o objeto 'sc')
+    if (!topoData.objects.sc) {
+        console.error("Erro: Objeto 'sc' não encontrado no JSON. Verifique a estrutura.");
         return;
     }
 
@@ -55,7 +48,7 @@ Promise.all([
     const projection = d3.geoMercator().fitSize([700, 450], municipios);
     const path = d3.geoPath().projection(projection);
 
-    // 4. Desenhar o mapa
+    // 3. Desenhar os municípios
     g.selectAll("path")
         .data(municipios.features)
         .enter().append("path")
@@ -68,6 +61,7 @@ Promise.all([
             atualizar(id, d.properties.name);
         });
 
+    // Evento de mudança no Seletor
     select.on("change", function() {
         const id = this.value;
         const nome = this.options[this.selectedIndex].text;
@@ -76,29 +70,31 @@ Promise.all([
 
     function atualizar(id, nome) {
         if (!id) return;
-        
+
+        // Resetar cores e selecionar o novo
         d3.selectAll(".municipio").classed("selecionado", false);
+        const selecaoNoMapa = d3.select("#mun-" + id);
         
-        const elemento = d3.select("#mun-" + id);
-        if (!elemento.empty()) {
-            elemento.classed("selecionado", true);
+        if (!selecaoNoMapa.empty()) {
+            selecaoNoMapa.classed("selecionado", true);
         }
 
+        // Atualizar textos
         d3.select("#nome-exibicao").text(nome);
         d3.select("#codigo-exibicao").text("Código IBGE: " + id);
         
-        // Caminho da bandeira
-        const urlBandeira = BASE_URL + "images/scflags/" + id + ".png";
+        // Atualizar Bandeira (caminho: images/scflags/ID.png)
+        const caminhoBandeira = "images/scflags/" + id + ".png";
         d3.select("#bandeira")
-            .attr("src", urlBandeira)
+            .attr("src", caminhoBandeira)
             .style("display", "block")
             .on("error", function() {
-                // Se a bandeira não existir, esconde o campo de imagem
+                // Se a bandeira não existir, esconde o elemento
                 d3.select(this).style("display", "none");
             });
     }
 
 }).catch(e => {
-    exibirErro("Erro ao carregar arquivos. Verifique o console.");
-    console.error(e);
+    console.error("Erro crítico ao carregar dados:", e);
+    d3.select("#select-mun").html('<option>Erro ao carregar dados (veja F12)</option>');
 });
