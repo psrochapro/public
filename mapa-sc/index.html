@@ -2,108 +2,38 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Mapa Santa Catarina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Santa Catarina - Municípios</title>
+    
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
-    <style>
-        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; background: #f4f4f9; }
-        header { background: #2c3e50; color: white; width: 100%; padding: 10px; text-align: center; }
-        #container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
-        #mapa-box { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        #info-box { background: white; padding: 20px; border-radius: 8px; width: 250px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .municipio { fill: #ddd; stroke: #fff; stroke-width: 0.5px; cursor: pointer; }
-        .selecionado { fill: #27ae60 !important; }
-        #bandeira { width: 100%; margin-top: 15px; display: none; border: 1px solid #ccc; }
-        select { padding: 8px; width: 300px; margin-bottom: 20px; }
-    </style>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header><h1>Municípios de Santa Catarina</h1></header>
+    <header>
+        <h1>Explorador de Municípios - SC</h1>
+    </header>
 
-<div id="container">
-    <div style="width: 100%; text-align: center;">
-        <select id="select-mun"><option>Carregando...</option></select>
+    <div id="container">
+        <div id="controles">
+            <select id="select-mun">
+                <option value="">Carregando municípios...</option>
+            </select>
+        </div>
+
+        <div id="mapa-box">
+            <svg id="svg-mapa" width="700" height="450"></svg>
+        </div>
+
+        <div id="info-box">
+            <h2 id="nome-exibicao">Município</h2>
+            <p id="codigo-exibicao">Código IBGE: -</p>
+            <img id="bandeira" src="" alt="Bandeira">
+        </div>
     </div>
 
-    <div id="mapa-box"><svg id="svg-mapa" width="600" height="400"></svg></div>
-
-    <div id="info-box">
-        <h3 id="nome-mun">Selecione</h3>
-        <p id="cod-mun">-</p>
-        <img id="bandeira" src="" alt="Bandeira">
-    </div>
-</div>
-
-<script>
-    // Links ajustados para a raiz do seu repositório
-    const GITHUB_RAW = "https://raw.githubusercontent.com/zapppsr/zapppsr.github.io/main/";
-    
-    const urlJson = GITHUB_RAW + "sc.json";
-    const urlCsv = GITHUB_RAW + "dim_municipio_ibge.csv";
-    const urlBandeiras = GITHUB_RAW + "images/scflags/";
-
-    const svg = d3.select("#svg-mapa");
-    const width = +svg.attr("width");
-    const height = +svg.attr("height");
-    const g = svg.append("g");
-
-    Promise.all([
-        d3.json(urlJson),
-        d3.csv(urlCsv)
-    ]).then(([topoData, csvData]) => {
-        
-        const select = d3.select("#select-mun");
-        select.html('<option value="">Selecione um município...</option>');
-
-        // Popular o Select com os nomes do CSV
-        csvData.sort((a, b) => a.nm_municipio.localeCompare(b.nm_municipio));
-        csvData.forEach(d => {
-            if(d.cd_ibge) {
-                select.append("option").attr("value", d.cd_ibge.trim()).text(d.nm_municipio);
-            }
-        });
-
-        // Converter TopoJSON para GeoJSON
-        const municipios = topojson.feature(topoData, topoData.objects.municipios);
-        const projection = d3.geoMercator().fitSize([width, height], municipios);
-        const path = d3.geoPath().projection(projection);
-
-        // Desenhar Mapa
-        g.selectAll("path")
-            .data(municipios.features)
-            .enter()
-            .append("path")
-            .attr("d", path)
-            .attr("class", "municipio")
-            .attr("id", d => "mun-" + d.properties.id.trim())
-            .on("click", (event, d) => {
-                const id = d.properties.id.trim();
-                select.property("value", id);
-                atualizar(id, d.properties.name);
-            });
-
-        select.on("change", function() {
-            const id = this.value;
-            const nome = this.options[this.selectedIndex].text;
-            atualizar(id, nome);
-        });
-
-        function atualizar(id, nome) {
-            if (!id) return;
-            d3.selectAll(".municipio").classed("selecionado", false);
-            d3.select("#mun-" + id).classed("selecionado", true);
-            d3.select("#nome-exibicao").text(nome);
-            d3.select("#codigo-exibicao").text("Código IBGE: " + id);
-            d3.select("#bandeira")
-               .attr("src", urlBandeiras + id + ".png")
-               .style("display", "block")
-               .on("error", function() { d3.select(this).style("display", "none"); });
-        }
-    }).catch(err => {
-        console.error("Erro ao carregar:", err);
-        // Se der erro 404 de novo, ele vai avisar no console exatamente qual arquivo falhou
-    });
-</script>
+    <script src="app.js"></script>
 </body>
 </html>
