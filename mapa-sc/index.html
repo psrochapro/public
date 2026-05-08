@@ -36,46 +36,74 @@
 </div>
 
 <script>
-    const GITHUB_BASE = "https://raw.githubusercontent.com/zapppsr/zapppsr.github.io/main/";
+    // Links ajustados para a raiz do seu repositório
+    const GITHUB_RAW = "https://raw.githubusercontent.com/zapppsr/zapppsr.github.io/main/";
     
+    const urlJson = GITHUB_RAW + "sc.json";
+    const urlCsv = GITHUB_RAW + "dim_municipio_ibge.csv";
+    const urlBandeiras = GITHUB_RAW + "images/scflags/";
+
+    const svg = d3.select("#svg-mapa");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+    const g = svg.append("g");
+
     Promise.all([
-        d3.json(GITHUB_BASE + "mapa-sc/sc.json"),
-        d3.csv(GITHUB_BASE + "mapa-sc/dim_municipio_ibge.csv")
+        d3.json(urlJson),
+        d3.csv(urlCsv)
     ]).then(([topoData, csvData]) => {
         
         const select = d3.select("#select-mun");
-        select.html('<option value="">Escolha um município...</option>');
-        
-        csvData.sort((a,b) => a.nm_municipio.localeCompare(b.nm_municipio));
-        csvData.forEach(d => select.append("option").attr("value", d.cd_ibge.trim()).text(d.nm_municipio));
+        select.html('<option value="">Selecione um município...</option>');
 
+        // Popular o Select com os nomes do CSV
+        csvData.sort((a, b) => a.nm_municipio.localeCompare(b.nm_municipio));
+        csvData.forEach(d => {
+            if(d.cd_ibge) {
+                select.append("option").attr("value", d.cd_ibge.trim()).text(d.nm_municipio);
+            }
+        });
+
+        // Converter TopoJSON para GeoJSON
         const municipios = topojson.feature(topoData, topoData.objects.municipios);
-        const projection = d3.geoMercator().fitSize([600, 400], municipios);
+        const projection = d3.geoMercator().fitSize([width, height], municipios);
         const path = d3.geoPath().projection(projection);
 
-        d3.select("#svg-mapa").append("g")
-            .selectAll("path").data(municipios.features).enter()
-            .append("path").attr("d", path).attr("class", "municipio")
+        // Desenhar Mapa
+        g.selectAll("path")
+            .data(municipios.features)
+            .enter()
+            .append("path")
+            .attr("d", path)
+            .attr("class", "municipio")
             .attr("id", d => "mun-" + d.properties.id.trim())
-            .on("click", (ev, d) => {
+            .on("click", (event, d) => {
                 const id = d.properties.id.trim();
                 select.property("value", id);
                 atualizar(id, d.properties.name);
             });
 
         select.on("change", function() {
-            atualizar(this.value, this.options[this.selectedIndex].text);
+            const id = this.value;
+            const nome = this.options[this.selectedIndex].text;
+            atualizar(id, nome);
         });
 
         function atualizar(id, nome) {
-            if(!id) return;
+            if (!id) return;
             d3.selectAll(".municipio").classed("selecionado", false);
             d3.select("#mun-" + id).classed("selecionado", true);
-            d3.select("#nome-mun").text(nome);
-            d3.select("#cod-mun").text("IBGE: " + id);
-            d3.select("#bandeira").attr("src", GITHUB_BASE + "images/scflags/" + id + ".png").style("display", "block");
+            d3.select("#nome-exibicao").text(nome);
+            d3.select("#codigo-exibicao").text("Código IBGE: " + id);
+            d3.select("#bandeira")
+               .attr("src", urlBandeiras + id + ".png")
+               .style("display", "block")
+               .on("error", function() { d3.select(this).style("display", "none"); });
         }
-    }).catch(err => console.error("Erro ao carregar dados:", err));
+    }).catch(err => {
+        console.error("Erro ao carregar:", err);
+        // Se der erro 404 de novo, ele vai avisar no console exatamente qual arquivo falhou
+    });
 </script>
 </body>
 </html>
