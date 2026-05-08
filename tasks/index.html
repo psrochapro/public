@@ -2,15 +2,43 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Minhas Tarefas</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow | Gestão Inteligente</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h2>Gerenciador de Tarefas</h2>
-        <input type="text" id="taskInput" placeholder="Nova tarefa...">
-        <button onclick="addTask()">Adicionar</button>
+        <header>
+            <h1>⚡ Task<span>Flow</span></h1>
+            <p id="date-display"></p>
+        </header>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="O que precisa ser feito?">
+            <select id="categorySelect">
+                <option value="personal">🏠 Pessoal</option>
+                <option value="work">💼 Trabalho</option>
+                <option value="urgent">🔥 Urgente</option>
+            </select>
+            <button onclick="addTask()" id="addBtn"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterTasks('all')">Todas</button>
+            <button class="filter-btn" onclick="filterTasks('personal')">Pessoal</button>
+            <button class="filter-btn" onclick="filterTasks('work')">Trabalho</button>
+            <button class="filter-btn" onclick="filterTasks('urgent')">Urgente</button>
+        </div>
+
         <ul id="taskList"></ul>
+
+        <div class="stats">
+            <span id="pendingCount">0 tarefas pendentes</span>
+            <button onclick="clearCompleted()" class="clear-btn">Limpar concluídas</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
