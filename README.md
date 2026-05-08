@@ -5,6 +5,8 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 ### 🔗 Acesso Rápido (Apps Online)
 | Projeto | Descrição | Link |
 | :--- | :--- | :--- |
+| **Mapa de SC** | Mapa interativo dos municípios com códigos IBGE e bandeiras | [Acessar App](https://psrochapro.github.io/public/mapa-sc/) |
+| **CV Interativo** | Currículo digital dinâmico com foco em experiência do usuário | [Acessar App](https://psrochapro.github.io/public/cv-interativo/) |
 | **Color Picker** | Seletor de cores dinâmico com JavaScript | [Acessar App](https://psrochapro.github.io/public/color-picker/) |
 | **CSV Reader** | Visualizador de arquivos CSV com interface limpa | [Acessar App](https://psrochapro.github.io/public/csv-reader/) |
 
