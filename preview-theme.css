@@ -1,0 +1,65 @@
+/* 1. FUNDO E TEXTO BASE */
+body {
+    background-color: white !important;
+    color: #1f2328 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* 2. TABELAS (Estilo GitHub com Bordas Visíveis) */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 16px;
+    border: 1px solid #d0d7de !important;
+}
+table th {
+    font-weight: 600;
+    background-color: #f6f8fa !important;
+    border: 1px solid #d0d7de !important;
+    padding: 6px 13px;
+}
+table td {
+    padding: 6px 13px;
+    border: 1px solid #d0d7de !important;
+}
+table tr:nth-child(2n) {
+    background-color: #f6f8fa !important;
+}
+
+/* 3. TÍTULOS */
+h1, h2, h3 {
+    color: #1f2328 !important;
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: 0.3em;
+}
+
+/* 4. NOTA (Blockquote) - Estilo Slim Escuro */
+blockquote {
+    background-color: #282a36 !important;
+    color: white !important;
+    padding: 0px 0px !important;
+    border-left: 4px solid #0969da !important;
+    margin: 16px 0 !important;
+    border-radius: 6px;
+}
+blockquote strong { 
+    color: #58a6ff !important; 
+}
+
+/* 5. MERMAID - APENAS FUNDO */
+.mermaid svg {
+    background-color: white !important;
+}
+
+/* Altera o fundo do bloco de código */
+pre {
+    background-color: #282a36 !important; /* Escolha um tom de cinza escuro ou preto */
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Garante que o texto dentro do bloco seja legível */
+pre code {
+    color: #d4d4d4;
+    background-color: transparent !important;
+}
