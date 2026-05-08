@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa Santa Catarina - Municípios</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; background-color: #f4f4f9; }
+        header { background: #2c3e50; color: white; width: 100%; padding: 1rem; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; width: 100%; max-width: 1200px; }
+        #controles { width: 100%; text-align: center; margin-bottom: 10px; }
+        select { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; width: 300px; }
+        #mapa-box { background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 10px; }
+        #info-box { background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; width: 300px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        svg { background-color: #fff; }
+        .municipio { fill: #e0e0e0; stroke: #fff; stroke-width: 0.5px; transition: fill 0.3s; }
+        .municipio:hover { fill: #bdc3c7; cursor: pointer; }
+        .selecionado { fill: #27ae60 !important; }
+        #bandeira { max-width: 200px; margin-top: 20px; display: none; border: 1px solid #ddd; }
+        h2 { margin: 0 0 10px 0; color: #34495e; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Explorador de Municípios - SC</h1>
+</header>
+
+<div id="container">
+    <div id="controles">
+        <select id="select-mun">
+            <option value="">Selecione um município...</option>
+        </select>
+    </div>
+
+    <div id="mapa-box">
+        <svg id="svg-mapa" width="700" height="450"></svg>
+    </div>
+
+    <div id="info-box">
+        <h2 id="nome-exibicao">Município</h2>
+        <p id="codigo-exibicao">Código IBGE: -</p>
+        <img id="bandeira" src="" alt="Bandeira do município">
+    </div>
+</div>
+
+<script>
+    // Links diretos do seu repositório
+    const urlJson = "https://raw.githubusercontent.com/zapppsr/zapppsr.github.io/main/mapa-sc/sc.json";
+    const urlCsv = "https://raw.githubusercontent.com/zapppsr/zapppsr.github.io/main/mapa-sc/dim_municipio_ibge.csv";
+    const urlBandeiras = "https://raw.githubusercontent.com/zapppsr/zapppsr.github.io/main/images/scflags/";
+
+    const svg = d3.select("#svg-mapa");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+
+    // Carregar dados
+    Promise.all([
+        d3.json(urlJson),
+        d3.csv(urlCsv)
+    ]).then(([topoData, csvData]) => {
+        
+        // Configurar Select
+        const select = d3.select("#select-mun");
+        csvData.sort((a, b) => a.nm_municipio.localeCompare(b.nm_municipio));
+        csvData.forEach(d => {
+            select.append("option").attr("value", d.cd_ibge).text(d.nm_municipio);
+        });
+
+        // Converter TopoJSON para GeoJSON
+        const municipios = topojson.feature(topoData, topoData.objects.sc);
+
+        // Projeção ajustada para SC
+        const projection = d3.geoMercator().fitSize([width, height], municipios);
+        const path = d3.geoPath().projection(projection);
+
+        // Desenhar Mapa
+        svg.append("g")
+            .selectAll("path")
+            .data(municipios.features)
+            .enter()
+            .append("path")
+            .attr("d", path)
+            .attr("class", "municipio")
+            .attr("id", d => "mun-" + d.properties.id)
+            .on("click", function(event, d) {
+                select.property("value", d.properties.id);
+                atualizar(d.properties.id, d.properties.name);
+            });
+
+        // Evento do Select
+        select.on("change", function() {
+            const id = this.value;
+            const nome = this.options[this.selectedIndex].text;
+            atualizar(id, nome);
+        });
+
+        function atualizar(id, nome) {
+            if (!id) return;
+
+            // Destaque no mapa
+            d3.selectAll(".municipio").classed("selecionado", false);
+            d3.select("#mun-" + id).classed("selecionado", true);
+
+            // Atualizar Painel
+            d3.select("#nome-exibicao").text(nome);
+            d3.select("#codigo-exibicao").text("Código IBGE: " + id);
+            
+            const img = d3.select("#bandeira");
+            img.attr("src", urlBandeiras + id + ".png")
+               .style("display", "block");
+        }
+    });
+</script>
+
+</body>
+</html>
