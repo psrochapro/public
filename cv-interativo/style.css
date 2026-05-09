@@ -1,49 +1,114 @@
-/* ... manter o root e body anteriores ... */
-
-.header-text h1 { font-size: 1.6rem; color: var(--primary); margin: 0; }
-.resumo-list { font-size: 0.82rem; line-height: 1.3; } /* Compactado */
-
-.contatos a { 
-    color: var(--accent); 
-    text-decoration: none; 
-    font-weight: 600; 
+:root {
+    --primary: #1e293b;
+    --accent: #2563eb;
+    --bg: #f1f5f9;
+    --text: #334155;
 }
 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    padding: 20px;
+    color: var(--text);
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Fix da Foto e Header */
+.header-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 20px;
+}
+
+.profile-img {
+    width: 160px !important; /* Força o tamanho */
+    height: 200px !important;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid var(--primary);
+    flex-shrink: 0; /* Impede que a foto esmague */
+}
+
+.header-text h1 { margin: 0; font-size: 2rem; color: var(--primary); }
+.subtitle { color: var(--accent); font-weight: 700; margin: 5px 0; }
+
+.resumo-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    font-size: 0.88rem;
+}
+
+.resumo-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+
+.contatos { font-size: 0.9rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
+.contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
+
+/* Menu de Abas */
 .nav-tabs {
-    gap: 5px;
-    border-bottom: 2px solid var(--bg);
-    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 25px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
 .tab-btn {
-    padding: 8px 12px;
-    font-size: 0.85rem;
+    padding: 10px 20px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    color: var(--text);
+    transition: all 0.3s;
 }
 
-/* Ajuste nos Cards de Habilidade */
-.skill-card {
-    padding: 10px 12px; /* Reduzi o padding vertical */
-    border-left: 3px solid var(--primary);
-    min-height: 60px; /* Altura mínima menor */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
 }
 
-.skill-card strong { font-size: 0.9rem; color: var(--primary); }
-.skill-card p { margin: 4px 0 0 0; font-size: 0.8rem; color: var(--text-light); }
+/* Conteúdo */
+#tab-content {
+    min-height: 300px;
+    animation: fadeIn 0.5s ease;
+}
 
-.pilar-card {
-    border-left: 4px solid var(--accent);
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .grid-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Mais colunas se houver espaço */
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
 }
 
-@media (max-width: 600px) {
-    .header-container { flex-direction: column; text-align: center; }
-    .grid-content { grid-template-columns: 1fr; }
+.card {
+    background: #f8fafc;
+    padding: 15px;
+    border-left: 5px solid var(--accent);
+    border-radius: 6px;
+}
+
+.cv-list { list-style: none; padding: 0; }
+.cv-list li { padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+
+@media (max-width: 768px) {
+    .header-container { flex-direction: column; align-items: center; text-align: center; }
 }
