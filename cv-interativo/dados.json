@@ -15,62 +15,58 @@
       "email": "psrocha.pro@gmail.com",
       "whatsapp": "(48) 99912-0415",
       "portfolio": "https://zapppsr.github.io",
-      "linkedin": "#"
+      "linkedin": "https://www.linkedin.com/in/paulo-sergio-rocha-18ba5868/"
     }
   },
-  "pilares_estrategicos": [
-    { "tema": "Business Intelligence", "tempo": "10 Anos", "experiencia": "Especialista em Power BI responsável pela construção de mais de 170 painéis com mais de 1.000 abas de insights validados pelos gestores de processos. Capacitações Internacionais SQLBI." },
-    { "tema": "Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação da metodologia Balanced Scorecard (BSC) do zero. Condução de diagnósticos via Matriz SWOT, Mapas Estratégicos e desdobramento em KPIs e metas." },
-    { "tema": "Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Gestão e Eficiência Operacional baseada na ISO 9001 e critérios do PNQ. Padronização de processos, Mapeamento e Gestão Orçamentária." },
-    { "tema": "Administração Operacional", "tempo": "15 Anos", "experiencia": "Atuação em processos administrativos: Recepção, Secretaria Escolar, Financeiro e Gestão de Pessoas. Coordenação de áreas administrativas." },
-    { "tema": "Docente", "tempo": "3 Anos", "experiencia": "Atuação em Curso Técnico nas disciplinas de Inglês Técnico, Qualidade e Produtividade e Informática." },
-    { "tema": "IA e Python", "tempo": "1 Ano", "experiencia": "Conhecimento inicial de Python (Programação Assistida por IA). Ambiente configurado com mais de 50 scripts funcionais feitos via IA." }
-  ],
   "habilidades_detalhadas": [
-    { "tema": "Estratégia (BSC)", "desc": "Aplicação da metodologia Balanced Scorecard para estabelecimento e gestão da estratégia." },
-    { "tema": "Projetos", "desc": "Gestão de projetos e planos de ação de forma organizada, ágil e documentada." },
-    { "tema": "Indicadores", "desc": "Estruturação de sistema de medição de indicadores informatizado via BI para resultados estratégicos." },
-    { "tema": "Business Intelligence", "desc": "Uso de Power BI, Power Query, Power Pivot, SQL e Excel para cenários dinâmicos de decisão." },
-    { "tema": "Processos", "desc": "Mapeamento de processos (atores, entradas, saídas, atividades) e conceitos de Lean Office." },
-    { "tema": "Conhecimento", "desc": "Implementação de Base de Conhecimento para documentação de padrões de trabalho." },
-    { "tema": "Padronização", "desc": "Elaboração de procedimentos, manuais, diagramas e formulários alinhados à modelagem." },
-    { "tema": "Qualidade/Gestão", "desc": "Implantação de Sistema de Gestão, controle de registros, auditorias e ações corretivas." },
-    { "tema": "Capacitação", "desc": "Criação de material didático, treinamento e avaliação de pessoal." },
-    { "tema": "Idiomas", "desc": "Fluência em Inglês para pesquisa, acesso a informações globais e interação internacional." }
+    { "tema": "Estratégia (BSC)", "icon": "🎯", "desc": "Aplicação da metodologia Balanced Scorecard para gestão da estratégia." },
+    { "tema": "Projetos", "icon": "📋", "desc": "Gestão de projetos e planos de ação de forma organizada e ágil." },
+    { "tema": "Indicadores", "icon": "📈", "desc": "Estruturação de sistema de medição de KPIs via BI para resultados." },
+    { "tema": "Business Intelligence", "icon": "📊", "desc": "Uso de Power BI, SQL e Excel para cenários dinâmicos de decisão." },
+    { "tema": "Processos", "icon": "⚙️", "desc": "Mapeamento de processos e aplicação de conceitos de Lean Office." },
+    { "tema": "Conhecimento", "icon": "📚", "desc": "Implementação de Base de Conhecimento para padrões de trabalho." },
+    { "tema": "Padronização", "icon": "📏", "desc": "Elaboração de procedimentos, manuais e diagramas de sistemas." },
+    { "tema": "Qualidade/Gestão", "icon": "✅", "desc": "Implantação de ISO 9001, auditorias e ações corretivas." },
+    { "tema": "Capacitação", "icon": "👨‍🏫", "desc": "Criação de material didático e treinamento de pessoal." },
+    { "tema": "Idiomas", "icon": "🌍", "desc": "Fluência em Inglês para pesquisa e interação internacional." }
+  ],
+  "pilares_estrategicos": [
+    { "tema": "Business Intelligence", "tempo": "10 Anos", "experiencia": "Construção de +170 painéis e +1.000 abas de insights. Capacitações SQLBI." },
+    { "tema": "Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação de BSC do zero, Matriz SWOT e Mapas Estratégicos." },
+    { "tema": "Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Foco em ISO 9001 e PNQ. Mapeamento de Processos e Gestão Orçamentária." },
+    { "tema": "Administração Operacional", "tempo": "15 Anos", "experiencia": "Gestão de áreas Financeiras, de Pessoas e Administrativas." },
+    { "tema": "Docente", "tempo": "3 Anos", "experiencia": "Professor de Inglês Técnico, Qualidade e Informática." },
+    { "tema": "IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais via IA para automação." }
   ],
   "fluencia_ingles": [
-    { "cert": "Cambridge CAE", "nivel": "C1 - Certificate in Advanced English", "inst": "Cambridge Assessment English", "ano": 2014 },
-    { "cert": "Beet Language Center", "nivel": "C1 a C2+ (Bournemouth, England Presencial)", "inst": "Beet Language Center", "ano": 2014 },
-    { "cert": "Cambridge FCE", "nivel": "Grade A (Equivalente a C1)", "inst": "Cambridge Assessment English", "ano": 2014 },
-    { "cert": "Cambridge PET", "nivel": "Pass with Distinction", "inst": "Cambridge Assessment English", "ano": 2013 },
-    { "cert": "Cambridge KET", "nivel": "Pass with Distinction", "inst": "Cambridge Assessment English", "ano": 2011 }
+    { "cert": "Cambridge CAE", "nivel": "C1 - Advanced", "inst": "Cambridge English", "ano": 2014 },
+    { "cert": "Beet Language Center", "nivel": "C1 a C2+ (England)", "inst": "Beet Center", "ano": 2014 },
+    { "cert": "Cambridge FCE", "nivel": "Grade A (C1)", "inst": "Cambridge English", "ano": 2014 },
+    { "cert": "Cambridge PET", "nivel": "Distinction", "inst": "Cambridge English", "ano": 2013 },
+    { "cert": "Cambridge KET", "nivel": "Distinction", "inst": "Cambridge English", "ano": 2011 }
   ],
   "formacao_academica": [
-    { "nivel": "Pós-Graduação", "curso": "Especialização em Gestão de Empresas", "inst": "UNISUL", "periodo": "2011 - 2012" },
-    { "nivel": "Graduação", "curso": "Bacharel em Letras Inglês", "inst": "UFSC", "periodo": "1998 - 2004" },
-    { "nivel": "Técnico", "curso": "Técnico em Mecânica", "inst": "IFSC", "periodo": "1986 - 1989" }
+    { "nivel": "Pós-Graduação", "curso": "Gestão de Empresas", "inst": "UNISUL", "periodo": "2011-2012" },
+    { "nivel": "Graduação", "curso": "Letras Inglês", "inst": "UFSC", "periodo": "1998-2004" },
+    { "nivel": "Técnico", "curso": "Mecânica", "inst": "IFSC", "periodo": "1986-1989" }
   ],
   "especializacoes_bi": [
-    { "curso": "Mastering DAX Workshop (London - Presencial)", "inst": "SQLBI (England)", "ano": 2016 },
-    { "curso": "Mastering DAX (Video Course)", "inst": "SQLBI", "ano": 2017 },
+    { "curso": "Mastering DAX (Workshop Londres)", "inst": "SQLBI", "ano": 2016 },
+    { "curso": "Mastering DAX (Video)", "inst": "SQLBI", "ano": 2017 },
     { "curso": "Power BI Dashboard Design", "inst": "SQLBI", "ano": 2017 },
-    { "curso": "Power BI World Tour (Montreal - Presencial)", "inst": "PBIWG (Canadá)", "ano": 2018 },
-    { "curso": "Data Modeling for Power BI", "inst": "SQLBI", "ano": 2018 },
+    { "curso": "Power BI World Tour (Montreal)", "inst": "PBIWG", "ano": 2018 },
+    { "curso": "Data Modeling", "inst": "SQLBI", "ano": 2018 },
     { "curso": "Optimizing DAX", "inst": "SQLBI", "ano": 2020 },
-    { "curso": "DAX Tools Video Course", "inst": "SQLBI", "ano": 2021 },
+    { "curso": "DAX Tools", "inst": "SQLBI", "ano": 2021 },
     { "curso": "Mastering Tabular", "inst": "SQLBI", "ano": 2022 }
   ],
   "especializacoes_gestao": [
-    { "curso": "Automação de Processos através da RPA", "inst": "Enap", "ch": "25h", "ano": 2026 },
-    { "curso": "Fundamentos da Transf. Digital: Mapeamento e Automação", "inst": "Enap", "ch": "20h", "ano": 2026 },
-    { "curso": "Abordagem Lean aplicada à Transf. Digital", "inst": "Enap", "ch": "25h", "ano": 2026 },
-    { "curso": "Análise e Melhoria de Processos", "inst": "Enap", "ch": "20h", "ano": 2026 },
+    { "curso": "Automação via RPA", "inst": "Enap", "ch": "25h", "ano": 2026 },
+    { "curso": "Transformação Digital", "inst": "Enap", "ch": "20h", "ano": 2026 },
+    { "curso": "Lean e Transf. Digital", "inst": "Enap", "ch": "25h", "ano": 2026 },
+    { "curso": "Melhoria de Processos", "inst": "Enap", "ch": "20h", "ano": 2026 },
     { "curso": "Gestão Para Resultados", "inst": "FALCONI", "ch": "24h", "ano": 2014 },
-    { "curso": "Execução de Projetos de Melhoria e Inovação", "inst": "Elo Group", "ch": "16h", "ano": 2013 },
-    { "curso": "Mapeamento do Fluxo de Valor", "inst": "Lean Institute", "ch": "16h", "ano": 2013 },
-    { "curso": "Mapeamento e Gestão por Processos", "inst": "Training Company", "ch": "16h", "ano": 2012 },
-    { "curso": "PCP na Empresa Lean", "inst": "Lean Institute", "ch": "16h", "ano": 2011 },
-    { "curso": "Formação de Auditores Internos ISO 9001:2000", "inst": "BSI Learning", "ch": "16h", "ano": 2008 },
-    { "curso": "ISO 9000 - Formação de Auditores Internos", "inst": "SENAI/FIESC", "ch": "24h", "ano": 1999 }
+    { "curso": "Mapeamento Fluxo de Valor", "inst": "Lean Institute", "ch": "16h", "ano": 2013 },
+    { "curso": "Auditores Internos ISO 9001", "inst": "BSI Learning", "ch": "16h", "ano": 2008 }
   ]
 }
