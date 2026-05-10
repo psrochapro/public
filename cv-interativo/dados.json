@@ -48,9 +48,9 @@
     { "cert": "Cambridge KET", "nivel": "Distinction", "inst": "Cambridge English", "ano": 2011 }
   ],
   "formacao_academica": [
-    { "nivel": "Pós-Graduação", "curso": "Gestão de Empresas", "inst": "UNISUL", "periodo": "2011-2012" },
-    { "nivel": "Graduação", "curso": "Letras Inglês", "inst": "UFSC", "periodo": "1998-2004" },
-    { "nivel": "Técnico", "curso": "Mecânica", "inst": "IFSC", "periodo": "1986-1989" }
+    { "nivel": "Pós-Graduação", "curso": "Pós-Graduação: Gestão de Empresas (UNISUL)", "inst": "UNISUL", "periodo": "2011-2012" },
+    { "nivel": "Graduação", "curso": "Graduação: Letras Inglês - Bacharelado (UFSC)", "inst": "UFSC", "periodo": "1998-2004" },
+    { "nivel": "Técnico", "curso": "Técnico: Mecânica (IFSC)", "inst": "IFSC", "periodo": "1986-1989" }
   ],
   "especializacoes_bi": [
     { "curso": "Mastering DAX (Workshop Londres Presencial)", "inst": "SQLBI - Inglaterra", "ano": 2016 },
