@@ -1,6 +1,115 @@
-/* ... (mantenha o código anterior e adicione abaixo) ... */
+:root {
+    --primary: #1e293b;
+    --accent: #2563eb;
+    --bg: #f1f5f9;
+    --text: #334155;
+}
 
-/* Estilos do Modal */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    padding: 20px;
+    color: var(--text);
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Header */
+.header-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 20px;
+}
+
+.profile-img {
+    width: 160px !important;
+    height: 200px !important;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid var(--primary);
+    flex-shrink: 0;
+}
+
+.header-text h1 { margin: 0; font-size: 2rem; color: var(--primary); }
+.subtitle { color: var(--accent); font-weight: 700; margin: 5px 0; }
+
+.resumo-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    font-size: 0.88rem;
+}
+
+.resumo-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+
+.contatos { font-size: 0.9rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
+.contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
+
+/* Menu de Abas */
+.nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 25px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    color: var(--text);
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Conteúdo */
+#tab-content {
+    min-height: 300px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.grid-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: #f8fafc;
+    padding: 15px;
+    border-left: 5px solid var(--accent);
+    border-radius: 6px;
+}
+
+.cv-list { list-style: none; padding: 0; }
+.cv-list li { padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+
+/* Modal / Pop-up */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -8,7 +117,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.85);
-    display: none; /* Escondido por padrão */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -17,49 +126,37 @@
 
 .modal-content {
     background: white;
-    width: 90%;
-    height: 85%;
-    max-width: 1200px;
+    width: 95%;
+    height: 90%;
+    max-width: 1300px;
     border-radius: 12px;
-    position: relative;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .modal-header {
-    padding: 15px 20px;
+    padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--primary);
     color: white;
-    border-radius: 12px 12px 0 0;
 }
 
 .close-btn {
     background: #ef4444;
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
+    padding: 8px 15px;
+    border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: background 0.3s;
 }
 
-.close-btn:hover {
-    background: #dc2626;
-}
+.iframe-container { flex-grow: 1; }
+iframe { width: 100%; height: 100%; border: none; }
 
-.iframe-container {
-    flex-grow: 1;
-    width: 100%;
-    border: none;
-}
-
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+@media (max-width: 768px) {
+    .header-container { flex-direction: column; align-items: center; text-align: center; }
 }
