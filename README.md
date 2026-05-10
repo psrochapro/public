@@ -3,6 +3,7 @@
 Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório centraliza pequenos projetos, ferramentas úteis e protótipos desenvolvidos com foco em eficiência e código limpo.
 
 ### 🔗 Acesso Rápido (Apps Online)
+
 | Projeto | Descrição | Link |
 | :--- | :--- | :--- |
 | **Mapa de SC** | Mapa interativo dos municípios com códigos IBGE e bandeiras | [Acessar App](https://psrochapro.github.io/public/mapa-sc/) |
