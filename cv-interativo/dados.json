@@ -31,12 +31,12 @@
     { "tema": "Idiomas", "icon": "🌍", "desc": "Fluência em Inglês para pesquisa e interação internacional." }
   ],
   "pilares_estrategicos": [
-    { "tema": "Business Intelligence", "tempo": "10 Anos", "experiencia": "Construção de +170 painéis e +1.000 abas de insights. Capacitações SQLBI." },
-    { "tema": "Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação de BSC do zero, Matriz SWOT e Mapas Estratégicos." },
-    { "tema": "Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Foco em ISO 9001 e PNQ. Mapeamento de Processos e Gestão Orçamentária." },
-    { "tema": "Administração Operacional", "tempo": "15 Anos", "experiencia": "Gestão de áreas Financeiras, de Pessoas e Administrativas." },
-    { "tema": "Docente", "tempo": "3 Anos", "experiencia": "Professor de Inglês Técnico, Qualidade e Informática." },
-    { "tema": "IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais via IA para automação." }
+    { "tema": "📊Business Intelligence", "tempo": "10 Anos", "experiencia": "Construção de +170 painéis e +1.000 abas de insights. Capacitações SQLBI." },
+    { "tema": "🎯Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação de BSC do zero, Matriz SWOT e Mapas Estratégicos." },
+    { "tema": "✅Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Foco em ISO 9001 e PNQ. Mapeamento de Processos e Gestão Orçamentária." },
+    { "tema": "📋Administração Operacional", "tempo": "15 Anos", "experiencia": "Gestão de áreas Financeiras, de Pessoas e Administrativas." },
+    { "tema": "👨‍🏫Docente", "tempo": "3 Anos", "experiencia": "Professor de Inglês Técnico, Qualidade e Informática." },
+    { "tema": "💻IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais via IA para automação." }
   ],
   "fluencia_ingles": [
     { "cert": "Cambridge CAE", "nivel": "C1 - Advanced", "inst": "Cambridge English", "ano": 2014 },
