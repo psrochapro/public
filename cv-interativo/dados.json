@@ -13,7 +13,7 @@
     ],
     "contatos": {
       "email": "psrocha.pro@gmail.com",
-      "whatsapp": "(48) 99912-0415",
+      "whatsapp": "Entre em contato",
       "portfolio": "https://zapppsr.github.io",
       "linkedin": "https://www.linkedin.com/in/paulo-sergio-rocha-18ba5868/"
     }
@@ -40,7 +40,7 @@
   ],
   "fluencia_ingles": [
     { "cert": "Cambridge CAE", "nivel": "C1 - Advanced", "inst": "Cambridge English", "ano": 2014 },
-    { "cert": "Beet Language Center", "nivel": "C1 a C2+ (England)", "inst": "Beet Center", "ano": 2014 },
+    { "cert": "Beet Language Center", "nivel": "C1 a C2+ (England - Presencial)", "inst": "Beet Center", "ano": 2014 },
     { "cert": "Cambridge FCE", "nivel": "Grade A (C1)", "inst": "Cambridge English", "ano": 2014 },
     { "cert": "Cambridge PET", "nivel": "Distinction", "inst": "Cambridge English", "ano": 2013 },
     { "cert": "Cambridge KET", "nivel": "Distinction", "inst": "Cambridge English", "ano": 2011 }
@@ -51,10 +51,10 @@
     { "nivel": "Técnico", "curso": "Mecânica", "inst": "IFSC", "periodo": "1986-1989" }
   ],
   "especializacoes_bi": [
-    { "curso": "Mastering DAX (Workshop Londres)", "inst": "SQLBI", "ano": 2016 },
+    { "curso": "Mastering DAX (Workshop Londres Presencial)", "inst": "SQLBI - Inglaterra", "ano": 2016 },
     { "curso": "Mastering DAX (Video)", "inst": "SQLBI", "ano": 2017 },
     { "curso": "Power BI Dashboard Design", "inst": "SQLBI", "ano": 2017 },
-    { "curso": "Power BI World Tour (Montreal)", "inst": "PBIWG", "ano": 2018 },
+    { "curso": "Power BI World Tour (Montreal Presencial)", "inst": "PBIWG - Canadá", "ano": 2018 },
     { "curso": "Data Modeling", "inst": "SQLBI", "ano": 2018 },
     { "curso": "Optimizing DAX", "inst": "SQLBI", "ano": 2020 },
     { "curso": "DAX Tools", "inst": "SQLBI", "ano": 2021 },
