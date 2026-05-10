@@ -15,8 +15,10 @@
       "email": "psrocha.pro@gmail.com",
       "whatsapp": "Entre em contato",
       "portfolio": "https://zapppsr.github.io",
-      "linkedin": "https://www.linkedin.com/in/paulo-sergio-rocha-18ba5868/"
-    }
+      "linkedin": "https://www.linkedin.com/in/paulo-sergio-rocha-18ba5868/",
+      "lattes": "http://lattes.cnpq.br/4603849697809690"
+    },
+    "metodologia_url": "https://docs.google.com/presentation/d/1vYH5t2lTzb3Heme1jOF65Bz5atuRBIXLXlZ39iMUoHU/embed"
   },
   "habilidades_detalhadas": [
     { "tema": "Estratégia (BSC)", "icon": "🎯", "desc": "Aplicação da metodologia Balanced Scorecard para gestão da estratégia." },

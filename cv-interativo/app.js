@@ -5,10 +5,38 @@ async function init() {
         const response = await fetch('dados.json');
         cvData = await response.json();
         renderHeader();
+        createModalStructure(); // Cria o HTML do modal
         switchTab('pilares', document.querySelector('.tab-btn'));
     } catch (error) {
         console.error("Erro ao carregar dados:", error);
     }
+}
+
+function createModalStructure() {
+    const modalHtml = `
+        <div id="modalMetodologia" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span style="font-weight:bold">📊 Apresentação de Metodologia</span>
+                    <button class="close-btn" onclick="closeModal()">✕ Voltar ao Currículo</button>
+                </div>
+                <div class="iframe-container">
+                    <iframe src="${cvData.perfil.metodologia_url}" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function openModal() {
+    document.getElementById('modalMetodologia').style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Trava o scroll do fundo
+}
+
+function closeModal() {
+    document.getElementById('modalMetodologia').style.display = 'none';
+    document.body.style.overflow = 'auto';
 }
 
 function renderHeader() {
@@ -26,7 +54,8 @@ function renderHeader() {
                     <div class="contatos">
                         📧 ${cvData.perfil.contatos.email} | 📱 ${cvData.perfil.contatos.whatsapp} | 
                         🔗 <a href="${cvData.perfil.contatos.portfolio}" target="_blank">Portfólio</a> |
-                        💼 <a href="${cvData.perfil.contatos.linkedin}" target="_blank">LinkedIn</a>
+                        💼 <a href="${cvData.perfil.contatos.linkedin}" target="_blank">LinkedIn</a> |
+                        🎓 <a href="${cvData.perfil.contatos.lattes}" target="_blank">Lattes</a>
                     </div>
                 </div>
             </header>
@@ -37,6 +66,7 @@ function renderHeader() {
                 <button class="tab-btn" onclick="switchTab('bi', this)">📊 Qualificação BI</button>
                 <button class="tab-btn" onclick="switchTab('gestao', this)">⚙️ Qualificação Gestão</button>
                 <button class="tab-btn" onclick="switchTab('formacao', this)">🎓 Acadêmico</button>
+                <button class="tab-btn" style="border-color: var(--accent); color: var(--accent)" onclick="openModal()">💡 Metodologias</button>
             </nav>
 
             <div id="tab-content"></div>
@@ -48,6 +78,7 @@ function renderHeader() {
     `;
 }
 
+// ... (Função switchTab permanece igual) ...
 function switchTab(tab, btn) {
     const tabs = document.querySelectorAll('.tab-btn');
     tabs.forEach(t => t.classList.remove('active'));
