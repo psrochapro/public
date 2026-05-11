@@ -28,37 +28,31 @@ loadMoreBtn.addEventListener('click', () => {
 });
 
 function processData(csvText) {
-    // Reset state
     tableHeader.innerHTML = '';
     tableBody.innerHTML = '';
     columnList.innerHTML = '';
     displayedRowCount = 0;
 
-    // Split lines and parse
     const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
     if (lines.length === 0) return;
 
-    // Helper to handle commas inside quotes
     const parseLine = (line) => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
     
     const headers = parseLine(lines[0]);
     allDataRows = lines.slice(1).map(line => parseLine(line));
 
-    // Detect Data Types
     const columnTypes = headers.map((_, index) => {
-        return detectType(allDataRows.slice(0, 10).map(row => row[index]));
+        return detectType(allDataRows.slice(0, 15).map(row => row[index]));
     });
 
-    // Update UI Stats
     document.getElementById('rowCount').textContent = allDataRows.length;
     document.getElementById('colCount').textContent = headers.length;
     statsBar.style.display = 'grid';
     sidebar.style.display = 'block';
 
-    // Render Sidebar
     headers.forEach((h, i) => {
         const li = document.createElement('li');
-        const cleanHeader = h.replace(/"/g, '').trim();
+        const cleanHeader = (h || '').replace(/"/g, '').trim();
         li.innerHTML = `
             <span>${cleanHeader}</span>
             <span class="badge badge-${columnTypes[i].toLowerCase()}">${columnTypes[i]}</span>
@@ -66,14 +60,12 @@ function processData(csvText) {
         columnList.appendChild(li);
     });
 
-    // Render Table Header
     headers.forEach(headerText => {
         const th = document.createElement('th');
-        th.textContent = headerText.replace(/"/g, '').trim();
+        th.textContent = (headerText || '').replace(/"/g, '').trim();
         tableHeader.appendChild(th);
     });
 
-    // Initial load
     renderMoreRows();
 }
 
@@ -91,13 +83,7 @@ function renderMoreRows() {
     });
 
     displayedRowCount += nextBatch.length;
-
-    // Show/Hide "Load More" button
-    if (displayedRowCount < allDataRows.length) {
-        loadMoreBtn.style.display = 'inline-block';
-    } else {
-        loadMoreBtn.style.display = 'none';
-    }
+    loadMoreBtn.style.display = displayedRowCount < allDataRows.length ? 'inline-block' : 'none';
 }
 
 function detectType(samples) {
@@ -105,11 +91,8 @@ function detectType(samples) {
     if (values.length === 0) return "String";
 
     const testValue = values[0].replace(/"/g, '').trim();
-
-    // 1. Check if it's a number (including negative and decimal)
     if (testValue !== "" && !isNaN(testValue)) return "Number";
     
-    // 2. Check if it's a date (basic check for strings like 2023-01-01)
     const date = Date.parse(testValue);
     if (!isNaN(date) && testValue.length > 5 && isNaN(testValue)) return "Date";
 
