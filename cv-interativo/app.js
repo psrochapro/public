@@ -3,14 +3,13 @@ let cvData = {};
 async function init() {
     try {
         const response = await fetch('dados.json');
-        if (!response.ok) throw new Error("Erro ao carregar dados.json");
+        if (!response.ok) throw new Error("Não foi possível carregar o dados.json");
         cvData = await response.json();
         renderApp();
-        // Inicializa a primeira aba
         switchTab('pilares', document.querySelector('.tab-btn'));
     } catch (error) {
         console.error("Erro ao carregar dados:", error);
-        document.getElementById('cv-app').innerHTML = "Erro ao carregar os dados. Verifique o console.";
+        document.getElementById('cv-app').innerHTML = `<p style="padding:20px; color:red">Erro ao carregar dados: ${error.message}</p>`;
     }
 }
 
@@ -89,36 +88,68 @@ function switchTab(tab, btn) {
                 </div>`).join('')}</div>`;
             break;
         case 'bi':
-            html = `<h3>📊 Especialização BI</h3>
+            html = `<h3>📊 Especialização em BI (Qualificação)</h3>
                 <table class="cv-table">
-                    <thead><tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr></thead>
-                    <tbody>${cvData.especializacoes_bi.map(e => `
-                        <tr><td data-label="Categoria">${e.categoria}</td><td data-label="Descrição">${e.curso}</td><td data-label="Instituição">${e.inst}</td><td data-label="Ano">${e.ano}</td></tr>`).join('')}
+                    <thead>
+                        <tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr>
+                    </thead>
+                    <tbody>
+                        ${cvData.especializacoes_bi.map(e => `
+                        <tr>
+                            <td data-label="Categoria">${e.categoria}</td>
+                            <td data-label="Descrição">${e.curso}</td>
+                            <td data-label="Instituição">${e.inst}</td>
+                            <td data-label="Ano/Período">${e.ano}</td>
+                        </tr>`).join('')}
                     </tbody>
                 </table>`;
             break;
         case 'gestao':
-            html = `<h3>⚙️ Qualificação Gestão</h3>
+            html = `<h3>⚙️ Especialização em Gestão por Processos e Qualidade</h3>
                 <table class="cv-table">
-                    <thead><tr><th>Categoria</th><th>Curso / Certificação</th><th>Instituição</th><th>Ano</th></tr></thead>
-                    <tbody>${cvData.especializacoes_gestao.map(g => `
-                        <tr><td data-label="Categoria">${g.categoria}</td><td data-label="Curso">${g.curso} ${g.ch ? `(${g.ch})` : ''}</td><td data-label="Instituição">${g.inst}</td><td data-label="Ano">${g.ano}</td></tr>`).join('')}
+                    <thead>
+                        <tr><th>Categoria</th><th>Curso / Certificação</th><th>Instituição</th><th>Ano</th></tr>
+                    </thead>
+                    <tbody>
+                        ${cvData.especializacoes_gestao.map(g => `
+                        <tr>
+                            <td data-label="Categoria">${g.categoria}</td>
+                            <td data-label="Curso">${g.curso} ${g.ch ? `(${g.ch})` : ''}</td>
+                            <td data-label="Instituição">${g.inst}</td>
+                            <td data-label="Ano">${g.ano}</td>
+                        </tr>`).join('')}
                     </tbody>
                 </table>`;
             break;
         case 'formacao':
             html = `<h3>🎓 Formação Acadêmica</h3>
                 <table class="cv-table">
-                    <thead><tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr></thead>
-                    <tbody>${cvData.formacao_academica.map(f => `
-                        <tr><td data-label="Categoria">${f.categoria}</td><td data-label="Descrição">${f.curso}</td><td data-label="Instituição">${f.inst}</td><td data-label="Período">${f.periodo}</td></tr>`).join('')}
+                    <thead>
+                        <tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr>
+                    </thead>
+                    <tbody>
+                        ${cvData.formacao_academica.map(f => `
+                        <tr>
+                            <td data-label="Categoria">${f.categoria}</td>
+                            <td data-label="Descrição">${f.curso}</td>
+                            <td data-label="Instituição">${f.inst}</td>
+                            <td data-label="Ano/Período">${f.periodo}</td>
+                        </tr>`).join('')}
                     </tbody>
                 </table>
                 <h3 style="margin-top:30px">🌎 Fluência na Língua Inglesa</h3>
                 <table class="cv-table">
-                    <thead><tr><th>Certificação</th><th>Nível / Resultado</th><th>Instituição</th><th>Ano</th></tr></thead>
-                    <tbody>${cvData.fluencia_ingles.map(i => `
-                        <tr><td data-label="Certificação">${i.cert}</td><td data-label="Nível">${i.nivel}</td><td data-label="Instituição">${i.inst}</td><td data-label="Ano">${i.ano}</td></tr>`).join('')}
+                    <thead>
+                        <tr><th>Certificação</th><th>Nível / Resultado</th><th>Instituição</th><th>Ano</th></tr>
+                    </thead>
+                    <tbody>
+                        ${cvData.fluencia_ingles.map(i => `
+                        <tr>
+                            <td data-label="Certificação">${i.cert}</td>
+                            <td data-label="Nível">${i.nivel}</td>
+                            <td data-label="Instituição">${i.inst}</td>
+                            <td data-label="Ano">${i.ano}</td>
+                        </tr>`).join('')}
                     </tbody>
                 </table>`;
             break;
