@@ -12,9 +12,10 @@
     <div class="shape shape-1"></div>
     <div class="shape shape-2"></div>
 
-    <h1 class="app-title">CHRONO<span>GLASS</span></h1>
-
     <div class="glass-card">
+        <!-- Title moved inside to fix layout -->
+        <h1 class="app-title">CHRONO<span>GLASS</span></h1>
+
         <!-- Navigation -->
         <div class="nav-tabs">
             <div class="tab active" id="tab-clock">CLOCK</div>
@@ -31,7 +32,7 @@
         <!-- Dynamic Inputs (Only visible in Timer Mode) -->
         <div id="timer-input-container" class="input-container hidden">
             <input type="number" id="input-minutes" min="0" max="99" placeholder="Min">
-            <span>:</span>
+            <span class="colon">:</span>
             <input type="number" id="input-seconds" min="0" max="59" placeholder="Sec">
         </div>
         

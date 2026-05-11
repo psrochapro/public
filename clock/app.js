@@ -1,4 +1,4 @@
-// ==================== GLOBAL STATE ====================
+// ==================== STATE ====================
 let currentMode = 'clock';
 let activeInterval = null;
 
@@ -25,7 +25,7 @@ function switchMode(newMode) {
     clearInterval(activeInterval);
     activeInterval = null;
 
-    // UI Reset
+    // Reset UI
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     timerInputContainer.classList.add('hidden');
     extraContent.innerHTML = '';
@@ -43,7 +43,7 @@ function switchMode(newMode) {
     }
 }
 
-// ==================== 1. CLOCK LOGIC ====================
+// ==================== 1. CLOCK ====================
 function setupClock() {
     modeLabel.innerText = "Current Time";
     const runClock = () => {
@@ -54,9 +54,11 @@ function setupClock() {
     activeInterval = setInterval(runClock, 1000);
 }
 
-// ==================== 2. TIMER LOGIC ====================
+// ==================== 2. TIMER ====================
 function setupTimer() {
     modeLabel.innerText = "Count Down";
+    isTimerRunning = false;
+    timerSeconds = 0;
     mainDisplay.innerText = "00:00";
     timerInputContainer.classList.remove('hidden');
     renderTimerControls();
@@ -64,21 +66,24 @@ function setupTimer() {
 
 function renderTimerControls() {
     controlsContainer.innerHTML = `
-        <button class="btn" id="btn-timer-start">${isTimerRunning ? 'Pause' : 'Start'}</button>
-        <button class="btn btn-sec" onclick="resetTimer()">Reset</button>
+        <button class="btn" id="start-timer-btn">${isTimerRunning ? 'Pause' : 'Start'}</button>
+        <button class="btn btn-sec" id="reset-timer-btn">Reset</button>
     `;
-    document.getElementById('btn-timer-start').onclick = toggleTimer;
+    document.getElementById('start-timer-btn').onclick = toggleTimer;
+    document.getElementById('reset-timer-btn').onclick = resetTimer;
 }
 
 function toggleTimer() {
     if (!isTimerRunning) {
+        // Only pull from inputs if we are at zero
         if (timerSeconds === 0) {
             const m = parseInt(document.getElementById('input-minutes').value) || 0;
             const s = parseInt(document.getElementById('input-seconds').value) || 0;
             timerSeconds = (m * 60) + s;
         }
-        if (timerSeconds <= 0) return;
-        
+
+        if (timerSeconds <= 0) return alert("Enter a valid time!");
+
         isTimerRunning = true;
         timerInputContainer.classList.add('hidden');
         activeInterval = setInterval(() => {
@@ -101,8 +106,8 @@ function resetTimer() {
     isTimerRunning = false;
     clearInterval(activeInterval);
     timerSeconds = 0;
-    timerInputContainer.classList.remove('hidden');
     mainDisplay.innerText = "00:00";
+    timerInputContainer.classList.remove('hidden');
     renderTimerControls();
 }
 
@@ -112,7 +117,7 @@ function updateTimerUI() {
     mainDisplay.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-// ==================== 3. CHRONO LOGIC ====================
+// ==================== 3. CHRONO ====================
 function setupStopwatch() {
     modeLabel.innerText = "Elapsed Time";
     updateChronoUI();
@@ -122,10 +127,13 @@ function setupStopwatch() {
 
 function renderChronoControls() {
     controlsContainer.innerHTML = `
-        <button class="btn" onclick="toggleChrono()">${isChronoRunning ? 'Stop' : 'Start'}</button>
-        <button class="btn btn-sec" onclick="recordLap()" ${!isChronoRunning ? 'disabled' : ''}>Lap</button>
-        <button class="btn btn-sec" onclick="resetChrono()">Reset</button>
+        <button class="btn" id="start-chrono-btn">${isChronoRunning ? 'Stop' : 'Start'}</button>
+        <button class="btn btn-sec" id="lap-chrono-btn" ${!isChronoRunning ? 'disabled' : ''}>Lap</button>
+        <button class="btn btn-sec" id="reset-chrono-btn">Reset</button>
     `;
+    document.getElementById('start-chrono-btn').onclick = toggleChrono;
+    document.getElementById('lap-chrono-btn').onclick = recordLap;
+    document.getElementById('reset-chrono-btn').onclick = resetChrono;
 }
 
 function toggleChrono() {
@@ -163,11 +171,10 @@ function updateChronoUI() {
 }
 
 function formatChronoTime(ms) {
-    const hours = Math.floor(ms / 3600000);
-    const minutes = Math.floor((ms % 3600000) / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    const centiseconds = Math.floor((ms % 1000) / 10);
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centiseconds).padStart(2, '0')}`;
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    const cs = Math.floor((ms % 1000) / 10); // Centiseconds
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(cs).padStart(2, '0')}`;
 }
 
 function renderLaps() {
@@ -179,8 +186,9 @@ function renderLaps() {
     `).join('');
 }
 
-// Init
+// Initial Events
 document.getElementById('tab-clock').onclick = () => switchMode('clock');
 document.getElementById('tab-timer').onclick = () => switchMode('timer');
 document.getElementById('tab-stopwatch').onclick = () => switchMode('stopwatch');
+
 switchMode('clock');
