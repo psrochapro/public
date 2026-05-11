@@ -20,9 +20,9 @@
                 <div class="card selector-card">
                     <label class="label">ESCOLHA A COR BASE</label>
                     <div class="picker-wrapper">
-                        <input type="color" id="picker" value="#088767">
+                        <input type="color" id="picker" value="#36aad2">
                         <div class="hex-display">
-                            <span id="hex-value">#088767</span>
+                            <span id="hex-value">#36AAD2</span>
                             <small>Clique para copiar</small>
                         </div>
                     </div>
@@ -30,16 +30,15 @@
                 </div>
 
                 <div class="card palette-card">
-                    <label class="label">VARIAÇÕES</label>
+                    <label class="label">VARIAÇÕES (CLIQUE PARA SELECIONAR)</label>
                     <div class="palette-grid">
-                        <div class="swatch" id="swatch-light"></div>
-                        <div class="swatch" id="swatch-main"></div>
-                        <div class="swatch" id="swatch-dark"></div>
+                        <div class="swatch" id="swatch-light" title="Claro"></div>
+                        <div class="swatch" id="swatch-main" title="Atual"></div>
+                        <div class="swatch" id="swatch-dark" title="Escuro"></div>
                     </div>
                 </div>
 
-                <!-- NOVO: Botão para exportar o código -->
-                <button id="copy-css" class="btn-secondary">Copiar Variáveis CSS</button>
+                <button id="copy-css" class="btn-export">Copiar Variáveis CSS</button>
             </section>
 
             <section class="preview-panel">

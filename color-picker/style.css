@@ -1,8 +1,8 @@
 :root {
-    --primary-color: #088767;
-    --primary-light: #3da48a;
-    --primary-dark: #066b52;
-    --primary-contrast: #ffffff; /* Cor que mudará via JS */
+    --primary-color: #36aad2;
+    --primary-light: #6ec6e3;
+    --primary-dark: #287a99;
+    --primary-contrast: #ffffff; /* JS vai trocar entre #fff e #000 */
     --bg-app: #f0f4f8;
     --card-bg: #ffffff;
     --text-main: #1e293b;
@@ -16,10 +16,7 @@ body {
     font-family: 'Inter', sans-serif;
     color: var(--text-main);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+    display: flex; justify-content: center; align-items: center; padding: 20px;
 }
 
 .app-container { width: 100%; max-width: 950px; }
@@ -27,117 +24,66 @@ body {
 header { margin-bottom: 2.5rem; text-align: center; }
 header h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; color: #0f172a; }
 header h1 span { color: var(--primary-color); transition: color 0.3s; }
-header p { color: var(--text-muted); font-weight: 500; }
 
 .main-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.5rem; }
-
 @media (max-width: 850px) { .main-layout { grid-template-columns: 1fr; } }
 
 .card {
-    background: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-    margin-bottom: 1.2rem;
-    border: 1px solid rgba(255,255,255,0.8);
+    background: var(--card-bg); padding: 1.5rem; border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 1.2rem;
 }
 
-.label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    margin-bottom: 1.2rem;
-    letter-spacing: 1.2px;
-}
+.label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--text-muted); margin-bottom: 1.2rem; letter-spacing: 1.2px; }
 
 .picker-wrapper { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem; }
 
 input[type="color"] {
-    -webkit-appearance: none;
-    border: none;
-    width: 85px; height: 85px;
-    cursor: pointer; background: none;
+    -webkit-appearance: none; border: none; width: 85px; height: 85px; cursor: pointer; background: none;
 }
-
 input[type="color"]::-webkit-color-swatch {
-    border-radius: 18px;
-    border: 6px solid #f8fafc;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 18px; border: 6px solid #f8fafc; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 #hex-value { font-size: 1.8rem; font-weight: 800; cursor: pointer; }
 
-.badge-check {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: 700;
-}
-
+.badge-check { display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; }
 .badge-pass { background: #dcfce7; color: #166534; }
 .badge-fail { background: #fee2e2; color: #991b1b; }
 
 .palette-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-
-.swatch {
-    height: 50px; border-radius: 12px; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-.swatch:hover { transform: translateY(-4px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.swatch { height: 50px; border-radius: 12px; cursor: pointer; transition: transform 0.2s; border: 1px solid rgba(0,0,0,0.05); }
+.swatch:hover { transform: translateY(-4px); }
 
 #swatch-light { background: var(--primary-light); }
 #swatch-main { background: var(--primary-color); }
 #swatch-dark { background: var(--primary-dark); }
 
-/* Estilo do Botão Secundário */
-.btn-secondary {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: 2px dashed #cbd5e1;
-    background: transparent;
-    color: var(--text-muted);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+.btn-export {
+    width: 100%; padding: 12px; border-radius: 12px; border: 2px dashed #cbd5e1;
+    background: transparent; color: var(--text-muted); font-weight: 600; cursor: pointer; transition: 0.2s;
 }
-
-.btn-secondary:hover { background: #f8fafc; color: var(--text-main); border-color: #94a3b8; }
+.btn-export:hover { border-color: var(--primary-color); color: var(--primary-color); background: #f8fafc; }
 
 /* Mockup */
-.mockup-card {
-    background: white; border-radius: 24px; overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;
-}
-
+.mockup-card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
 .mockup-header { background: #f8fafc; padding: 14px 20px; display: flex; gap: 8px; }
 .dot { width: 10px; height: 10px; background: #cbd5e1; border-radius: 50%; }
 .mockup-content { padding: 30px; }
 .mockup-nav { height: 12px; width: 35%; background: var(--primary-color); border-radius: 6px; margin-bottom: 30px; opacity: 0.25; }
 
 .mockup-badge {
-    padding: 5px 14px;
-    background: var(--primary-color);
-    color: var(--primary-contrast); /* Dinâmico */
-    border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
-    transition: background 0.3s, color 0.3s;
+    padding: 5px 14px; background: var(--primary-color); 
+    color: var(--primary-contrast); /* DINÂMICO */
+    border-radius: 20px; font-size: 0.65rem; font-weight: 800;
 }
 
 .line { background: #e2e8f0; border-radius: 4px; }
 .line.long { height: 16px; width: 160px; background: #1e293b; margin-bottom: 10px; }
-
 .icon-box { width: 35px; height: 35px; background: var(--primary-color); border-radius: 10px; opacity: 0.15; }
 
 .mockup-button {
-    width: 100%; padding: 16px;
-    background: var(--primary-color);
-    color: var(--primary-contrast); /* Dinâmico */
-    border: none; border-radius: 14px; font-weight: 700; font-family: inherit;
-    cursor: pointer; margin-bottom: 15px; transition: all 0.3s;
+    width: 100%; padding: 16px; background: var(--primary-color);
+    color: var(--primary-contrast); /* DINÂMICO */
+    border: none; border-radius: 14px; font-weight: 700; cursor: pointer; margin-bottom: 15px; transition: 0.3s;
 }
-
 .mockup-link { text-align: center; font-size: 0.8rem; color: var(--primary-color); font-weight: 700; }
