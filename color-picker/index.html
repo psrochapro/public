@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChromaCraft Studio</title>
+    <title>ChromaCraft Studio | Color Laboratory</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts para um look moderno -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -22,20 +21,21 @@
                 <div class="card selector-card">
                     <label class="label">ESCOLHA A COR BASE</label>
                     <div class="picker-wrapper">
-                        <input type="color" id="picker" value="#6366f1">
+                        <input type="color" id="picker" value="#36aaf2">
                         <div class="hex-display">
-                            <span id="hex-value">#6366F1</span>
+                            <span id="hex-value">#36AAF2</span>
                             <small>Clique para copiar</small>
                         </div>
                     </div>
+                    <div id="accessibility-badge" class="badge-check">Contraste: Verificando...</div>
                 </div>
 
                 <div class="card palette-card">
-                    <label class="label">VARIAÇÕES</label>
+                    <label class="label">VARIAÇÕES (CLIQUE PARA SELECIONAR)</label>
                     <div class="palette-grid">
-                        <div class="swatch" id="swatch-light"></div>
-                        <div class="swatch" id="swatch-main"></div>
-                        <div class="swatch" id="swatch-dark"></div>
+                        <div class="swatch" id="swatch-light" title="Versão Clara"></div>
+                        <div class="swatch" id="swatch-main" title="Cor Atual"></div>
+                        <div class="swatch" id="swatch-dark" title="Versão Escura"></div>
                     </div>
                 </div>
             </section>
@@ -64,7 +64,7 @@
                                 <div class="line short"></div>
                             </div>
                             <button class="mockup-button">Confirmar Ação</button>
-                            <p class="mockup-link">Cancelar</p>
+                            <p class="mockup-link">Cancelar Operação</p>
                         </div>
                     </div>
                 </div>
