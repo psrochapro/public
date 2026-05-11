@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleek Glass Time Suite</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Aesthetic background elements -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+
+    <div class="glass-card">
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <div class="tab active" id="tab-clock">CLOCK</div>
+            <div class="tab" id="tab-timer">TIMER</div>
+            <div class="tab" id="tab-stopwatch">CHRONO</div>
+        </div>
+
+        <!-- Mode Label -->
+        <div id="mode-label" class="label-display">Current Time</div>
+
+        <!-- Central Display Area -->
+        <div id="main-display" class="time-display">00:00:00</div>
+
+        <!-- Dynamic Inputs (Only visible in Timer Mode) -->
+        <div id="timer-input-container" class="input-container hidden">
+            <input type="number" id="input-minutes" min="0" max="99" placeholder="Min">
+            <span>:</span>
+            <input type="number" id="input-seconds" min="0" max="59" placeholder="Sec">
+        </div>
+        
+        <!-- Controls (Play, Pause, Reset buttons are injected here by JS) -->
+        <div id="controls-container" class="controls"></div>
+
+        <!-- Extras Area (Lap lists for stopwatch / alerts for timer) -->
+        <div id="extra-content" class="extra-container"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

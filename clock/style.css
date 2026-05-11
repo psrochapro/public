@@ -1,0 +1,160 @@
+/* Custom properties for easy color management */
+:root {
+    --bg-dark: #1a2a3a;
+    --accent-blue: #3498db;
+    --accent-yellow: #f1c40f;
+    --panel-white: rgba(255, 255, 255, 0.1);
+    --border-white: rgba(255, 255, 255, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--accent-blue) 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+/* Background elements to reveal blur */
+.shape {
+    position: absolute;
+    filter: blur(50px);
+    z-index: -1;
+    border-radius: 50%;
+}
+.shape-1 { width: 300px; height: 300px; background: #27ae60; top: 10%; left: 20%; opacity: 0.4; }
+.shape-2 { width: 250px; height: 250px; background: #c0392b; bottom: 15%; right: 25%; opacity: 0.3; }
+
+/* The Glass Card Container */
+.glass-card {
+    width: 400px;
+    padding: 40px;
+    background: var(--panel-white);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--border-white);
+    border-radius: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* Tabs */
+.nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    padding: 5px;
+}
+.tab {
+    flex: 1;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.6;
+}
+.tab.active {
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 1;
+}
+
+/* Text Displays */
+.label-display {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.8;
+}
+.time-display {
+    font-size: 4.5rem;
+    font-weight: 700;
+    margin: 20px 0;
+    font-variant-numeric: tabular-nums; /* Critical: keeps time numbers from shifting */
+    letter-spacing: -2px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Sleek Buttons */
+.controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+.btn {
+    background: white;
+    color: var(--bg-dark);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    background: var(--accent-yellow);
+}
+.btn-sec {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid var(--border-white);
+}
+.btn-sec:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Hidden elements class utility */
+.hidden {
+    display: none !important;
+}
+
+/* Inputs for Timer Mode */
+.input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.input-container input {
+    width: 60px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-white);
+    border-radius: 8px;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+}
+.input-container input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Scrollable Extra Content (e.g. Laps) */
+.extra-container {
+    margin-top: 20px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+.lap-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
