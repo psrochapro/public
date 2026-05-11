@@ -41,34 +41,38 @@
     { "tema": "💻IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais via IA para automação." }
   ],
   "fluencia_ingles": [
-    { "cert": "Cambridge CAE", "nivel": "C1 - Advanced", "inst": "Cambridge English", "ano": 2014 },
-    { "cert": "Beet Language Center", "nivel": "C1 a C2+ (England - Presencial)", "inst": "Beet Center", "ano": 2014 },
-    { "cert": "Cambridge FCE", "nivel": "Grade A (C1)", "inst": "Cambridge English", "ano": 2014 },
-    { "cert": "Cambridge PET", "nivel": "Distinction", "inst": "Cambridge English", "ano": 2013 },
-    { "cert": "Cambridge KET", "nivel": "Distinction", "inst": "Cambridge English", "ano": 2011 }
+    { "cert": "Cambridge CAE", "nivel": "C1 - Certificate in Advanced English", "inst": "Cambridge Assessment English", "ano": "2014" },
+    { "cert": "Beet Language Center", "nivel": "C1 a C2+ (Bournemouth, England Presencial)", "inst": "Beet Language Center England", "ano": "2014" },
+    { "cert": "Cambridge FCE", "nivel": "Grade A (Equivalente a C1)", "inst": "Cambridge Assessment English", "ano": "2014" },
+    { "cert": "Cambridge PET", "nivel": "Pass with Distinction", "inst": "Cambridge Assessment English", "ano": "2013" },
+    { "cert": "Cambridge KET", "nivel": "Pass with Distinction", "inst": "Cambridge Assessment English", "ano": "2011" }
   ],
   "formacao_academica": [
-    { "nivel": "Pós-Graduação", "curso": "Pós-Graduação: Gestão de Empresas (UNISUL)", "inst": "UNISUL", "periodo": "2011-2012" },
-    { "nivel": "Graduação", "curso": "Graduação: Letras Inglês - Bacharelado (UFSC)", "inst": "UFSC", "periodo": "1998-2004" },
-    { "nivel": "Técnico", "curso": "Técnico: Mecânica (IFSC)", "inst": "IFSC", "periodo": "1986-1989" }
+    { "categoria": "Pós-Graduação", "curso": "Especialização em Gestão de Empresas", "inst": "UNISUL", "periodo": "2011 - 2012" },
+    { "categoria": "Graduação", "curso": "Bacharelado em Letras Inglês", "inst": "UFSC", "periodo": "1998 - 2004" },
+    { "categoria": "Técnico", "curso": "Técnico em Mecânica", "inst": "IFSC", "periodo": "1986 - 1989" }
   ],
   "especializacoes_bi": [
-    { "curso": "Mastering DAX (Workshop Londres Presencial)", "inst": "SQLBI - Inglaterra", "ano": 2016 },
-    { "curso": "Mastering DAX (Video)", "inst": "SQLBI", "ano": 2017 },
-    { "curso": "Power BI Dashboard Design", "inst": "SQLBI", "ano": 2017 },
-    { "curso": "Power BI World Tour (Montreal Presencial)", "inst": "PBIWG - Canadá", "ano": 2018 },
-    { "curso": "Data Modeling", "inst": "SQLBI", "ano": 2018 },
-    { "curso": "Optimizing DAX", "inst": "SQLBI", "ano": 2020 },
-    { "curso": "DAX Tools", "inst": "SQLBI", "ano": 2021 },
-    { "curso": "Mastering Tabular", "inst": "SQLBI", "ano": 2022 }
+    { "categoria": "DAX Avançado", "curso": "Mastering DAX Workshop (London - Presencial)", "inst": "SQLBI (England)", "ano": "2016" },
+    { "categoria": "DAX Avançado", "curso": "Mastering DAX (Video Course)", "inst": "SQLBI", "ano": "2017" },
+    { "categoria": "Dashboards", "curso": "Power BI Dashboard Design", "inst": "SQLBI", "ano": "2017" },
+    { "categoria": "Power BI", "curso": "Power BI World Tour (Montreal - Presencial)", "inst": "PBIWG (Canadá)", "ano": "2018" },
+    { "categoria": "Modelagem de Dados", "curso": "Data Modeling for Power BI", "inst": "SQLBI", "ano": "2018" },
+    { "categoria": "DAX Avançado", "curso": "Optimizing DAX", "inst": "SQLBI", "ano": "2020" },
+    { "categoria": "DAX Avançado", "curso": "DAX Tools Video Course", "inst": "SQLBI", "ano": "2021" },
+    { "categoria": "Modelo Tabular", "curso": "Mastering Tabular", "inst": "SQLBI", "ano": "2022" }
   ],
   "especializacoes_gestao": [
-    { "curso": "Automação via RPA", "inst": "Enap", "ch": "25h", "ano": 2026 },
-    { "curso": "Transformação Digital", "inst": "Enap", "ch": "20h", "ano": 2026 },
-    { "curso": "Lean e Transf. Digital", "inst": "Enap", "ch": "25h", "ano": 2026 },
-    { "curso": "Melhoria de Processos", "inst": "Enap", "ch": "20h", "ano": 2026 },
-    { "curso": "Gestão Para Resultados", "inst": "FALCONI", "ch": "24h", "ano": 2014 },
-    { "curso": "Mapeamento Fluxo de Valor", "inst": "Lean Institute", "ch": "16h", "ano": 2013 },
-    { "curso": "Auditores Internos ISO 9001", "inst": "BSI Learning", "ch": "16h", "ano": 2008 }
+    { "categoria": "Processos", "curso": "Automação de Processos através da RPA", "ch": "25h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Processos", "curso": "Fundamentos da Transformação Digital: Mapeamento e Automação", "ch": "20h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Lean Office", "curso": "Abordagem Lean aplicada à Transformação Digital", "ch": "25h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Processos", "curso": "Análise e Melhoria de Processos", "ch": "20h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Qualidade", "curso": "Gestão Para Resultados", "ch": "24h", "inst": "FALCONI", "ano": "2014" },
+    { "categoria": "Projetos", "curso": "Execução de Projetos de Melhoria e Inovação de Processos", "ch": "16h", "inst": "Elo Group", "ano": "2013" },
+    { "categoria": "Processos", "curso": "Mapeamento do Fluxo de Valor", "ch": "16h", "inst": "Lean Institute", "ano": "2013" },
+    { "categoria": "Processos", "curso": "Mapeamento e Gestão por Processos", "ch": "16h", "inst": "Training Company", "ano": "2012" },
+    { "categoria": "Lean Office", "curso": "PCP na Empresa Lean", "ch": "16h", "inst": "Lean Institute", "ano": "2011" },
+    { "categoria": "Qualidade", "curso": "Formação de Auditores Internos ISO 9001:2000", "ch": "16h", "inst": "BSI Learning", "ano": "2008" },
+    { "categoria": "Qualidade", "curso": "ISO 9000 - Formação de Auditores Internos da Qualidade", "ch": "24h", "inst": "SENAI/FIESC", "ano": "1999" }
   ]
 }

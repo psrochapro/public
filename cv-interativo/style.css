@@ -1,8 +1,10 @@
+/* Variáveis Globais e Reset */
 :root {
     --primary: #1e293b;
     --accent: #2563eb;
     --bg: #f1f5f9;
     --text: #334155;
+    --table-header: #475569;
 }
 
 body {
@@ -11,6 +13,7 @@ body {
     margin: 0;
     padding: 20px;
     color: var(--text);
+    line-height: 1.5;
 }
 
 .container {
@@ -22,7 +25,7 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* Header */
+/* Header (Perfil e Resumo) */
 .header-container {
     display: flex;
     align-items: flex-start;
@@ -50,12 +53,27 @@ body {
     font-size: 0.88rem;
 }
 
-.resumo-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.resumo-list li { 
+    margin-bottom: 4px; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
 
-.contatos { font-size: 0.9rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
-.contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
+.contatos { 
+    font-size: 0.9rem; 
+    margin-top: 15px; 
+    border-top: 1px solid #eee; 
+    padding-top: 10px; 
+}
 
-/* Menu de Abas */
+.contatos a { 
+    color: var(--accent); 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+
+/* Menu de Navegação (Abas) */
 .nav-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -76,13 +94,18 @@ body {
     transition: all 0.3s;
 }
 
+.tab-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
 .tab-btn.active {
     background: var(--primary);
     color: white;
     border-color: var(--primary);
 }
 
-/* Conteúdo */
+/* Conteúdo e Animações */
 #tab-content {
     min-height: 300px;
     animation: fadeIn 0.5s ease;
@@ -93,6 +116,7 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Grid de Cards (Usado em Pilares e Habilidades) */
 .grid-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -104,12 +128,51 @@ body {
     padding: 15px;
     border-left: 5px solid var(--accent);
     border-radius: 6px;
+    transition: transform 0.2s;
 }
 
-.cv-list { list-style: none; padding: 0; }
-.cv-list li { padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+.card:hover {
+    transform: translateX(5px);
+}
 
-/* Modal / Pop-up */
+/* Tabelas (Especializações, Formação e Inglês) */
+.cv-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+}
+
+.cv-table th {
+    background-color: var(--table-header);
+    color: white;
+    text-align: left;
+    padding: 12px 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.cv-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    color: var(--text);
+    vertical-align: middle;
+}
+
+.cv-table tbody tr:nth-child(even) {
+    background-color: #f8fafc; /* Efeito Zebra */
+}
+
+.cv-table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Modal / Pop-up de Metodologia */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -157,6 +220,48 @@ body {
 .iframe-container { flex-grow: 1; }
 iframe { width: 100%; height: 100%; border: none; }
 
+/* Responsividade */
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; align-items: center; text-align: center; }
+    .header-container { 
+        flex-direction: column; 
+        align-items: center; 
+        text-align: center; 
+    }
+
+    .nav-tabs {
+        justify-content: center;
+    }
+
+    /* Transformação da Tabela em Cards para Celular */
+    .cv-table thead { 
+        display: none; 
+    }
+    
+    .cv-table tr { 
+        display: block; 
+        margin-bottom: 15px; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 8px;
+        background: white !important;
+    }
+    
+    .cv-table td { 
+        display: flex; 
+        justify-content: space-between;
+        text-align: right; 
+        padding: 10px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .cv-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        text-align: left;
+        color: var(--accent);
+        margin-right: 10px;
+    }
+
+    .cv-table td:last-child {
+        border-bottom: none;
+    }
 }
