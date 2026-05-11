@@ -1,61 +1,42 @@
-// Seleção de elementos
 const picker = document.getElementById('picker');
 const hexText = document.getElementById('hex-value');
 const badge = document.getElementById('accessibility-badge');
+const copyCssBtn = document.getElementById('copy-css');
 
-/**
- * Ajusta a luminosidade de uma cor HEX
- * @param {string} hex - Cor original
- * @param {number} amount - Valor positivo para clarear, negativo para escurecer
- */
 function adjustColor(hex, amount) {
     return '#' + hex.replace(/^#/, '').replace(/../g, char => 
         ('0' + Math.min(255, Math.max(0, parseInt(char, 16) + amount)).toString(16)).substr(-2));
 }
 
-/**
- * Calcula o contraste ideal (Preto ou Branco) para o fundo fornecido
- */
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
     const g = parseInt(hexcolor.substr(2,2),16);
     const b = parseInt(hexcolor.substr(4,2),16);
     const yiq = ((r*299)+(g*587)+(b*114))/1000;
-    return (yiq >= 128) ? 'black' : 'white';
+    return (yiq >= 128) ? '#000000' : '#ffffff';
 }
 
-/**
- * Converte RGB (do computed style) para HEX
- */
 function rgbToHex(rgb) {
     const rgbValues = rgb.match(/\d+/g);
-    const r = parseInt(rgbValues[0]).toString(16).padStart(2, '0');
-    const g = parseInt(rgbValues[1]).toString(16).padStart(2, '0');
-    const b = parseInt(rgbValues[2]).toString(16).padStart(2, '0');
-    return `#${r}${g}${b}`;
+    return `#${((1 << 24) + (parseInt(rgbValues[0]) << 16) + (parseInt(rgbValues[1]) << 8) + parseInt(rgbValues[2])).toString(16).slice(1)}`;
 }
 
-/**
- * Atualiza toda a interface do app
- */
 const updateTheme = (color) => {
     const root = document.documentElement;
     const light = adjustColor(color, 45);
     const dark = adjustColor(color, -45);
-    const contrast = getContrastYIQ(color);
+    const contrastColor = getContrastYIQ(color);
 
-    // Atualiza variáveis CSS globais
     root.style.setProperty('--primary-color', color);
     root.style.setProperty('--primary-light', light);
     root.style.setProperty('--primary-dark', dark);
+    root.style.setProperty('--primary-contrast', contrastColor);
 
-    // Atualiza textos
     hexText.textContent = color.toUpperCase();
     
-    // Atualiza o Badge de Acessibilidade
-    if (contrast === 'white') {
-        badge.textContent = "CONSTRATE: BOM (TEXTO BRANCO)";
+    if (contrastColor === '#ffffff') {
+        badge.textContent = "CONTRASTE: BOM (TEXTO BRANCO)";
         badge.className = "badge-check badge-pass";
     } else {
         badge.textContent = "CONTRASTE: BAIXO (REQUER TEXTO ESCURO)";
@@ -63,31 +44,39 @@ const updateTheme = (color) => {
     }
 };
 
-// Eventos do seletor principal
-picker.addEventListener('input', (e) => {
-    updateTheme(e.target.value);
-});
+picker.addEventListener('input', (e) => updateTheme(e.target.value));
 
-// Tornar as variações da paleta clicáveis
 document.querySelectorAll('.swatch').forEach(swatch => {
     swatch.addEventListener('click', () => {
-        const computedColor = window.getComputedStyle(swatch).backgroundColor;
-        const hexColor = rgbToHex(computedColor);
+        const hexColor = rgbToHex(window.getComputedStyle(swatch).backgroundColor);
         picker.value = hexColor;
         updateTheme(hexColor);
     });
 });
 
-// Funcionalidade de copiar
+// Copiar HEX
 hexText.addEventListener('click', () => {
-    const originalText = hexText.textContent;
-    navigator.clipboard.writeText(originalText).then(() => {
+    const text = hexText.textContent;
+    navigator.clipboard.writeText(text).then(() => {
         hexText.textContent = "COPIADO! 🎉";
-        setTimeout(() => {
-            hexText.textContent = originalText;
-        }, 1000);
+        setTimeout(() => hexText.textContent = text, 1000);
     });
 });
 
-// Inicialização
+// NOVO: Copiar variáveis CSS
+copyCssBtn.addEventListener('click', () => {
+    const color = picker.value;
+    const light = adjustColor(color, 45);
+    const dark = adjustColor(color, -45);
+    const contrast = getContrastYIQ(color);
+
+    const cssCode = `--primary: ${color};\n--primary-light: ${light};\n--primary-dark: ${dark};\n--contrast: ${contrast};`;
+    
+    navigator.clipboard.writeText(cssCode).then(() => {
+        const originalText = copyCssBtn.textContent;
+        copyCssBtn.textContent = "CÓDIGO COPIADO!";
+        setTimeout(() => copyCssBtn.textContent = originalText, 1500);
+    });
+});
+
 updateTheme(picker.value);

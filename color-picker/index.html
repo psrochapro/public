@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChromaCraft Studio | Color Laboratory</title>
+    <title>ChromaCraft Studio</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -16,38 +16,37 @@
         </header>
 
         <main class="main-layout">
-            <!-- COLUNA ESQUERDA: CONTROLES -->
             <section class="controls-panel">
                 <div class="card selector-card">
                     <label class="label">ESCOLHA A COR BASE</label>
                     <div class="picker-wrapper">
-                        <input type="color" id="picker" value="#36aaf2">
+                        <input type="color" id="picker" value="#088767">
                         <div class="hex-display">
-                            <span id="hex-value">#36AAF2</span>
+                            <span id="hex-value">#088767</span>
                             <small>Clique para copiar</small>
                         </div>
                     </div>
-                    <div id="accessibility-badge" class="badge-check">Contraste: Verificando...</div>
+                    <div id="accessibility-badge" class="badge-check">CONTRASTE: BOM</div>
                 </div>
 
                 <div class="card palette-card">
-                    <label class="label">VARIAÇÕES (CLIQUE PARA SELECIONAR)</label>
+                    <label class="label">VARIAÇÕES</label>
                     <div class="palette-grid">
-                        <div class="swatch" id="swatch-light" title="Versão Clara"></div>
-                        <div class="swatch" id="swatch-main" title="Cor Atual"></div>
-                        <div class="swatch" id="swatch-dark" title="Versão Escura"></div>
+                        <div class="swatch" id="swatch-light"></div>
+                        <div class="swatch" id="swatch-main"></div>
+                        <div class="swatch" id="swatch-dark"></div>
                     </div>
                 </div>
+
+                <!-- NOVO: Botão para exportar o código -->
+                <button id="copy-css" class="btn-secondary">Copiar Variáveis CSS</button>
             </section>
 
-            <!-- COLUNA DIREITA: MOCKUP -->
             <section class="preview-panel">
                 <label class="label">MOCKUP DE INTERFACE</label>
                 <div class="mockup-card">
                     <div class="mockup-header">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
+                        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
                     </div>
                     <div class="mockup-content">
                         <div class="mockup-nav"></div>
