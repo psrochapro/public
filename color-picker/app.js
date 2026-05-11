@@ -1,30 +1,44 @@
-// Seleção de elementos do DOM
 const picker = document.getElementById('picker');
-const preview = document.getElementById('preview');
 const hexText = document.getElementById('hex-value');
 
-/**
- * Atualiza os elementos visuais da interface
- * @param {string} color - O valor hexadecimal da cor
- */
-const updateUI = (color) => {
-    const upperColor = color.toUpperCase();
-    preview.style.backgroundColor = upperColor;
-    hexText.textContent = upperColor;
+// Função para clarear/escurecer cor (HEX)
+function adjustColor(hex, amount) {
+    return '#' + hex.replace(/^#/, '').replace(/../g, hex => 
+        ('0' + Math.min(255, Math.max(0, parseInt(hex, 16) + amount)).toString(16)).substr(-2));
+}
+
+const updateTheme = (color) => {
+    const root = document.documentElement;
+    const light = adjustColor(color, 40);
+    const dark = adjustColor(color, -40);
+
+    // Atualiza variáveis CSS
+    root.style.setProperty('--primary-color', color);
+    root.style.setProperty('--primary-light', light);
+    root.style.setProperty('--primary-dark', dark);
+
+    // Atualiza texto HEX
+    hexText.textContent = color.toUpperCase();
 };
 
-// Evento de entrada (dispara enquanto o usuário arrasta o seletor)
-picker.addEventListener('input', (event) => {
-    updateUI(event.target.value);
+// Evento do Seletor
+picker.addEventListener('input', (e) => {
+    updateTheme(e.target.value);
 });
 
-// Funcionalidade de copiar para o clipboard
+// Copiar para o clipboard com feedback visual
 hexText.addEventListener('click', () => {
-    const text = hexText.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-        // Feedback visual simples
-        const originalText = text;
-        hexText.textContent = "COPIADO!";
-        setTimeout(() => hexText.textContent = originalText, 1000);
+    const originalText = hexText.textContent;
+    navigator.clipboard.writeText(originalText).then(() => {
+        hexText.textContent = "COPIADO! 🎉";
+        hexText.style.color = "var(--primary-color)";
+        
+        setTimeout(() => {
+            hexText.textContent = originalText;
+            hexText.style.color = "var(--text-main)";
+        }, 1000);
     });
 });
+
+// Inicialização
+updateTheme(picker.value);
