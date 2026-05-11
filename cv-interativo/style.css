@@ -64,9 +64,16 @@ body {
     padding: 0;
     margin: 10px 0;
     font-size: 0.85rem;
+    text-align: left; /* Garante que o texto não seja justificado */
 }
 
-.resumo-list li { margin-bottom: 6px; display: flex; align-items: flex-start; gap: 8px; }
+.resumo-list li { 
+    margin-bottom: 6px; 
+    display: flex; 
+    align-items: flex-start; 
+    gap: 8px; 
+    word-spacing: normal; /* Evita espaços anormais entre palavras */
+}
 
 .contatos { font-size: 0.88rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 12px; }
 .contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
