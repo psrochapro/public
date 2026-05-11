@@ -34,13 +34,15 @@ function renderApp() {
                 </div>
             </header>
 
-            <nav class="nav-tabs">
-                <button class="tab-btn active" onclick="switchTab('pilares', this)">💎 Pilares</button>
-                <button class="tab-btn" onclick="switchTab('habilidades', this)">🛠️ Habilidades</button>
-                <button class="tab-btn" onclick="switchTab('bi', this)">📊 Qualificação BI</button>
-                <button class="tab-btn" onclick="switchTab('gestao', this)">⚙️ Qualificação Gestão</button>
-                <button class="tab-btn" onclick="switchTab('formacao', this)">🎓 Acadêmico</button>
-                <button class="tab-btn" style="color: var(--accent); border-color: var(--accent)" onclick="openModal()">💡 Metodologias</button>
+            <nav class="nav-tabs-container">
+                <div class="nav-tabs">
+                    <button class="tab-btn active" onclick="switchTab('pilares', this)">💎 Pilares</button>
+                    <button class="tab-btn" onclick="switchTab('habilidades', this)">🛠️ Habilidades</button>
+                    <button class="tab-btn" onclick="switchTab('bi', this)">📊 Qualificação BI</button>
+                    <button class="tab-btn" onclick="switchTab('gestao', this)">⚙️ Qualificação Gestão</button>
+                    <button class="tab-btn" onclick="switchTab('formacao', this)">🎓 Acadêmico</button>
+                    <button class="tab-btn btn-metodologia" onclick="openModal()">💡 Metodologias</button>
+                </div>
             </nav>
 
             <div id="tab-content"></div>
@@ -88,68 +90,36 @@ function switchTab(tab, btn) {
                 </div>`).join('')}</div>`;
             break;
         case 'bi':
-            html = `<h3>📊 Especialização em BI (Qualificação)</h3>
+            html = `<h3 class="tab-title">📊 Especialização em BI</h3>
                 <table class="cv-table">
-                    <thead>
-                        <tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr>
-                    </thead>
-                    <tbody>
-                        ${cvData.especializacoes_bi.map(e => `
-                        <tr>
-                            <td data-label="Categoria">${e.categoria}</td>
-                            <td data-label="Descrição">${e.curso}</td>
-                            <td data-label="Instituição">${e.inst}</td>
-                            <td data-label="Ano/Período">${e.ano}</td>
-                        </tr>`).join('')}
+                    <thead><tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr></thead>
+                    <tbody>${cvData.especializacoes_bi.map(e => `
+                        <tr><td data-label="Categoria">${e.categoria}</td><td data-label="Descrição">${e.curso}</td><td data-label="Instituição">${e.inst}</td><td data-label="Ano">${e.ano}</td></tr>`).join('')}
                     </tbody>
                 </table>`;
             break;
         case 'gestao':
-            html = `<h3>⚙️ Especialização em Gestão por Processos e Qualidade</h3>
+            html = `<h3 class="tab-title">⚙️ Especialização em Gestão e Qualidade</h3>
                 <table class="cv-table">
-                    <thead>
-                        <tr><th>Categoria</th><th>Curso / Certificação</th><th>Instituição</th><th>Ano</th></tr>
-                    </thead>
-                    <tbody>
-                        ${cvData.especializacoes_gestao.map(g => `
-                        <tr>
-                            <td data-label="Categoria">${g.categoria}</td>
-                            <td data-label="Curso">${g.curso} ${g.ch ? `(${g.ch})` : ''}</td>
-                            <td data-label="Instituição">${g.inst}</td>
-                            <td data-label="Ano">${g.ano}</td>
-                        </tr>`).join('')}
+                    <thead><tr><th>Categoria</th><th>Curso / Certificação</th><th>Instituição</th><th>Ano</th></tr></thead>
+                    <tbody>${cvData.especializacoes_gestao.map(g => `
+                        <tr><td data-label="Categoria">${g.categoria}</td><td data-label="Curso">${g.curso} ${g.ch ? `(${g.ch})` : ''}</td><td data-label="Instituição">${g.inst}</td><td data-label="Ano">${g.ano}</td></tr>`).join('')}
                     </tbody>
                 </table>`;
             break;
         case 'formacao':
-            html = `<h3>🎓 Formação Acadêmica</h3>
+            html = `<h3 class="tab-title">🎓 Formação Acadêmica</h3>
                 <table class="cv-table">
-                    <thead>
-                        <tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr>
-                    </thead>
-                    <tbody>
-                        ${cvData.formacao_academica.map(f => `
-                        <tr>
-                            <td data-label="Categoria">${f.categoria}</td>
-                            <td data-label="Descrição">${f.curso}</td>
-                            <td data-label="Instituição">${f.inst}</td>
-                            <td data-label="Ano/Período">${f.periodo}</td>
-                        </tr>`).join('')}
+                    <thead><tr><th>Categoria</th><th>Descrição</th><th>Instituição</th><th>Ano/Período</th></tr></thead>
+                    <tbody>${cvData.formacao_academica.map(f => `
+                        <tr><td data-label="Categoria">${f.categoria}</td><td data-label="Descrição">${f.curso}</td><td data-label="Instituição">${f.inst}</td><td data-label="Período">${f.periodo}</td></tr>`).join('')}
                     </tbody>
                 </table>
-                <h3 style="margin-top:30px">🌎 Fluência na Língua Inglesa</h3>
+                <h3 class="tab-title" style="margin-top:30px">🌎 Fluência na Língua Inglesa</h3>
                 <table class="cv-table">
-                    <thead>
-                        <tr><th>Certificação</th><th>Nível / Resultado</th><th>Instituição</th><th>Ano</th></tr>
-                    </thead>
-                    <tbody>
-                        ${cvData.fluencia_ingles.map(i => `
-                        <tr>
-                            <td data-label="Certificação">${i.cert}</td>
-                            <td data-label="Nível">${i.nivel}</td>
-                            <td data-label="Instituição">${i.inst}</td>
-                            <td data-label="Ano">${i.ano}</td>
-                        </tr>`).join('')}
+                    <thead><tr><th>Certificação</th><th>Nível / Resultado</th><th>Instituição</th><th>Ano</th></tr></thead>
+                    <tbody>${cvData.fluencia_ingles.map(i => `
+                        <tr><td data-label="Certificação">${i.cert}</td><td data-label="Nível">${i.nivel}</td><td data-label="Instituição">${i.inst}</td><td data-label="Ano">${i.ano}</td></tr>`).join('')}
                     </tbody>
                 </table>`;
             break;

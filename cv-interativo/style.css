@@ -3,9 +3,11 @@
     --accent: #2563eb;
     --bg: #f1f5f9;
     --text: #334155;
-    --table-header-bg: #f8fafc; /* Cor suave para o fundo do cabeçalho */
+    --table-header-bg: #f8fafc;
     --table-border: #e2e8f0;
 }
+
+* { box-sizing: border-box; }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -58,18 +60,21 @@ body {
 .contatos { font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
 .contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
-/* Menu de Abas */
+/* Menu de Abas Híbrido */
+.nav-tabs-container {
+    margin: 20px 0;
+    border-bottom: 1px solid #ddd;
+    background: white;
+}
+
 .nav-tabs {
     display: flex;
-    flex-wrap: wrap;
     gap: 8px;
-    margin: 20px 0;
     padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
 }
 
 .tab-btn {
-    padding: 8px 16px;
+    padding: 10px 18px;
     border: 1px solid #e2e8f0;
     background: #fff;
     cursor: pointer;
@@ -77,6 +82,7 @@ body {
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--text);
+    white-space: nowrap;
     transition: all 0.3s;
 }
 
@@ -84,6 +90,11 @@ body {
     background: var(--primary);
     color: white;
     border-color: var(--primary);
+}
+
+.btn-metodologia {
+    color: var(--accent);
+    border-color: var(--accent);
 }
 
 /* Conteúdo */
@@ -105,12 +116,12 @@ body {
 
 .card {
     background: #f8fafc;
-    padding: 12px;
+    padding: 15px;
     border-left: 4px solid var(--accent);
     border-radius: 6px;
 }
 
-/* Tabelas Compactas */
+/* Tabelas */
 .cv-table {
     width: 100%;
     border-collapse: collapse;
@@ -124,23 +135,17 @@ body {
     background-color: var(--table-header-bg);
     color: var(--primary);
     text-align: left;
-    padding: 8px 10px; /* Redução de altura */
+    padding: 10px;
     font-weight: 700;
     border-bottom: 2px solid var(--table-border);
 }
 
 .cv-table td {
-    padding: 6px 10px; /* Redução de altura das linhas */
+    padding: 8px 10px;
     border-bottom: 1px solid #f1f5f9;
 }
 
-.cv-table tbody tr:nth-child(even) {
-    background-color: #fafbfc;
-}
-
-.cv-table tbody tr:hover {
-    background-color: #f1f5f9;
-}
+.cv-table tbody tr:nth-child(even) { background-color: #fafbfc; }
 
 /* Modal */
 .modal-overlay {
@@ -167,11 +172,79 @@ body {
 .iframe-container { flex-grow: 1; }
 iframe { width: 100%; height: 100%; border: none; }
 
+/* --- REGRAS PARA CELULAR (MOBILE) --- */
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; align-items: center; text-align: center; }
+    body { padding: 10px; }
     
-    .cv-table thead { display: none; }
-    .cv-table tr { display: block; border: 1px solid var(--table-border); margin-bottom: 10px; border-radius: 8px; }
-    .cv-table td { display: flex; justify-content: space-between; text-align: right; padding: 8px; border-bottom: 1px solid #f1f5f9; }
-    .cv-table td::before { content: attr(data-label); font-weight: bold; color: var(--accent); }
+    .container { padding: 15px; border-radius: 8px; }
+
+    /* Header empilhado no mobile */
+    .header-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .profile-img {
+        width: 130px !important;
+        height: 160px !important;
+    }
+
+    .header-text h1 { font-size: 1.5rem; }
+
+    /* Menu de abas com Scroll Horizontal (Estilo App) */
+    .nav-tabs-container {
+        margin: 15px -15px; /* Estica até as bordas */
+        padding: 0 15px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-tabs {
+        padding-bottom: 15px;
+    }
+
+    .nav-tabs::-webkit-scrollbar { display: none; } /* Esconde barra de scroll no mobile */
+
+    /* Tabelas transformadas em Cards amigáveis */
+    .cv-table, .cv-table thead, .cv-table tbody, .cv-table th, .cv-table td, .cv-table tr { 
+        display: block; 
+    }
+
+    .cv-table { border: none; }
+
+    .cv-table thead { display: none; } /* Esconde cabeçalho da tabela */
+
+    .cv-table tr {
+        background: #fff !important;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        padding: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .cv-table td {
+        display: flex;
+        justify-content: space-between;
+        text-align: right;
+        padding: 6px 5px;
+        border-bottom: 1px solid #f8fafc;
+    }
+
+    .cv-table td:last-child { border-bottom: none; }
+
+    /* Cria rótulos coloridos antes do valor no mobile */
+    .cv-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        text-align: left;
+        color: var(--accent);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        margin-right: 10px;
+    }
+
+    .grid-content { grid-template-columns: 1fr; }
 }
