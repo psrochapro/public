@@ -3,29 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizador de CSV</title>
+    <title>CSV Data Insights</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main class="container">
         <header>
-            <h1>Leitor de Dados CSV</h1>
-            <p>Selecione um arquivo para visualizar o conteúdo abaixo</p>
+            <h1>CSV Data Insights</h1>
+            <p>Faça o upload para analisar a estrutura dos seus dados</p>
         </header>
 
         <section class="upload-area">
             <input type="file" id="csvInput" accept=".csv">
-            <label for="csvInput" class="custom-loader">📁 Selecionar CSV</label>
+            <label for="csvInput" class="custom-loader">📁 Escolher Arquivo</label>
         </section>
 
-        <section class="table-wrapper">
-            <table id="dataTable">
-                <thead>
-                    <tr id="tableHeader"></tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </section>
+        <!-- Stats Bar -->
+        <div id="statsBar" class="stats-container" style="display: none;">
+            <div class="stat-card">
+                <span class="stat-label">Linhas</span>
+                <span id="rowCount" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Colunas</span>
+                <span id="colCount" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Nome do Arquivo</span>
+                <span id="fileName" class="stat-value">-</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Sidebar for Columns -->
+            <aside class="sidebar" id="sidebar" style="display: none;">
+                <h3>Colunas Detectadas</h3>
+                <ul id="columnList"></ul>
+            </aside>
+
+            <!-- Table Area -->
+            <section class="table-wrapper">
+                <table id="dataTable">
+                    <thead>
+                        <tr id="tableHeader"></tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </section>
+        </div>
     </main>
     <script src="app.js"></script>
 </body>
