@@ -64,7 +64,7 @@
   ],
   "especializacoes_gestao": [
     { "categoria": "Processos", "curso": "Automação de Processos através da RPA", "ch": "25h", "inst": "Enap", "ano": "2026" },
-    { "categoria": "Processos", "curso": "Fundamentos da Transformation Digital: Mapeamento e Automação", "ch": "20h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Processos", "curso": "Fundamentos da Transformação Digital: Mapeamento e Automação", "ch": "20h", "inst": "Enap", "ano": "2026" },
     { "categoria": "Lean Office", "curso": "Abordagem Lean aplicada à Transformação Digital", "ch": "25h", "inst": "Enap", "ano": "2026" },
     { "categoria": "Processos", "curso": "Análise e Melhoria de Processos", "ch": "20h", "inst": "Enap", "ano": "2026" },
     { "categoria": "Qualidade", "curso": "Gestão Para Resultados", "ch": "24h", "inst": "FALCONI", "ano": "2014" },
