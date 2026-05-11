@@ -20,6 +20,11 @@ body {
     justify-content: center;
 }
 
+/* Hides the default browser file button */
+#csvInput {
+    display: none;
+}
+
 .container {
     width: 100%;
     max-width: 1200px;
@@ -42,9 +47,10 @@ header p { margin: 5px 0 0; color: var(--text-light); }
     cursor: pointer;
     font-weight: 600;
     display: inline-block;
+    transition: transform 0.1s;
 }
+.custom-loader:active { transform: scale(0.95); }
 
-/* Stats Layout */
 .stats-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -62,7 +68,6 @@ header p { margin: 5px 0 0; color: var(--text-light); }
 .stat-label { display: block; font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; }
 .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
 
-/* Main Content Grid */
 .main-content {
     display: grid;
     grid-template-columns: 250px 1fr;
@@ -73,7 +78,6 @@ header p { margin: 5px 0 0; color: var(--text-light); }
     .main-content { grid-template-columns: 1fr; }
 }
 
-/* Sidebar */
 .sidebar {
     background: #f8fafc;
     padding: 1.5rem;
@@ -92,20 +96,17 @@ header p { margin: 5px 0 0; color: var(--text-light); }
     border-bottom: 1px solid #edf2f7;
 }
 
-/* Type Badges */
 .badge {
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 700;
     color: white;
-    text-transform: uppercase;
 }
 .badge-number { background: var(--type-number); }
 .badge-string { background: var(--type-string); }
 .badge-date { background: var(--type-date); }
 
-/* Table styling */
 .table-wrapper {
     overflow-x: auto;
     border-radius: 8px;
@@ -113,5 +114,22 @@ header p { margin: 5px 0 0; color: var(--text-light); }
 }
 
 table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-th { background: #f1f5f9; padding: 12px; text-align: left; font-size: 0.85rem; }
+th { background: #f1f5f9; padding: 12px; text-align: left; font-size: 0.85rem; position: sticky; top: 0; }
 td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+
+.load-more-container {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+#loadMoreBtn {
+    background: white;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    padding: 8px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: none;
+}
+#loadMoreBtn:hover { background: var(--accent); color: white; }
