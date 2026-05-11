@@ -63,7 +63,7 @@ body {
     list-style: none;
     padding: 0;
     margin: 10px 0;
-    font-size: 0.85rem; /* Fonte reduzida para evitar quebra */
+    font-size: 0.85rem; /* Fonte reduzida conforme solicitado */
 }
 
 .resumo-list li { margin-bottom: 6px; display: flex; align-items: flex-start; gap: 8px; }
