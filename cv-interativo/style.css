@@ -27,56 +27,54 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* --- HEADER E FOTO (AS MELHORIAS SOLICITADAS) --- */
+/* Header */
 .header-container {
     display: flex;
     align-items: flex-start;
-    gap: 30px;
+    gap: 40px;
     border-bottom: 2px solid #edf2f7;
-    padding-bottom: 20px;
+    padding-bottom: 25px;
 }
 
 .profile-img {
-    width: 150px; /* Tamanho levemente reduzido para elegância */
-    height: 185px; /* Proporção 3x4 clássica de PDF */
+    width: 180px;
+    height: 230px;
     object-fit: cover;
     border-radius: 12px;
-    
-    /* Moldura "PDF Style" */
     border: 4px solid white; 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12); /* Sombra suave de profundidade */
-    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
     flex-shrink: 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição suave */
-    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Efeito Cool no Hover */
 .profile-img:hover {
-    transform: translateY(-5px) scale(1.02); /* Elevação leve */
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18); /* Aumento da sombra ao subir */
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
 }
 
-.header-text h1 { margin: 0; font-size: 1.8rem; color: var(--primary); }
-.subtitle { color: var(--accent); font-weight: 700; margin: 5px 0; }
+.header-text {
+    flex: 1;
+}
+
+.header-text h1 { margin: 0; font-size: 2rem; color: var(--primary); }
+.subtitle { color: var(--accent); font-weight: 700; margin: 5px 0 12px 0; }
 
 .resumo-list {
     list-style: none;
     padding: 0;
     margin: 10px 0;
-    font-size: 0.88rem;
+    font-size: 0.92rem;
 }
 
-.resumo-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.resumo-list li { margin-bottom: 6px; display: flex; align-items: flex-start; gap: 8px; }
 
-.contatos { font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
+.contatos { font-size: 0.88rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 12px; }
 .contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
-/* Menu de Abas Híbrido */
+/* Menu de Abas */
 .nav-tabs-container {
     margin: 20px 0;
     border-bottom: 1px solid #ddd;
-    background: white;
 }
 
 .nav-tabs {
@@ -149,7 +147,6 @@ body {
     text-align: left;
     padding: 10px;
     font-weight: 700;
-    border-bottom: 2px solid var(--table-border);
 }
 
 .cv-table td {
@@ -189,6 +186,7 @@ iframe { width: 100%; height: 100%; border: none; }
     body { padding: 10px; }
     .container { padding: 15px; }
     .header-container { flex-direction: column; align-items: center; text-align: center; }
+    .profile-img { width: 150px; height: 190px; }
     .nav-tabs-container { margin: 15px -15px; padding: 0 15px; overflow-x: auto; }
     .cv-table thead { display: none; }
     .cv-table tr { display: block; border: 1px solid #e2e8f0; margin-bottom: 12px; border-radius: 8px; padding: 8px; }
