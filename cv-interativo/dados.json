@@ -4,12 +4,12 @@
     "titulo": "Especialista em Processos e Business Intelligence",
     "foto": "profilepic.jpeg",
     "resumo": [
-      "Profissional sênior focado em transformar eficiência operacional em vantagem competitiva.",
-      "Com sólida bagagem em BI capaz de implementar um sistema de medição de indicadores automatizado.",
-      "Promove ambiente data driven para garantir que cada decisão seja guiada por dados precisos e insights validados.",
-      "Em gestão por processos, ajuda empresas a simplificar processos complexos e elevar a qualidade das entregas.",
-      "Em gestão estratégica, implementa metodologia de planejamento estratégico da concepção à execução.",
-      "Em gestão por projetos, auxilia na estruturação, execução e acompanhamento de projetos."
+      "Profissional sênior focado em transformar <b>eficiência operacional</b> em vantagem competitiva.",
+      "Com sólida bagagem em <b>BI - Business Intelligence</b> capaz de implementar um sistema de medição de indicadores automatizado.",
+      "Promove ambiente <b>data driven</b> para garantir que cada decisão seja guiada por dados precisos e insights validados.",
+      "Em <b>gestão por processos</b>, ajuda empresas a simplificar processos complexos e elevar a qualidade das entregas.",
+      "Em <b>gestão estratégica</b>, implementa metodologia de planejamento estratégico da concepção à execução.",
+      "Em <b>gestão por projetos</b>, auxilia na estruturação, execução e acompanhamento de projetos."
     ],
     "contatos": {
       "email": "psrocha.pro@gmail.com",
@@ -28,17 +28,17 @@
     { "tema": "Processos", "icon": "⚙️", "desc": "Mapeamento de processos e aplicação de conceitos de Lean Office." },
     { "tema": "Conhecimento", "icon": "📚", "desc": "Implementação de Base de Conhecimento para padrões de trabalho." },
     { "tema": "Padronização", "icon": "📏", "desc": "Elaboração de procedimentos, manuais e diagramas de sistemas." },
-    { "tema": "Qualidade/Gestão", "icon": "✅", "desc": "Implantação de ISO 9001, auditorias e ações corretivas." },
+    { "tema": "Qualidade/Gestão", "icon": "✅", "desc": "Aplicação prática dos fundamentos de qualidade (ISO 9001 e PNQ) na otimização de fluxos de trabalho contemporâneos e melhoria contínua." },
     { "tema": "Capacitação", "icon": "👨‍🏫", "desc": "Criação de material didático e treinamento de pessoal." },
     { "tema": "Idiomas", "icon": "🌍", "desc": "Fluência em Inglês para pesquisa e interação internacional." }
   ],
   "pilares_estrategicos": [
     { "tema": "📊Business Intelligence", "tempo": "10 Anos", "experiencia": "Construção de +170 painéis e +1.000 abas de insights. Capacitações SQLBI." },
     { "tema": "🎯Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação de BSC do zero, Matriz SWOT e Mapas Estratégicos." },
-    { "tema": "✅Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Foco em ISO 9001 e PNQ. Mapeamento de Processos e Gestão Orçamentária." },
+    { "tema": "✅Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Solidez com histórico em ISO 9001 e PNQ. Mapeamento de Processos e Gestão Orçamentária." },
     { "tema": "📋Administração Operacional", "tempo": "15 Anos", "experiencia": "Gestão de áreas Financeiras, de Pessoas e Administrativas." },
-    { "tema": "👨‍🏫Docente", "tempo": "3 Anos", "experiencia": "Professor de Inglês Técnico, Qualidade e Informática." },
-    { "tema": "💻IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais via IA para automação." }
+    { "tema": "👨‍🏫Docente", "tempo": "3 Anos", "experiencia": "Professor de Inglês Técnico, Qualidade e Produtividade e Informática." },
+    { "tema": "💻IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais assistido por IA para automação." }
   ],
   "fluencia_ingles": [
     { "cert": "Cambridge CAE", "nivel": "C1 - Certificate in Advanced English", "inst": "Cambridge Assessment English", "ano": "2014" },
