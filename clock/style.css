@@ -1,4 +1,3 @@
-/* Custom properties for easy color management */
 :root {
     --bg-dark: #1a2a3a;
     --accent-blue: #3498db;
@@ -7,23 +6,30 @@
     --border-white: rgba(255, 255, 255, 0.2);
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, var(--bg-dark) 0%, var(--accent-blue) 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     color: white;
     overflow: hidden;
 }
 
-/* Background elements to reveal blur */
+.app-title {
+    font-size: 1.2rem;
+    letter-spacing: 8px;
+    margin-bottom: 20px;
+    font-weight: 300;
+    opacity: 0.9;
+}
+.app-title span { font-weight: 800; color: var(--accent-yellow); }
+
 .shape {
     position: absolute;
     filter: blur(50px);
@@ -33,9 +39,8 @@ body {
 .shape-1 { width: 300px; height: 300px; background: #27ae60; top: 10%; left: 20%; opacity: 0.4; }
 .shape-2 { width: 250px; height: 250px; background: #c0392b; bottom: 15%; right: 25%; opacity: 0.3; }
 
-/* The Glass Card Container */
 .glass-card {
-    width: 400px;
+    width: 450px;
     padding: 40px;
     background: var(--panel-white);
     backdrop-filter: blur(15px);
@@ -46,7 +51,6 @@ body {
     text-align: center;
 }
 
-/* Tabs */
 .nav-tabs {
     display: flex;
     justify-content: space-between;
@@ -65,34 +69,21 @@ body {
     font-weight: 600;
     opacity: 0.6;
 }
-.tab.active {
-    background: rgba(255, 255, 255, 0.2);
-    opacity: 1;
-}
+.tab.active { background: rgba(255, 255, 255, 0.2); opacity: 1; }
 
-/* Text Displays */
-.label-display {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    opacity: 0.8;
-}
+.label-display { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.8; }
+
 .time-display {
-    font-size: 4.5rem;
+    font-size: 3.8rem;
     font-weight: 700;
     margin: 20px 0;
-    font-variant-numeric: tabular-nums; /* Critical: keeps time numbers from shifting */
+    font-variant-numeric: tabular-nums;
     letter-spacing: -2px;
     text-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Sleek Buttons */
-.controls {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 25px;
-}
+.controls { display: flex; gap: 15px; justify-content: center; margin-top: 25px; }
+
 .btn {
     background: white;
     color: var(--bg-dark);
@@ -102,59 +93,35 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s;
+    min-width: 100px;
 }
-.btn:hover {
-    transform: translateY(-2px);
-    background: var(--accent-yellow);
-}
-.btn-sec {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid var(--border-white);
-}
-.btn-sec:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
+.btn:hover { transform: translateY(-2px); background: var(--accent-yellow); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-sec { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid var(--border-white); }
 
-/* Hidden elements class utility */
-.hidden {
-    display: none !important;
-}
-
-/* Inputs for Timer Mode */
-.input-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
+.input-container { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 20px; }
 .input-container input {
-    width: 60px;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--border-white);
-    border-radius: 8px;
-    color: white;
-    font-size: 1.2rem;
-    text-align: center;
-}
-.input-container input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    width: 70px; padding: 10px; background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-white); border-radius: 8px; color: white; font-size: 1.2rem; text-align: center;
 }
 
-/* Scrollable Extra Content (e.g. Laps) */
 .extra-container {
-    margin-top: 20px;
+    margin-top: 25px;
     max-height: 120px;
     overflow-y: auto;
+    padding-right: 5px;
 }
+/* Scrollbar styling */
+.extra-container::-webkit-scrollbar { width: 5px; }
+.extra-container::-webkit-scrollbar-thumb { background: var(--border-white); border-radius: 10px; }
+
 .lap-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px 10px;
-    margin-bottom: 5px;
-    background: rgba(0,0,0,0.1);
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 8px 15px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    font-family: monospace;
 }
+.hidden { display: none !important; }

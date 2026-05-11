@@ -1,28 +1,36 @@
-// ==================== STATE MANAGEMENT ====================
-let currentMode = 'clock'; // 'clock', 'timer', or 'stopwatch'
-let activeInterval = null; // Stores our active setInterval
+// ==================== GLOBAL STATE ====================
+let currentMode = 'clock';
+let activeInterval = null;
 
-// ==================== DOM ELEMENTS ====================
+// Timer State
+let timerSeconds = 0;
+let isTimerRunning = false;
+
+// Chrono State
+let chronoStartTime = 0;
+let chronoElapsedTime = 0;
+let isChronoRunning = false;
+let laps = [];
+
+// DOM Elements
 const mainDisplay = document.getElementById('main-display');
 const modeLabel = document.getElementById('mode-label');
 const controlsContainer = document.getElementById('controls-container');
 const timerInputContainer = document.getElementById('timer-input-container');
 const extraContent = document.getElementById('extra-content');
 
-// ==================== TAB NAVIGATION ====================
+// ==================== NAVIGATION ====================
 function switchMode(newMode) {
     currentMode = newMode;
-    
-    // Stop any active clock, stopwatch, or timer countdown loops
     clearInterval(activeInterval);
     activeInterval = null;
 
-    // Reset layout UI classes
+    // UI Reset
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     timerInputContainer.classList.add('hidden');
     extraContent.innerHTML = '';
+    controlsContainer.innerHTML = '';
 
-    // Route to correct setup
     if (newMode === 'clock') {
         document.getElementById('tab-clock').classList.add('active');
         setupClock();
@@ -35,66 +43,144 @@ function switchMode(newMode) {
     }
 }
 
-// Attach Event Listeners to Tabs
-document.getElementById('tab-clock').addEventListener('click', () => switchMode('clock'));
-document.getElementById('tab-timer').addEventListener('click', () => switchMode('timer'));
-document.getElementById('tab-stopwatch').addEventListener('click', () => switchMode('stopwatch'));
-
-
-// ==================== 1. CLOCK ENGINE ====================
+// ==================== 1. CLOCK LOGIC ====================
 function setupClock() {
     modeLabel.innerText = "Current Time";
-    controlsContainer.innerHTML = ''; // Clocks don't need buttons
-    
-    // Create the time updater function
     const runClock = () => {
         const now = new Date();
-        const hrs = String(now.getHours()).padStart(2, '0');
-        const mins = String(now.getMinutes()).padStart(2, '0');
-        const secs = String(now.getSeconds()).padStart(2, '0');
-        mainDisplay.innerText = `${hrs}:${mins}:${secs}`;
+        mainDisplay.innerText = now.toLocaleTimeString('en-GB');
     };
-
-    runClock(); // Run once immediately
-    activeInterval = setInterval(runClock, 1000); // Repeat every second
+    runClock();
+    activeInterval = setInterval(runClock, 1000);
 }
 
-
-// ==================== 2. CHRONO (STOPWATCH) ENGINE ====================
-// TODO: Put global stopwatch variables here (startTime, elapsedMilliseconds, etc.)
-
-function setupStopwatch() {
-    modeLabel.innerText = "Elapsed Time";
-    mainDisplay.innerText = "00:00:00.00"; // Includes milliseconds!
-    
-    // Inject custom Control buttons
-    controlsContainer.innerHTML = `
-        <button class="btn" id="btn-sw-start">Start</button>
-        <button class="btn btn-sec" id="btn-sw-lap" disabled>Lap</button>
-    `;
-
-    // TODO: Write event listeners for these buttons & build the logic!
-}
-
-
-// ==================== 3. TIMER ENGINE ====================
-// TODO: Put global timer variables here (timeLeftInSeconds, isRunning, etc.)
-
+// ==================== 2. TIMER LOGIC ====================
 function setupTimer() {
     modeLabel.innerText = "Count Down";
     mainDisplay.innerText = "00:00";
-    timerInputContainer.classList.remove('hidden'); // Show time inputs
-
-    // Inject custom Control buttons
-    controlsContainer.innerHTML = `
-        <button class="btn" id="btn-timer-start">Start</button>
-        <button class="btn btn-sec" id="btn-timer-reset">Reset</button>
-    `;
-
-    // TODO: Write event listeners for inputs and countdown logic!
+    timerInputContainer.classList.remove('hidden');
+    renderTimerControls();
 }
 
+function renderTimerControls() {
+    controlsContainer.innerHTML = `
+        <button class="btn" id="btn-timer-start">${isTimerRunning ? 'Pause' : 'Start'}</button>
+        <button class="btn btn-sec" onclick="resetTimer()">Reset</button>
+    `;
+    document.getElementById('btn-timer-start').onclick = toggleTimer;
+}
 
-// ==================== INITIAL START ====================
-// Start on Clock mode when the page finishes loading
+function toggleTimer() {
+    if (!isTimerRunning) {
+        if (timerSeconds === 0) {
+            const m = parseInt(document.getElementById('input-minutes').value) || 0;
+            const s = parseInt(document.getElementById('input-seconds').value) || 0;
+            timerSeconds = (m * 60) + s;
+        }
+        if (timerSeconds <= 0) return;
+        
+        isTimerRunning = true;
+        timerInputContainer.classList.add('hidden');
+        activeInterval = setInterval(() => {
+            timerSeconds--;
+            updateTimerUI();
+            if (timerSeconds <= 0) {
+                clearInterval(activeInterval);
+                alert("Time is up!");
+                resetTimer();
+            }
+        }, 1000);
+    } else {
+        isTimerRunning = false;
+        clearInterval(activeInterval);
+    }
+    renderTimerControls();
+}
+
+function resetTimer() {
+    isTimerRunning = false;
+    clearInterval(activeInterval);
+    timerSeconds = 0;
+    timerInputContainer.classList.remove('hidden');
+    mainDisplay.innerText = "00:00";
+    renderTimerControls();
+}
+
+function updateTimerUI() {
+    const m = Math.floor(timerSeconds / 60);
+    const s = timerSeconds % 60;
+    mainDisplay.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// ==================== 3. CHRONO LOGIC ====================
+function setupStopwatch() {
+    modeLabel.innerText = "Elapsed Time";
+    updateChronoUI();
+    renderChronoControls();
+    renderLaps();
+}
+
+function renderChronoControls() {
+    controlsContainer.innerHTML = `
+        <button class="btn" onclick="toggleChrono()">${isChronoRunning ? 'Stop' : 'Start'}</button>
+        <button class="btn btn-sec" onclick="recordLap()" ${!isChronoRunning ? 'disabled' : ''}>Lap</button>
+        <button class="btn btn-sec" onclick="resetChrono()">Reset</button>
+    `;
+}
+
+function toggleChrono() {
+    if (!isChronoRunning) {
+        isChronoRunning = true;
+        chronoStartTime = Date.now() - chronoElapsedTime;
+        activeInterval = setInterval(() => {
+            chronoElapsedTime = Date.now() - chronoStartTime;
+            updateChronoUI();
+        }, 10);
+    } else {
+        isChronoRunning = false;
+        clearInterval(activeInterval);
+    }
+    renderChronoControls();
+}
+
+function resetChrono() {
+    isChronoRunning = false;
+    clearInterval(activeInterval);
+    chronoElapsedTime = 0;
+    laps = [];
+    updateChronoUI();
+    renderChronoControls();
+    renderLaps();
+}
+
+function recordLap() {
+    laps.unshift(formatChronoTime(chronoElapsedTime));
+    renderLaps();
+}
+
+function updateChronoUI() {
+    mainDisplay.innerText = formatChronoTime(chronoElapsedTime);
+}
+
+function formatChronoTime(ms) {
+    const hours = Math.floor(ms / 3600000);
+    const minutes = Math.floor((ms % 3600000) / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    const centiseconds = Math.floor((ms % 1000) / 10);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centiseconds).padStart(2, '0')}`;
+}
+
+function renderLaps() {
+    extraContent.innerHTML = laps.map((time, i) => `
+        <div class="lap-item">
+            <span>Lap ${laps.length - i}</span>
+            <span>${time}</span>
+        </div>
+    `).join('');
+}
+
+// Init
+document.getElementById('tab-clock').onclick = () => switchMode('clock');
+document.getElementById('tab-timer').onclick = () => switchMode('timer');
+document.getElementById('tab-stopwatch').onclick = () => switchMode('stopwatch');
 switchMode('clock');
