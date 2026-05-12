@@ -1,5 +1,22 @@
 {
-    "labels": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-    "valores": [12, 19, 3, 5, 2, 15, 22, 18, 10, 14, 25, 30],
-    "titulo": "Vendas por Período"
+    "vendasMensais": {
+        "titulo": "Vendas por Mês",
+        "labels": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+        "valores": [12, 19, 3, 5, 2, 15, 22, 18, 10, 14, 25, 30]
+    },
+    "quadrantes": {
+        "titulo": "Distribuição Regional",
+        "labels": ["Norte", "Sul", "Leste", "Oeste"],
+        "valores": [25, 35, 20, 20]
+    },
+    "evolucao": {
+        "titulo": "Evolução de Performance (10 Itens)",
+        "labels": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"],
+        "valores": [10, 25, 45, 30, 55, 70, 65, 90, 85, 100]
+    },
+    "topProdutos": {
+        "titulo": "Top 5 Produtos",
+        "labels": ["Produto A", "Produto B", "Produto C", "Produto D", "Produto E"],
+        "valores": [450, 380, 310, 290, 210]
+    }
 }

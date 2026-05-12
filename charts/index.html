@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Blueprint Glass</title>
+    <title>Blueprint Dashboard Pro</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Bibliotecas Necessárias -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
 <body>
-    <div class="container">
-        <canvas id="meuGrafico"></canvas>
+    <div class="dashboard-container">
+        <div class="chart-card"><canvas id="chartVendas"></canvas></div>
+        <div class="chart-card"><canvas id="chartRosca"></canvas></div>
+        <div class="chart-card"><canvas id="chartLinha"></canvas></div>
+        <div class="chart-card"><canvas id="chartBarras"></canvas></div>
     </div>
     <script src="app.js"></script>
 </body>
