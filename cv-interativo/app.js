@@ -22,7 +22,7 @@ function renderApp() {
                 <div class="header-text">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <h1>${cvData.perfil.nome}</h1>
-                        <button onclick="window.print()" class="print-btn-float no-print" title="Gerar PDF">🖨️ PDF</button>
+                        <button onclick="handlePrint()" class="print-btn-float no-print" title="Gerar PDF">🖨️ PDF</button>
                     </div>
                     <div class="subtitle">🚀 ${cvData.perfil.titulo}</div>
                     <ul class="resumo-list">
@@ -120,6 +120,15 @@ function switchTab(tab, btn) {
     tabs.forEach(t => t.classList.remove('active'));
     if(btn) btn.classList.add('active');
 
+    // REGISTRO NO ANALYTICS
+    if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({
+            path:  'aba-' + tab,
+            title: 'Clique na Aba ' + tab,
+            event: true,
+        });
+    }
+
     const content = document.getElementById('tab-content');
     let html = '';
 
@@ -176,7 +185,25 @@ function switchTab(tab, btn) {
     content.innerHTML = html;
 }
 
+function handlePrint() {
+    if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({
+            path:  'click-pdf',
+            title: 'Gerou PDF',
+            event: true,
+        });
+    }
+    window.print();
+}
+
 function openModal() {
+    if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({
+            path:  'click-metodologia',
+            title: 'Abriu Metodologias',
+            event: true,
+        });
+    }
     document.getElementById('modalMetodologia').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
