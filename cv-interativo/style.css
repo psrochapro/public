@@ -47,30 +47,39 @@ body {
     transition: all 0.3s ease;
 }
 
-.profile-img:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
+.header-text { flex: 1; text-align: left; }
+
+.header-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
 }
 
-.header-text { flex: 1; text-align: left; }
-.header-text h1 { margin: 0; font-size: 1.8rem; color: var(--primary); text-align: left; }
-.subtitle { color: var(--accent); font-weight: 700; margin: 3px 0 10px 0; text-align: left; }
+.header-text h1 { margin: 0; font-size: 1.8rem; color: var(--primary); }
+.subtitle { color: var(--accent); font-weight: 700; margin-bottom: 12px; }
 
 .resumo-list {
     list-style: none;
     padding: 0;
     margin: 8px 0;
     font-size: 0.85rem;
-    text-align: left;
 }
 
 .resumo-list li { 
-    margin-bottom: 4px;
-    display: block;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
     line-height: 1.4;
 }
 
-.contatos { font-size: 0.85rem; margin-top: 12px; border-top: 1px solid #eee; padding-top: 10px; text-align: left; }
+.resumo-icon {
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.contatos { font-size: 0.85rem; margin-top: 12px; border-top: 1px solid #eee; padding-top: 10px; }
 .contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
 /* Botão PDF */
@@ -83,6 +92,7 @@ body {
     cursor: pointer;
     font-weight: bold;
     font-size: 0.75rem;
+    white-space: nowrap;
     transition: all 0.2s;
 }
 
@@ -155,12 +165,46 @@ iframe { width: 100%; height: 100%; border: none; }
 /* Mobile */
 @media (max-width: 768px) {
     body { padding: 10px; }
-    .container { padding: 12px; }
-    .header-container { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
-    .header-text { text-align: center; }
-    .subtitle, .resumo-list, .contatos, .tab-title { text-align: center; }
-    .profile-img { width: 140px; height: 180px; }
+    .container { padding: 15px; }
+    .header-container { flex-direction: column; align-items: center; text-align: center; gap: 15px; }
+    .header-text { text-align: center; width: 100%; }
+    
+    .header-title-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-text h1 { 
+        font-size: 1.6rem; 
+        text-align: center;
+        white-space: normal; /* Permite quebrar se o celular for muito pequeno, mas sem o PDF do lado */
+    }
+
+    .print-btn-float {
+        order: -1; /* Coloca o botão no topo no mobile */
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .subtitle { text-align: center; font-size: 0.95rem; }
+    
+    .resumo-list {
+        text-align: left;
+        margin: 15px 0;
+    }
+
+    .resumo-list li {
+        background: #f8fafc;
+        padding: 8px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 0.82rem;
+    }
+
+    .contatos { text-align: center; line-height: 1.8; }
+    .profile-img { width: 130px; height: 160px; }
     .nav-tabs-container { margin: 10px -12px; padding: 0 12px; overflow-x: auto; }
+    
     .cv-table thead { display: none; }
     .cv-table tr { display: block; border: 1px solid #e2e8f0; margin-bottom: 10px; border-radius: 8px; padding: 6px; }
     .cv-table td { display: flex; justify-content: space-between; padding: 4px 5px; border-bottom: none; }
@@ -198,7 +242,6 @@ iframe { width: 100%; height: 100%; border: none; }
 
     .resumo-list li { 
         font-size: 0.72rem !important; 
-        white-space: nowrap !important;
         margin-bottom: 2px;
         text-align: left !important;
     }
@@ -217,7 +260,6 @@ iframe { width: 100%; height: 100%; border: none; }
 
     .print-item {
         font-size: 0.72rem !important; 
-        white-space: nowrap !important; 
         margin-bottom: 4px;
         text-align: left;
     }

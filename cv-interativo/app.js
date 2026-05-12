@@ -20,13 +20,18 @@ function renderApp() {
             <header class="header-container">
                 <img src="${cvData.perfil.foto}" class="profile-img" alt="Foto">
                 <div class="header-text">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div class="header-title-row">
                         <h1>${cvData.perfil.nome}</h1>
                         <button onclick="handlePrint()" class="print-btn-float no-print" title="Gerar PDF">🖨️ PDF</button>
                     </div>
                     <div class="subtitle">🚀 ${cvData.perfil.titulo}</div>
                     <ul class="resumo-list">
-                        ${cvData.perfil.resumo.map(r => `<li>🔹 ${r}</li>`).join('')}
+                        ${cvData.perfil.resumo.map(r => `
+                            <li>
+                                <span class="resumo-icon">🔹</span>
+                                <span class="resumo-text">${r}</span>
+                            </li>
+                        `).join('')}
                     </ul>
                     <div class="contatos">
                         📧 ${cvData.perfil.contatos.email} | 📱 ${cvData.perfil.contatos.whatsapp} | 
@@ -120,7 +125,6 @@ function switchTab(tab, btn) {
     tabs.forEach(t => t.classList.remove('active'));
     if(btn) btn.classList.add('active');
 
-    // REGISTRO NO ANALYTICS
     if (window.goatcounter && window.goatcounter.count) {
         window.goatcounter.count({
             path:  'aba-' + tab,
