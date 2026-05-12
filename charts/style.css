@@ -2,14 +2,14 @@ body {
     margin: 0;
     padding: 0;
     width: 100vw;
-    height: 100vh; /* Ocupa exatamente a altura da tela */
-    overflow: hidden; /* Remove as barras de rolagem */
+    height: 100vh;
+    overflow: hidden; /* Trava a rolagem */
     background-color: #000d1a;
     background-image: 
         linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 25px 25px;
-    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-size: 30px 30px;
+    font-family: 'Segoe UI', sans-serif;
     color: #e0f7fa;
 }
 
@@ -23,46 +23,44 @@ body {
 
 header {
     text-align: center;
-    padding: 10px 0;
-    flex-shrink: 0; /* Não deixa o cabeçalho diminuir */
+    padding: 5px 0;
+    flex-shrink: 0;
 }
 
 .dashboard-title {
     margin: 0;
-    font-size: 1.5rem; /* Diminuído para ganhar espaço */
+    font-size: 1.4rem;
     letter-spacing: 4px;
     color: #00ffff;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
 }
 
 .status-bar {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     letter-spacing: 2px;
     color: rgba(0, 255, 255, 0.5);
 }
 
 .grid-layout {
-    flex-grow: 1; /* Ocupa o resto do espaço da tela */
+    flex-grow: 1;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 15px; /* Espaço reduzido entre gráficos */
-    padding-bottom: 10px;
-    min-height: 0; /* Importante para o grid não estourar no flex */
+    gap: 15px;
+    padding: 10px 0;
+    min-height: 0; /* Essencial para o grid caber na tela */
 }
 
 .chart-card {
-    background: rgba(0, 20, 40, 0.7);
+    background: rgba(0, 20, 40, 0.6);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 255, 255, 0.2);
-    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    border-radius: 12px;
     padding: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    min-height: 0; /* Permite que o canvas diminua conforme o card */
+    min-height: 0;
 }
 
 canvas {
@@ -70,13 +68,8 @@ canvas {
     height: 100% !important;
 }
 
-/* Responsividade: Se a tela for muito pequena (celular), aí sim permitimos rolar */
-@media (max-width: 800px), (max-height: 600px) {
+@media (max-width: 800px) {
     body { overflow-y: auto; height: auto; }
-    .grid-layout { 
-        grid-template-columns: 1fr; 
-        grid-template-rows: auto;
-        height: auto;
-    }
+    .grid-layout { grid-template-columns: 1fr; grid-template-rows: auto; }
     .chart-card { height: 300px; }
 }

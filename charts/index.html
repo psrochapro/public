@@ -5,37 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Blueprint Pro</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Bibliotecas Essenciais -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
 <body>
-
     <div class="main-container">
         <header>
             <h1 class="dashboard-title">SISTEMA DE MONITORAMENTO BLUEPRINT</h1>
-            <div class="status-bar">SISTEMA OPERACIONAL // DADOS EM TEMPO REAL</div>
+            <div class="status-bar">DADOS EM TEMPO REAL // STATUS: ATIVO</div>
         </header>
-        
         <div class="grid-layout">
-            <div class="chart-card">
-                <canvas id="chartVendas"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <canvas id="chartRosca"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <canvas id="chartLinha"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <canvas id="chartBarras"></canvas>
-            </div>
+            <div class="chart-card"><canvas id="chartVendas"></canvas></div>
+            <div class="chart-card"><canvas id="chartRosca"></canvas></div>
+            <div class="chart-card"><canvas id="chartLinha"></canvas></div>
+            <div class="chart-card"><canvas id="chartBarras"></canvas></div>
         </div>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
