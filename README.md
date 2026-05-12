@@ -12,6 +12,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **CSV Reader** | Visualizador de arquivos CSV com interface limpa | [Acessar App](https://psrochapro.github.io/public/csv-reader/) |
 | **Tasks** | Gerenciador de Tarefas | [Acessar App](https://psrochapro.github.io/public/tasks/) |
 | **Clock** | Trio Relógio, Timer, Chronômetro | [Acessar App](https://psrochapro.github.io/public/clock/) |
+| **Charts** | Gerador de Gráficos | [Acessar App](https://psrochapro.github.io/public/charts/) |
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.

@@ -1,0 +1,5 @@
+{
+    "labels": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
+    "valores": [12, 19, 3, 5, 2],
+    "titulo": "Vendas por Período"
+}
