@@ -52,25 +52,25 @@ body {
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
 }
 
-.header-text { flex: 1; }
+.header-text { flex: 1; text-align: left; }
 .header-text h1 { margin: 0; font-size: 1.8rem; color: var(--primary); }
-.subtitle { color: var(--accent); font-weight: 700; margin: 3px 0 10px 0; }
+.subtitle { color: var(--accent); font-weight: 700; margin: 3px 0 10px 0; text-align: left; }
 
 .resumo-list {
     list-style: none;
     padding: 0;
     margin: 8px 0;
     font-size: 0.85rem;
+    text-align: left;
 }
 
 .resumo-list li { 
     margin-bottom: 4px;
     display: block;
-    text-align: left;
     line-height: 1.4;
 }
 
-.contatos { font-size: 0.85rem; margin-top: 12px; border-top: 1px solid #eee; padding-top: 10px; }
+.contatos { font-size: 0.85rem; margin-top: 12px; border-top: 1px solid #eee; padding-top: 10px; text-align: left; }
 .contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
 /* Botão PDF */
@@ -132,6 +132,8 @@ body {
 .cv-table td { padding: 4px 10px; border-bottom: 1px solid #f1f5f9; }
 .cv-table tbody tr:nth-child(even) { background-color: #fafbfc; }
 
+.tab-title { margin: 15px 0 8px 0; font-size: 1.1rem; text-align: left; }
+
 /* Modal */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -155,6 +157,8 @@ iframe { width: 100%; height: 100%; border: none; }
     body { padding: 10px; }
     .container { padding: 12px; }
     .header-container { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+    .header-text { text-align: center; }
+    .subtitle, .resumo-list, .contatos, .tab-title { text-align: center; }
     .profile-img { width: 140px; height: 180px; }
     .nav-tabs-container { margin: 10px -12px; padding: 0 12px; overflow-x: auto; }
     .cv-table thead { display: none; }
@@ -164,7 +168,7 @@ iframe { width: 100%; height: 100%; border: none; }
 }
 
 /* ===========================================
-   REGRAS DE IMPRESSÃO (PDF) AJUSTADAS
+   REGRAS DE IMPRESSÃO (PDF)
    =========================================== */
 @media print {
     @page { size: A4; margin: 1cm; }
@@ -180,23 +184,26 @@ iframe { width: 100%; height: 100%; border: none; }
     .header-container { 
         display: flex !important; 
         flex-direction: row !important; 
+        align-items: flex-start !important;
         border-bottom: 2px solid #334155; 
         padding-bottom: 10px; 
-        gap: 20px;
+        gap: 25px;
     }
     
-    /* Reduzindo a imagem para dar mais espaço lateral ao texto */
-    .profile-img { width: 100px; height: 130px; border: 1px solid #eee; }
+    .profile-img { width: 100px; height: 130px; border: 1px solid #eee; flex-shrink: 0; }
     
-    .header-text h1 { font-size: 1.4rem !important; }
-    .subtitle { font-size: 0.9rem; margin-bottom: 5px; }
+    .header-text { text-align: left !important; }
+    .header-text h1 { font-size: 1.4rem !important; text-align: left !important; }
+    .subtitle { font-size: 0.9rem; margin: 2px 0 5px 0 !important; text-align: left !important; }
 
-    /* Ajustando o RESUMO para não quebrar linha */
     .resumo-list li { 
-        font-size: 0.72rem !important; /* Fonte menor para caber na largura */
-        white-space: nowrap !important; /* FORÇA UMA LINHA SÓ */
+        font-size: 0.72rem !important; 
+        white-space: nowrap !important;
         margin-bottom: 2px;
+        text-align: left !important;
     }
+
+    .contatos { text-align: left !important; margin-top: 8px; padding-top: 5px; }
 
     .print-section-title {
         font-size: 1rem;
@@ -205,19 +212,21 @@ iframe { width: 100%; height: 100%; border: none; }
         margin: 15px 0 8px 0;
         padding-bottom: 2px;
         text-transform: uppercase;
+        text-align: left;
     }
 
-    /* Ajustando os PILARES para não quebrar linha */
     .print-item {
-        font-size: 0.72rem !important; /* Fonte menor para caber na largura */
-        white-space: nowrap !important; /* FORÇA UMA LINHA SÓ */
+        font-size: 0.72rem !important; 
+        white-space: nowrap !important; 
         margin-bottom: 4px;
+        text-align: left;
     }
 
     .cv-table { 
         font-size: 0.7rem !important; 
         margin-bottom: 10px; 
         display: table !important; 
+        width: 100%;
     }
     .cv-table thead { display: table-header-group !important; }
     .cv-table tr { display: table-row !important; }
@@ -225,6 +234,7 @@ iframe { width: 100%; height: 100%; border: none; }
         display: table-cell !important; 
         padding: 3px 5px !important; 
         border: 1px solid #f1f5f9 !important; 
+        text-align: left;
     }
     .cv-table td::before { content: none !important; }
 
