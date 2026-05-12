@@ -4,12 +4,14 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #0a0f1a; /* Azul ultra escuro */
+    /* Fundo escuro profundo para dar contraste ao vidro */
+    background-color: #0f172a; 
     background-image: 
         linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-size: 35px 35px;
     font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #ffffff;
 }
 
 .main-container {
@@ -23,24 +25,20 @@ body {
 header {
     text-align: center;
     padding: 10px 0;
-    flex-shrink: 0;
 }
 
 .dashboard-title {
     margin: 0;
     font-size: 1.3rem;
-    letter-spacing: 6px;
+    letter-spacing: 5px;
     font-weight: 300;
-    color: #ffffff;
-    text-transform: uppercase;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    opacity: 0.9;
 }
 
 .status-bar {
     font-size: 0.6rem;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     color: rgba(255, 255, 255, 0.4);
-    margin-top: 5px;
 }
 
 .grid-layout {
@@ -49,23 +47,23 @@ header {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 20px;
-    padding: 10px 0 20px 0;
+    padding: 15px 0;
     min-height: 0;
 }
 
 .chart-card {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* EFEITO VIDRO */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     padding: 20px;
-    box-sizing: border-box;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 canvas {

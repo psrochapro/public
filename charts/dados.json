@@ -10,7 +10,7 @@
         "valores": [25, 40, 15, 20]
     },
     "evolucao_performance": {
-        "titulo": "Performance Técnica",
+        "titulo": "Evolução Técnica",
         "labels": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"],
         "valores": [10, 15, 8, 22, 35, 30, 45, 50, 42, 60]
     },
