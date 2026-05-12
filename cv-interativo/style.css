@@ -27,10 +27,10 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* Header */
+/* Header - Centralização Vertical Aplicada aqui */
 .header-container {
     display: flex;
-    align-items: flex-start;
+    align-items: center; /* Centraliza a foto verticalmente com o texto */
     gap: 40px;
     border-bottom: 2px solid #edf2f7;
     padding-bottom: 20px;
@@ -222,7 +222,7 @@ iframe { width: 100%; height: 100%; border: none; }
 }
 
 /* ===========================================
-   REGRAS DE IMPRESSÃO (PDF) - OTIMIZADO
+   REGRAS DE IMPRESSÃO (PDF) - CENTRALIZADO
    =========================================== */
 @media print {
     @page { size: A4; margin: 1cm; }
@@ -238,23 +238,21 @@ iframe { width: 100%; height: 100%; border: none; }
     .header-container { 
         display: flex !important; 
         flex-direction: row !important; 
-        align-items: flex-start !important;
+        align-items: center !important; /* Centraliza a foto com o texto no PDF */
         border-bottom: 2px solid #334155; 
         padding-bottom: 10px; 
         gap: 25px;
     }
     
-    /* Foto levemente maior no PDF para preencher o espaço do resumo tratado */
-    .profile-img { width: 130px; height: 175px; border: 1px solid #eee; flex-shrink: 0; }
+    .profile-img { width: 120px; height: 160px; border: 1px solid #eee; flex-shrink: 0; }
     
     .header-text { text-align: left !important; }
     .header-text h1 { font-size: 1.5rem !important; text-align: left !important; }
     .subtitle { font-size: 0.95rem; margin: 2px 0 8px 0 !important; text-align: left !important; color: var(--accent) !important; }
 
-    /* Resumo compacto no PDF */
     .resumo-list { margin: 5px 0 !important; }
     .resumo-list li { 
-        background: transparent !important; /* Remove fundo cinza no PDF */
+        background: transparent !important; 
         padding: 0 !important;
         margin-bottom: 4px !important;
         font-size: 0.75rem !important; 
@@ -267,7 +265,7 @@ iframe { width: 100%; height: 100%; border: none; }
         text-align: left !important; 
         margin-top: 10px; 
         padding-top: 5px; 
-        display: block !important; /* Volta ao fluxo normal para economizar espaço */
+        display: block !important; 
     }
     .contato-item { background: transparent !important; border: none !important; padding: 0 !important; margin-right: 10px; }
 
