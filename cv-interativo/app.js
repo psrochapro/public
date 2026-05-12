@@ -48,10 +48,8 @@ function renderApp() {
                 </div>
             </nav>
 
-            <!-- Conteúdo Dinâmico das Abas (Tela) -->
             <div id="tab-content" class="no-print"></div>
 
-            <!-- SEÇÃO EXCLUSIVA PARA IMPRESSÃO (Oculta na tela, visível no PDF) -->
             <div id="print-only-content" class="print-only">
                 <section>
                     <h3 class="print-section-title">💎 Pilares Estratégicos</h3>
