@@ -20,7 +20,10 @@ function renderApp() {
             <header class="header-container">
                 <img src="${cvData.perfil.foto}" class="profile-img" alt="Foto">
                 <div class="header-text">
-                    <h1>${cvData.perfil.nome}</h1>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <h1>${cvData.perfil.nome}</h1>
+                        <button onclick="window.print()" class="print-btn-float no-print" title="Gerar PDF">🖨️ PDF</button>
+                    </div>
                     <div class="subtitle">🚀 ${cvData.perfil.titulo}</div>
                     <ul class="resumo-list">
                         ${cvData.perfil.resumo.map(r => `<li>🔹 ${r}</li>`).join('')}
@@ -34,7 +37,7 @@ function renderApp() {
                 </div>
             </header>
 
-            <nav class="nav-tabs-container">
+            <nav class="nav-tabs-container no-print">
                 <div class="nav-tabs">
                     <button class="tab-btn active" onclick="switchTab('pilares', this)">💎 Pilares</button>
                     <button class="tab-btn" onclick="switchTab('habilidades', this)">🛠️ Habilidades</button>
@@ -45,14 +48,62 @@ function renderApp() {
                 </div>
             </nav>
 
-            <div id="tab-content"></div>
+            <!-- Conteúdo Dinâmico das Abas (Tela) -->
+            <div id="tab-content" class="no-print"></div>
 
-            <footer style="text-align: center; margin-top: 40px; font-size: 0.8rem; color: #64748b;">
+            <!-- SEÇÃO EXCLUSIVA PARA IMPRESSÃO (Oculta na tela, visível no PDF) -->
+            <div id="print-only-content" class="print-only">
+                <section>
+                    <h3 class="print-section-title">💎 Pilares Estratégicos</h3>
+                    <div class="grid-print">
+                        ${cvData.pilares_estrategicos.map(p => `
+                            <div class="print-item"><strong>${p.tema} (${p.tempo}):</strong> ${p.experiencia}</div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="print-section-title">📊 Qualificação em Business Intelligence</h3>
+                    <table class="cv-table">
+                        <thead><tr><th>Categoria</th><th>Curso</th><th>Instituição</th><th>Ano</th></tr></thead>
+                        <tbody>${cvData.especializacoes_bi.map(e => `
+                            <tr><td>${e.categoria}</td><td>${e.curso}</td><td>${e.inst}</td><td>${e.ano}</td></tr>
+                        `).join('')}</tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3 class="print-section-title">⚙️ Qualificação em Gestão e Processos</h3>
+                    <table class="cv-table">
+                        <thead><tr><th>Categoria</th><th>Curso</th><th>Instituição</th><th>Ano</th></tr></thead>
+                        <tbody>${cvData.especializacoes_gestao.map(g => `
+                            <tr><td>${g.categoria}</td><td>${g.curso}</td><td>${g.inst}</td><td>${g.ano}</td></tr>
+                        `).join('')}</tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3 class="print-section-title">🎓 Formação Acadêmica e Idiomas</h3>
+                    <table class="cv-table">
+                        <tbody>${cvData.formacao_academica.map(f => `
+                            <tr><td><strong>${f.categoria}</strong></td><td>${f.curso}</td><td>${f.inst}</td><td>${f.periodo}</td></tr>
+                        `).join('')}</tbody>
+                    </table>
+                    <table class="cv-table">
+                        <thead><tr><th>Inglês (Certificação)</th><th>Nível</th><th>Instituição</th><th>Ano</th></tr></thead>
+                        <tbody>${cvData.fluencia_ingles.map(i => `
+                            <tr><td>${i.cert}</td><td>${i.nivel}</td><td>${i.inst}</td><td>${i.ano}</td></tr>
+                        `).join('')}</tbody>
+                    </table>
+                </section>
+            </div>
+
+            <footer style="text-align: center; margin-top: 40px; font-size: 0.8rem; color: #64748b;" class="no-print">
                 Currículo Interativo - Paulo Sergio Rocha | 2026
             </footer>
         </div>
 
-        <div id="modalMetodologia" class="modal-overlay">
+        <div id="modalMetodologia" class="modal-overlay no-print">
             <div class="modal-content">
                 <div class="modal-header">
                     <strong>📊 Metodologias e Processos</strong>
@@ -79,14 +130,14 @@ function switchTab(tab, btn) {
             html = `<div class="grid-content">${cvData.pilares_estrategicos.map(p => `
                 <div class="card">
                     <strong style="color:var(--primary)">${p.tema}</strong> <small>(${p.tempo})</small>
-                    <p style="font-size:0.9rem; margin-top:8px">${p.experiencia}</p>
+                    <p style="font-size:0.9rem; margin-top:4px">${p.experiencia}</p>
                 </div>`).join('')}</div>`;
             break;
         case 'habilidades':
             html = `<div class="grid-content">${cvData.habilidades_detalhadas.map(h => `
                 <div class="card">
                     <strong>${h.icon} ${h.tema}</strong>
-                    <p style="font-size:0.85rem; margin-top:5px; color:#64748b">${h.desc}</p>
+                    <p style="font-size:0.85rem; margin-top:4px; color:#64748b">${h.desc}</p>
                 </div>`).join('')}</div>`;
             break;
         case 'bi':
