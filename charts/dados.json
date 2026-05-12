@@ -1,5 +1,5 @@
 {
-    "labels": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
-    "valores": [12, 19, 3, 5, 2],
+    "labels": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+    "valores": [12, 19, 3, 5, 2, 15, 22, 18, 10, 14, 25, 30],
     "titulo": "Vendas por Período"
 }
