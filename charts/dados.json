@@ -1,22 +1,22 @@
 {
-    "vendasMensais": {
-        "titulo": "Vendas por Mês",
+    "vendas_mensais": {
+        "titulo": "Vendas Mensais (Colunas)",
         "labels": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-        "valores": [12, 19, 3, 5, 2, 15, 22, 18, 10, 14, 25, 30]
+        "valores": [12, 19, 15, 25, 22, 30, 45, 38, 52, 48, 60, 75]
     },
     "quadrantes": {
-        "titulo": "Distribuição Regional",
+        "titulo": "Distribuição por Quadrante (Rosca)",
         "labels": ["Norte", "Sul", "Leste", "Oeste"],
-        "valores": [25, 35, 20, 20]
+        "valores": [25, 40, 15, 20]
     },
-    "evolucao": {
-        "titulo": "Evolução de Performance (10 Itens)",
-        "labels": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"],
-        "valores": [10, 25, 45, 30, 55, 70, 65, 90, 85, 100]
+    "evolucao_performance": {
+        "titulo": "Evolução de Performance (Linha)",
+        "labels": ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10"],
+        "valores": [10, 15, 8, 22, 35, 30, 45, 50, 42, 60]
     },
-    "topProdutos": {
-        "titulo": "Top 5 Produtos",
-        "labels": ["Produto A", "Produto B", "Produto C", "Produto D", "Produto E"],
-        "valores": [450, 380, 310, 290, 210]
+    "top_produtos": {
+        "titulo": "Top 5 Produtos (Barras)",
+        "labels": ["Software A", "Hardware B", "Serviço C", "Licença D", "Cloud E"],
+        "valores": [85, 72, 60, 55, 40]
     }
 }

@@ -1,52 +1,59 @@
 body {
     margin: 0;
+    padding: 0;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #001a33;
+    /* Fundo Blueprint com grade */
     background-image: 
-        linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 30px 30px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-title {
+    margin: 20px 0;
+    letter-spacing: 3px;
+    font-weight: 300;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+.main-container {
+    width: 95%;
+    max-width: 1300px;
     padding: 20px;
 }
 
-.dashboard-container {
+.grid-layout {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 colunas */
-    grid-template-rows: repeat(2, 1fr);    /* 2 linhas */
+    /* 2 colunas com tamanhos iguais */
+    grid-template-columns: repeat(2, 1fr);
+    /* Espaçamento entre os gráficos */
     gap: 25px;
-    width: 95%;
-    max-width: 1200px;
-    height: 85vh;
 }
 
 .chart-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 255, 255, 0.2);
     border-radius: 15px;
     padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    height: 350px; /* Altura fixa para manter simetria */
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    transition: transform 0.3s ease;
 }
 
-.chart-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 255, 255, 0.5);
-}
-
-/* Ajuste para telas pequenas */
-@media (max-width: 850px) {
-    .dashboard-container {
+/* Responsividade para telas de celular */
+@media (max-width: 900px) {
+    .grid-layout {
         grid-template-columns: 1fr;
-        height: auto;
     }
     .chart-card {
         height: 300px;

@@ -3,18 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blueprint Dashboard Pro</title>
+    <title>Dashboard Blueprint Pro</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Bibliotecas via CDN (Versões estáveis) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="chart-card"><canvas id="chartVendas"></canvas></div>
-        <div class="chart-card"><canvas id="chartRosca"></canvas></div>
-        <div class="chart-card"><canvas id="chartLinha"></canvas></div>
-        <div class="chart-card"><canvas id="chartBarras"></canvas></div>
+
+    <div class="main-container">
+        <h1 class="dashboard-title">SISTEMA DE MONITORAMENTO BLUEPRINT</h1>
+        
+        <div class="grid-layout">
+            <!-- Gráfico 1: Colunas (Vendas) -->
+            <div class="chart-card">
+                <canvas id="chartVendas"></canvas>
+            </div>
+
+            <!-- Gráfico 2: Rosca (Quadrantes) -->
+            <div class="chart-card">
+                <canvas id="chartRosca"></canvas>
+            </div>
+
+            <!-- Gráfico 3: Linhas (Evolução) -->
+            <div class="chart-card">
+                <canvas id="chartLinha"></canvas>
+            </div>
+
+            <!-- Gráfico 4: Barras (Top Produtos) -->
+            <div class="chart-card">
+                <canvas id="chartBarras"></canvas>
+            </div>
+        </div>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
