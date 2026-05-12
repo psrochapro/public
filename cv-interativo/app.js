@@ -56,12 +56,22 @@ function renderApp() {
 
             <div id="tab-content" class="no-print"></div>
 
+            <!-- CONTEÚDO EXCLUSIVO PARA IMPRESSÃO (PDF) -->
             <div id="print-only-content" class="print-only">
                 <section>
                     <h3 class="print-section-title">💎 Pilares Estratégicos</h3>
                     <div class="grid-print">
                         ${cvData.pilares_estrategicos.map(p => `
                             <div class="print-item"><strong>${p.tema} (${p.tempo}):</strong> ${p.experiencia}</div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="print-section-title">🛠️ Competências e Habilidades</h3>
+                    <div class="grid-print">
+                        ${cvData.habilidades_detalhadas.map(h => `
+                            <div class="print-item"><strong>${h.tema}:</strong> ${h.desc}</div>
                         `).join('')}
                     </div>
                 </section>
@@ -79,9 +89,9 @@ function renderApp() {
                 <section>
                     <h3 class="print-section-title">⚙️ Qualificação em Gestão e Processos</h3>
                     <table class="cv-table">
-                        <thead><tr><th>Categoria</th><th>Curso</th><th>Instituição</th><th>Ano</th></tr></thead>
+                        <thead><tr><th>Categoria</th><th>Curso / Certificação</th><th>Instituição</th><th>Ano</th></tr></thead>
                         <tbody>${cvData.especializacoes_gestao.map(g => `
-                            <tr><td>${g.categoria}</td><td>${g.curso}</td><td>${g.inst}</td><td>${g.ano}</td></tr>
+                            <tr><td>${g.categoria}</td><td>${g.curso} ${g.ch ? `(${g.ch})` : ''}</td><td>${g.inst}</td><td>${g.ano}</td></tr>
                         `).join('')}</tbody>
                     </table>
                 </section>
@@ -100,6 +110,10 @@ function renderApp() {
                         `).join('')}</tbody>
                     </table>
                 </section>
+
+                <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; font-size: 0.7rem; color: #64748b;">
+                    <p>💡 <strong>Metodologias e Processos Detalhados:</strong> Acesse a apresentação completa em: ${cvData.perfil.metodologia_url}</p>
+                </div>
             </div>
 
             <footer style="text-align: center; margin-top: 40px; font-size: 0.8rem; color: #64748b;" class="no-print">
