@@ -2,53 +2,70 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background-color: #001a33;
+    background-color: #000d1a;
+    /* Grade Blueprint mais técnica */
     background-image: 
-        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 30px 30px;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    color: white;
+        linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 25px 25px;
+    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+    color: #e0f7fa;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.dashboard-title {
-    margin: 20px 0;
-    letter-spacing: 3px;
-    font-weight: 300;
-    text-shadow: 0 0 10px #00ffff;
-    text-align: center;
+    justify-content: center;
 }
 
 .main-container {
     width: 95%;
-    max-width: 1300px;
-    padding: 20px;
+    max-width: 1400px;
+    padding: 30px 10px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: 5px;
+    font-weight: 300;
+    color: #00ffff;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+}
+
+.status-bar {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: rgba(0, 255, 255, 0.5);
+    margin-top: 10px;
 }
 
 .grid-layout {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
+    gap: 30px;
 }
 
 .chart-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 20, 40, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 255, 255, 0.2);
-    border-radius: 15px;
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    height: 350px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 255, 255, 0.05);
+    height: 380px;
+    transition: all 0.3s ease;
 }
 
-@media (max-width: 900px) {
+.chart-card:hover {
+    border-color: rgba(0, 255, 255, 0.6);
+    box-shadow: 0 15px 40px rgba(0, 255, 255, 0.15);
+}
+
+/* Ajuste Mobile */
+@media (max-width: 950px) {
     .grid-layout { grid-template-columns: 1fr; }
-    .chart-card { height: 300px; }
+    .chart-card { height: 320px; }
 }

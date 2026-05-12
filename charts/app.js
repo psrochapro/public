@@ -1,51 +1,61 @@
-// Registrar o plugin datalabels
+// Registro do Plugin
 Chart.register(ChartDataLabels);
 
-const corCiano = 'rgba(0, 255, 255, 0.6)';
-const corBorda = '#00ffff';
-const corBranca = '#ffffff';
+// Paleta de Cores Blueprint
+const cores = {
+    primaria: '#00ffff',
+    primariaTrans: 'rgba(0, 255, 255, 0.3)',
+    secundaria: '#0080ff',
+    texto: '#e0f7fa',
+    grid: 'rgba(255, 255, 255, 0.05)',
+    paletaDoughnut: [
+        'rgba(0, 255, 255, 0.7)',
+        'rgba(0, 160, 255, 0.7)',
+        'rgba(0, 80, 255, 0.7)',
+        'rgba(0, 200, 200, 0.7)'
+    ]
+};
 
-// Função auxiliar para as opções dos gráficos
-function getBaseOptions() {
-    return {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            datalabels: {
-                color: corBranca,
-                anchor: 'end',
-                align: 'top',
-                font: { weight: 'bold', size: 10 }
-            },
-            legend: {
-                labels: { color: corBranca, font: { size: 12 } }
-            }
+// Opções base reaproveitáveis
+const baseOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { top: 20 } },
+    plugins: {
+        legend: {
+            display: true,
+            position: 'top',
+            labels: { color: cores.texto, font: { size: 12, weight: '500' }, padding: 20 }
         },
-        scales: {
-            x: { ticks: { color: corBranca }, grid: { display: false } },
-            y: { 
-                beginAtZero: true, 
-                ticks: { color: corBranca }, 
-                grid: { color: 'rgba(255,255,255,0.1)' } 
-            }
+        datalabels: {
+            color: cores.texto,
+            font: { weight: 'bold', size: 11 },
+            anchor: 'end',
+            align: 'top',
+            offset: 4,
+            formatter: (v) => v
         }
-    };
-}
+    },
+    scales: {
+        x: { 
+            ticks: { color: cores.texto }, 
+            grid: { display: false } 
+        },
+        y: { 
+            beginAtZero: true,
+            ticks: { color: cores.texto },
+            grid: { color: cores.grid }
+        }
+    }
+};
 
-async function renderCharts() {
-    const errorDiv = document.getElementById('error-message');
-    
+async function init() {
     try {
-        // Busca o JSON no mesmo diretório do app.js
         const response = await fetch('dados.json');
-        
-        if (!response.ok) {
-            throw new Error(`Erro HTTP! status: ${response.status} - Verifique se o dados.json está na pasta.`);
-        }
-
+        if (!response.ok) throw new Error("JSON não encontrado");
         const d = await response.json();
 
-        // 1. Gráfico de Colunas
+        // 1. COLUNAS
         new Chart(document.getElementById('chartVendas'), {
             type: 'bar',
             data: {
@@ -53,38 +63,43 @@ async function renderCharts() {
                 datasets: [{
                     label: d.vendas_mensais.titulo,
                     data: d.vendas_mensais.valores,
-                    backgroundColor: corCiano,
-                    borderColor: corBorda,
-                    borderWidth: 1
+                    backgroundColor: cores.primariaTrans,
+                    borderColor: cores.primaria,
+                    borderWidth: 2,
+                    borderRadius: 4
                 }]
             },
-            options: getBaseOptions()
+            options: baseOptions
         });
 
-        // 2. Gráfico de Rosca
+        // 2. ROSCA (Doughnut) - Customizado
         new Chart(document.getElementById('chartRosca'), {
             type: 'doughnut',
             data: {
                 labels: d.quadrantes.labels,
                 datasets: [{
                     data: d.quadrantes.valores,
-                    backgroundColor: [
-                        'rgba(0, 255, 255, 0.7)',
-                        'rgba(0, 150, 255, 0.7)',
-                        'rgba(0, 80, 255, 0.7)',
-                        'rgba(100, 255, 255, 0.7)'
-                    ],
-                    borderColor: '#001a33',
-                    borderWidth: 2
+                    backgroundColor: cores.paletaDoughnut,
+                    borderColor: '#000d1a',
+                    borderWidth: 3
                 }]
             },
             options: {
-                ...getBaseOptions(),
+                ...baseOptions,
+                plugins: {
+                    ...baseOptions.plugins,
+                    datalabels: {
+                        color: '#fff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: { size: 14, weight: 'bold' }
+                    }
+                },
                 scales: { x: { display: false }, y: { display: false } }
             }
         });
 
-        // 3. Gráfico de Linhas
+        // 3. LINHA (Evolução)
         new Chart(document.getElementById('chartLinha'), {
             type: 'line',
             data: {
@@ -92,16 +107,19 @@ async function renderCharts() {
                 datasets: [{
                     label: d.evolucao_performance.titulo,
                     data: d.evolucao_performance.valores,
-                    borderColor: corBorda,
+                    borderColor: cores.primaria,
                     backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                    borderWidth: 3,
                     fill: true,
-                    tension: 0.3
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: cores.primaria
                 }]
             },
-            options: getBaseOptions()
+            options: baseOptions
         });
 
-        // 4. Gráfico de Barras Horizontais
+        // 4. BARRAS HORIZONTAIS
         new Chart(document.getElementById('chartBarras'), {
             type: 'bar',
             data: {
@@ -109,22 +127,29 @@ async function renderCharts() {
                 datasets: [{
                     label: d.top_produtos.titulo,
                     data: d.top_produtos.valores,
-                    backgroundColor: 'rgba(0, 200, 255, 0.6)',
-                    borderColor: corBorda,
-                    borderWidth: 1
+                    backgroundColor: 'rgba(0, 120, 255, 0.4)',
+                    borderColor: cores.secundaria,
+                    borderWidth: 2,
+                    borderRadius: 4
                 }]
             },
             options: {
-                ...getBaseOptions(),
-                indexAxis: 'y'
+                ...baseOptions,
+                indexAxis: 'y',
+                plugins: {
+                    ...baseOptions.plugins,
+                    datalabels: {
+                        ...baseOptions.plugins.datalabels,
+                        anchor: 'end',
+                        align: 'right'
+                    }
+                }
             }
         });
 
     } catch (err) {
-        console.error("Erro detalhado:", err);
-        errorDiv.innerText = "ERRO AO CARREGAR GRÁFICOS: " + err.message;
+        console.error("Erro:", err);
     }
 }
 
-// Inicia a execução apenas quando a janela carregar
-window.onload = renderCharts;
+window.onload = init;
