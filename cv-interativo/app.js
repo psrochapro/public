@@ -67,15 +67,6 @@ function renderApp() {
                 </section>
 
                 <section>
-                    <h3 class="print-section-title">🛠️ Competências e Habilidades</h3>
-                    <div class="grid-print">
-                        ${cvData.habilidades_detalhadas.map(h => `
-                            <div class="print-item"><strong>${h.tema}:</strong> ${h.desc}</div>
-                        `).join('')}
-                    </div>
-                </section>
-
-                <section>
                     <h3 class="print-section-title">📊 Qualificação em Business Intelligence</h3>
                     <table class="cv-table">
                         <thead><tr><th>Categoria</th><th>Curso</th><th>Instituição</th><th>Ano</th></tr></thead>
@@ -88,9 +79,9 @@ function renderApp() {
                 <section>
                     <h3 class="print-section-title">⚙️ Qualificação em Gestão e Processos</h3>
                     <table class="cv-table">
-                        <thead><tr><th>Categoria</th><th>Curso / Certificação</th><th>Instituição</th><th>Ano</th></tr></thead>
+                        <thead><tr><th>Categoria</th><th>Curso</th><th>Instituição</th><th>Ano</th></tr></thead>
                         <tbody>${cvData.especializacoes_gestao.map(g => `
-                            <tr><td>${g.categoria}</td><td>${g.curso} ${g.ch ? `(${g.ch})` : ''}</td><td>${g.inst}</td><td>${g.ano}</td></tr>
+                            <tr><td>${g.categoria}</td><td>${g.curso}</td><td>${g.inst}</td><td>${g.ano}</td></tr>
                         `).join('')}</tbody>
                     </table>
                 </section>
@@ -109,10 +100,6 @@ function renderApp() {
                         `).join('')}</tbody>
                     </table>
                 </section>
-
-                <div class="print-footer-note">
-                    💡 <strong>Metodologias e Processos Detalhados:</strong> Acesse a apresentação completa em: ${cvData.perfil.metodologia_url}
-                </div>
             </div>
 
             <footer style="text-align: center; margin-top: 40px; font-size: 0.8rem; color: #64748b;" class="no-print">
@@ -138,6 +125,14 @@ function switchTab(tab, btn) {
     const tabs = document.querySelectorAll('.tab-btn');
     tabs.forEach(t => t.classList.remove('active'));
     if(btn) btn.classList.add('active');
+
+    if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({
+            path:  'aba-' + tab,
+            title: 'Clique na Aba ' + tab,
+            event: true,
+        });
+    }
 
     const content = document.getElementById('tab-content');
     let html = '';
@@ -196,10 +191,24 @@ function switchTab(tab, btn) {
 }
 
 function handlePrint() {
+    if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({
+            path:  'click-pdf',
+            title: 'Gerou PDF',
+            event: true,
+        });
+    }
     window.print();
 }
 
 function openModal() {
+    if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({
+            path:  'click-metodologia',
+            title: 'Abriu Metodologias',
+            event: true,
+        });
+    }
     document.getElementById('modalMetodologia').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }

@@ -27,9 +27,10 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
+/* Header - Centralização Vertical Aplicada aqui */
 .header-container {
     display: flex;
-    align-items: center;
+    align-items: center; /* Centraliza a foto verticalmente com o texto */
     gap: 40px;
     border-bottom: 2px solid #edf2f7;
     padding-bottom: 20px;
@@ -43,6 +44,7 @@ body {
     border: 4px solid white; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
     flex-shrink: 0;
+    transition: all 0.3s ease;
 }
 
 .header-text { flex: 1; text-align: left; }
@@ -72,8 +74,12 @@ body {
     line-height: 1.4;
 }
 
-.resumo-icon { margin-right: 10px; flex-shrink: 0; }
+.resumo-icon {
+    margin-right: 10px;
+    flex-shrink: 0;
+}
 
+/* Contatos - Layout Desktop */
 .contatos { 
     font-size: 0.85rem; 
     margin-top: 12px; 
@@ -83,8 +89,10 @@ body {
     flex-wrap: wrap;
     gap: 10px 15px;
 }
+.contato-item { white-space: nowrap; }
 .contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
+/* Botão PDF */
 .print-btn-float {
     background: #f1f5f9;
     color: var(--primary);
@@ -94,10 +102,15 @@ body {
     cursor: pointer;
     font-weight: bold;
     font-size: 0.75rem;
+    white-space: nowrap;
+    transition: all 0.2s;
 }
 
+.print-btn-float:hover { background: var(--primary); color: white; }
+
+/* Menu de Abas */
 .nav-tabs-container { margin: 15px 0; border-bottom: 1px solid #ddd; }
-.nav-tabs { display: flex; gap: 6px; padding-bottom: 8px; overflow-x: auto; }
+.nav-tabs { display: flex; gap: 6px; padding-bottom: 8px; }
 .tab-btn {
     padding: 8px 14px;
     border: 1px solid #e2e8f0;
@@ -106,92 +119,176 @@ body {
     border-radius: 6px;
     font-weight: 600;
     font-size: 0.85rem;
+    color: var(--text);
     white-space: nowrap;
+    transition: all 0.3s;
 }
-.tab-btn.active { background: var(--primary); color: white; }
+.tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.btn-metodologia { color: var(--accent); border-color: var(--accent); }
+
+/* Conteúdo */
+#tab-content { min-height: 200px; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 .grid-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
 .card { background: #f8fafc; padding: 10px 15px; border-left: 4px solid var(--accent); border-radius: 6px; }
+.card strong { font-size: 0.9rem; }
+.card p { margin-top: 4px; margin-bottom: 0; font-size: 0.85rem; }
 
+/* Tabelas */
 .cv-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 8px;
     margin-bottom: 20px;
     font-size: 0.85rem;
+    border: 1px solid var(--table-border);
 }
-.cv-table th { background-color: var(--table-header-bg); text-align: left; padding: 6px 10px; border: 1px solid var(--table-border); }
-.cv-table td { padding: 4px 10px; border: 1px solid var(--table-border); }
+.cv-table th { background-color: var(--table-header-bg); color: var(--primary); text-align: left; padding: 6px 10px; font-weight: 700; }
+.cv-table td { padding: 4px 10px; border-bottom: 1px solid #f1f5f9; }
+.cv-table tbody tr:nth-child(even) { background-color: #fafbfc; }
 
+.tab-title { margin: 15px 0 8px 0; font-size: 1.1rem; text-align: left; }
+
+/* Modal */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center;
-    z-index: 9999;
+    z-index: 9999; backdrop-filter: blur(5px);
 }
-.modal-content { background: white; width: 95%; height: 90%; max-width: 1300px; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
+.modal-content {
+    background: white; width: 95%; height: 90%;
+    max-width: 1300px; border-radius: 12px;
+    display: flex; flex-direction: column; overflow: hidden;
+}
 .modal-header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; }
-
-/* ESTILO DO BOTÃO VOLTAR (CORRIGIDO) */
-.close-btn { 
-    background: #ef4444; 
-    color: white; 
-    border: none; 
-    padding: 8px 16px; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    font-weight: bold;
-    font-size: 0.85rem;
-    transition: background 0.2s;
-}
-.close-btn:hover { background: #dc2626; }
-
+.close-btn { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; }
 .iframe-container { flex-grow: 1; }
 iframe { width: 100%; height: 100%; border: none; }
 
 .print-only { display: none; }
 
+/* ===========================================
+   MOBILE ADJUSTMENTS (APPROVED)
+   =========================================== */
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; text-align: center; }
-    .header-text { text-align: center; }
-    .resumo-list li { background: #f8fafc; padding: 8px; border-radius: 6px; border-left: 3px solid var(--accent); }
-    .contato-item { background: #f1f5f9; padding: 5px 12px; border-radius: 20px; border: 1px solid #e2e8f0; }
+    body { padding: 10px; }
+    .container { padding: 15px; }
+    .header-container { flex-direction: column; align-items: center; text-align: center; gap: 15px; }
+    .header-text { text-align: center; width: 100%; }
+    
+    .header-title-row { flex-direction: column; gap: 10px; }
+    .header-text h1 { font-size: 1.6rem; text-align: center; }
+
+    .print-btn-float { order: -1; margin: 0 auto; }
+    .subtitle { text-align: center; font-size: 0.95rem; }
+    
+    .resumo-list { text-align: left; margin: 15px 0; }
+    .resumo-list li {
+        background: #f8fafc;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 0.82rem;
+        border-left: 3px solid var(--accent);
+    }
+
+    .contatos { justify-content: center; gap: 8px; margin-top: 15px; }
+    .contato-item {
+        background: #f1f5f9;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .profile-img { width: 130px; height: 160px; }
+    .nav-tabs-container { margin: 10px -12px; padding: 0 12px; overflow-x: auto; }
+    
+    .cv-table thead { display: none; }
+    .cv-table tr { 
+        display: block; border: 1px solid #e2e8f0; margin-bottom: 15px; 
+        border-radius: 10px; padding: 10px; background: white;
+    }
+    .cv-table td { display: flex; flex-direction: column; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid #f8fafc; }
+    .cv-table td::before { 
+        content: attr(data-label); font-weight: 800; color: var(--accent); 
+        font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;
+    }
 }
 
 /* ===========================================
-   REGRAS DE IMPRESSÃO (PDF)
+   REGRAS DE IMPRESSÃO (PDF) - CENTRALIZADO
    =========================================== */
 @media print {
     @page { size: A4; margin: 1cm; }
-    body { background: white; padding: 0; color: #000; }
+    body { background: white; padding: 0; }
     .container { box-shadow: none; padding: 0; max-width: 100%; width: 100%; border: none; }
-    .no-print, .nav-tabs-container, .modal-overlay, #tab-content, .print-btn-float { display: none !important; }
-    .print-only { display: block !important; }
     
-    .header-container { display: flex !important; flex-direction: row !important; align-items: center !important; border-bottom: 2px solid #1e293b; padding-bottom: 15px; gap: 30px; }
-    .profile-img { width: 110px; height: 140px; border: 1px solid #ddd; }
-    
-    .header-text h1 { font-size: 1.6rem !important; }
-    .subtitle { font-size: 1rem; color: #2563eb !important; }
-
-    /* RESUMO NO PDF: UMA LINHA POR ITEM (FONTE REDUZIDA) */
-    .resumo-list { margin: 10px 0 !important; padding: 0; list-style: none; }
-    .resumo-list li { 
-        font-size: 0.72rem !important; /* Fonte reduzida para caber na linha */
-        white-space: nowrap; /* Força ficar em uma linha só */
-        overflow: hidden;
-        text-overflow: clip;
-        margin-bottom: 3px !important;
-        display: block !important; 
+    .no-print, .nav-tabs-container, .modal-overlay, #tab-content, .print-btn-float { 
+        display: none !important; 
     }
 
-    .contatos { display: block !important; border-top: 1px solid #eee; margin-top: 8px; padding-top: 8px; }
-    .contato-item { background: transparent !important; border: none !important; margin-right: 15px; font-size: 0.75rem !important; display: inline-block !important; }
+    .print-only { display: block !important; }
+    
+    .header-container { 
+        display: flex !important; 
+        flex-direction: row !important; 
+        align-items: center !important; /* Centraliza a foto com o texto no PDF */
+        border-bottom: 2px solid #334155; 
+        padding-bottom: 10px; 
+        gap: 25px;
+    }
+    
+    .profile-img { width: 120px; height: 160px; border: 1px solid #eee; flex-shrink: 0; }
+    
+    .header-text { text-align: left !important; }
+    .header-text h1 { font-size: 1.5rem !important; text-align: left !important; }
+    .subtitle { font-size: 0.95rem; margin: 2px 0 8px 0 !important; text-align: left !important; color: var(--accent) !important; }
 
-    .print-section-title { font-size: 0.95rem; color: #1e293b; border-bottom: 1px solid #cbd5e1; margin: 18px 0 8px 0; padding-bottom: 2px; text-transform: uppercase; }
-    .grid-print { display: block !important; }
-    .print-item { font-size: 0.8rem !important; margin-bottom: 6px; line-height: 1.4; page-break-inside: avoid; }
-    .cv-table { width: 100%; border-collapse: collapse; font-size: 0.75rem !important; margin-bottom: 12px; }
-    .cv-table th { background: #f8fafc !important; border: 1px solid #e2e8f0; padding: 5px; }
-    .cv-table td { border: 1px solid #e2e8f0; padding: 4px; }
+    .resumo-list { margin: 5px 0 !important; }
+    .resumo-list li { 
+        background: transparent !important; 
+        padding: 0 !important;
+        margin-bottom: 4px !important;
+        font-size: 0.75rem !important; 
+        border: none !important;
+        text-align: left !important;
+    }
+    .resumo-icon { margin-right: 6px !important; }
+
+    .contatos { 
+        text-align: left !important; 
+        margin-top: 10px; 
+        padding-top: 5px; 
+        display: block !important; 
+    }
+    .contato-item { background: transparent !important; border: none !important; padding: 0 !important; margin-right: 10px; }
+
+    .print-section-title {
+        font-size: 1rem;
+        color: var(--primary);
+        border-bottom: 1px solid #e2e8f0;
+        margin: 15px 0 8px 0;
+        padding-bottom: 2px;
+        text-transform: uppercase;
+        text-align: left;
+    }
+
+    .print-item { font-size: 0.72rem !important; margin-bottom: 4px; text-align: left; }
+
+    .cv-table { font-size: 0.7rem !important; margin-bottom: 10px; display: table !important; width: 100%; }
+    .cv-table thead { display: table-header-group !important; }
+    .cv-table tr { display: table-row !important; }
+    .cv-table td, .cv-table th { 
+        display: table-cell !important; padding: 3px 5px !important; 
+        border: 1px solid #f1f5f9 !important; text-align: left;
+    }
+    .cv-table td::before { content: none !important; }
+
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
