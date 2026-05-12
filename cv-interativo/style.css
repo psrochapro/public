@@ -27,7 +27,6 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* Header - Centralização Vertical */
 .header-container {
     display: flex;
     align-items: center;
@@ -73,12 +72,8 @@ body {
     line-height: 1.4;
 }
 
-.resumo-icon {
-    margin-right: 10px;
-    flex-shrink: 0;
-}
+.resumo-icon { margin-right: 10px; flex-shrink: 0; }
 
-/* Contatos Web/Mobile */
 .contatos { 
     font-size: 0.85rem; 
     margin-top: 12px; 
@@ -88,10 +83,8 @@ body {
     flex-wrap: wrap;
     gap: 10px 15px;
 }
-.contato-item { white-space: nowrap; }
 .contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
-/* Botão PDF no Site */
 .print-btn-float {
     background: #f1f5f9;
     color: var(--primary);
@@ -103,7 +96,6 @@ body {
     font-size: 0.75rem;
 }
 
-/* Menu de Abas (Site) */
 .nav-tabs-container { margin: 15px 0; border-bottom: 1px solid #ddd; }
 .nav-tabs { display: flex; gap: 6px; padding-bottom: 8px; overflow-x: auto; }
 .tab-btn {
@@ -118,11 +110,9 @@ body {
 }
 .tab-btn.active { background: var(--primary); color: white; }
 
-/* Grid de Cards (Site) */
 .grid-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
 .card { background: #f8fafc; padding: 10px 15px; border-left: 4px solid var(--accent); border-radius: 6px; }
 
-/* Tabelas (Site) */
 .cv-table {
     width: 100%;
     border-collapse: collapse;
@@ -133,7 +123,6 @@ body {
 .cv-table th { background-color: var(--table-header-bg); text-align: left; padding: 6px 10px; border: 1px solid var(--table-border); }
 .cv-table td { padding: 4px 10px; border: 1px solid var(--table-border); }
 
-/* Modal Metodologia */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center;
@@ -141,117 +130,68 @@ body {
 }
 .modal-content { background: white; width: 95%; height: 90%; max-width: 1300px; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
 .modal-header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; }
+
+/* ESTILO DO BOTÃO VOLTAR (CORRIGIDO) */
+.close-btn { 
+    background: #ef4444; 
+    color: white; 
+    border: none; 
+    padding: 8px 16px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+.close-btn:hover { background: #dc2626; }
+
 .iframe-container { flex-grow: 1; }
 iframe { width: 100%; height: 100%; border: none; }
 
 .print-only { display: none; }
 
-/* MOBILE ADJUSTMENTS */
 @media (max-width: 768px) {
     .header-container { flex-direction: column; text-align: center; }
     .header-text { text-align: center; }
-    .header-title-row { flex-direction: column; }
-    .resumo-list li { background: #f8fafc; padding: 8px; border-radius: 6px; margin-bottom: 5px; border-left: 3px solid var(--accent); }
-    .contato-item { background: #f1f5f9; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
+    .resumo-list li { background: #f8fafc; padding: 8px; border-radius: 6px; border-left: 3px solid var(--accent); }
+    .contato-item { background: #f1f5f9; padding: 5px 12px; border-radius: 20px; border: 1px solid #e2e8f0; }
 }
 
 /* ===========================================
-   REGRAS DE IMPRESSÃO (PDF) - LIMPO E LINEAR
+   REGRAS DE IMPRESSÃO (PDF)
    =========================================== */
 @media print {
     @page { size: A4; margin: 1cm; }
-    
     body { background: white; padding: 0; color: #000; }
     .container { box-shadow: none; padding: 0; max-width: 100%; width: 100%; border: none; }
-    
-    .no-print, .nav-tabs-container, .modal-overlay, #tab-content, .print-btn-float { 
-        display: none !important; 
-    }
-
+    .no-print, .nav-tabs-container, .modal-overlay, #tab-content, .print-btn-float { display: none !important; }
     .print-only { display: block !important; }
     
-    /* Header no PDF */
-    .header-container { 
-        display: flex !important; 
-        flex-direction: row !important; 
-        align-items: center !important; 
-        border-bottom: 2px solid #1e293b; 
-        padding-bottom: 15px; 
-        gap: 30px;
-    }
+    .header-container { display: flex !important; flex-direction: row !important; align-items: center !important; border-bottom: 2px solid #1e293b; padding-bottom: 15px; gap: 30px; }
+    .profile-img { width: 110px; height: 140px; border: 1px solid #ddd; }
     
-    .profile-img { width: 110px; height: 140px; border: 1px solid #ddd; flex-shrink: 0; }
-    
-    .header-text { text-align: left !important; }
-    .header-text h1 { font-size: 1.6rem !important; margin: 0; color: #000; }
-    .subtitle { font-size: 1rem; font-weight: bold; margin: 4px 0 !important; color: #2563eb !important; }
+    .header-text h1 { font-size: 1.6rem !important; }
+    .subtitle { font-size: 1rem; color: #2563eb !important; }
 
-    /* Resumo Limpo no PDF - Uma linha por item */
+    /* RESUMO NO PDF: UMA LINHA POR ITEM (FONTE REDUZIDA) */
     .resumo-list { margin: 10px 0 !important; padding: 0; list-style: none; }
     .resumo-list li { 
-        background: transparent !important; 
-        border: none !important; 
-        padding: 1px 0 !important;
-        margin-bottom: 4px !important;
-        font-size: 0.8rem !important; 
-        color: #334155 !important;
+        font-size: 0.72rem !important; /* Fonte reduzida para caber na linha */
+        white-space: nowrap; /* Força ficar em uma linha só */
+        overflow: hidden;
+        text-overflow: clip;
+        margin-bottom: 3px !important;
         display: block !important; 
     }
-    .resumo-icon { display: inline-block; margin-right: 5px; }
 
-    /* Contatos em Texto Simples no PDF */
-    .contatos { 
-        display: block !important; 
-        border-top: 1px solid #eee; 
-        margin-top: 8px; 
-        padding-top: 8px; 
-    }
-    .contato-item { 
-        background: transparent !important; 
-        border: none !important; 
-        padding: 0 !important; 
-        margin-right: 15px; 
-        font-size: 0.75rem !important;
-        display: inline-block !important;
-    }
-    .contatos a { color: #000 !important; text-decoration: none; font-weight: normal; }
+    .contatos { display: block !important; border-top: 1px solid #eee; margin-top: 8px; padding-top: 8px; }
+    .contato-item { background: transparent !important; border: none !important; margin-right: 15px; font-size: 0.75rem !important; display: inline-block !important; }
 
-    /* Seções e Títulos no PDF */
-    .print-section-title {
-        font-size: 0.95rem;
-        color: #1e293b;
-        border-bottom: 1px solid #cbd5e1;
-        margin: 18px 0 8px 0;
-        padding-bottom: 2px;
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-
-    /* Grid Linear (Um abaixo do outro) */
+    .print-section-title { font-size: 0.95rem; color: #1e293b; border-bottom: 1px solid #cbd5e1; margin: 18px 0 8px 0; padding-bottom: 2px; text-transform: uppercase; }
     .grid-print { display: block !important; }
-    .print-item { 
-        font-size: 0.8rem !important; 
-        margin-bottom: 6px; 
-        line-height: 1.4;
-        page-break-inside: avoid;
-    }
-
-    /* Tabelas no PDF */
-    .cv-table { 
-        width: 100%; 
-        border-collapse: collapse; 
-        font-size: 0.75rem !important; 
-        margin-bottom: 12px; 
-    }
-    .cv-table th { background: #f8fafc !important; border: 1px solid #e2e8f0; padding: 5px; font-weight: bold; }
+    .print-item { font-size: 0.8rem !important; margin-bottom: 6px; line-height: 1.4; page-break-inside: avoid; }
+    .cv-table { width: 100%; border-collapse: collapse; font-size: 0.75rem !important; margin-bottom: 12px; }
+    .cv-table th { background: #f8fafc !important; border: 1px solid #e2e8f0; padding: 5px; }
     .cv-table td { border: 1px solid #e2e8f0; padding: 4px; }
-
-    .print-footer-note {
-        margin-top: 15px;
-        font-size: 0.7rem;
-        color: #64748b;
-        font-style: italic;
-    }
-
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }

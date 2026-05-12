@@ -56,7 +56,6 @@ function renderApp() {
 
             <div id="tab-content" class="no-print"></div>
 
-            <!-- CONTEÚDO EXCLUSIVO PARA O PDF (IMPRESSÃO) -->
             <div id="print-only-content" class="print-only">
                 <section>
                     <h3 class="print-section-title">💎 Pilares Estratégicos</h3>
@@ -140,14 +139,6 @@ function switchTab(tab, btn) {
     tabs.forEach(t => t.classList.remove('active'));
     if(btn) btn.classList.add('active');
 
-    if (window.goatcounter && window.goatcounter.count) {
-        window.goatcounter.count({
-            path:  'aba-' + tab,
-            title: 'Clique na Aba ' + tab,
-            event: true,
-        });
-    }
-
     const content = document.getElementById('tab-content');
     let html = '';
 
@@ -205,24 +196,10 @@ function switchTab(tab, btn) {
 }
 
 function handlePrint() {
-    if (window.goatcounter && window.goatcounter.count) {
-        window.goatcounter.count({
-            path:  'click-pdf',
-            title: 'Gerou PDF',
-            event: true,
-        });
-    }
     window.print();
 }
 
 function openModal() {
-    if (window.goatcounter && window.goatcounter.count) {
-        window.goatcounter.count({
-            path:  'click-metodologia',
-            title: 'Abriu Metodologias',
-            event: true,
-        });
-    }
     document.getElementById('modalMetodologia').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
