@@ -1,21 +1,21 @@
 {
     "vendas_mensais": {
-        "titulo": "Vendas Mensais",
+        "titulo": "Volume Mensal",
         "labels": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
         "valores": [12, 19, 15, 25, 22, 30, 45, 38, 52, 48, 60, 75]
     },
     "quadrantes": {
-        "titulo": "Distribuição Regional",
+        "titulo": "Regional",
         "labels": ["Norte", "Sul", "Leste", "Oeste"],
         "valores": [25, 40, 15, 20]
     },
     "evolucao_performance": {
-        "titulo": "Evolução Técnica",
+        "titulo": "Performance Técnica",
         "labels": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"],
         "valores": [10, 15, 8, 22, 35, 30, 45, 50, 42, 60]
     },
     "top_produtos": {
-        "titulo": "Top 5 Ativos",
+        "titulo": "Ranking Ativos",
         "labels": ["Alpha", "Bravo", "Charlie", "Delta", "Echo"],
         "valores": [85, 72, 60, 55, 40]
     }

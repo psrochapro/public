@@ -4,38 +4,36 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    /* Fundo escuro neutro para destacar o vidro */
-    background-color: #0f172a; 
+    background-color: #0a0f1a; /* Azul ultra escuro */
     background-image: 
         linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 30px 30px;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    color: #f8fafc;
+    background-size: 40px 40px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 .main-container {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 10px 25px;
+    padding: 10px 30px;
     box-sizing: border-box;
 }
 
 header {
     text-align: center;
-    padding: 15px 0;
+    padding: 10px 0;
     flex-shrink: 0;
 }
 
 .dashboard-title {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     letter-spacing: 6px;
     font-weight: 300;
     color: #ffffff;
     text-transform: uppercase;
-    opacity: 0.9;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 .status-bar {
@@ -56,18 +54,18 @@ header {
 }
 
 .chart-card {
-    /* Efeito Vidro Transparente */
-    background: rgba(255, 255, 255, 0.03); 
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
     padding: 20px;
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 0;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 canvas {
@@ -75,8 +73,8 @@ canvas {
     height: 100% !important;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     body { overflow-y: auto; height: auto; }
-    .grid-layout { grid-template-columns: 1fr; grid-template-rows: auto; }
-    .chart-card { height: 300px; }
+    .grid-layout { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+    .chart-card { height: 320px; }
 }
