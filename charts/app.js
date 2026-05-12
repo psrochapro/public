@@ -1,32 +1,75 @@
+// Registrar o plugin de rótulos de dados globalmente
+Chart.register(ChartDataLabels);
+
 async function carregarGrafico() {
-    // 1. Busca os dados do arquivo JSON
-    const resposta = await fetch('dados.json');
-    const dados = await resposta.json();
+    try {
+        const resposta = await fetch('dados.json');
+        if (!resposta.ok) throw new Error('Não foi possível carregar o JSON');
+        
+        const dados = await resposta.json();
+        const ctx = document.getElementById('meuGrafico').getContext('2d');
 
-    // 2. Seleciona o elemento canvas
-    const ctx = document.getElementById('meuGrafico').getContext('2d');
-
-    // 3. Cria o gráfico
-    new Chart(ctx, {
-        type: 'bar', // Tipo do gráfico (pode ser 'line', 'pie', etc)
-        data: {
-            labels: dados.labels,
-            datasets: [{
-                label: dados.titulo,
-                data: dados.valores,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: { beginAtZero: true }
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dados.labels,
+                datasets: [{
+                    label: dados.titulo,
+                    data: dados.valores,
+                    backgroundColor: 'rgba(0, 255, 255, 0.4)', // Ciano translúcido
+                    borderColor: '#00ffff', // Borda ciano sólida
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBackgroundColor: 'rgba(0, 255, 255, 0.6)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    // Configuração dos Rótulos de Dados (Datalabels)
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5,
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value) => value // Exibe o valor puro
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: '#ffffff',
+                            font: { size: 14 }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)'
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#ffffff' },
+                        grid: { display: false } // Remove grade vertical interna
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#ffffff' },
+                        grid: { 
+                            color: 'rgba(255, 255, 255, 0.1)',
+                            drawBorder: false 
+                        }
+                    }
+                }
             }
-        }
-    });
+        });
+    } catch (erro) {
+        console.error('Erro na aplicação:', erro);
+    }
 }
 
-// Inicializa a função
 carregarGrafico();
