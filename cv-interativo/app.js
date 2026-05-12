@@ -34,10 +34,11 @@ function renderApp() {
                         `).join('')}
                     </ul>
                     <div class="contatos">
-                        📧 ${cvData.perfil.contatos.email} | 📱 ${cvData.perfil.contatos.whatsapp} | 
-                        🔗 <a href="${cvData.perfil.contatos.portfolio}" target="_blank">Portfólio</a> |
-                        💼 <a href="${cvData.perfil.contatos.linkedin}" target="_blank">LinkedIn</a> |
-                        🎓 <a href="${cvData.perfil.contatos.lattes}" target="_blank">Lattes</a>
+                        <span class="contato-item">📧 ${cvData.perfil.contatos.email}</span>
+                        <span class="contato-item">📱 ${cvData.perfil.contatos.whatsapp}</span>
+                        <span class="contato-item">🔗 <a href="${cvData.perfil.contatos.portfolio}" target="_blank">Portfólio</a></span>
+                        <span class="contato-item">💼 <a href="${cvData.perfil.contatos.linkedin}" target="_blank">LinkedIn</a></span>
+                        <span class="contato-item">🎓 <a href="${cvData.perfil.contatos.lattes}" target="_blank">Lattes</a></span>
                     </div>
                 </div>
             </header>
@@ -165,7 +166,7 @@ function switchTab(tab, btn) {
                 <table class="cv-table">
                     <thead><tr><th>Categoria</th><th>Curso / Certificação</th><th>Instituição</th><th>Ano</th></tr></thead>
                     <tbody>${cvData.especializacoes_gestao.map(g => `
-                        <tr><td data-label="Categoria">${g.categoria}</td><td data-label="Curso">${g.curso} ${g.ch ? `(${g.ch})` : ''}</td><td data-label="Instituição">${g.inst}</td><td data-label="Ano">${g.ano}</td></tr>`).join('')}
+                        <tr><td data-label="Categoria">${g.categoria}</td><td data-label="Descrição">${g.curso} ${g.ch ? `(${g.ch})` : ''}</td><td data-label="Instituição">${g.inst}</td><td data-label="Ano">${g.ano}</td></tr>`).join('')}
                     </tbody>
                 </table>`;
             break;
