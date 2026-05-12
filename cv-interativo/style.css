@@ -173,7 +173,7 @@ iframe { width: 100%; height: 100%; border: none; }
 .print-only { display: none; }
 
 /* ===========================================
-   MOBILE ADJUSTMENTS
+   MOBILE ADJUSTMENTS (APPROVED)
    =========================================== */
 @media (max-width: 768px) {
     body { padding: 10px; }
@@ -197,12 +197,7 @@ iframe { width: 100%; height: 100%; border: none; }
         border-left: 3px solid var(--accent);
     }
 
-    /* Contatos Mobile - Estilo Pílulas */
-    .contatos { 
-        justify-content: center; 
-        gap: 8px; 
-        margin-top: 15px;
-    }
+    .contatos { justify-content: center; gap: 8px; margin-top: 15px; }
     .contato-item {
         background: #f1f5f9;
         padding: 5px 12px;
@@ -214,37 +209,20 @@ iframe { width: 100%; height: 100%; border: none; }
     .profile-img { width: 130px; height: 160px; }
     .nav-tabs-container { margin: 10px -12px; padding: 0 12px; overflow-x: auto; }
     
-    /* Tabelas Acadêmicas Mobile - Estilo Card Vertical */
     .cv-table thead { display: none; }
     .cv-table tr { 
-        display: block; 
-        border: 1px solid #e2e8f0; 
-        margin-bottom: 15px; 
-        border-radius: 10px; 
-        padding: 10px;
-        background: white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        display: block; border: 1px solid #e2e8f0; margin-bottom: 15px; 
+        border-radius: 10px; padding: 10px; background: white;
     }
-    .cv-table td { 
-        display: flex; 
-        flex-direction: column; /* Texto embaixo do título do campo */
-        align-items: flex-start;
-        padding: 6px 0; 
-        border-bottom: 1px solid #f8fafc; 
-    }
-    .cv-table td:last-child { border-bottom: none; }
+    .cv-table td { display: flex; flex-direction: column; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid #f8fafc; }
     .cv-table td::before { 
-        content: attr(data-label); 
-        font-weight: 800; 
-        color: var(--accent); 
-        font-size: 0.7rem; 
-        text-transform: uppercase;
-        margin-bottom: 2px;
+        content: attr(data-label); font-weight: 800; color: var(--accent); 
+        font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;
     }
 }
 
 /* ===========================================
-   REGRAS DE IMPRESSÃO (PDF)
+   REGRAS DE IMPRESSÃO (PDF) - OTIMIZADO
    =========================================== */
 @media print {
     @page { size: A4; margin: 1cm; }
@@ -266,19 +244,32 @@ iframe { width: 100%; height: 100%; border: none; }
         gap: 25px;
     }
     
-    .profile-img { width: 100px; height: 130px; border: 1px solid #eee; flex-shrink: 0; }
+    /* Foto levemente maior no PDF para preencher o espaço do resumo tratado */
+    .profile-img { width: 130px; height: 175px; border: 1px solid #eee; flex-shrink: 0; }
     
     .header-text { text-align: left !important; }
-    .header-text h1 { font-size: 1.4rem !important; text-align: left !important; }
-    .subtitle { font-size: 0.9rem; margin: 2px 0 5px 0 !important; text-align: left !important; }
+    .header-text h1 { font-size: 1.5rem !important; text-align: left !important; }
+    .subtitle { font-size: 0.95rem; margin: 2px 0 8px 0 !important; text-align: left !important; color: var(--accent) !important; }
 
+    /* Resumo compacto no PDF */
+    .resumo-list { margin: 5px 0 !important; }
     .resumo-list li { 
-        font-size: 0.72rem !important; 
-        margin-bottom: 2px;
+        background: transparent !important; /* Remove fundo cinza no PDF */
+        padding: 0 !important;
+        margin-bottom: 4px !important;
+        font-size: 0.75rem !important; 
+        border: none !important;
         text-align: left !important;
     }
+    .resumo-icon { margin-right: 6px !important; }
 
-    .contatos { text-align: left !important; margin-top: 8px; padding-top: 5px; }
+    .contatos { 
+        text-align: left !important; 
+        margin-top: 10px; 
+        padding-top: 5px; 
+        display: block !important; /* Volta ao fluxo normal para economizar espaço */
+    }
+    .contato-item { background: transparent !important; border: none !important; padding: 0 !important; margin-right: 10px; }
 
     .print-section-title {
         font-size: 1rem;
@@ -290,25 +281,14 @@ iframe { width: 100%; height: 100%; border: none; }
         text-align: left;
     }
 
-    .print-item {
-        font-size: 0.72rem !important; 
-        margin-bottom: 4px;
-        text-align: left;
-    }
+    .print-item { font-size: 0.72rem !important; margin-bottom: 4px; text-align: left; }
 
-    .cv-table { 
-        font-size: 0.7rem !important; 
-        margin-bottom: 10px; 
-        display: table !important; 
-        width: 100%;
-    }
+    .cv-table { font-size: 0.7rem !important; margin-bottom: 10px; display: table !important; width: 100%; }
     .cv-table thead { display: table-header-group !important; }
     .cv-table tr { display: table-row !important; }
     .cv-table td, .cv-table th { 
-        display: table-cell !important; 
-        padding: 3px 5px !important; 
-        border: 1px solid #f1f5f9 !important; 
-        text-align: left;
+        display: table-cell !important; padding: 3px 5px !important; 
+        border: 1px solid #f1f5f9 !important; text-align: left;
     }
     .cv-table td::before { content: none !important; }
 
