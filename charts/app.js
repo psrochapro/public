@@ -1,43 +1,73 @@
-// Registrar o plugin globalmente ANTES de qualquer função
+// Registrar o plugin datalabels
 Chart.register(ChartDataLabels);
 
-// Configuração Global de Cores e Estilo
-const azulCiano = 'rgba(0, 255, 255, 0.6)';
-const azulBorda = '#00ffff';
-const corTexto = '#ffffff';
+const corCiano = 'rgba(0, 255, 255, 0.6)';
+const corBorda = '#00ffff';
+const corBranca = '#ffffff';
 
-async function carregarDashboard() {
+// Função auxiliar para as opções dos gráficos
+function getBaseOptions() {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            datalabels: {
+                color: corBranca,
+                anchor: 'end',
+                align: 'top',
+                font: { weight: 'bold', size: 10 }
+            },
+            legend: {
+                labels: { color: corBranca, font: { size: 12 } }
+            }
+        },
+        scales: {
+            x: { ticks: { color: corBranca }, grid: { display: false } },
+            y: { 
+                beginAtZero: true, 
+                ticks: { color: corBranca }, 
+                grid: { color: 'rgba(255,255,255,0.1)' } 
+            }
+        }
+    };
+}
+
+async function renderCharts() {
+    const errorDiv = document.getElementById('error-message');
+    
     try {
-        // Fetch com caminho relativo para funcionar no GitHub Pages
-        const resposta = await fetch('./dados.json');
+        // Busca o JSON no mesmo diretório do app.js
+        const response = await fetch('dados.json');
         
-        if (!resposta.ok) throw new Error('Falha ao carregar dados.json');
-        
-        const dados = await resposta.json();
+        if (!response.ok) {
+            throw new Error(`Erro HTTP! status: ${response.status} - Verifique se o dados.json está na pasta.`);
+        }
 
-        // 1. CONFIGURAÇÃO GRÁFICO DE COLUNAS (Vendas)
+        const d = await response.json();
+
+        // 1. Gráfico de Colunas
         new Chart(document.getElementById('chartVendas'), {
             type: 'bar',
             data: {
-                labels: dados.vendas_mensais.labels,
+                labels: d.vendas_mensais.labels,
                 datasets: [{
-                    label: dados.vendas_mensais.titulo,
-                    data: dados.vendas_mensais.valores,
-                    backgroundColor: azulCiano,
-                    borderColor: azulBorda,
+                    label: d.vendas_mensais.titulo,
+                    data: d.vendas_mensais.valores,
+                    backgroundColor: corCiano,
+                    borderColor: corBorda,
                     borderWidth: 1
                 }]
             },
             options: getBaseOptions()
         });
 
-        // 2. CONFIGURAÇÃO GRÁFICO DE ROSCA (Quadrantes)
+        // 2. Gráfico de Rosca
         new Chart(document.getElementById('chartRosca'), {
             type: 'doughnut',
             data: {
-                labels: dados.quadrantes.labels,
+                labels: d.quadrantes.labels,
                 datasets: [{
-                    data: dados.quadrantes.valores,
+                    data: d.quadrantes.valores,
                     backgroundColor: [
                         'rgba(0, 255, 255, 0.7)',
                         'rgba(0, 150, 255, 0.7)',
@@ -54,15 +84,15 @@ async function carregarDashboard() {
             }
         });
 
-        // 3. CONFIGURAÇÃO GRÁFICO DE LINHAS (Evolução)
+        // 3. Gráfico de Linhas
         new Chart(document.getElementById('chartLinha'), {
             type: 'line',
             data: {
-                labels: dados.evolucao_performance.labels,
+                labels: d.evolucao_performance.labels,
                 datasets: [{
-                    label: dados.evolucao_performance.titulo,
-                    data: dados.evolucao_performance.valores,
-                    borderColor: azulBorda,
+                    label: d.evolucao_performance.titulo,
+                    data: d.evolucao_performance.valores,
+                    borderColor: corBorda,
                     backgroundColor: 'rgba(0, 255, 255, 0.1)',
                     fill: true,
                     tension: 0.3
@@ -71,59 +101,30 @@ async function carregarDashboard() {
             options: getBaseOptions()
         });
 
-        // 4. CONFIGURAÇÃO GRÁFICO DE BARRAS HORIZONTAIS (Top Produtos)
+        // 4. Gráfico de Barras Horizontais
         new Chart(document.getElementById('chartBarras'), {
             type: 'bar',
             data: {
-                labels: dados.top_produtos.labels,
+                labels: d.top_produtos.labels,
                 datasets: [{
-                    label: dados.top_produtos.titulo,
-                    data: dados.top_produtos.valores,
+                    label: d.top_produtos.titulo,
+                    data: d.top_produtos.valores,
                     backgroundColor: 'rgba(0, 200, 255, 0.6)',
-                    borderColor: azulBorda,
+                    borderColor: corBorda,
                     borderWidth: 1
                 }]
             },
             options: {
                 ...getBaseOptions(),
-                indexAxis: 'y' // Torna a barra horizontal
+                indexAxis: 'y'
             }
         });
 
-    } catch (erro) {
-        console.error('Erro na aplicação:', erro);
-        document.body.innerHTML += `<div style="color:red; text-align:center; padding:20px;">Erro ao carregar dados: ${erro.message}</div>`;
+    } catch (err) {
+        console.error("Erro detalhado:", err);
+        errorDiv.innerText = "ERRO AO CARREGAR GRÁFICOS: " + err.message;
     }
 }
 
-// Função para retornar as opções padrão e evitar repetição de código
-function getBaseOptions() {
-    return {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            datalabels: {
-                color: corTexto,
-                anchor: 'end',
-                align: 'top',
-                font: { weight: 'bold', size: 11 },
-                formatter: (val) => val
-            },
-            legend: {
-                display: true,
-                labels: { color: corTexto, font: { size: 12 } }
-            }
-        },
-        scales: {
-            x: { ticks: { color: corTexto }, grid: { display: false } },
-            y: { 
-                beginAtZero: true, 
-                ticks: { color: corTexto }, 
-                grid: { color: 'rgba(255,255,255,0.1)' } 
-            }
-        }
-    };
-}
-
-// Inicia o carregamento
-carregarDashboard();
+// Inicia a execução apenas quando a janela carregar
+window.onload = renderCharts;

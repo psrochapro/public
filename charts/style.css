@@ -3,7 +3,6 @@ body {
     padding: 0;
     min-height: 100vh;
     background-color: #001a33;
-    /* Fundo Blueprint com grade */
     background-image: 
         linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
@@ -20,6 +19,7 @@ body {
     letter-spacing: 3px;
     font-weight: 300;
     text-shadow: 0 0 10px #00ffff;
+    text-align: center;
 }
 
 .main-container {
@@ -30,9 +30,7 @@ body {
 
 .grid-layout {
     display: grid;
-    /* 2 colunas com tamanhos iguais */
     grid-template-columns: repeat(2, 1fr);
-    /* Espaçamento entre os gráficos */
     gap: 25px;
 }
 
@@ -44,18 +42,13 @@ body {
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    height: 350px; /* Altura fixa para manter simetria */
+    height: 350px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Responsividade para telas de celular */
 @media (max-width: 900px) {
-    .grid-layout {
-        grid-template-columns: 1fr;
-    }
-    .chart-card {
-        height: 300px;
-    }
+    .grid-layout { grid-template-columns: 1fr; }
+    .chart-card { height: 300px; }
 }
