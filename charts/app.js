@@ -1,25 +1,31 @@
 Chart.register(ChartDataLabels);
 
+// Paleta Minimalista (Vidro/Neutral)
 const cores = {
-    primaria: '#00ffff',
-    primariaTrans: 'rgba(0, 255, 255, 0.2)',
-    secundaria: '#0080ff',
-    texto: '#e0f7fa',
-    grid: 'rgba(255, 255, 255, 0.05)'
+    primaria: 'rgba(255, 255, 255, 0.8)',      // Branco sólido suave
+    primariaTrans: 'rgba(255, 255, 255, 0.15)', // Vidro fundo
+    secundaria: 'rgba(200, 200, 200, 0.5)',     // Cinza médio
+    texto: 'rgba(255, 255, 255, 0.7)',          // Texto suave
+    grid: 'rgba(255, 255, 255, 0.05)',
+    paletaDoughnut: [
+        'rgba(255, 255, 255, 0.6)',
+        'rgba(255, 255, 255, 0.4)',
+        'rgba(255, 255, 255, 0.2)',
+        'rgba(255, 255, 255, 0.1)'
+    ]
 };
 
-// Opções Genéricas
 const baseOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
         legend: {
             display: true,
-            labels: { color: cores.texto, font: { size: 10 }, boxWidth: 10 }
+            labels: { color: cores.texto, font: { size: 10, weight: '300' }, boxWidth: 10 }
         },
         datalabels: {
-            color: cores.texto,
-            font: { weight: 'bold', size: 9 },
+            color: '#ffffff',
+            font: { weight: '300', size: 9 },
             anchor: 'end',
             align: 'top',
             formatter: Math.round
@@ -34,100 +40,90 @@ const baseOptions = {
 async function init() {
     try {
         const response = await fetch('dados.json');
-        if (!response.ok) throw new Error("Erro ao carregar JSON");
         const d = await response.json();
 
-        // 1. COLUNAS (Vendas)
+        // 1. COLUNAS
         new Chart(document.getElementById('chartVendas'), {
             type: 'bar',
             data: {
                 labels: d.vendas_mensais.labels,
                 datasets: [{
-                    label: d.vendas_mensais.titulo,
+                    label: 'Volume Mensal',
                     data: d.vendas_mensais.valores,
                     backgroundColor: cores.primariaTrans,
-                    borderColor: cores.primaria,
-                    borderWidth: 1.5
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    borderWidth: 1
                 }]
             },
             options: baseOptions
         });
 
-        // 2. ROSCA (Distribuição)
+        // 2. ROSCA
         new Chart(document.getElementById('chartRosca'), {
             type: 'doughnut',
             data: {
                 labels: d.quadrantes.labels,
                 datasets: [{
                     data: d.quadrantes.valores,
-                    backgroundColor: ['#00ffff', '#0080ff', '#0040ff', '#00cccc'],
-                    borderColor: '#000d1a',
-                    borderWidth: 2
+                    backgroundColor: cores.paletaDoughnut,
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1
                 }]
             },
             options: {
                 ...baseOptions,
                 plugins: {
                     ...baseOptions.plugins,
-                    datalabels: { color: '#fff', font: { size: 11, weight: 'bold' } }
+                    datalabels: { color: '#fff', anchor: 'center', align: 'center' }
                 },
                 scales: { x: { display: false }, y: { display: false } }
             }
         });
 
-        // 3. LINHA (Evolução)
+        // 3. LINHA
         new Chart(document.getElementById('chartLinha'), {
             type: 'line',
             data: {
                 labels: d.evolucao_performance.labels,
                 datasets: [{
-                    label: d.evolucao_performance.titulo,
+                    label: 'Performance',
                     data: d.evolucao_performance.valores,
-                    borderColor: cores.primaria,
-                    backgroundColor: 'rgba(0, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.6)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
                     fill: true,
                     tension: 0.4,
-                    pointRadius: 2
+                    pointRadius: 3,
+                    pointBackgroundColor: '#ffffff'
                 }]
             },
             options: baseOptions
         });
 
-        // 4. BARRAS HORIZONTAIS (Top Ativos) - CORREÇÃO AQUI
+        // 4. BARRAS HORIZONTAIS
         new Chart(document.getElementById('chartBarras'), {
             type: 'bar',
             data: {
                 labels: d.top_produtos.labels,
                 datasets: [{
-                    label: d.top_produtos.titulo,
+                    label: 'Ranking Ativos',
                     data: d.top_produtos.valores,
-                    backgroundColor: 'rgba(0, 128, 255, 0.4)',
-                    borderColor: cores.secundaria,
-                    borderWidth: 1.5
+                    backgroundColor: cores.primariaTrans,
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                    borderWidth: 1
                 }]
             },
             options: {
                 ...baseOptions,
-                indexAxis: 'y', // Ativa horizontal
-                plugins: {
-                    ...baseOptions.plugins,
-                    datalabels: { align: 'right', anchor: 'end', color: cores.texto }
-                },
+                indexAxis: 'y',
                 scales: {
-                    x: { // No horizontal, o X é o eixo de VALORES
-                        ticks: { color: cores.texto, font: { size: 9 } },
-                        grid: { color: cores.grid }
-                    },
-                    y: { // No horizontal, o Y é o eixo de LABELS
-                        ticks: { color: cores.texto, font: { size: 9 } },
-                        grid: { display: false }
-                    }
+                    x: { ticks: { color: cores.texto }, grid: { color: cores.grid } },
+                    y: { ticks: { color: cores.texto }, grid: { display: false } }
                 }
             }
         });
 
     } catch (err) {
-        console.error("Erro no Dashboard:", err);
+        console.error("Erro:", err);
     }
 }
 
