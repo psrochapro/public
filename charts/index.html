@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glass Dashboard Blueprint</title>
+    <title>Glass Dashboard</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- Bibliotecas via CDN alternativo (Cloudflare) para evitar o erro de conexão -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <!-- Bibliotecas com caminhos completos e diretos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
 <body>
     <div class="main-container">
         <header>
             <h1 class="dashboard-title">SISTEMA DE MONITORAMENTO BLUEPRINT</h1>
-            <div class="status-bar">DADOS EM TEMPO REAL // ESTILO GLASS</div>
+            <div class="status-bar">MODO: VIDRO TRANSLÚCIDO // STATUS: ONLINE</div>
         </header>
         <div class="grid-layout">
             <div class="chart-card"><canvas id="chartVendas"></canvas></div>
