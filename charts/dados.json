@@ -1,6 +1,6 @@
 {
     "vendas_mensais": {
-        "titulo": "Vendas Mensais (Unidades)",
+        "titulo": "Vendas Mensais",
         "labels": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
         "valores": [12, 19, 15, 25, 22, 30, 45, 38, 52, 48, 60, 75]
     },

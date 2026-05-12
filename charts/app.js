@@ -1,10 +1,8 @@
-// Registro do Plugin
 Chart.register(ChartDataLabels);
 
-// Paleta de Cores Blueprint
 const cores = {
     primaria: '#00ffff',
-    primariaTrans: 'rgba(0, 255, 255, 0.3)',
+    primariaTrans: 'rgba(0, 255, 255, 0.2)',
     secundaria: '#0080ff',
     texto: '#e0f7fa',
     grid: 'rgba(255, 255, 255, 0.05)',
@@ -16,34 +14,34 @@ const cores = {
     ]
 };
 
-// Opções base reaproveitáveis
 const baseOptions = {
     responsive: true,
-    maintainAspectRatio: false,
-    layout: { padding: { top: 20 } },
+    maintainAspectRatio: false, // Permite que o gráfico preencha o card
     plugins: {
         legend: {
             display: true,
             position: 'top',
-            labels: { color: cores.texto, font: { size: 12, weight: '500' }, padding: 20 }
+            labels: { 
+                color: cores.texto, 
+                font: { size: 10 },
+                boxWidth: 12,
+                padding: 10
+            }
         },
         datalabels: {
             color: cores.texto,
-            font: { weight: 'bold', size: 11 },
+            font: { weight: 'bold', size: 9 },
             anchor: 'end',
             align: 'top',
-            offset: 4,
+            offset: 2,
             formatter: (v) => v
         }
     },
     scales: {
-        x: { 
-            ticks: { color: cores.texto }, 
-            grid: { display: false } 
-        },
+        x: { ticks: { color: cores.texto, font: { size: 9 } }, grid: { display: false } },
         y: { 
             beginAtZero: true,
-            ticks: { color: cores.texto },
+            ticks: { color: cores.texto, font: { size: 9 } },
             grid: { color: cores.grid }
         }
     }
@@ -52,7 +50,6 @@ const baseOptions = {
 async function init() {
     try {
         const response = await fetch('dados.json');
-        if (!response.ok) throw new Error("JSON não encontrado");
         const d = await response.json();
 
         // 1. COLUNAS
@@ -65,14 +62,13 @@ async function init() {
                     data: d.vendas_mensais.valores,
                     backgroundColor: cores.primariaTrans,
                     borderColor: cores.primaria,
-                    borderWidth: 2,
-                    borderRadius: 4
+                    borderWidth: 1.5
                 }]
             },
             options: baseOptions
         });
 
-        // 2. ROSCA (Doughnut) - Customizado
+        // 2. ROSCA
         new Chart(document.getElementById('chartRosca'), {
             type: 'doughnut',
             data: {
@@ -81,25 +77,20 @@ async function init() {
                     data: d.quadrantes.valores,
                     backgroundColor: cores.paletaDoughnut,
                     borderColor: '#000d1a',
-                    borderWidth: 3
+                    borderWidth: 2
                 }]
             },
             options: {
                 ...baseOptions,
                 plugins: {
                     ...baseOptions.plugins,
-                    datalabels: {
-                        color: '#fff',
-                        anchor: 'center',
-                        align: 'center',
-                        font: { size: 14, weight: 'bold' }
-                    }
+                    datalabels: { color: '#fff', font: { size: 11, weight: 'bold' } }
                 },
                 scales: { x: { display: false }, y: { display: false } }
             }
         });
 
-        // 3. LINHA (Evolução)
+        // 3. LINHA
         new Chart(document.getElementById('chartLinha'), {
             type: 'line',
             data: {
@@ -108,12 +99,11 @@ async function init() {
                     label: d.evolucao_performance.titulo,
                     data: d.evolucao_performance.valores,
                     borderColor: cores.primaria,
-                    backgroundColor: 'rgba(0, 255, 255, 0.1)',
-                    borderWidth: 3,
+                    backgroundColor: 'rgba(0, 255, 255, 0.05)',
+                    borderWidth: 2,
                     fill: true,
                     tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: cores.primaria
+                    pointRadius: 2
                 }]
             },
             options: baseOptions
@@ -129,8 +119,7 @@ async function init() {
                     data: d.top_produtos.valores,
                     backgroundColor: 'rgba(0, 120, 255, 0.4)',
                     borderColor: cores.secundaria,
-                    borderWidth: 2,
-                    borderRadius: 4
+                    borderWidth: 1.5
                 }]
             },
             options: {
@@ -138,11 +127,7 @@ async function init() {
                 indexAxis: 'y',
                 plugins: {
                     ...baseOptions.plugins,
-                    datalabels: {
-                        ...baseOptions.plugins.datalabels,
-                        anchor: 'end',
-                        align: 'right'
-                    }
+                    datalabels: { align: 'right', anchor: 'end' }
                 }
             }
         });

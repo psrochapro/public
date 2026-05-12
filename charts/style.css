@@ -1,71 +1,82 @@
 body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh; /* Ocupa exatamente a altura da tela */
+    overflow: hidden; /* Remove as barras de rolagem */
     background-color: #000d1a;
-    /* Grade Blueprint mais técnica */
     background-image: 
         linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 25px 25px;
-    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Roboto, sans-serif;
     color: #e0f7fa;
-    display: flex;
-    justify-content: center;
 }
 
 .main-container {
-    width: 95%;
-    max-width: 1400px;
-    padding: 30px 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+    box-sizing: border-box;
 }
 
 header {
     text-align: center;
-    margin-bottom: 30px;
+    padding: 10px 0;
+    flex-shrink: 0; /* Não deixa o cabeçalho diminuir */
 }
 
 .dashboard-title {
     margin: 0;
-    font-size: 2rem;
-    letter-spacing: 5px;
-    font-weight: 300;
+    font-size: 1.5rem; /* Diminuído para ganhar espaço */
+    letter-spacing: 4px;
     color: #00ffff;
-    text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
 }
 
 .status-bar {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     letter-spacing: 2px;
     color: rgba(0, 255, 255, 0.5);
-    margin-top: 10px;
 }
 
 .grid-layout {
+    flex-grow: 1; /* Ocupa o resto do espaço da tela */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 15px; /* Espaço reduzido entre gráficos */
+    padding-bottom: 10px;
+    min-height: 0; /* Importante para o grid não estourar no flex */
 }
 
 .chart-card {
     background: rgba(0, 20, 40, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 255, 255, 0.05);
-    height: 380px;
-    transition: all 0.3s ease;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    min-height: 0; /* Permite que o canvas diminua conforme o card */
 }
 
-.chart-card:hover {
-    border-color: rgba(0, 255, 255, 0.6);
-    box-shadow: 0 15px 40px rgba(0, 255, 255, 0.15);
+canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
-/* Ajuste Mobile */
-@media (max-width: 950px) {
-    .grid-layout { grid-template-columns: 1fr; }
-    .chart-card { height: 320px; }
+/* Responsividade: Se a tela for muito pequena (celular), aí sim permitimos rolar */
+@media (max-width: 800px), (max-height: 600px) {
+    body { overflow-y: auto; height: auto; }
+    .grid-layout { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: auto;
+        height: auto;
+    }
+    .chart-card { height: 300px; }
 }
