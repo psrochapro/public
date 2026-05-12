@@ -1,240 +1,105 @@
-:root {
-    --primary: #1e293b;
-    --accent: #2563eb;
-    --bg: #f1f5f9;
-    --text: #334155;
-    --table-header-bg: #f8fafc;
-    --table-border: #e2e8f0;
-}
+/* ... (Mantenha o início do seu style.css igual até chegar no @media print) ... */
 
-* { box-sizing: border-box; }
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg);
-    margin: 0;
-    padding: 20px;
-    color: var(--text);
-    line-height: 1.4;
-}
-
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.header-container {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    border-bottom: 2px solid #edf2f7;
-    padding-bottom: 20px;
-}
-
-.profile-img {
-    width: 170px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 4px solid white; 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-    flex-shrink: 0;
-    transition: all 0.3s ease;
-}
-
-.header-text { flex: 1; text-align: left; }
-
-.header-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 5px;
-}
-
-.header-text h1 { margin: 0; font-size: 1.8rem; color: var(--primary); }
-.subtitle { color: var(--accent); font-weight: 700; margin-bottom: 12px; }
-
-.resumo-list {
-    list-style: none;
-    padding: 0;
-    margin: 8px 0;
-    font-size: 0.85rem;
-}
-
-.resumo-list li { 
-    margin-bottom: 6px;
-    display: flex;
-    align-items: flex-start;
-    line-height: 1.4;
-}
-
-.resumo-icon {
-    margin-right: 10px;
-    flex-shrink: 0;
-}
-
-.contatos { 
-    font-size: 0.85rem; 
-    margin-top: 12px; 
-    border-top: 1px solid #eee; 
-    padding-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 15px;
-}
-.contato-item { white-space: nowrap; }
-.contatos a { color: var(--accent); text-decoration: none; font-weight: bold; }
-
-.print-btn-float {
-    background: #f1f5f9;
-    color: var(--primary);
-    border: 1px solid var(--table-border);
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    transition: all 0.2s;
-}
-
-.print-btn-float:hover { background: var(--primary); color: white; }
-
-.nav-tabs-container { margin: 15px 0; border-bottom: 1px solid #ddd; }
-.nav-tabs { display: flex; gap: 6px; padding-bottom: 8px; }
-.tab-btn {
-    padding: 8px 14px;
-    border: 1px solid #e2e8f0;
-    background: #fff;
-    cursor: pointer;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--text);
-    white-space: nowrap;
-    transition: all 0.3s;
-}
-.tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-.btn-metodologia { color: var(--accent); border-color: var(--accent); }
-
-#tab-content { min-height: 200px; animation: fadeIn 0.4s ease; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.grid-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
-.card { background: #f8fafc; padding: 10px 15px; border-left: 4px solid var(--accent); border-radius: 6px; }
-.card strong { font-size: 0.9rem; }
-.card p { margin-top: 4px; margin-bottom: 0; font-size: 0.85rem; }
-
-.cv-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 8px;
-    margin-bottom: 20px;
-    font-size: 0.85rem;
-    border: 1px solid var(--table-border);
-}
-.cv-table th { background-color: var(--table-header-bg); color: var(--primary); text-align: left; padding: 6px 10px; font-weight: 700; }
-.cv-table td { padding: 4px 10px; border-bottom: 1px solid #f1f5f9; }
-.cv-table tbody tr:nth-child(even) { background-color: #fafbfc; }
-
-.tab-title { margin: 15px 0 8px 0; font-size: 1.1rem; text-align: left; }
-
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center;
-    z-index: 9999; backdrop-filter: blur(5px);
-}
-.modal-content {
-    background: white; width: 95%; height: 90%;
-    max-width: 1300px; border-radius: 12px;
-    display: flex; flex-direction: column; overflow: hidden;
-}
-.modal-header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; }
-.close-btn { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; }
-.iframe-container { flex-grow: 1; }
-iframe { width: 100%; height: 100%; border: none; }
-
-.print-only { display: none; }
-
-/* MOBILE ADJUSTMENTS */
-@media (max-width: 768px) {
-    body { padding: 10px; }
-    .container { padding: 15px; }
-    .header-container { flex-direction: column; align-items: center; text-align: center; gap: 15px; }
-    .header-text { text-align: center; width: 100%; }
-    .header-title-row { flex-direction: column; gap: 10px; }
-    .header-text h1 { font-size: 1.6rem; text-align: center; }
-    .print-btn-float { order: -1; margin: 0 auto; }
-    .subtitle { text-align: center; font-size: 0.95rem; }
-    .resumo-list { text-align: left; margin: 15px 0; }
-    .resumo-list li {
-        background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 8px; font-size: 0.82rem; border-left: 3px solid var(--accent);
-    }
-    .contatos { justify-content: center; gap: 8px; margin-top: 15px; }
-    .contato-item { background: #f1f5f9; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
-    .profile-img { width: 130px; height: 160px; }
-    .nav-tabs-container { margin: 10px -12px; padding: 0 12px; overflow-x: auto; }
-    .cv-table thead { display: none; }
-    .cv-table tr { 
-        display: block; border: 1px solid #e2e8f0; margin-bottom: 15px; 
-        border-radius: 10px; padding: 10px; background: white;
-    }
-    .cv-table td { display: flex; flex-direction: column; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid #f8fafc; }
-    .cv-table td::before { 
-        content: attr(data-label); font-weight: 800; color: var(--accent); 
-        font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;
-    }
-}
-
-/* REGRAS DE IMPRESSÃO (PDF) */
+/* ===========================================
+   REGRAS DE IMPRESSÃO (PDF) - LIMPO E LINEAR
+   =========================================== */
 @media print {
-    @page { size: A4; margin: 0.8cm; }
-    body { background: white; padding: 0; }
+    @page { size: A4; margin: 1.2cm; }
+    
+    body { background: white; padding: 0; color: #000; }
     .container { box-shadow: none; padding: 0; max-width: 100%; width: 100%; border: none; }
-    .no-print, .nav-tabs-container, .modal-overlay, #tab-content, .print-btn-float { display: none !important; }
+    
+    /* Esconder elementos de navegação e interatividade */
+    .no-print, .nav-tabs-container, .modal-overlay, #tab-content, .print-btn-float { 
+        display: none !important; 
+    }
+
     .print-only { display: block !important; }
     
+    /* Header Profissional */
     .header-container { 
-        display: flex !important; flex-direction: row !important; align-items: center !important;
-        border-bottom: 2px solid #334155; padding-bottom: 10px; gap: 25px;
+        display: flex !important; 
+        flex-direction: row !important; 
+        align-items: center !important; 
+        border-bottom: 2px solid #1e293b; 
+        padding-bottom: 15px; 
+        gap: 30px;
     }
-    .profile-img { width: 110px; height: 140px; border: 1px solid #eee; flex-shrink: 0; }
+    
+    .profile-img { width: 110px; height: 140px; border: 1px solid #ddd; flex-shrink: 0; filter: grayscale(100%); }
+    
     .header-text { text-align: left !important; }
-    .header-text h1 { font-size: 1.4rem !important; margin: 0; }
-    .subtitle { font-size: 0.9rem; margin: 2px 0 5px 0 !important; color: var(--accent) !important; }
-    .resumo-list { margin: 5px 0 !important; }
-    .resumo-list li { font-size: 0.72rem !important; margin-bottom: 2px !important; }
-    .contatos { display: block !important; margin-top: 5px; padding-top: 5px; }
-    .contato-item { font-size: 0.72rem; margin-right: 10px; }
+    .header-text h1 { font-size: 1.8rem !important; margin: 0; color: #000; }
+    .subtitle { font-size: 1.1rem; font-weight: bold; margin: 4px 0 !important; color: #2563eb !important; }
 
+    /* Resumo em Texto Simples - Um por linha */
+    .resumo-list { margin: 10px 0 !important; padding: 0; list-style: none; }
+    .resumo-list li { 
+        background: transparent !important; 
+        border: none !important; 
+        padding: 2px 0 !important;
+        margin-bottom: 3px !important;
+        font-size: 0.85rem !important; 
+        color: #334155 !important;
+        display: block !important; /* Força um embaixo do outro */
+    }
+    .resumo-icon { display: inline-block; margin-right: 5px; color: #000; }
+
+    /* Contatos sem estilo de botão/pílula */
+    .contatos { 
+        display: block !important; 
+        border-top: 1px solid #eee; 
+        margin-top: 10px; 
+        padding-top: 8px; 
+    }
+    .contato-item { 
+        background: transparent !important; 
+        border: none !important; 
+        padding: 0 !important; 
+        margin-right: 15px; 
+        font-size: 0.8rem !important;
+        color: #000 !important;
+        display: inline-block !important;
+    }
+    .contatos a { color: #000 !important; text-decoration: none; }
+
+    /* Seções e Títulos */
     .print-section-title {
-        font-size: 0.9rem; color: var(--primary); border-bottom: 1px solid #e2e8f0;
-        margin: 12px 0 6px 0; padding-bottom: 2px; text-transform: uppercase;
+        font-size: 1rem;
+        color: #1e293b;
+        border-bottom: 1px solid #cbd5e1;
+        margin: 20px 0 10px 0;
+        padding-bottom: 3px;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 
-    /* Grid para Pilares e Habilidades no PDF */
-    .grid-print { 
-        display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; 
-        margin-bottom: 8px;
+    /* Listagem Linear (Um embaixo do outro) */
+    .grid-print { display: block !important; }
+    .print-item { 
+        font-size: 0.85rem !important; 
+        margin-bottom: 8px; 
+        line-height: 1.4;
+        page-break-inside: avoid;
     }
-    .print-item { font-size: 0.7rem !important; line-height: 1.2; }
 
-    .cv-table { font-size: 0.68rem !important; margin-bottom: 8px; display: table !important; width: 100%; }
-    .cv-table thead { display: table-header-group !important; }
-    .cv-table tr { display: table-row !important; }
-    .cv-table td, .cv-table th { 
-        display: table-cell !important; padding: 2px 5px !important; 
-        border: 1px solid #f1f5f9 !important;
+    /* Tabelas */
+    .cv-table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        font-size: 0.8rem !important; 
+        margin-bottom: 15px; 
     }
-    .cv-table td::before { content: none !important; }
+    .cv-table th { background: #f8fafc !important; border: 1px solid #e2e8f0; padding: 6px; }
+    .cv-table td { border: 1px solid #e2e8f0; padding: 5px; }
+
+    /* Rodapé da Metodologia */
+    .print-footer-note {
+        margin-top: 20px;
+        font-size: 0.75rem;
+        color: #64748b;
+        font-style: italic;
+    }
+
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
