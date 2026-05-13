@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Citações Pro</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,8 +22,13 @@
 
             <section class="control-group">
                 <h3>2. Imagem do Autor</h3>
-                <input type="file" id="input-file" accept="image/*">
-                <input type="text" id="input-url" placeholder="Ou cole a URL da imagem">
+                <div class="image-input-wrapper">
+                    <label>Upload Local</label>
+                    <input type="file" id="input-file" accept="image/*">
+                    <label>Ou Link (URL)</label>
+                    <input type="text" id="input-url" placeholder="https://exemplo.com/foto.jpg">
+                    <button id="btn-remove-img" class="btn-secondary">Remover Foto</button>
+                </div>
                 
                 <div class="row">
                     <div>
