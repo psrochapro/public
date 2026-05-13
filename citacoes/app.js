@@ -59,15 +59,16 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#1a1a1a' : '#ffffff';
 }
 
-// Padrões geométricos no fundo (Mais visíveis nesta versão)
-function drawBackgroundPattern(color, width, height) {
+function drawBackgroundPattern(color, width, height, userOpacity) {
+    if (userOpacity <= 0) return;
+    
     ctx.save();
     const contrastColor = getContrastYIQ(color);
     ctx.strokeStyle = contrastColor;
     ctx.fillStyle = contrastColor;
 
-    // Círculos maiores e mais definidos
-    ctx.globalAlpha = 0.25; // Aumentado de 0.15
+    // Círculos
+    ctx.globalAlpha = userOpacity / 100;
     for(let i = 0; i < 6; i++) {
         ctx.beginPath();
         const radius = 100 + (Math.random() * 250);
@@ -76,8 +77,8 @@ function drawBackgroundPattern(color, width, height) {
         ctx.stroke();
     }
 
-    // Linhas diagonais mais presentes
-    ctx.globalAlpha = 0.12; // Aumentado de 0.05
+    // Linhas
+    ctx.globalAlpha = (userOpacity / 100) * 0.5;
     ctx.lineWidth = 2;
     for(let i = -height; i < width; i += 60) {
         ctx.beginPath();
@@ -172,6 +173,8 @@ function render() {
     const imgShape = document.getElementById('input-img-shape').value;
     const imgSizeFactor = document.getElementById('input-img-size').value / 100;
     const filter = document.getElementById('input-filter').value;
+    const bgOpacity = document.getElementById('input-bg-opacity').value;
+    const borderOpacity = document.getElementById('input-border-opacity').value;
 
     let width = 1080;
     let height = 1080;
@@ -184,15 +187,18 @@ function render() {
     ctx.fillStyle = themeColor;
     ctx.fillRect(0, 0, width, height);
 
-    drawBackgroundPattern(themeColor, width, height);
+    drawBackgroundPattern(themeColor, width, height, bgOpacity);
 
     const textColor = getContrastYIQ(themeColor);
     
-    ctx.strokeStyle = textColor;
-    ctx.globalAlpha = 0.12;
-    ctx.lineWidth = 20;
-    ctx.strokeRect(10, 10, width - 20, height - 20);
-    ctx.globalAlpha = 1.0;
+    // Borda do Card Controlada pelo Usuário
+    if (borderOpacity > 0) {
+        ctx.strokeStyle = textColor;
+        ctx.globalAlpha = borderOpacity / 100;
+        ctx.lineWidth = 20;
+        ctx.strokeRect(10, 10, width - 20, height - 20);
+        ctx.globalAlpha = 1.0;
+    }
 
     let safeWidth = width - (padding * 2);
     let safeHeight = height - (padding * 2);
@@ -231,11 +237,9 @@ function render() {
     let textData;
     let titleFontSize;
 
-    // Loop de Auto-ajuste de fonte (Citação e Título crescem/diminuem juntos)
     while (fontSize > 15) {
         textData = processText(ctx, quoteText, safeWidth, fontSize, fontFace);
-        titleFontSize = Math.max(24, fontSize * 0.55); // Título é ~55% da fonte principal
-        
+        titleFontSize = Math.max(24, fontSize * 0.55);
         const totalH = (titleText ? titleFontSize + 40 : 0) + textData.totalHeight + (fullAuthor ? 60 : 0);
         if (totalH <= safeHeight) break;
         fontSize -= 2;
@@ -244,7 +248,6 @@ function render() {
     const startY = currentY + (safeHeight - ((titleText ? titleFontSize + 40 : 0) + textData.totalHeight + (fullAuthor ? 60 : 0))) / 2;
     let drawY = startY;
 
-    // Título Dinâmico
     if (titleText) {
         ctx.font = `bold ${titleFontSize}px Montserrat`;
         ctx.globalAlpha = 0.6;
@@ -253,7 +256,6 @@ function render() {
         drawY += titleFontSize + 40;
     }
 
-    // Citação
     ctx.font = `${fontSize}px "${fontFace}"`;
     if (fontFace === 'Dancing Script') ctx.font = `700 ${fontSize + 15}px "${fontFace}"`;
 
@@ -263,7 +265,6 @@ function render() {
         drawY += textData.lineHeight;
     });
 
-    // Autor
     if (fullAuthor) {
         drawY += 40;
         ctx.font = `italic ${Math.max(26, fontSize * 0.5)}px "${fontFace}"`;
@@ -274,7 +275,7 @@ function render() {
 
 btnDownload.onclick = () => {
     const link = document.createElement('a');
-    link.download = 'citacao-pro-v2.png';
+    link.download = 'citacao-personalizada.png';
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
 };
