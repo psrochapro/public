@@ -133,16 +133,15 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.25) };
 }
 
-// NOVA LÓGICA DE MOLDURA: Zoom Real (In e Out) + Foco Vertical
 function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusYPercent, zoomPercent) {
     ctx.save();
     
-    // Sombra da moldura
-    ctx.shadowColor = "rgba(0,0,0,0.5)";
-    ctx.shadowBlur = 30;
-    ctx.shadowOffsetY = 15;
+    if (borderWeight > 0) {
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetY = 10;
+    }
 
-    // Criar a máscara (Círculo ou Quadrado)
     ctx.save();
     if (shape === 'circle') {
         ctx.beginPath();
@@ -150,45 +149,31 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
         ctx.clip();
     }
 
-    // Fundo interno da moldura (caso a imagem seja menor que a moldura no zoom out)
-    ctx.fillStyle = "rgba(0,0,0,0.1)"; 
-    ctx.fillRect(x, y, size, size);
-
     ctx.filter = filter;
 
-    // --- CÁLCULO DE ESCALA DINÂMICA ---
     const zoomFactor = zoomPercent / 100;
     const imgRatio = img.width / img.height;
     
     let drawW, drawH;
-
-    // Base: "Cover" (ajusta para preencher a moldura)
-    if (imgRatio > 1) { // Paisagem
+    if (imgRatio > 1) {
         drawH = size * zoomFactor;
         drawW = drawH * imgRatio;
-    } else { // Retrato
+    } else {
         drawW = size * zoomFactor;
         drawH = drawW / imgRatio;
     }
 
-    // Posicionamento
-    // Horizontal: Sempre centralizado
     const dx = x + (size - drawW) / 2;
-    
-    // Vertical: Baseado no slider de Foco
-    // 0% foco = topo da imagem no topo da moldura
-    // 100% foco = base da imagem na base da moldura
     const dy = y + (size - drawH) * (focusYPercent / 100);
 
     ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, drawW, drawH);
-    
     ctx.restore();
 
-    // Desenhar a borda por cima de tudo
     if (borderWeight > 0) {
+        ctx.save();
+        ctx.shadowColor = "transparent";
         ctx.strokeStyle = accentColor;
         ctx.lineWidth = borderWeight;
-        ctx.shadowColor = "transparent";
         if (shape === 'circle') {
             ctx.beginPath(); 
             ctx.arc(x + size / 2, y + size / 2, size / 2 + borderWeight / 2, 0, Math.PI * 2); 
@@ -196,6 +181,7 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
         } else {
             ctx.strokeRect(x - borderWeight / 2, y - borderWeight / 2, size + borderWeight, size + borderWeight);
         }
+        ctx.restore();
     }
     ctx.restore();
 }
@@ -324,7 +310,7 @@ function render() {
 
 btnDownload.onclick = () => {
     const link = document.createElement('a');
-    link.download = 'citacao-pro.png';
+    link.download = 'citacao-pro-final.png';
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
 };
