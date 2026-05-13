@@ -4,12 +4,12 @@
     "titulo": "Especialista em Processos e Business Intelligence",
     "foto": "profilepic.jpeg",
     "resumo": [
-      "Profissional sênior focado em transformar <strong>Eficiência Operacional</strong> em vantagem competitiva.",
-      "Com sólida bagagem em <strong>Business Intelligence</strong> capaz de implementar um sistema de medição de indicadores automatizado.",
-      "Promove ambiente <strong>Data Driven</strong> para garantir que cada decisão seja guiada por dados precisos e insights validados.",
-      "Em <strong>Gestão por Processos</strong>, ajuda empresas a simplificar processos complexos e elevar a qualidade das entregas.",
-      "Em <strong>Gestão Estratégica</strong>, implementa metodologia de planejamento estratégico da concepção à execução.",
-      "Em <strong>Gestão por Projetos</strong>, auxilia na estruturação, execução e acompanhamento de projetos."
+      "✅Profissional sênior focado em transformar <strong>Eficiência Operacional</strong> em vantagem competitiva.",
+      "✅Com sólida bagagem em <strong>Business Intelligence</strong> capaz de implementar um sistema de medição de indicadores automatizado.",
+      "✅Promove ambiente <strong>Data Driven</strong> para garantir que cada decisão seja guiada por dados precisos e insights validados.",
+      "✅Em <strong>Gestão por Processos</strong>, ajuda empresas a simplificar processos complexos e elevar a qualidade das entregas.",
+      "✅Em <strong>Gestão Estratégica</strong>, implementa metodologia de planejamento estratégico da concepção à execução.",
+      "✅Em <strong>Gestão por Projetos</strong>, auxilia na estruturação, execução e acompanhamento de projetos."
     ],
     "contatos": {
       "email": "psrocha.pro@gmail.com",
@@ -33,19 +33,19 @@
     { "tema": "Idiomas", "icon": "🌍", "desc": "Fluência em Inglês para pesquisa e interação internacional." }
   ],
   "pilares_estrategicos": [
-    { "tema": "📊Business Intelligence", "tempo": "10 Anos", "experiencia": "Construção de +170 painéis e +1.000 abas de insights. Capacitações SQLBI." },
-    { "tema": "🎯Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação de BSC do zero, Matriz SWOT e Mapas Estratégicos." },
+    { "tema": "📊Business Intelligence", "tempo": "10 Anos", "experiencia": "Construção de +170 painéis e +1.000 abas de insights. Capacitações Internacionais SQLBI." },
+    { "tema": "🎯Planejamento Estratégico", "tempo": "10 Anos", "experiencia": "Implementação de BSC do zero, Matriz SWOT, Mapas Estratégicos e Planos de Ação." },
     { "tema": "✅Sistema de Gestão", "tempo": "20 Anos", "experiencia": "Solidez com histórico em ISO 9001 e PNQ. Mapeamento de Processos e Gestão Orçamentária." },
-    { "tema": "📋Administração Operacional", "tempo": "15 Anos", "experiencia": "Gestão de áreas Financeiras, de Pessoas e Administrativas." },
+    { "tema": "📋Administração Operacional", "tempo": "15 Anos", "experiencia": "Atuação em áreas Financeiras, de Pessoas e Administrativas." },
     { "tema": "👨‍🏫Docente", "tempo": "3 Anos", "experiencia": "Professor de Inglês Técnico, Qualidade e Produtividade e Informática." },
-    { "tema": "💻IA e Python", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais assistido por IA para automação." }
+    { "tema": "💻IA, Python e JavaScript", "tempo": "1 Ano", "experiencia": "Orquestração de +50 scripts funcionais assistido por IA para automação." }
   ],
   "fluencia_ingles": [
-    { "cert": "Cambridge CAE", "nivel": "C1 - Certificate in Advanced English", "inst": "Cambridge Assessment English", "ano": "2014" },
-    { "cert": "Beet Language Center", "nivel": "C1 a C2+ (Bournemouth, England Presencial)", "inst": "Beet Language Center England", "ano": "2014" },
-    { "cert": "Cambridge FCE", "nivel": "Grade A (Equivalente a C1)", "inst": "Cambridge Assessment English", "ano": "2014" },
-    { "cert": "Cambridge PET", "nivel": "Pass with Distinction", "inst": "Cambridge Assessment English", "ano": "2013" },
-    { "cert": "Cambridge KET", "nivel": "Pass with Distinction", "inst": "Cambridge Assessment English", "ano": "2011" }
+    { "cert": "Cambridge CAE", "nivel": "🌍C1 - Certificate in Advanced English", "inst": "Cambridge Assessment English", "ano": "2014" },
+    { "cert": "Beet Language Center", "nivel": "🌍C1 a C2+ (Bournemouth, England Presencial)", "inst": "Beet Language Center England", "ano": "2014" },
+    { "cert": "Cambridge FCE", "nivel": "🌍Grade A (Equivalente a C1)", "inst": "Cambridge Assessment English", "ano": "2014" },
+    { "cert": "Cambridge PET", "nivel": "🌍Pass with Distinction", "inst": "Cambridge Assessment English", "ano": "2013" },
+    { "cert": "Cambridge KET", "nivel": "🌍Pass with Distinction", "inst": "Cambridge Assessment English", "ano": "2011" }
   ],
   "formacao_academica": [
     { "categoria": "Pós-Graduação", "curso": "Especialização em Gestão de Empresas", "inst": "UNISUL", "periodo": "2011 - 2012" },
@@ -53,26 +53,26 @@
     { "categoria": "Técnico", "curso": "Técnico em Mecânica", "inst": "IFSC", "periodo": "1986 - 1989" }
   ],
   "especializacoes_bi": [
-    { "categoria": "DAX Avançado", "curso": "Mastering DAX Workshop (London - Presencial)", "inst": "SQLBI (England)", "ano": "2016" },
-    { "categoria": "DAX Avançado", "curso": "Mastering DAX (Video Course)", "inst": "SQLBI", "ano": "2017" },
-    { "categoria": "Dashboards", "curso": "Power BI Dashboard Design", "inst": "SQLBI", "ano": "2017" },
-    { "categoria": "Power BI", "curso": "Power BI World Tour (Montreal - Presencial)", "inst": "PBIWG (Canadá)", "ano": "2018" },
-    { "categoria": "Modelagem de Dados", "curso": "Data Modeling for Power BI", "inst": "SQLBI", "ano": "2018" },
-    { "categoria": "DAX Avançado", "curso": "Optimizing DAX", "inst": "SQLBI", "ano": "2020" },
-    { "categoria": "DAX Avançado", "curso": "DAX Tools Video Course", "inst": "SQLBI", "ano": "2021" },
-    { "categoria": "Modelo Tabular", "curso": "Mastering Tabular", "inst": "SQLBI", "ano": "2022" }
+    { "categoria": "DAX Avançado", "curso": "📊Mastering DAX Workshop (London - Presencial)", "inst": "SQLBI (England)", "ano": "2016" },
+    { "categoria": "DAX Avançado", "curso": "📊Mastering DAX (Video Course)", "inst": "SQLBI", "ano": "2017" },
+    { "categoria": "Dashboards", "curso": "📊Power BI Dashboard Design", "inst": "SQLBI", "ano": "2017" },
+    { "categoria": "Power BI", "curso": "📊Power BI World Tour (Montreal - Presencial)", "inst": "PBIWG (Canadá)", "ano": "2018" },
+    { "categoria": "Modelagem de Dados", "curso": "📊Data Modeling for Power BI", "inst": "SQLBI", "ano": "2018" },
+    { "categoria": "DAX Avançado", "curso": "📊Optimizing DAX", "inst": "SQLBI", "ano": "2020" },
+    { "categoria": "DAX Avançado", "curso": "📊DAX Tools Video Course", "inst": "SQLBI", "ano": "2021" },
+    { "categoria": "Modelo Tabular", "curso": "📊Mastering Tabular", "inst": "SQLBI", "ano": "2022" }
   ],
   "especializacoes_gestao": [
-    { "categoria": "Processos", "curso": "Automação de Processos através da RPA", "ch": "25h", "inst": "Enap", "ano": "2026" },
-    { "categoria": "Processos", "curso": "Fundamentos da Transformação Digital: Mapeamento e Automação", "ch": "20h", "inst": "Enap", "ano": "2026" },
-    { "categoria": "Lean Office", "curso": "Abordagem Lean aplicada à Transformação Digital", "ch": "25h", "inst": "Enap", "ano": "2026" },
-    { "categoria": "Processos", "curso": "Análise e Melhoria de Processos", "ch": "20h", "inst": "Enap", "ano": "2026" },
-    { "categoria": "Qualidade", "curso": "Gestão Para Resultados", "ch": "24h", "inst": "FALCONI", "ano": "2014" },
-    { "categoria": "Projetos", "curso": "Execução de Projetos de Melhoria e Inovação de Processos", "ch": "16h", "inst": "Elo Group", "ano": "2013" },
-    { "categoria": "Processos", "curso": "Mapeamento do Fluxo de Valor", "ch": "16h", "inst": "Lean Institute", "ano": "2013" },
-    { "categoria": "Processos", "curso": "Mapeamento e Gestão por Processos", "ch": "16h", "inst": "Training Company", "ano": "2012" },
-    { "categoria": "Lean Office", "curso": "PCP na Empresa Lean", "ch": "16h", "inst": "Lean Institute", "ano": "2011" },
-    { "categoria": "Qualidade", "curso": "Formação de Auditores Internos ISO 9001:2000", "ch": "16h", "inst": "BSI Learning", "ano": "2008" },
-    { "categoria": "Qualidade", "curso": "ISO 9000 - Formação de Auditores Internos da Qualidade", "ch": "24h", "inst": "SENAI/FIESC", "ano": "1999" }
+    { "categoria": "Processos", "curso": "⚙️Automação de Processos através da RPA", "ch": "25h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Processos", "curso": "⚙️Fundamentos da Transformação Digital: Mapeamento e Automação", "ch": "20h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Lean Office", "curso": "⚙️Abordagem Lean aplicada à Transformação Digital", "ch": "25h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Processos", "curso": "⚙️Análise e Melhoria de Processos", "ch": "20h", "inst": "Enap", "ano": "2026" },
+    { "categoria": "Qualidade", "curso": "⚙️Gestão Para Resultados", "ch": "24h", "inst": "FALCONI", "ano": "2014" },
+    { "categoria": "Projetos", "curso": "⚙️Execução de Projetos de Melhoria e Inovação de Processos", "ch": "16h", "inst": "Elo Group", "ano": "2013" },
+    { "categoria": "Processos", "curso": "⚙️Mapeamento do Fluxo de Valor", "ch": "16h", "inst": "Lean Institute", "ano": "2013" },
+    { "categoria": "Processos", "curso": "⚙️Mapeamento e Gestão por Processos", "ch": "16h", "inst": "Training Company", "ano": "2012" },
+    { "categoria": "Lean Office", "curso": "⚙️PCP na Empresa Lean", "ch": "16h", "inst": "Lean Institute", "ano": "2011" },
+    { "categoria": "Qualidade", "curso": "⚙️Formação de Auditores Internos ISO 9001:2000", "ch": "16h", "inst": "BSI Learning", "ano": "2008" },
+    { "categoria": "Qualidade", "curso": "⚙️ISO 9000 - Formação de Auditores Internos da Qualidade", "ch": "24h", "inst": "SENAI/FIESC", "ano": "1999" }
   ]
 }
