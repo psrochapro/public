@@ -7,21 +7,35 @@ let userImage = null;
 
 function init() {
     inputs.forEach(input => input.addEventListener('input', render));
-    document.getElementById('input-file').addEventListener('change', handleFile);
+    
+    // File upload
+    document.getElementById('input-file').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => loadImage(ev.target.result);
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // URL upload
+    document.getElementById('input-url').addEventListener('input', (e) => {
+        if (e.target.value.startsWith('http')) {
+            loadImage(e.target.value);
+        }
+    });
+
     render();
 }
 
-function handleFile(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => { userImage = img; render(); };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
+function loadImage(src) {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+        userImage = img;
+        render();
+    };
+    img.src = src;
 }
 
 function getContrastYIQ(hexcolor){
@@ -33,27 +47,33 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#1a1a1a' : '#ffffff';
 }
 
-// Função aprimorada para calcular altura e desenhar texto
-function processText(context, text, x, y, maxWidth, fontSize, fontFace, lineHeightMult = 1.3) {
+// Função de quebra de linha com detecção de Script
+function processText(context, text, maxWidth, fontSize, fontFace) {
     const words = text.split(' ');
     let lines = [];
     let currentLine = '';
-    context.font = `${fontSize}px ${fontFace}`;
+    context.font = `${fontSize}px "${fontFace}"`;
+
+    // Multiplicador de espaçamento: Script precisa de mais ar vertical
+    const spacingFactor = fontFace === 'Dancing Script' ? 1.5 : 1.3;
 
     for (let n = 0; n < words.length; n++) {
         let testLine = currentLine + words[n] + ' ';
         let metrics = context.measureText(testLine);
         if (metrics.width > maxWidth && n > 0) {
-            lines.push(currentLine);
+            lines.push(currentLine.trim());
             currentLine = words[n] + ' ';
         } else {
             currentLine = testLine;
         }
     }
-    lines.push(currentLine);
+    lines.push(currentLine.trim());
     
-    const totalHeight = lines.length * (fontSize * lineHeightMult);
-    return { lines, totalHeight };
+    return {
+        lines,
+        totalHeight: lines.length * (fontSize * spacingFactor),
+        lineHeight: fontSize * spacingFactor
+    };
 }
 
 function render() {
@@ -80,81 +100,89 @@ function render() {
 
     const textColor = getContrastYIQ(themeColor);
     ctx.fillStyle = textColor;
-    ctx.textAlign = (imgPos === 'top' || !userImage) ? 'center' : 'left';
+    
+    let safeWidth = width - (padding * 2);
+    let safeHeight = height - (padding * 2);
+    let currentY = padding;
+    let textAnchorX = width / 2;
 
-    let availableAreaY = padding;
-    let availableAreaX = padding;
-    let availableWidth = width - (padding * 2);
-    let availableHeight = height - (padding * 2);
-
-    // 1. Desenhar Imagem e Reservar Espaço
+    // 1. Renderizar Imagem e ajustar espaço disponível
     if (userImage) {
         const imgSize = width * imgSizeFactor;
-        let imgX, imgY;
-
         if (imgPos === 'top') {
-            imgX = (width - imgSize) / 2;
-            imgY = padding;
-            drawImg(userImage, imgX, imgY, imgSize, imgShape, filter);
-            availableAreaY = imgY + imgSize + 40;
-            availableHeight -= (imgSize + 40);
+            const imgX = (width - imgSize) / 2;
+            drawImg(userImage, imgX, padding, imgSize, imgShape, filter, textColor);
+            currentY = padding + imgSize + 40;
+            safeHeight -= (imgSize + 40);
+            ctx.textAlign = 'center';
         } else {
-            imgX = padding;
-            imgY = (height - imgSize) / 2;
-            drawImg(userImage, imgX, imgY, imgSize, imgShape, filter);
-            availableAreaX = imgX + imgSize + 50;
-            availableWidth -= (imgSize + 50);
+            const imgY = (height - imgSize) / 2;
+            drawImg(userImage, padding, imgY, imgSize, imgShape, filter, textColor);
+            textAnchorX = padding + imgSize + 60;
+            safeWidth = width - textAnchorX - padding;
+            ctx.textAlign = 'left';
         }
+    } else {
+        ctx.textAlign = 'center';
     }
 
-    // 2. Lógica de Auto-ajuste de Fonte
-    const quoteText = `“${document.getElementById('input-quote').value || 'Sua frase...'}”`;
-    const authorText = document.getElementById('input-author').value ? `— ${document.getElementById('input-author').value}` : '';
+    // 2. Lógica de Redimensionamento Dinâmico (Auto-Fit)
     const titleText = document.getElementById('input-title').value.toUpperCase();
+    const quoteText = `“${document.getElementById('input-quote').value || ''}”`;
+    const authorText = document.getElementById('input-author').value;
+    const yearText = document.getElementById('input-year').value;
+    const fullAuthor = authorText ? `— ${authorText}${yearText ? ', ' + yearText : ''}` : '';
 
-    let fontSize = (layout === '9:16') ? 70 : 50;
-    let textInfo;
+    let fontSize = (layout === '9:16') ? 80 : 55;
+    let textData;
 
-    // Loop para diminuir fonte se não couber
-    while (fontSize > 20) {
-        ctx.font = `bold ${fontSize}px ${fontFace}`;
-        textInfo = processText(ctx, quoteText, 0, 0, availableWidth, fontSize, fontFace);
+    // Loop de segurança: reduz a fonte até caber na altura restante
+    while (fontSize > 15) {
+        textData = processText(ctx, quoteText, safeWidth, fontSize, fontFace);
+        const titleH = titleText ? 50 : 0;
+        const authorH = fullAuthor ? 60 : 0;
         
-        // Verifica se altura do título + citação + autor cabe no espaço
-        const totalNeededHeight = (titleText ? 60 : 0) + textInfo.totalHeight + (authorText ? 60 : 0);
-        
-        if (totalNeededHeight <= availableHeight) break;
+        if ((textData.totalHeight + titleH + authorH) <= safeHeight) break;
         fontSize -= 2;
     }
 
-    // 3. Renderizar Textos
-    let currentY = availableAreaY + (availableHeight - (textInfo.totalHeight + (titleText ? 40 : 0))) / 2;
-    const anchorX = ctx.textAlign === 'center' ? width / 2 : availableAreaX;
+    // 3. Desenhar Textos
+    // Centralizar bloco de texto verticalmente no espaço que sobrou
+    const totalBlockHeight = textData.totalHeight + (titleText ? 50 : 0) + (fullAuthor ? 60 : 0);
+    const startY = currentY + (safeHeight - totalBlockHeight) / 2;
+    let drawY = startY;
 
+    // Título
     if (titleText) {
-        ctx.font = `bold 24px ${fontFace}`;
+        ctx.font = `bold 24px Montserrat`;
         ctx.globalAlpha = 0.5;
-        ctx.fillText(titleText, anchorX, currentY);
+        ctx.fillText(titleText, textAnchorX, drawY);
         ctx.globalAlpha = 1.0;
-        currentY += 50;
+        drawY += 60;
     }
 
-    ctx.font = fontFace === 'Dancing Script' ? `bold ${fontSize + 20}px ${fontFace}` : `bold ${fontSize}px ${fontFace}`;
-    textInfo.lines.forEach((line) => {
-        ctx.fillText(line.trim(), anchorX, currentY);
-        currentY += fontSize * 1.3;
+    // Citação
+    ctx.font = `${fontSize}px "${fontFace}"`;
+    if (fontFace === 'Dancing Script') ctx.font = `700 ${fontSize + 15}px "${fontFace}"`;
+
+    textData.lines.forEach(line => {
+        ctx.fillText(line, textAnchorX, drawY + fontSize);
+        drawY += textData.lineHeight;
     });
 
-    if (authorText) {
-        currentY += 30;
-        ctx.font = `italic ${Math.max(20, fontSize * 0.7)}px ${fontFace}`;
-        ctx.fillText(authorText, anchorX, currentY);
+    // Autor
+    if (fullAuthor) {
+        drawY += 40;
+        ctx.font = `italic ${Math.max(22, fontSize * 0.6)}px "${fontFace}"`;
+        ctx.globalAlpha = 0.8;
+        ctx.fillText(fullAuthor, textAnchorX, drawY);
     }
 }
 
-function drawImg(img, x, y, size, shape, filter) {
+function drawImg(img, x, y, size, shape, filter, borderColor) {
     ctx.save();
     ctx.filter = filter;
+    
     if (shape === 'circle') {
         ctx.beginPath();
         ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
@@ -174,8 +202,10 @@ function drawImg(img, x, y, size, shape, filter) {
     ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
     ctx.restore();
     
-    ctx.strokeStyle = getContrastYIQ(document.getElementById('input-color').value);
+    // Borda sutil
+    ctx.strokeStyle = borderColor;
     ctx.globalAlpha = 0.2;
+    ctx.lineWidth = 2;
     if (shape === 'circle') {
         ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2); ctx.stroke();
     } else {
@@ -186,8 +216,8 @@ function drawImg(img, x, y, size, shape, filter) {
 
 btnDownload.onclick = () => {
     const link = document.createElement('a');
-    link.download = 'citacao.png';
-    link.href = canvas.toDataURL('image/png');
+    link.download = 'citacao-pro.png';
+    link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
 };
 

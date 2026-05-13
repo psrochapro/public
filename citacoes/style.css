@@ -9,7 +9,7 @@
 * { box-sizing: border-box; }
 body {
     margin: 0;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Montserrat', system-ui, sans-serif;
     background-color: var(--bg-dark);
     color: var(--text-main);
     display: flex;
@@ -50,7 +50,10 @@ input, textarea, select {
     color: white;
     border-radius: 6px;
     font-size: 0.85rem;
+    width: 100%;
 }
+
+textarea { height: 80px; resize: none; }
 
 .row { display: flex; gap: 10px; }
 .row > div { flex: 1; }
@@ -61,12 +64,25 @@ label { font-size: 0.65rem; color: #94a3b8; display: block; margin-bottom: 4px; 
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0b0f1a;
+    background: #0b1120;
     padding: 20px;
+    overflow: hidden;
 }
 
-#canvas-wrapper { max-width: 100%; max-height: 100%; }
-canvas { max-width: 100%; max-height: 90vh; box-shadow: 0 20px 40px rgba(0,0,0,0.4); background: #fff; }
+#canvas-wrapper { 
+    max-width: 100%; 
+    max-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas { 
+    max-width: 100%; 
+    max-height: 85vh; 
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
+    background: #000;
+}
 
 .btn-primary {
     background: var(--accent);
@@ -77,9 +93,13 @@ canvas { max-width: 100%; max-height: 90vh; box-shadow: 0 20px 40px rgba(0,0,0,0
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+    transition: background 0.2s;
 }
+
+.btn-primary:hover { background: #4f46e5; }
 
 @media (max-width: 850px) {
     .app-container { flex-direction: column; overflow-y: auto; }
-    .sidebar { width: 100%; }
+    .sidebar { width: 100%; height: auto; }
+    .preview-area { min-height: 500px; }
 }
