@@ -67,7 +67,6 @@ function drawBackgroundPattern(color, width, height, userOpacity) {
     ctx.strokeStyle = contrastColor;
     ctx.fillStyle = contrastColor;
 
-    // Círculos
     ctx.globalAlpha = userOpacity / 100;
     for(let i = 0; i < 6; i++) {
         ctx.beginPath();
@@ -77,7 +76,6 @@ function drawBackgroundPattern(color, width, height, userOpacity) {
         ctx.stroke();
     }
 
-    // Linhas
     ctx.globalAlpha = (userOpacity / 100) * 0.5;
     ctx.lineWidth = 2;
     for(let i = -height; i < width; i += 60) {
@@ -117,30 +115,23 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     };
 }
 
-function drawImgWithFrame(img, x, y, size, shape, filter, accentColor) {
+// MOLDURA REFEITA: Minimalista e Profissional
+function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight) {
     ctx.save();
+    
+    // Sombra projetada para dar profundidade
     ctx.shadowColor = "rgba(0,0,0,0.4)";
-    ctx.shadowBlur = 30;
-    ctx.shadowOffsetY = 15;
+    ctx.shadowBlur = 25;
+    ctx.shadowOffsetY = 10;
 
-    ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 3;
-    if (shape === 'circle') {
-        ctx.beginPath();
-        ctx.arc(x + size/2, y + size/2, size/2 + 12, 0, Math.PI * 2);
-        ctx.stroke();
-    } else {
-        ctx.strokeRect(x - 12, y - 12, size + 24, size + 24);
-    }
-    
-    ctx.shadowColor = "transparent";
-    
+    // Desenhar a foto com filtro
     ctx.filter = filter;
     if (shape === 'circle') {
         ctx.beginPath();
         ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
         ctx.clip();
     }
+    
     const aspect = img.width / img.height;
     let sw, sh, sx, sy;
     if (aspect > 1) {
@@ -153,15 +144,20 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor) {
     ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
     ctx.restore();
 
-    ctx.save();
-    ctx.strokeStyle = "rgba(255,255,255,0.4)";
-    ctx.lineWidth = 1.5;
-    if (shape === 'circle') {
-        ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2); ctx.stroke();
-    } else {
-        ctx.strokeRect(x, y, size, size);
+    // Borda Única Minimalista (Opcional via slider)
+    if (borderWeight > 0) {
+        ctx.save();
+        ctx.strokeStyle = accentColor;
+        ctx.lineWidth = borderWeight;
+        if (shape === 'circle') {
+            ctx.beginPath();
+            ctx.arc(x + size/2, y + size/2, size/2 + borderWeight/2, 0, Math.PI * 2);
+            ctx.stroke();
+        } else {
+            ctx.strokeRect(x - borderWeight/2, y - borderWeight/2, size + borderWeight, size + borderWeight);
+        }
+        ctx.restore();
     }
-    ctx.restore();
 }
 
 function render() {
@@ -172,6 +168,7 @@ function render() {
     const imgPos = document.getElementById('input-img-pos').value;
     const imgShape = document.getElementById('input-img-shape').value;
     const imgSizeFactor = document.getElementById('input-img-size').value / 100;
+    const imgBorderWeight = parseInt(document.getElementById('input-img-border-weight').value);
     const filter = document.getElementById('input-filter').value;
     const bgOpacity = document.getElementById('input-bg-opacity').value;
     const borderOpacity = document.getElementById('input-border-opacity').value;
@@ -191,7 +188,6 @@ function render() {
 
     const textColor = getContrastYIQ(themeColor);
     
-    // Borda do Card Controlada pelo Usuário
     if (borderOpacity > 0) {
         ctx.strokeStyle = textColor;
         ctx.globalAlpha = borderOpacity / 100;
@@ -209,14 +205,14 @@ function render() {
         const imgSize = width * imgSizeFactor;
         if (imgPos === 'top') {
             const imgX = (width - imgSize) / 2;
-            drawImgWithFrame(userImage, imgX, padding, imgSize, imgShape, filter, textColor);
-            currentY = padding + imgSize + 80;
-            safeHeight -= (imgSize + 80);
+            drawImgWithFrame(userImage, imgX, padding, imgSize, imgShape, filter, textColor, imgBorderWeight);
+            currentY = padding + imgSize + 60;
+            safeHeight -= (imgSize + 60);
             ctx.textAlign = 'center';
         } else {
             const imgY = (height - imgSize) / 2;
-            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor);
-            textAnchorX = padding + imgSize + 90;
+            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight);
+            textAnchorX = padding + imgSize + 70;
             safeWidth = width - textAnchorX - padding;
             ctx.textAlign = 'left';
         }
@@ -275,7 +271,7 @@ function render() {
 
 btnDownload.onclick = () => {
     const link = document.createElement('a');
-    link.download = 'citacao-personalizada.png';
+    link.download = 'citacao-pro.png';
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
 };
