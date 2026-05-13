@@ -76,7 +76,7 @@ function drawBackgroundPattern(color, width, height, userOpacity, patternType) {
     const contrastColor = getContrastYIQ(color);
     ctx.strokeStyle = contrastColor;
     ctx.fillStyle = contrastColor;
-    ctx.globalAlpha = userOpacity / 300;
+    ctx.globalAlpha = userOpacity / 350;
 
     switch(patternType) {
         case 'circles':
@@ -87,35 +87,26 @@ function drawBackgroundPattern(color, width, height, userOpacity, patternType) {
                 ctx.stroke();
             }
             break;
-            
         case 'grid':
             const spacing = 60;
             for(let x = 0; x < width; x += spacing) {
                 for(let y = 0; y < height; y += spacing) {
-                    ctx.beginPath();
-                    ctx.arc(x, y, 2, 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
                 }
             }
             break;
-
         case 'diagonals':
             ctx.lineWidth = 15;
             for(let i = -height; i < width; i += 100) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i + height, height);
-                ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + height, height); ctx.stroke();
             }
             break;
-
         case 'bubbles':
             for(let i = 0; i < 20; i++) {
                 ctx.beginPath();
                 const bX = (i * 137.5) % width;
                 const bY = (i * 241.1) % height;
-                ctx.arc(bX, bY, 30 + (i * 5), 0, Math.PI * 2);
-                ctx.stroke();
+                ctx.arc(bX, bY, 30 + (i * 5), 0, Math.PI * 2); ctx.stroke();
             }
             break;
     }
@@ -142,8 +133,8 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.25) };
 }
 
-// MOLDURA REFEITA: Com suporte a Foco Vertical
-function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusY) {
+// MOLDURA COM ZOOM INTERNO E FOCO
+function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusY, zoomLevel) {
     ctx.save();
     ctx.shadowColor = "rgba(0,0,0,0.5)";
     ctx.shadowBlur = 30;
@@ -158,19 +149,25 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
     const aspect = img.width / img.height;
     let sw, sh, sx, sy;
 
-    // Lógica de centralização e deslocamento (focusY)
-    if (aspect > 1) { // Imagem Paisagem (Horizontal)
-        sh = img.height;
-        sw = img.height;
-        sx = (img.width - sw) * 0.5; // Centraliza horizontalmente fixo
-        sy = 0;
-    } else { // Imagem Retrato (Vertical)
-        sw = img.width;
-        sh = img.width;
-        sx = 0;
-        // Aplica o foco vertical: 0 = topo, 0.5 = centro, 1 = base
+    // O zoomLevel age sobre a dimensão base. 100% = Cover padrão.
+    // Menos que 100% = Zoom out (reduz o assunto dentro da moldura)
+    const zoomFactor = zoomLevel / 100;
+
+    if (aspect > 1) { // Paisagem
+        sh = img.height / zoomFactor;
+        sw = sh;
+        sx = (img.width - sw) * 0.5;
+        sy = (img.height - sh) * focusY;
+    } else { // Retrato
+        sw = img.width / zoomFactor;
+        sh = sw;
+        sx = (img.width - sw) * 0.5;
         sy = (img.height - sh) * focusY;
     }
+    
+    // Proteção para não tentar recortar fora da imagem original (clamping)
+    if (sw > img.width) { sw = img.width; sh = sw; sx = 0; }
+    if (sh > img.height) { sh = img.height; sw = sh; sy = 0; }
     
     ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
     ctx.restore();
@@ -205,6 +202,7 @@ function render() {
     const imgSizeFactor = document.getElementById('input-img-size').value / 100;
     const imgBorderWeight = parseInt(document.getElementById('input-img-border-weight').value);
     const imgFocusY = document.getElementById('input-img-focus').value / 100;
+    const imgZoom = parseInt(document.getElementById('input-img-zoom').value);
     const filter = document.getElementById('input-filter').value;
     const bgOpacity = document.getElementById('input-bg-opacity').value;
     const borderOpacity = document.getElementById('input-border-opacity').value;
@@ -237,13 +235,13 @@ function render() {
     if (userImage) {
         const imgSize = width * imgSizeFactor;
         if (imgPos === 'top') {
-            drawImgWithFrame(userImage, (width - imgSize) / 2, padding, imgSize, imgShape, filter, textColor, imgBorderWeight, imgFocusY);
+            drawImgWithFrame(userImage, (width - imgSize) / 2, padding, imgSize, imgShape, filter, textColor, imgBorderWeight, imgFocusY, imgZoom);
             currentY = padding + imgSize + imgContentGap;
             safeHeight -= (imgSize + imgContentGap);
             ctx.textAlign = 'center';
         } else {
             const imgY = (height - imgSize) / 2;
-            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight, imgFocusY);
+            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight, imgFocusY, imgZoom);
             textAnchorX = padding + imgSize + 45;
             safeWidth = width - textAnchorX - padding;
             ctx.textAlign = 'left';
