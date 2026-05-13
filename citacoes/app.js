@@ -133,6 +133,7 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.25) };
 }
 
+// MOLDURA COM CROP QUADRADO E CIRCULAR
 function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusYPercent, zoomPercent) {
     ctx.save();
     
@@ -143,11 +144,14 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
     }
 
     ctx.save();
+    // APLICAÇÃO DA MÁSCARA (Ajustado para Quadrado e Círculo)
+    ctx.beginPath();
     if (shape === 'circle') {
-        ctx.beginPath();
         ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
-        ctx.clip();
+    } else {
+        ctx.rect(x, y, size, size);
     }
+    ctx.clip();
 
     ctx.filter = filter;
 
@@ -169,6 +173,7 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
     ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, drawW, drawH);
     ctx.restore();
 
+    // Bordas (Desenhadas por cima)
     if (borderWeight > 0) {
         ctx.save();
         ctx.shadowColor = "transparent";
@@ -242,77 +247,3 @@ function render() {
             ctx.textAlign = 'center';
         } else {
             const imgY = (height - imgSize) / 2;
-            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight, imgFocusY, imgZoom);
-            textAnchorX = padding + imgSize + 45;
-            safeWidth = width - textAnchorX - padding;
-            ctx.textAlign = 'left';
-        }
-    } else {
-        ctx.textAlign = 'center';
-        currentY = height / 5;
-    }
-
-    ctx.fillStyle = textColor;
-    ctx.textBaseline = 'middle';
-
-    const titleText = document.getElementById('input-title').value.toUpperCase();
-    const quoteText = `“${document.getElementById('input-quote').value || ''}”`;
-    const authorText = document.getElementById('input-author').value;
-    const yearText = document.getElementById('input-year').value;
-    const watermark = document.getElementById('input-watermark').value;
-
-    let fontSize = (layout === '9:16') ? 80 : 60;
-    let textData, titleSize;
-
-    while (fontSize > 15) {
-        textData = processText(ctx, quoteText, safeWidth, fontSize, fontFace);
-        titleSize = Math.max(24, fontSize * 0.5);
-        const totalH = (titleText ? titleSize + 30 : 0) + textData.lines.length * textData.lineHeight + 50;
-        if (totalH <= safeHeight) break;
-        fontSize -= 2;
-    }
-
-    let drawY = currentY + (safeHeight - (textData.lines.length * textData.lineHeight)) / 2;
-
-    if (titleText) {
-        ctx.save();
-        ctx.font = `bold ${titleSize}px Montserrat`;
-        ctx.globalAlpha = 0.5;
-        ctx.fillText(titleText, textAnchorX, drawY - titleSize - 15);
-        ctx.restore();
-    }
-
-    ctx.font = `${fontSize}px "${fontFace}"`;
-    if (fontFace === 'Dancing Script') ctx.font = `700 ${fontSize + 15}px "${fontFace}"`;
-
-    textData.lines.forEach(line => {
-        ctx.fillText(line, textAnchorX, drawY);
-        drawY += textData.lineHeight;
-    });
-
-    if (authorText) {
-        ctx.save();
-        ctx.font = `italic ${Math.max(22, fontSize * 0.5)}px "${fontFace}"`;
-        ctx.globalAlpha = 0.8;
-        ctx.fillText(`— ${authorText}${yearText ? ', ' + yearText : ''}`, textAnchorX, drawY + 20);
-        ctx.restore();
-    }
-
-    if (watermark) {
-        ctx.save();
-        ctx.globalAlpha = 0.3;
-        ctx.font = "bold 22px Montserrat";
-        ctx.textAlign = "center";
-        ctx.fillText(watermark, width / 2, height - 60);
-        ctx.restore();
-    }
-}
-
-btnDownload.onclick = () => {
-    const link = document.createElement('a');
-    link.download = 'citacao-pro-final.png';
-    link.href = canvas.toDataURL('image/png', 1.0);
-    link.click();
-};
-
-document.fonts.ready.then(init);
