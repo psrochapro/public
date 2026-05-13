@@ -76,7 +76,7 @@ function drawBackgroundPattern(color, width, height, userOpacity, patternType) {
     const contrastColor = getContrastYIQ(color);
     ctx.strokeStyle = contrastColor;
     ctx.fillStyle = contrastColor;
-    ctx.globalAlpha = userOpacity / 300; // Ajuste fino de opacidade
+    ctx.globalAlpha = userOpacity / 300;
 
     switch(patternType) {
         case 'circles':
@@ -217,23 +217,26 @@ function render() {
     let currentY = padding;
     let textAnchorX = width / 2;
 
+    // --- MELHORIA: Redução da área reservada para a imagem ---
+    const imgContentGap = 35; // Reduzido de ~80 para 35px
+
     if (userImage) {
         const imgSize = width * imgSizeFactor;
         if (imgPos === 'top') {
             drawImgWithFrame(userImage, (width - imgSize) / 2, padding, imgSize, imgShape, filter, textColor, imgBorderWeight);
-            currentY = padding + imgSize + 70;
-            safeHeight -= (imgSize + 70);
+            currentY = padding + imgSize + imgContentGap;
+            safeHeight -= (imgSize + imgContentGap);
             ctx.textAlign = 'center';
         } else {
             const imgY = (height - imgSize) / 2;
             drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight);
-            textAnchorX = padding + imgSize + 80;
+            textAnchorX = padding + imgSize + 45; // Espaçamento horizontal reduzido
             safeWidth = width - textAnchorX - padding;
             ctx.textAlign = 'left';
         }
     } else {
         ctx.textAlign = 'center';
-        currentY = height / 4;
+        currentY = height / 5; // Ajustado para centralizar melhor quando sem imagem
     }
 
     ctx.fillStyle = textColor;
@@ -248,21 +251,25 @@ function render() {
     let fontSize = (layout === '9:16') ? 80 : 60;
     let textData, titleSize;
 
+    // Loop de Auto-ajuste de fonte
     while (fontSize > 15) {
         textData = processText(ctx, quoteText, safeWidth, fontSize, fontFace);
         titleSize = Math.max(24, fontSize * 0.5);
-        const totalH = (titleText ? titleSize + 50 : 0) + textData.lines.length * textData.lineHeight + 60;
+        // Altura total incluindo o título e a citação
+        const totalH = (titleText ? titleSize + 30 : 0) + textData.lines.length * textData.lineHeight + 50;
         if (totalH <= safeHeight) break;
         fontSize -= 2;
     }
 
+    // Centralização do bloco de texto na área disponível
     let drawY = currentY + (safeHeight - (textData.lines.length * textData.lineHeight)) / 2;
 
     if (titleText) {
         ctx.save();
         ctx.font = `bold ${titleSize}px Montserrat`;
         ctx.globalAlpha = 0.5;
-        ctx.fillText(titleText, textAnchorX, drawY - titleSize - 20);
+        // Posicionamento do título mais próximo da citação
+        ctx.fillText(titleText, textAnchorX, drawY - titleSize - 15);
         ctx.restore();
     }
 
