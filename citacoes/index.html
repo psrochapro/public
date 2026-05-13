@@ -16,36 +16,35 @@
             <section class="control-group">
                 <h3>1. Conteúdo</h3>
                 <input type="text" id="input-title" placeholder="Título (ex: Macroprocessos)">
-                <textarea id="input-quote" placeholder="Sua citação aqui..."></textarea>
-                <input type="text" id="input-author" placeholder="Autor">
-                <input type="text" id="input-year" placeholder="Ano (Opcional)">
+                <textarea id="input-quote" placeholder="Sua citação aqui...">Um macroprocesso é um conjunto de processos que impactam diretamente a estratégia da organização.</textarea>
+                <input type="text" id="input-author" placeholder="Autor" value="João da Silva">
+                <input type="text" id="input-year" placeholder="Ano (Opcional)" value="2026">
             </section>
 
             <section class="control-group">
                 <h3>2. Imagem do Autor</h3>
                 <input type="file" id="input-file" accept="image/*">
-                <input type="text" id="input-url" placeholder="Ou cole a URL da imagem">
                 
                 <div class="row">
                     <div>
                         <label>Posição</label>
                         <select id="input-img-pos">
-                            <option value="top">Topo (Centralizado)</option>
-                            <option value="left">Esquerda (Lateral)</option>
+                            <option value="top">Topo</option>
+                            <option value="left">Esquerda</option>
                         </select>
                     </div>
                     <div>
                         <label>Formato</label>
                         <select id="input-img-shape">
-                            <option value="circle">Círculo</option>
                             <option value="square">Quadrado</option>
+                            <option value="circle">Círculo</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="range-group">
-                    <label>Tamanho da Imagem</label>
-                    <input type="range" id="input-img-size" min="15" max="60" value="30">
+                    <label>Tamanho da Imagem (%)</label>
+                    <input type="range" id="input-img-size" min="10" max="50" value="25">
                 </div>
 
                 <div class="filters">
@@ -54,7 +53,6 @@
                         <option value="none">Sem Filtro</option>
                         <option value="grayscale(100%)">Preto e Branco</option>
                         <option value="sepia(80%)">Sépia</option>
-                        <option value="blur(3px)">Suave (Blur)</option>
                     </select>
                 </div>
             </section>
@@ -64,7 +62,7 @@
                 <div class="row">
                     <div>
                         <label>Cor de Fundo</label>
-                        <input type="color" id="input-color" value="#f3f4f6">
+                        <input type="color" id="input-color" value="#f8f9fa">
                     </div>
                     <div>
                         <label>Proporção</label>
@@ -85,8 +83,8 @@
                         </select>
                     </div>
                     <div>
-                        <label>Respiro (Padding)</label>
-                        <input type="range" id="input-padding" min="40" max="120" value="80">
+                        <label>Padding</label>
+                        <input type="range" id="input-padding" min="30" max="100" value="60">
                     </div>
                 </div>
             </section>
