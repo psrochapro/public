@@ -3,35 +3,33 @@ const ctx = canvas.getContext('2d');
 const inputs = document.querySelectorAll('input, textarea, select');
 const btnDownload = document.getElementById('btn-download');
 const btnRemoveImg = document.getElementById('btn-remove-img');
-const inputURL = document.getElementById('input-url');
-const inputFile = document.getElementById('input-file');
 
 let userImage = null;
 
 function init() {
     inputs.forEach(input => input.addEventListener('input', render));
     
-    inputFile.addEventListener('change', (e) => {
+    document.getElementById('input-file').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
-            inputURL.value = '';
+            document.getElementById('input-url').value = '';
             const reader = new FileReader();
             reader.onload = (ev) => loadImage(ev.target.result);
             reader.readAsDataURL(file);
         }
     });
 
-    inputURL.addEventListener('input', (e) => {
+    document.getElementById('input-url').addEventListener('input', (e) => {
         if (e.target.value.trim().startsWith('http')) {
-            inputFile.value = '';
+            document.getElementById('input-file').value = '';
             loadImage(e.target.value.trim());
         }
     });
 
     btnRemoveImg.onclick = () => {
         userImage = null;
-        inputFile.value = '';
-        inputURL.value = '';
+        document.getElementById('input-file').value = '';
+        document.getElementById('input-url').value = '';
         render();
     };
 
@@ -43,7 +41,7 @@ function loadImage(src) {
     img.crossOrigin = "anonymous";
     img.onload = () => { userImage = img; render(); };
     img.onerror = () => {
-        alert("Erro de CORS ou Link inválido. Tente baixar a imagem e fazer o upload local.");
+        alert("Erro ao carregar imagem externa. Verifique o link ou faça upload local.");
         userImage = null;
         render();
     };
@@ -56,32 +54,36 @@ function getContrastYIQ(hexcolor){
     const g = parseInt(hexcolor.substr(2,2),16);
     const b = parseInt(hexcolor.substr(4,2),16);
     const yiq = ((r*299)+(g*587)+(b*114))/1000;
-    return (yiq >= 128) ? '#1a1a1a' : '#ffffff';
+    return (yiq >= 128) ? '#111827' : '#ffffff';
+}
+
+function drawBackground(color, width, height, style) {
+    if (style === 'gradient') {
+        const grd = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width * 0.8);
+        grd.addColorStop(0, color);
+        // Cria um tom mais escuro da cor base
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, width, height);
+        
+        ctx.fillStyle = 'rgba(0,0,0,0.3)'; // Overlay de profundidade
+        ctx.fillRect(0, 0, width, height);
+    } else {
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, width, height);
+    }
 }
 
 function drawBackgroundPattern(color, width, height, userOpacity) {
     if (userOpacity <= 0) return;
-    
     ctx.save();
     const contrastColor = getContrastYIQ(color);
     ctx.strokeStyle = contrastColor;
-    ctx.fillStyle = contrastColor;
+    ctx.globalAlpha = userOpacity / 150; // Atenuação para não poluir
 
-    ctx.globalAlpha = userOpacity / 100;
-    for(let i = 0; i < 6; i++) {
+    for(let i = 0; i < 8; i++) {
         ctx.beginPath();
-        const radius = 100 + (Math.random() * 250);
-        ctx.lineWidth = 1 + (Math.random() * 4);
-        ctx.arc(Math.random() * width, Math.random() * height, radius, 0, Math.PI * 2);
-        ctx.stroke();
-    }
-
-    ctx.globalAlpha = (userOpacity / 100) * 0.5;
-    ctx.lineWidth = 2;
-    for(let i = -height; i < width; i += 60) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i + height, height);
+        ctx.lineWidth = 1 + (i % 3);
+        ctx.arc(width * (i/8), height * (i/8), 100 + (i*50), 0, Math.PI * 2);
         ctx.stroke();
     }
     ctx.restore();
@@ -92,13 +94,11 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     let lines = [];
     let currentLine = '';
     context.font = `${fontSize}px "${fontFace}"`;
-
-    const safeMaxWidth = fontFace === 'Dancing Script' ? maxWidth * 0.82 : maxWidth;
+    const safeMaxWidth = fontFace === 'Dancing Script' ? maxWidth * 0.8 : maxWidth;
 
     for (let n = 0; n < words.length; n++) {
         let testLine = currentLine + words[n] + ' ';
-        let metrics = context.measureText(testLine);
-        if (metrics.width > safeMaxWidth && n > 0) {
+        if (context.measureText(testLine).width > safeMaxWidth && n > 0) {
             lines.push(currentLine.trim());
             currentLine = words[n] + ' ';
         } else {
@@ -106,65 +106,45 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
         }
     }
     lines.push(currentLine.trim());
-    
-    const spacing = fontFace === 'Dancing Script' ? 1.4 : 1.25;
-    return {
-        lines,
-        totalHeight: lines.length * (fontSize * spacing),
-        lineHeight: fontSize * spacing
-    };
+    return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.2) };
 }
 
-// MOLDURA REFEITA: Minimalista e Profissional
 function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight) {
     ctx.save();
-    
-    // Sombra projetada para dar profundidade
-    ctx.shadowColor = "rgba(0,0,0,0.4)";
-    ctx.shadowBlur = 25;
-    ctx.shadowOffsetY = 10;
+    ctx.shadowColor = "rgba(0,0,0,0.5)";
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 15;
 
-    // Desenhar a foto com filtro
     ctx.filter = filter;
     if (shape === 'circle') {
-        ctx.beginPath();
-        ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
-        ctx.clip();
+        ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2); ctx.clip();
     }
     
     const aspect = img.width / img.height;
-    let sw, sh, sx, sy;
-    if (aspect > 1) {
-        sh = img.height; sw = img.height;
-        sx = (img.width - sw) / 2; sy = 0;
-    } else {
-        sw = img.width; sh = img.width;
-        sx = 0; sy = (img.height - sh) / 2;
-    }
+    let sw = img.width, sh = img.height, sx = 0, sy = 0;
+    if (aspect > 1) { sw = sh; sx = (img.width - sw) / 2; }
+    else { sh = sw; sy = (img.height - sh) / 2; }
+    
     ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
     ctx.restore();
 
-    // Borda Única Minimalista (Opcional via slider)
     if (borderWeight > 0) {
-        ctx.save();
         ctx.strokeStyle = accentColor;
         ctx.lineWidth = borderWeight;
         if (shape === 'circle') {
-            ctx.beginPath();
-            ctx.arc(x + size/2, y + size/2, size/2 + borderWeight/2, 0, Math.PI * 2);
-            ctx.stroke();
+            ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2 + borderWeight/2, 0, Math.PI * 2); ctx.stroke();
         } else {
             ctx.strokeRect(x - borderWeight/2, y - borderWeight/2, size + borderWeight, size + borderWeight);
         }
-        ctx.restore();
     }
 }
 
 function render() {
     const layout = document.getElementById('input-layout').value;
     const themeColor = document.getElementById('input-color').value;
+    const bgStyle = document.getElementById('input-bg-style').value;
     const fontFace = document.getElementById('input-font').value;
-    const padding = parseInt(document.getElementById('input-padding').value);
+    const padding = 100;
     const imgPos = document.getElementById('input-img-pos').value;
     const imgShape = document.getElementById('input-img-shape').value;
     const imgSizeFactor = document.getElementById('input-img-size').value / 100;
@@ -173,26 +153,23 @@ function render() {
     const bgOpacity = document.getElementById('input-bg-opacity').value;
     const borderOpacity = document.getElementById('input-border-opacity').value;
 
-    let width = 1080;
-    let height = 1080;
+    let width = 1080, height = 1080;
     if (layout === '16:9') height = 608;
     if (layout === '9:16') height = 1920;
+    canvas.width = width; canvas.height = height;
 
-    canvas.width = width;
-    canvas.height = height;
-
-    ctx.fillStyle = themeColor;
-    ctx.fillRect(0, 0, width, height);
-
+    // 1. Fundo e Padrões
+    drawBackground(themeColor, width, height, bgStyle);
     drawBackgroundPattern(themeColor, width, height, bgOpacity);
 
     const textColor = getContrastYIQ(themeColor);
     
+    // 2. Borda Decorativa do Card
     if (borderOpacity > 0) {
         ctx.strokeStyle = textColor;
         ctx.globalAlpha = borderOpacity / 100;
-        ctx.lineWidth = 20;
-        ctx.strokeRect(10, 10, width - 20, height - 20);
+        ctx.lineWidth = 15;
+        ctx.strokeRect(25, 25, width - 50, height - 50);
         ctx.globalAlpha = 1.0;
     }
 
@@ -201,17 +178,16 @@ function render() {
     let currentY = padding;
     let textAnchorX = width / 2;
 
+    // 3. Imagem
     if (userImage) {
         const imgSize = width * imgSizeFactor;
         if (imgPos === 'top') {
-            const imgX = (width - imgSize) / 2;
-            drawImgWithFrame(userImage, imgX, padding, imgSize, imgShape, filter, textColor, imgBorderWeight);
+            drawImgWithFrame(userImage, (width - imgSize) / 2, padding, imgSize, imgShape, filter, textColor, imgBorderWeight);
             currentY = padding + imgSize + 60;
             safeHeight -= (imgSize + 60);
             ctx.textAlign = 'center';
         } else {
-            const imgY = (height - imgSize) / 2;
-            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight);
+            drawImgWithFrame(userImage, padding, (height - imgSize) / 2, imgSize, imgShape, filter, textColor, imgBorderWeight);
             textAnchorX = padding + imgSize + 70;
             safeWidth = width - textAnchorX - padding;
             ctx.textAlign = 'left';
@@ -220,58 +196,63 @@ function render() {
         ctx.textAlign = 'center';
     }
 
+    // 4. Textos com Sombra para Leitura
     ctx.fillStyle = textColor;
+    ctx.shadowColor = "rgba(0,0,0,0.2)";
+    ctx.shadowBlur = 4;
+
     const titleText = document.getElementById('input-title').value.toUpperCase();
     const quoteText = `“${document.getElementById('input-quote').value || ''}”`;
     const authorText = document.getElementById('input-author').value;
     const yearText = document.getElementById('input-year').value;
-    const fullAuthor = authorText ? `— ${authorText}${yearText ? ', ' + yearText : ''}` : '';
+    const watermark = document.getElementById('input-watermark').value;
 
-    let fontSize = (layout === '9:16') ? 85 : 60;
-    if (fontFace === 'Dancing Script') fontSize += 15;
-
-    let textData;
-    let titleFontSize;
+    let fontSize = (layout === '9:16') ? 85 : 65;
+    let textData, titleSize;
 
     while (fontSize > 15) {
         textData = processText(ctx, quoteText, safeWidth, fontSize, fontFace);
-        titleFontSize = Math.max(24, fontSize * 0.55);
-        const totalH = (titleText ? titleFontSize + 40 : 0) + textData.totalHeight + (fullAuthor ? 60 : 0);
+        titleSize = fontSize * 0.5;
+        const totalH = (titleText ? titleSize + 40 : 0) + (textData.lines.length * textData.lineHeight) + 80;
         if (totalH <= safeHeight) break;
         fontSize -= 2;
     }
 
-    const startY = currentY + (safeHeight - ((titleText ? titleFontSize + 40 : 0) + textData.totalHeight + (fullAuthor ? 60 : 0))) / 2;
-    let drawY = startY;
+    let drawY = currentY + (safeHeight - (textData.lines.length * textData.lineHeight)) / 2;
 
     if (titleText) {
-        ctx.font = `bold ${titleFontSize}px Montserrat`;
+        ctx.font = `bold ${titleSize}px Montserrat`;
         ctx.globalAlpha = 0.6;
-        ctx.fillText(titleText, textAnchorX, drawY + titleFontSize);
+        ctx.fillText(titleText, textAnchorX, drawY - 40);
         ctx.globalAlpha = 1.0;
-        drawY += titleFontSize + 40;
     }
 
     ctx.font = `${fontSize}px "${fontFace}"`;
-    if (fontFace === 'Dancing Script') ctx.font = `700 ${fontSize + 15}px "${fontFace}"`;
+    if (fontFace === 'Dancing Script') ctx.font = `700 ${fontSize + 10}px "${fontFace}"`;
 
     textData.lines.forEach(line => {
-        const xPos = (ctx.textAlign === 'center' && fontFace === 'Dancing Script') ? textAnchorX + 10 : textAnchorX;
-        ctx.fillText(line, xPos, drawY + fontSize * 0.8);
+        ctx.fillText(line, textAnchorX, drawY);
         drawY += textData.lineHeight;
     });
 
-    if (fullAuthor) {
-        drawY += 40;
-        ctx.font = `italic ${Math.max(26, fontSize * 0.5)}px "${fontFace}"`;
+    if (authorText) {
+        ctx.font = `italic ${fontSize * 0.5}px "${fontFace}"`;
         ctx.globalAlpha = 0.8;
-        ctx.fillText(fullAuthor, textAnchorX, drawY);
+        ctx.fillText(`— ${authorText}${yearText ? ', ' + yearText : ''}`, textAnchorX, drawY + 20);
+    }
+
+    // 5. Marca d'água
+    if (watermark) {
+        ctx.globalAlpha = 0.4;
+        ctx.font = "bold 20px Montserrat";
+        ctx.textAlign = "center";
+        ctx.fillText(watermark, width / 2, height - 60);
     }
 }
 
 btnDownload.onclick = () => {
     const link = document.createElement('a');
-    link.download = 'citacao-pro.png';
+    link.download = 'citacao-premium.png';
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
 };
