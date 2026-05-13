@@ -28,7 +28,7 @@
     { "tema": "Processos", "icon": "⚙️", "desc": "Mapeamento de processos e aplicação de conceitos de Lean Office." },
     { "tema": "Conhecimento", "icon": "📚", "desc": "Implementação de Base de Conhecimento para padrões de trabalho." },
     { "tema": "Padronização", "icon": "📏", "desc": "Elaboração de procedimentos, manuais e diagramas de sistemas." },
-    { "tema": "Qualidade/Gestão", "icon": "✅", "desc": "Aplicação prática dos fundamentos de qualidade (ISO 9001 e PNQ) na otimização de fluxos de trabalho contemporâneos e melhoria contínua." },
+    { "tema": "Qualidade/Gestão", "icon": "✅", "desc": "Aplicação prática dos fundamentos de (ISO 9001 e PNQ) na otimização de processos contemporâneos e melhoria contínua." },
     { "tema": "Capacitação", "icon": "👨‍🏫", "desc": "Criação de material didático e treinamento de pessoal." },
     { "tema": "Idiomas", "icon": "🌍", "desc": "Fluência em Inglês para pesquisa e interação internacional." }
   ],
