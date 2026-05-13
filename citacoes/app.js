@@ -142,7 +142,8 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.25) };
 }
 
-function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight) {
+// MOLDURA REFEITA: Com suporte a Foco Vertical
+function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusY) {
     ctx.save();
     ctx.shadowColor = "rgba(0,0,0,0.5)";
     ctx.shadowBlur = 30;
@@ -153,10 +154,24 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
     if (shape === 'circle') {
         ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2); ctx.clip();
     }
+    
     const aspect = img.width / img.height;
-    let sw = img.width, sh = img.height, sx = 0, sy = 0;
-    if (aspect > 1) { sw = sh; sx = (img.width - sw) / 2; }
-    else { sh = sw; sy = (img.height - sh) / 2; }
+    let sw, sh, sx, sy;
+
+    // Lógica de centralização e deslocamento (focusY)
+    if (aspect > 1) { // Imagem Paisagem (Horizontal)
+        sh = img.height;
+        sw = img.height;
+        sx = (img.width - sw) * 0.5; // Centraliza horizontalmente fixo
+        sy = 0;
+    } else { // Imagem Retrato (Vertical)
+        sw = img.width;
+        sh = img.width;
+        sx = 0;
+        // Aplica o foco vertical: 0 = topo, 0.5 = centro, 1 = base
+        sy = (img.height - sh) * focusY;
+    }
+    
     ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
     ctx.restore();
 
@@ -189,6 +204,7 @@ function render() {
     const imgShape = document.getElementById('input-img-shape').value;
     const imgSizeFactor = document.getElementById('input-img-size').value / 100;
     const imgBorderWeight = parseInt(document.getElementById('input-img-border-weight').value);
+    const imgFocusY = document.getElementById('input-img-focus').value / 100;
     const filter = document.getElementById('input-filter').value;
     const bgOpacity = document.getElementById('input-bg-opacity').value;
     const borderOpacity = document.getElementById('input-border-opacity').value;
@@ -216,27 +232,25 @@ function render() {
     let safeHeight = height - (padding * 2);
     let currentY = padding;
     let textAnchorX = width / 2;
-
-    // --- MELHORIA: Redução da área reservada para a imagem ---
-    const imgContentGap = 35; // Reduzido de ~80 para 35px
+    const imgContentGap = 35;
 
     if (userImage) {
         const imgSize = width * imgSizeFactor;
         if (imgPos === 'top') {
-            drawImgWithFrame(userImage, (width - imgSize) / 2, padding, imgSize, imgShape, filter, textColor, imgBorderWeight);
+            drawImgWithFrame(userImage, (width - imgSize) / 2, padding, imgSize, imgShape, filter, textColor, imgBorderWeight, imgFocusY);
             currentY = padding + imgSize + imgContentGap;
             safeHeight -= (imgSize + imgContentGap);
             ctx.textAlign = 'center';
         } else {
             const imgY = (height - imgSize) / 2;
-            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight);
-            textAnchorX = padding + imgSize + 45; // Espaçamento horizontal reduzido
+            drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor, imgBorderWeight, imgFocusY);
+            textAnchorX = padding + imgSize + 45;
             safeWidth = width - textAnchorX - padding;
             ctx.textAlign = 'left';
         }
     } else {
         ctx.textAlign = 'center';
-        currentY = height / 5; // Ajustado para centralizar melhor quando sem imagem
+        currentY = height / 5;
     }
 
     ctx.fillStyle = textColor;
@@ -251,24 +265,20 @@ function render() {
     let fontSize = (layout === '9:16') ? 80 : 60;
     let textData, titleSize;
 
-    // Loop de Auto-ajuste de fonte
     while (fontSize > 15) {
         textData = processText(ctx, quoteText, safeWidth, fontSize, fontFace);
         titleSize = Math.max(24, fontSize * 0.5);
-        // Altura total incluindo o título e a citação
         const totalH = (titleText ? titleSize + 30 : 0) + textData.lines.length * textData.lineHeight + 50;
         if (totalH <= safeHeight) break;
         fontSize -= 2;
     }
 
-    // Centralização do bloco de texto na área disponível
     let drawY = currentY + (safeHeight - (textData.lines.length * textData.lineHeight)) / 2;
 
     if (titleText) {
         ctx.save();
         ctx.font = `bold ${titleSize}px Montserrat`;
         ctx.globalAlpha = 0.5;
-        // Posicionamento do título mais próximo da citação
         ctx.fillText(titleText, textAnchorX, drawY - titleSize - 15);
         ctx.restore();
     }
