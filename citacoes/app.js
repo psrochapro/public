@@ -133,16 +133,16 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.25) };
 }
 
-// MOLDURA CORRIGIDA: Lógica Robusta de Zoom e Foco
+// NOVA LÓGICA DE MOLDURA: Zoom Real (In e Out) + Foco Vertical
 function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusYPercent, zoomPercent) {
     ctx.save();
     
-    // Sombras externas
+    // Sombra da moldura
     ctx.shadowColor = "rgba(0,0,0,0.5)";
     ctx.shadowBlur = 30;
     ctx.shadowOffsetY = 15;
 
-    // Máscara (Círculo ou Quadrado)
+    // Criar a máscara (Círculo ou Quadrado)
     ctx.save();
     if (shape === 'circle') {
         ctx.beginPath();
@@ -150,41 +150,49 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
         ctx.clip();
     }
 
+    // Fundo interno da moldura (caso a imagem seja menor que a moldura no zoom out)
+    ctx.fillStyle = "rgba(0,0,0,0.1)"; 
+    ctx.fillRect(x, y, size, size);
+
     ctx.filter = filter;
 
-    // --- CÁLCULO DE RECORTE (ZOOM E FOCO) ---
+    // --- CÁLCULO DE ESCALA DINÂMICA ---
     const zoomFactor = zoomPercent / 100;
+    const imgRatio = img.width / img.height;
     
-    // 1. Determina o tamanho do recorte base (Object Fit Cover)
-    // Queremos um quadrado proporcional à menor dimensão da imagem original
-    let sourceSize = Math.min(img.width, img.height) / zoomFactor;
+    let drawW, drawH;
 
-    // 2. Garante que o recorte não seja maior que a própria imagem
-    if (sourceSize > img.width) sourceSize = img.width;
-    if (sourceSize > img.height) sourceSize = img.height;
+    // Base: "Cover" (ajusta para preencher a moldura)
+    if (imgRatio > 1) { // Paisagem
+        drawH = size * zoomFactor;
+        drawW = drawH * imgRatio;
+    } else { // Retrato
+        drawW = size * zoomFactor;
+        drawH = drawW / imgRatio;
+    }
 
-    // 3. Calcula a posição X (Centralizado horizontalmente)
-    let sx = (img.width - sourceSize) / 2;
+    // Posicionamento
+    // Horizontal: Sempre centralizado
+    const dx = x + (size - drawW) / 2;
+    
+    // Vertical: Baseado no slider de Foco
+    // 0% foco = topo da imagem no topo da moldura
+    // 100% foco = base da imagem na base da moldura
+    const dy = y + (size - drawH) * (focusYPercent / 100);
 
-    // 4. Calcula a posição Y (Baseado no slider de Foco Vertical)
-    let sy = (img.height - sourceSize) * (focusYPercent / 100);
-
-    // 5. Clamping final: garante que sx e sy nunca fiquem negativos ou fora da imagem
-    sx = Math.max(0, Math.min(img.width - sourceSize, sx));
-    sy = Math.max(0, Math.min(img.height - sourceSize, sy));
-
-    // Desenha a imagem cortada na moldura
-    ctx.drawImage(img, sx, sy, sourceSize, sourceSize, x, y, size, size);
+    ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, drawW, drawH);
     
     ctx.restore();
 
-    // Borda (desenhada por cima)
+    // Desenhar a borda por cima de tudo
     if (borderWeight > 0) {
         ctx.strokeStyle = accentColor;
         ctx.lineWidth = borderWeight;
         ctx.shadowColor = "transparent";
         if (shape === 'circle') {
-            ctx.beginPath(); ctx.arc(x + size / 2, y + size / 2, size / 2 + borderWeight / 2, 0, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); 
+            ctx.arc(x + size / 2, y + size / 2, size / 2 + borderWeight / 2, 0, Math.PI * 2); 
+            ctx.stroke();
         } else {
             ctx.strokeRect(x - borderWeight / 2, y - borderWeight / 2, size + borderWeight, size + borderWeight);
         }
