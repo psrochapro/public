@@ -133,53 +133,60 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.25) };
 }
 
-// MOLDURA COM ZOOM INTERNO E FOCO
-function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusY, zoomLevel) {
+// MOLDURA CORRIGIDA: Lógica Robusta de Zoom e Foco
+function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusYPercent, zoomPercent) {
     ctx.save();
+    
+    // Sombras externas
     ctx.shadowColor = "rgba(0,0,0,0.5)";
     ctx.shadowBlur = 30;
     ctx.shadowOffsetY = 15;
 
+    // Máscara (Círculo ou Quadrado)
     ctx.save();
-    ctx.filter = filter;
     if (shape === 'circle') {
-        ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2); ctx.clip();
+        ctx.beginPath();
+        ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+        ctx.clip();
     }
-    
-    const aspect = img.width / img.height;
-    let sw, sh, sx, sy;
 
-    // O zoomLevel age sobre a dimensão base. 100% = Cover padrão.
-    // Menos que 100% = Zoom out (reduz o assunto dentro da moldura)
-    const zoomFactor = zoomLevel / 100;
+    ctx.filter = filter;
 
-    if (aspect > 1) { // Paisagem
-        sh = img.height / zoomFactor;
-        sw = sh;
-        sx = (img.width - sw) * 0.5;
-        sy = (img.height - sh) * focusY;
-    } else { // Retrato
-        sw = img.width / zoomFactor;
-        sh = sw;
-        sx = (img.width - sw) * 0.5;
-        sy = (img.height - sh) * focusY;
-    }
+    // --- CÁLCULO DE RECORTE (ZOOM E FOCO) ---
+    const zoomFactor = zoomPercent / 100;
     
-    // Proteção para não tentar recortar fora da imagem original (clamping)
-    if (sw > img.width) { sw = img.width; sh = sw; sx = 0; }
-    if (sh > img.height) { sh = img.height; sw = sh; sy = 0; }
+    // 1. Determina o tamanho do recorte base (Object Fit Cover)
+    // Queremos um quadrado proporcional à menor dimensão da imagem original
+    let sourceSize = Math.min(img.width, img.height) / zoomFactor;
+
+    // 2. Garante que o recorte não seja maior que a própria imagem
+    if (sourceSize > img.width) sourceSize = img.width;
+    if (sourceSize > img.height) sourceSize = img.height;
+
+    // 3. Calcula a posição X (Centralizado horizontalmente)
+    let sx = (img.width - sourceSize) / 2;
+
+    // 4. Calcula a posição Y (Baseado no slider de Foco Vertical)
+    let sy = (img.height - sourceSize) * (focusYPercent / 100);
+
+    // 5. Clamping final: garante que sx e sy nunca fiquem negativos ou fora da imagem
+    sx = Math.max(0, Math.min(img.width - sourceSize, sx));
+    sy = Math.max(0, Math.min(img.height - sourceSize, sy));
+
+    // Desenha a imagem cortada na moldura
+    ctx.drawImage(img, sx, sy, sourceSize, sourceSize, x, y, size, size);
     
-    ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
     ctx.restore();
 
+    // Borda (desenhada por cima)
     if (borderWeight > 0) {
         ctx.strokeStyle = accentColor;
         ctx.lineWidth = borderWeight;
         ctx.shadowColor = "transparent";
         if (shape === 'circle') {
-            ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2 + borderWeight/2, 0, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(x + size / 2, y + size / 2, size / 2 + borderWeight / 2, 0, Math.PI * 2); ctx.stroke();
         } else {
-            ctx.strokeRect(x - borderWeight/2, y - borderWeight/2, size + borderWeight, size + borderWeight);
+            ctx.strokeRect(x - borderWeight / 2, y - borderWeight / 2, size + borderWeight, size + borderWeight);
         }
     }
     ctx.restore();
@@ -201,7 +208,7 @@ function render() {
     const imgShape = document.getElementById('input-img-shape').value;
     const imgSizeFactor = document.getElementById('input-img-size').value / 100;
     const imgBorderWeight = parseInt(document.getElementById('input-img-border-weight').value);
-    const imgFocusY = document.getElementById('input-img-focus').value / 100;
+    const imgFocusY = parseInt(document.getElementById('input-img-focus').value);
     const imgZoom = parseInt(document.getElementById('input-img-zoom').value);
     const filter = document.getElementById('input-filter').value;
     const bgOpacity = document.getElementById('input-bg-opacity').value;
