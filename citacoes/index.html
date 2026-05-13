@@ -84,11 +84,12 @@
                 </div>
                 <div class="row">
                     <div>
-                        <label>Proporção</label>
-                        <select id="input-layout">
-                            <option value="1:1">Quadrado (1:1)</option>
-                            <option value="16:9">Wide (16:9)</option>
-                            <option value="9:16">Stories (9:16)</option>
+                        <label>Padrão de Arte</label>
+                        <select id="input-pattern-type">
+                            <option value="circles">Círculos</option>
+                            <option value="grid">Grade Digital</option>
+                            <option value="diagonals">Linhas Diagonais</option>
+                            <option value="bubbles">Bolhas Aleatórias</option>
                         </select>
                     </div>
                     <div>
@@ -102,7 +103,7 @@
                 </div>
                 <div class="row">
                     <div>
-                        <label>Arte de Fundo</label>
+                        <label>Opacidade Arte</label>
                         <input type="range" id="input-bg-opacity" min="0" max="100" value="20">
                     </div>
                     <div>
@@ -110,6 +111,12 @@
                         <input type="range" id="input-border-opacity" min="0" max="100" value="30">
                     </div>
                 </div>
+                <label>Proporção do Layout</label>
+                <select id="input-layout">
+                    <option value="1:1">Quadrado (1:1)</option>
+                    <option value="16:9">Wide (16:9)</option>
+                    <option value="9:16">Stories (9:16)</option>
+                </select>
             </section>
 
             <button id="btn-download" class="btn-primary">Baixar PNG de Alta Resolução</button>

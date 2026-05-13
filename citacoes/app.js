@@ -61,7 +61,7 @@ function drawBackground(color, width, height, style) {
     if (style === 'gradient') {
         const grd = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width);
         grd.addColorStop(0, color);
-        grd.addColorStop(1, "#000000"); // Garante o fim do gradiente para evitar erro
+        grd.addColorStop(1, "#000000");
         ctx.fillStyle = grd;
     } else {
         ctx.fillStyle = color;
@@ -70,17 +70,54 @@ function drawBackground(color, width, height, style) {
     ctx.restore();
 }
 
-function drawBackgroundPattern(color, width, height, userOpacity) {
+function drawBackgroundPattern(color, width, height, userOpacity, patternType) {
     if (userOpacity <= 0) return;
     ctx.save();
-    ctx.strokeStyle = getContrastYIQ(color);
-    ctx.globalAlpha = userOpacity / 200; 
+    const contrastColor = getContrastYIQ(color);
+    ctx.strokeStyle = contrastColor;
+    ctx.fillStyle = contrastColor;
+    ctx.globalAlpha = userOpacity / 300; // Ajuste fino de opacidade
 
-    for(let i = 0; i < 8; i++) {
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.arc(width/2, height/2, 100 + (i*120), 0, Math.PI * 2);
-        ctx.stroke();
+    switch(patternType) {
+        case 'circles':
+            for(let i = 0; i < 8; i++) {
+                ctx.beginPath();
+                ctx.lineWidth = 2;
+                ctx.arc(width/2, height/2, 100 + (i*130), 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            break;
+            
+        case 'grid':
+            const spacing = 60;
+            for(let x = 0; x < width; x += spacing) {
+                for(let y = 0; y < height; y += spacing) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            break;
+
+        case 'diagonals':
+            ctx.lineWidth = 15;
+            for(let i = -height; i < width; i += 100) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i + height, height);
+                ctx.stroke();
+            }
+            break;
+
+        case 'bubbles':
+            for(let i = 0; i < 20; i++) {
+                ctx.beginPath();
+                const bX = (i * 137.5) % width;
+                const bY = (i * 241.1) % height;
+                ctx.arc(bX, bY, 30 + (i * 5), 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            break;
     }
     ctx.restore();
 }
@@ -107,12 +144,10 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
 
 function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight) {
     ctx.save();
-    // Sombras
     ctx.shadowColor = "rgba(0,0,0,0.5)";
     ctx.shadowBlur = 30;
     ctx.shadowOffsetY = 15;
 
-    // Foto
     ctx.save();
     ctx.filter = filter;
     if (shape === 'circle') {
@@ -125,7 +160,6 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
     ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
     ctx.restore();
 
-    // Borda
     if (borderWeight > 0) {
         ctx.strokeStyle = accentColor;
         ctx.lineWidth = borderWeight;
@@ -140,7 +174,6 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
 }
 
 function render() {
-    // Reseta estado global do canvas para evitar herança de lixo de frames anteriores
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = 1.0;
     ctx.shadowBlur = 0;
@@ -149,6 +182,7 @@ function render() {
     const layout = document.getElementById('input-layout').value;
     const themeColor = document.getElementById('input-color').value;
     const bgStyle = document.getElementById('input-bg-style').value;
+    const patternType = document.getElementById('input-pattern-type').value;
     const fontFace = document.getElementById('input-font').value;
     const padding = 100;
     const imgPos = document.getElementById('input-img-pos').value;
@@ -164,13 +198,11 @@ function render() {
     if (layout === '9:16') height = 1920;
     canvas.width = width; canvas.height = height;
 
-    // 1. Fundo
     drawBackground(themeColor, width, height, bgStyle);
-    drawBackgroundPattern(themeColor, width, height, bgOpacity);
+    drawBackgroundPattern(themeColor, width, height, bgOpacity, patternType);
 
     const textColor = getContrastYIQ(themeColor);
     
-    // 2. Borda do Card
     if (borderOpacity > 0) {
         ctx.save();
         ctx.strokeStyle = textColor;
@@ -185,7 +217,6 @@ function render() {
     let currentY = padding;
     let textAnchorX = width / 2;
 
-    // 3. Imagem
     if (userImage) {
         const imgSize = width * imgSizeFactor;
         if (imgPos === 'top') {
@@ -205,7 +236,6 @@ function render() {
         currentY = height / 4;
     }
 
-    // 4. Textos
     ctx.fillStyle = textColor;
     ctx.textBaseline = 'middle';
 
@@ -252,7 +282,6 @@ function render() {
         ctx.restore();
     }
 
-    // 5. Marca d'água
     if (watermark) {
         ctx.save();
         ctx.globalAlpha = 0.3;
