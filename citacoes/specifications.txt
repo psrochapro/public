@@ -22,7 +22,9 @@
 - Interface responsiva adaptada para hospedagem estática (GitHub Pages)
 - Solicitados inputs ao usuário com histórico de cores recentes no Picker
 - Preview dinâmico com sistema de zoom/escala para caber na tela do navegador
-- Assistência por IA: Botão 'Surpreenda-me' (API Gemini) para sugerir citações e temas
 - Usuário escolhe tamanho e proporção do layout (Presets de redes sociais)
 - Após validação da visualização, usuário pode salvar o PNG localmente
 - Tratamento técnico de CORS para imagens externas e separação de lógica de renderização
+
+-- Implemntações futuras (Não vão seri feitas agora - Apenas para conhecimento)
+- Assistência por IA: Botão 'Surpreenda-me' (API Gemini) para sugerir citações e temas
