@@ -59,26 +59,30 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#1a1a1a' : '#ffffff';
 }
 
-// Padrões geométricos no fundo
+// Padrões geométricos no fundo (Mais visíveis nesta versão)
 function drawBackgroundPattern(color, width, height) {
     ctx.save();
-    ctx.globalAlpha = 0.15;
-    ctx.strokeStyle = getContrastYIQ(color);
-    ctx.fillStyle = getContrastYIQ(color);
+    const contrastColor = getContrastYIQ(color);
+    ctx.strokeStyle = contrastColor;
+    ctx.fillStyle = contrastColor;
 
-    // Círculos decorativos
-    for(let i = 0; i < 5; i++) {
+    // Círculos maiores e mais definidos
+    ctx.globalAlpha = 0.25; // Aumentado de 0.15
+    for(let i = 0; i < 6; i++) {
         ctx.beginPath();
-        ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 300, 0, Math.PI * 2);
+        const radius = 100 + (Math.random() * 250);
+        ctx.lineWidth = 1 + (Math.random() * 4);
+        ctx.arc(Math.random() * width, Math.random() * height, radius, 0, Math.PI * 2);
         ctx.stroke();
     }
 
-    // Linhas diagonais sutis
-    ctx.globalAlpha = 0.05;
-    for(let i = 0; i < width; i += 40) {
+    // Linhas diagonais mais presentes
+    ctx.globalAlpha = 0.12; // Aumentado de 0.05
+    ctx.lineWidth = 2;
+    for(let i = -height; i < width; i += 60) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
-        ctx.lineTo(i + 200, height);
+        ctx.lineTo(i + height, height);
         ctx.stroke();
     }
     ctx.restore();
@@ -114,26 +118,22 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
 
 function drawImgWithFrame(img, x, y, size, shape, filter, accentColor) {
     ctx.save();
-    
-    // 1. Sombra projetada da moldura
-    ctx.shadowColor = "rgba(0,0,0,0.3)";
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetY = 10;
+    ctx.shadowColor = "rgba(0,0,0,0.4)";
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 15;
 
-    // 2. Moldura externa (offset)
     ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     if (shape === 'circle') {
         ctx.beginPath();
-        ctx.arc(x + size/2, y + size/2, size/2 + 10, 0, Math.PI * 2);
+        ctx.arc(x + size/2, y + size/2, size/2 + 12, 0, Math.PI * 2);
         ctx.stroke();
     } else {
-        ctx.strokeRect(x - 10, y - 10, size + 20, size + 20);
+        ctx.strokeRect(x - 12, y - 12, size + 24, size + 24);
     }
     
-    ctx.shadowColor = "transparent"; // Reseta sombra para a foto
+    ctx.shadowColor = "transparent";
     
-    // 3. Desenhar a Imagem
     ctx.filter = filter;
     if (shape === 'circle') {
         ctx.beginPath();
@@ -150,13 +150,11 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor) {
         sx = 0; sy = (img.height - sh) / 2;
     }
     ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
-    
     ctx.restore();
 
-    // 4. Borda interna fina "Fine Art"
     ctx.save();
-    ctx.strokeStyle = "rgba(255,255,255,0.3)";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255,255,255,0.4)";
+    ctx.lineWidth = 1.5;
     if (shape === 'circle') {
         ctx.beginPath(); ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2); ctx.stroke();
     } else {
@@ -183,18 +181,15 @@ function render() {
     canvas.width = width;
     canvas.height = height;
 
-    // Fundo Sólido
     ctx.fillStyle = themeColor;
     ctx.fillRect(0, 0, width, height);
 
-    // Decoração Geométrica
     drawBackgroundPattern(themeColor, width, height);
 
     const textColor = getContrastYIQ(themeColor);
     
-    // Borda Geral do Card (Variação de Tom)
     ctx.strokeStyle = textColor;
-    ctx.globalAlpha = 0.1;
+    ctx.globalAlpha = 0.12;
     ctx.lineWidth = 20;
     ctx.strokeRect(10, 10, width - 20, height - 20);
     ctx.globalAlpha = 1.0;
@@ -209,13 +204,13 @@ function render() {
         if (imgPos === 'top') {
             const imgX = (width - imgSize) / 2;
             drawImgWithFrame(userImage, imgX, padding, imgSize, imgShape, filter, textColor);
-            currentY = padding + imgSize + 70;
-            safeHeight -= (imgSize + 70);
+            currentY = padding + imgSize + 80;
+            safeHeight -= (imgSize + 80);
             ctx.textAlign = 'center';
         } else {
             const imgY = (height - imgSize) / 2;
             drawImgWithFrame(userImage, padding, imgY, imgSize, imgShape, filter, textColor);
-            textAnchorX = padding + imgSize + 80;
+            textAnchorX = padding + imgSize + 90;
             safeWidth = width - textAnchorX - padding;
             ctx.textAlign = 'left';
         }
@@ -234,24 +229,31 @@ function render() {
     if (fontFace === 'Dancing Script') fontSize += 15;
 
     let textData;
+    let titleFontSize;
+
+    // Loop de Auto-ajuste de fonte (Citação e Título crescem/diminuem juntos)
     while (fontSize > 15) {
         textData = processText(ctx, quoteText, safeWidth, fontSize, fontFace);
-        const totalH = (titleText ? 60 : 0) + textData.totalHeight + (fullAuthor ? 60 : 0);
+        titleFontSize = Math.max(24, fontSize * 0.55); // Título é ~55% da fonte principal
+        
+        const totalH = (titleText ? titleFontSize + 40 : 0) + textData.totalHeight + (fullAuthor ? 60 : 0);
         if (totalH <= safeHeight) break;
         fontSize -= 2;
     }
 
-    const startY = currentY + (safeHeight - (textData.totalHeight + (titleText ? 60 : 0) + (fullAuthor ? 60 : 0))) / 2;
+    const startY = currentY + (safeHeight - ((titleText ? titleFontSize + 40 : 0) + textData.totalHeight + (fullAuthor ? 60 : 0))) / 2;
     let drawY = startY;
 
+    // Título Dinâmico
     if (titleText) {
-        ctx.font = `bold 22px Montserrat`;
-        ctx.globalAlpha = 0.5;
-        ctx.fillText(titleText, textAnchorX, drawY);
+        ctx.font = `bold ${titleFontSize}px Montserrat`;
+        ctx.globalAlpha = 0.6;
+        ctx.fillText(titleText, textAnchorX, drawY + titleFontSize);
         ctx.globalAlpha = 1.0;
-        drawY += 60;
+        drawY += titleFontSize + 40;
     }
 
+    // Citação
     ctx.font = `${fontSize}px "${fontFace}"`;
     if (fontFace === 'Dancing Script') ctx.font = `700 ${fontSize + 15}px "${fontFace}"`;
 
@@ -261,9 +263,10 @@ function render() {
         drawY += textData.lineHeight;
     });
 
+    // Autor
     if (fullAuthor) {
         drawY += 40;
-        ctx.font = `italic ${Math.max(24, fontSize * 0.5)}px "${fontFace}"`;
+        ctx.font = `italic ${Math.max(26, fontSize * 0.5)}px "${fontFace}"`;
         ctx.globalAlpha = 0.8;
         ctx.fillText(fullAuthor, textAnchorX, drawY);
     }
@@ -271,7 +274,7 @@ function render() {
 
 btnDownload.onclick = () => {
     const link = document.createElement('a');
-    link.download = 'citacao-pro-art.png';
+    link.download = 'citacao-pro-v2.png';
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
 };
