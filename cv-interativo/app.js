@@ -59,9 +59,18 @@ function renderApp() {
             <div id="print-only-content" class="print-only">
                 <section>
                     <h3 class="print-section-title">💎 Pilares Estratégicos</h3>
-                    <div class="grid-print">
+                    <div class="list-print">
                         ${cvData.pilares_estrategicos.map(p => `
                             <div class="print-item"><strong>${p.tema} (${p.tempo}):</strong> ${p.experiencia}</div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="print-section-title">🛠️ Habilidades Detalhadas</h3>
+                    <div class="list-print">
+                        ${cvData.habilidades_detalhadas.map(h => `
+                            <div class="print-item"><strong>${h.tema}:</strong> ${h.desc}</div>
                         `).join('')}
                     </div>
                 </section>
