@@ -5,21 +5,12 @@ const btnDownload = document.getElementById('btn-download');
 
 let userImage = null;
 
-// Configurações iniciais
-const settings = {
-    baseSize: 1080,
-    padding: 60,
-    get contrastColor() {
-        return getContrastYIQ(document.getElementById('input-color').value);
-    }
-};
-
-// Inicialização
+// Inicialização e Listeners
 function init() {
     inputs.forEach(input => input.addEventListener('input', render));
     window.addEventListener('resize', render);
     
-    // Upload de Imagem Local
+    // Upload de arquivo local
     document.getElementById('input-file').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -33,7 +24,7 @@ function init() {
         }
     });
 
-    // Upload de Imagem via URL
+    // Link de imagem externa
     document.getElementById('input-url').addEventListener('change', (e) => {
         if (e.target.value) {
             const img = new Image();
@@ -46,25 +37,24 @@ function init() {
     render();
 }
 
+// Função de Contraste (Calcula se o texto deve ser preto ou branco)
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
     const g = parseInt(hexcolor.substr(2,2),16);
     const b = parseInt(hexcolor.substr(4,2),16);
     const yiq = ((r*299)+(g*587)+(b*114))/1000;
-    return (yiq >= 128) ? '#000000' : '#ffffff';
+    return (yiq >= 128) ? '#1a1a1a' : '#ffffff';
 }
 
+// Função para quebra de linha automática no Canvas
 function wrapText(context, text, x, y, maxWidth, lineHeight) {
     const words = text.split(' ');
     let line = '';
-    let testY = y;
-
     for(let n = 0; n < words.length; n++) {
         let testLine = line + words[n] + ' ';
         let metrics = context.measureText(testLine);
-        let testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
+        if (metrics.width > maxWidth && n > 0) {
             context.fillText(line, x, y);
             line = words[n] + ' ';
             y += lineHeight;
@@ -76,19 +66,52 @@ function wrapText(context, text, x, y, maxWidth, lineHeight) {
     return y;
 }
 
+// Desenha a imagem cortada corretamente (estilo object-fit: cover)
+function drawImageProcessed(img, x, y, size, shape, filter) {
+    ctx.save();
+    ctx.filter = filter;
+    
+    if (shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
+        ctx.clip();
+    }
+
+    const imgRatio = img.width / img.height;
+    let sw, sh, sx, sy;
+
+    if (imgRatio > 1) { // Paisagem
+        sh = img.height;
+        sw = img.height;
+        sx = (img.width - sh) / 2;
+        sy = 0;
+    } else { // Retrato
+        sw = img.width;
+        sh = img.width;
+        sx = 0;
+        sy = (img.height - sw) / 2;
+    }
+
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, size, size);
+    ctx.restore();
+}
+
 async function render() {
+    // Captura valores atuais
     const layout = document.getElementById('input-layout').value;
     const themeColor = document.getElementById('input-color').value;
     const font = document.getElementById('input-font').value;
     const padding = parseInt(document.getElementById('input-padding').value);
+    const imgPos = document.getElementById('input-img-pos').value;
+    const imgShape = document.getElementById('input-img-shape').value;
+    const imgSizeFactor = document.getElementById('input-img-size').value / 100;
     const filter = document.getElementById('input-filter').value;
-    const focusY = document.getElementById('input-focus').value / 100;
 
-    // Definir dimensões
-    let width = settings.baseSize;
-    let height = settings.baseSize;
-    if (layout === '16:9') height = width * (9/16);
-    if (layout === '9:16') height = width * (16/9);
+    // Configura tamanho do Canvas (High-DPI 1080p base)
+    let width = 1080;
+    let height = 1080;
+    if (layout === '16:9') height = 608;
+    if (layout === '9:16') height = 1920;
 
     canvas.width = width;
     canvas.height = height;
@@ -97,79 +120,84 @@ async function render() {
     ctx.fillStyle = themeColor;
     ctx.fillRect(0, 0, width, height);
 
-    // 2. Desenhar Imagem
+    const textColor = getContrastYIQ(themeColor);
+    ctx.fillStyle = textColor;
+
+    // Definição de áreas de conteúdo
+    let contentAreaX = padding;
+    let contentAreaY = padding;
+    let contentAreaWidth = width - (padding * 2);
+
+    // 2. Renderizar Imagem
     if (userImage) {
-        ctx.save();
-        ctx.filter = filter;
-        
-        // Simular Object-fit: cover
-        const imgRatio = userImage.width / userImage.height;
-        const canvasRatio = width / height;
-        let drawW, drawH, drawX, drawY;
+        const imgDisplaySize = width * imgSizeFactor;
 
-        if (imgRatio > canvasRatio) {
-            drawH = height;
-            drawW = height * imgRatio;
-            drawX = (width - drawW) / 2;
-            drawY = 0;
+        if (imgPos === 'top') {
+            const imgX = (width - imgDisplaySize) / 2;
+            const imgY = padding;
+            drawImageProcessed(userImage, imgX, imgY, imgDisplaySize, imgShape, filter);
+            contentAreaY = imgY + imgDisplaySize + 60; // Empurra texto para baixo
+            ctx.textAlign = 'center';
         } else {
-            drawW = width;
-            drawH = width / imgRatio;
-            drawX = 0;
-            drawY = (height - drawH) * focusY;
+            // Posicionamento Esquerda (Lateral)
+            const imgX = padding;
+            const imgY = (height - imgDisplaySize) / 2;
+            drawImageProcessed(userImage, imgX, imgY, imgDisplaySize, imgShape, filter);
+            contentAreaX = imgX + imgDisplaySize + 60;
+            contentAreaWidth = width - contentAreaX - padding;
+            contentAreaY = (height / 2) - 100; // Tenta centralizar texto verticalmente
+            ctx.textAlign = 'left';
         }
-
-        ctx.drawImage(userImage, drawX, drawY, drawW, drawH);
-        ctx.restore();
-
-        // Overlay suave para leitura
-        ctx.fillStyle = "rgba(0,0,0,0.3)";
-        ctx.fillRect(0,0, width, height);
+    } else {
+        ctx.textAlign = 'center';
+        contentAreaY = height / 3;
     }
 
-    // 3. Textos
-    const textColor = settings.contrastColor;
-    ctx.fillStyle = textColor;
-    ctx.textAlign = 'center';
-    
-    const safeArea = width - (padding * 2);
-    let currentY = padding + 40;
+    const textAnchorX = ctx.textAlign === 'center' ? width / 2 : contentAreaX;
 
+    // 3. Renderizar Textos
     // Título
     const title = document.getElementById('input-title').value.toUpperCase();
     if (title) {
-        ctx.font = `bold 30px ${font}`;
-        ctx.fillText(title, width/2, currentY);
-        currentY += 60;
+        ctx.font = `bold 28px ${font}`;
+        ctx.globalAlpha = 0.6;
+        ctx.fillText(title, textAnchorX, contentAreaY);
+        ctx.globalAlpha = 1.0;
+        contentAreaY += 60;
     }
 
     // Citação
-    const quote = `“${document.getElementById('input-quote').value || 'Sua frase inspiradora aparecerá aqui.'}”`;
-    ctx.font = font === 'Dancing Script' ? `italic 80px ${font}` : `bold 60px ${font}`;
-    currentY = wrapText(ctx, quote, width/2, currentY + 40, safeArea, 70);
+    const quoteText = document.getElementById('input-quote').value || "Sua citação ou pensamento aparecerá aqui para visualização.";
+    const quote = `“${quoteText}”`;
+    
+    // Ajuste dinâmico de tamanho de fonte baseado na proporção
+    const fontSize = layout === '9:16' ? 70 : 55;
+    ctx.font = font === 'Dancing Script' ? `700 ${fontSize + 20}px ${font}` : `bold ${fontSize}px ${font}`;
+    
+    contentAreaY = wrapText(ctx, quote, textAnchorX, contentAreaY + 40, contentAreaWidth, fontSize + 15);
 
     // Autor e Ano
     const author = document.getElementById('input-author').value;
     const year = document.getElementById('input-year').value;
     if (author) {
-        currentY += 60;
-        ctx.font = `40px ${font}`;
-        ctx.fillText(author + (year ? `, ${year}` : ''), width/2, currentY);
+        ctx.font = font === 'Dancing Script' ? `400 45px ${font}` : `italic 38px ${font}`;
+        ctx.fillText(`— ${author}${year ? ', ' + year : ''}`, textAnchorX, contentAreaY + 70);
     }
 
-    // Moldura decorativa
+    // 4. Detalhe de Moldura (Opcional - Estético)
     ctx.strokeStyle = textColor;
+    ctx.globalAlpha = 0.15;
     ctx.lineWidth = 2;
-    ctx.strokeRect(padding/2, padding/2, width - padding, height - padding);
+    ctx.strokeRect(20, 20, width - 40, height - 40);
 }
 
-// Download
+// Função de Download
 btnDownload.onclick = () => {
     const link = document.createElement('a');
-    link.download = 'citacao-pro.png';
+    link.download = 'citacao-pro-export.png';
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
 };
 
-// Iniciar
+// Garante que as fontes do Google carreguem antes de desenhar
 document.fonts.ready.then(init);

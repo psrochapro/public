@@ -14,40 +14,60 @@
             <h1>Citação<span>Pro</span></h1>
             
             <section class="control-group">
-                <h3>Conteúdo</h3>
-                <input type="text" id="input-title" placeholder="Título (Opcional)">
+                <h3>1. Conteúdo</h3>
+                <input type="text" id="input-title" placeholder="Título (ex: Macroprocessos)">
                 <textarea id="input-quote" placeholder="Sua citação aqui..."></textarea>
                 <input type="text" id="input-author" placeholder="Autor">
                 <input type="text" id="input-year" placeholder="Ano (Opcional)">
             </section>
 
             <section class="control-group">
-                <h3>Imagem</h3>
+                <h3>2. Imagem do Autor</h3>
                 <input type="file" id="input-file" accept="image/*">
                 <input type="text" id="input-url" placeholder="Ou cole a URL da imagem">
-                <div class="range-group">
-                    <label>Foco da Imagem (Vertical)</label>
-                    <input type="range" id="input-focus" min="0" max="100" value="50">
+                
+                <div class="row">
+                    <div>
+                        <label>Posição</label>
+                        <select id="input-img-pos">
+                            <option value="top">Topo (Centralizado)</option>
+                            <option value="left">Esquerda (Lateral)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Formato</label>
+                        <select id="input-img-shape">
+                            <option value="circle">Círculo</option>
+                            <option value="square">Quadrado</option>
+                        </select>
+                    </div>
                 </div>
+
+                <div class="range-group">
+                    <label>Tamanho da Imagem</label>
+                    <input type="range" id="input-img-size" min="15" max="60" value="30">
+                </div>
+
                 <div class="filters">
+                    <label>Filtro da Foto</label>
                     <select id="input-filter">
                         <option value="none">Sem Filtro</option>
                         <option value="grayscale(100%)">Preto e Branco</option>
                         <option value="sepia(80%)">Sépia</option>
-                        <option value="blur(5px)">Desfoque</option>
+                        <option value="blur(3px)">Suave (Blur)</option>
                     </select>
                 </div>
             </section>
 
             <section class="control-group">
-                <h3>Estilo & Layout</h3>
+                <h3>3. Estilo & Layout</h3>
                 <div class="row">
                     <div>
-                        <label>Tema</label>
-                        <input type="color" id="input-color" value="#6366f1">
+                        <label>Cor de Fundo</label>
+                        <input type="color" id="input-color" value="#f3f4f6">
                     </div>
                     <div>
-                        <label>Layout</label>
+                        <label>Proporção</label>
                         <select id="input-layout">
                             <option value="1:1">Quadrado (1:1)</option>
                             <option value="16:9">Wide (16:9)</option>
@@ -65,13 +85,13 @@
                         </select>
                     </div>
                     <div>
-                        <label>Padding</label>
-                        <input type="range" id="input-padding" min="20" max="100" value="60">
+                        <label>Respiro (Padding)</label>
+                        <input type="range" id="input-padding" min="40" max="120" value="80">
                     </div>
                 </div>
             </section>
 
-            <button id="btn-download" class="btn-primary">Baixar PNG</button>
+            <button id="btn-download" class="btn-primary">Baixar Imagem PNG</button>
         </aside>
 
         <main class="preview-area">

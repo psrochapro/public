@@ -13,6 +13,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Tasks** | Gerenciador de Tarefas | [Acessar App](https://psrochapro.github.io/public/tasks/) |
 | **Clock** | Trio Relógio, Timer, Chronômetro | [Acessar App](https://psrochapro.github.io/public/clock/) |
 | **Charts** | Gerador de Gráficos | [Acessar App](https://psrochapro.github.io/public/charts/) |
+| **Citações** | Gerador de Citações | [Acessar App](https://psrochapro.github.io/public/citacoes/) |
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.
