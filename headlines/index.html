@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Notícias Dinâmico</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fontes do Projeto -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-visible">
+
+    <!-- SIDEBAR DE CUSTOMIZAÇÃO (Igual ao CitacaoPro) -->
+    <aside class="customizer-sidebar" id="sidebar">
+        <h2>Customização</h2>
+        
+        <div class="control-group">
+            <label>Cor de Destaque</label>
+            <input type="color" id="input-accent-color" value="#003366">
+        </div>
+
+        <div class="control-group">
+            <label>Modo de Visualização</label>
+            <button id="btn-toggle-ui">Ocultar Painel (Ver Notícia)</button>
+        </div>
+
+        <div class="control-group">
+            <label>Exportar Imagem</label>
+            <select id="export-format">
+                <option value="1:1">Quadrado (1:1)</option>
+                <option value="16:9">Wide (16:9)</option>
+                <option value="9:16">Stories (9:16)</option>
+            </select>
+            <button id="btn-export" class="btn-primary">Gerar PNG</button>
+        </div>
+    </aside>
+
+    <!-- ÁREA DO PORTAL -->
+    <main class="portal-wrapper">
+        <header class="portal-header">
+            <div class="container">
+                <img src="" alt="Logo" id="site-logo" class="logo">
+                <nav>
+                    <span>Destaques</span>
+                    <span>Política</span>
+                    <span>Economia</span>
+                    <span>Mundo</span>
+                </nav>
+            </div>
+        </header>
+
+        <section class="portal-grid container">
+            <!-- COLUNA PRINCIPAL (70%) -->
+            <article class="main-content" id="main-news-area">
+                <div class="hero-image-container">
+                    <img src="" id="main-img" alt="Notícia Principal">
+                    <div class="meta-info-overlay">
+                        <span id="main-date"></span>
+                    </div>
+                </div>
+                
+                <span class="badge" id="main-category"></span>
+                <h1 id="main-title">Carregando...</h1>
+                <p class="subtitle" id="main-subtitle"></p>
+                
+                <div class="reading-time">Tempo de leitura: <span id="read-time">0</span> min</div>
+                
+                <div class="content-body" id="main-body">
+                    <!-- Texto injetado pelo JS -->
+                </div>
+                
+                <button class="btn-read-more">LEIA MAIS</button>
+            </article>
+
+            <!-- BARRA LATERAL (30%) -->
+            <aside class="sidebar-news">
+                <h3>OUTRAS MINI NOTÍCIAS</h3>
+                <div id="mini-news-container">
+                    <!-- Mini notícias injetadas pelo JS -->
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <!-- CANVAS OCULTO PARA EXPORTAÇÃO -->
+    <canvas id="export-canvas" style="display:none;"></canvas>
+
+    <script src="app.js"></script>
+</body>
+</html>

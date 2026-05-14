@@ -1,0 +1,36 @@
+-- DADOS DO PROJETO
+-- Nome: Portal de Notícias Minimalista Dinâmico
+-- Ambiente: JavaScript Puro (Vanilla JS), HTML5, CSS3
+-- Hospedagem: GitHub Pages
+-- Arquitetura: Decoupled Content (Conteúdo separado do código)
+
+-- DESCRIÇÃO
+- Criação de um gerador dinâmico de páginas de notícias onde 100% do conteúdo (textos e caminhos de arquivos de imagem) é consumido de um arquivo JSON externo, permitindo a atualização completa do site sem alterar o código-fonte.
+
+-- ESTRUTURA DE ARQUIVOS ALVO
+- index.html   (Estrutura semântica base)
+- style.css    (Estilização e Grid de 12 colunas)
+- app.js       (Lógica de Fetch para ler o JSON e renderizar o DOM)
+- dados.json   (Banco de dados estruturado do conteúdo)
+- /assets/     (Diretório contendo mainimage.png, thumb1.png, etc.)
+
+-- CARACTERÍSTICAS VISUAIS (LAYOUT 12 COLUNAS)
+- Interface limpa e minimalista com foco total na legibilidade.
+- Grid Responsivo: Divisão proporcional de 70% para o conteúdo principal e 30% para a barra lateral de mini notícias.
+- Paleta de Cores: Dominante Off-White/Branco (60%), Elementos e Textos em Grafite/Cinza Escuro (30%), Detalhes/Links em Azul Escuro (10%).
+
+-- REQUISITOS DO ARQUIVO DADOS.JSON
+- Deve conter um nó para a notícia principal (com chaves para headline, subheadline, texto_principal, imagem_url, categoria, data e tempo_leitura).
+- Deve conter um array para as mini notícias da barra lateral, onde cada item possui seu próprio título, categoria, data e url_da_thumbnail.
+
+-- REQUISITOS DE FUNCIONALIDADE (JAVASCRIPT)
+- O `app.js` deve realizar uma requisição assíncrona (Fetch API) para ler o `dados.json` no momento do carregamento da página.
+- Manipulação dinâmica do DOM para injetar os textos e aplicar as tags `<img>` apontando para os caminhos de imagem definidos no JSON.
+- Inclusão de um indicador dinâmico de "Tempo de Leitura" baseado no volume de texto da notícia principal.
+
+-- CUSTOMIZAÇÃO
+- Usar mesmas possibilidades de Customização do Projeto de CitacoesPro (Fornecido como base)
+- Após customização, ter opção de ocultar a interface e de ixar só a noticia visível.
+
+-- EXPORTAÇãO
+- Possibilidade de exportar uma imagem PNG da página completa em formatos Quadrado (1:1), Wide(16:9) e Stories (9:16)
