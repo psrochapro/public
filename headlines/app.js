@@ -1,28 +1,79 @@
 /**
- * APP: News Snapshot Creator Pro - LIVE EDITOR
- * Gerencia o estado da aplicação e sincronização em tempo real.
+ * APP: News Snapshot Creator Pro
+ * Lógica: Edição em Tempo Real + Import/Export de Estado (JSON)
  */
 
 let state = null;
 
-// Inicialização
 async function init() {
     try {
         const response = await fetch('dados.json');
         state = await response.json();
         
         setupSidebarInputs();
+        setupPersistence(); // Novas funções de JSON
         syncSidebarWithState();
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro ao carregar dados:", e);
+        console.error("Erro ao carregar dados iniciais:", e);
     }
 }
 
-// Vincula cada input do HTML ao objeto de estado
+// Configura botões de Exportar e Importar
+function setupPersistence() {
+    // EXPORTAR JSON
+    document.getElementById('btn-export-json').onclick = () => {
+        // Captura o layout e cores atuais para salvar no JSON também
+        state.config.current_layout = document.getElementById('layout-selector').value;
+        state.config.current_bg = document.getElementById('bg-card-color').value;
+        state.config.current_accent = document.getElementById('accent-color').value;
+
+        const dataStr = JSON.stringify(state, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = 'news-snapshot-project.json';
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // IMPORTAR JSON
+    const fileInput = document.getElementById('import-json-file');
+    document.getElementById('btn-trigger-import').onclick = () => fileInput.click();
+
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const importedState = JSON.parse(event.target.result);
+                state = importedState;
+                
+                // Restaura Layout e Cores se existirem no arquivo
+                if(state.config.current_layout) document.getElementById('layout-selector').value = state.config.current_layout;
+                if(state.config.current_bg) document.getElementById('bg-card-color').value = state.config.current_bg;
+                if(state.config.current_accent) document.getElementById('accent-color').value = state.config.current_accent;
+
+                document.body.className = document.getElementById('layout-selector').value;
+                
+                syncSidebarWithState();
+                render();
+                updateColors();
+                alert("Projeto importado com sucesso!");
+            } catch (err) {
+                alert("Erro ao ler o arquivo JSON.");
+            }
+        };
+        reader.readAsText(file);
+    };
+}
+
 function setupSidebarInputs() {
-    // Cores e Layout
+    // Estilo
     document.getElementById('layout-selector').onchange = (e) => {
         document.body.className = e.target.value;
         render();
@@ -34,29 +85,28 @@ function setupSidebarInputs() {
     // Config Geral
     document.getElementById('edit-site-url').oninput = (e) => {
         state.config.site_url = e.target.value;
-        document.getElementById('site-url-text').innerText = e.target.value;
+        render();
     };
 
-    // Imagens (Logo, Main, Thumbs) via FileReader
-    handleImageUpload('edit-logo', (result) => { state.config.logo_url = result; render(); });
-    handleImageUpload('edit-main-img', (result) => { state.noticiaPrincipal.imagem_url = result; render(); });
-    
-    // Notícia Principal Textos
+    // Uploads de Imagem (DataURL vai para o state)
+    handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
+    handleImageUpload('edit-main-img', (res) => { state.noticiaPrincipal.imagem_url = res; render(); });
+
+    // Notícia Principal
     document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
     document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
     document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
     document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
     document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
 
-    // Mini Notícias (Loops para os 3 itens)
+    // Mini Notícias
     for (let i = 0; i < 3; i++) {
-        handleImageUpload(`edit-thumb-${i}`, (result) => { state.miniNoticias[i].thumb_url = result; render(); });
+        handleImageUpload(`edit-thumb-${i}`, (res) => { state.miniNoticias[i].thumb_url = res; render(); });
         document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
         document.getElementById(`edit-resumo-${i}`).oninput = (e) => { state.miniNoticias[i].resumo = e.target.value; render(); };
     }
 }
 
-// Preenche os campos da sidebar com os valores iniciais do JSON
 function syncSidebarWithState() {
     document.getElementById('edit-site-url').value = state.config.site_url;
     document.getElementById('edit-main-cat').value = state.noticiaPrincipal.categoria;
@@ -71,13 +121,12 @@ function syncSidebarWithState() {
     }
 }
 
-// Auxiliar para processar upload de imagem local
 function handleImageUpload(id, callback) {
     document.getElementById(id).onchange = (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (event) => callback(event.target.result);
+            reader.onload = (ev) => callback(event.target.result);
             reader.readAsDataURL(file);
         }
     };

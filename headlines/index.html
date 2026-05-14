@@ -13,6 +13,17 @@
         <h2>Snapshot Editor</h2>
         
         <div class="tabs-container">
+            <!-- SEÇÃO DE ARQUIVO (SESSÃO) -->
+            <section class="control-group">
+                <h3>0. Gerenciar Sessão</h3>
+                <div class="row">
+                    <button id="btn-export-json" class="btn-secondary">Exportar JSON</button>
+                    <button id="btn-trigger-import" class="btn-secondary">Importar JSON</button>
+                </div>
+                <!-- Input de arquivo escondido para o import -->
+                <input type="file" id="import-json-file" accept=".json" style="display: none;">
+            </section>
+
             <!-- SEÇÃO ESTILO -->
             <section class="control-group">
                 <h3>1. Estilo e Formato</h3>
@@ -57,24 +68,21 @@
 
             <!-- SEÇÃO MINI NOTÍCIAS -->
             <section class="control-group">
-                <h3>3. Mini Notícias (3 itens)</h3>
-                
+                <h3>3. Mini Notícias</h3>
                 <div class="mini-edit-box">
-                    <label>Item 1 (Foto e Título)</label>
+                    <label>Item 1</label>
                     <input type="file" id="edit-thumb-0" accept="image/*">
                     <input type="text" id="edit-title-0">
                     <input type="text" id="edit-resumo-0" placeholder="Resumo">
                 </div>
-
                 <div class="mini-edit-box">
-                    <label>Item 2 (Foto e Título)</label>
+                    <label>Item 2</label>
                     <input type="file" id="edit-thumb-1" accept="image/*">
                     <input type="text" id="edit-title-1">
                     <input type="text" id="edit-resumo-1" placeholder="Resumo">
                 </div>
-
                 <div class="mini-edit-box">
-                    <label>Item 3 (Foto e Título)</label>
+                    <label>Item 3</label>
                     <input type="file" id="edit-thumb-2" accept="image/*">
                     <input type="text" id="edit-title-2">
                     <input type="text" id="edit-resumo-2" placeholder="Resumo">
@@ -82,7 +90,7 @@
             </section>
         </div>
 
-        <button id="btn-export" class="btn-primary">Gerar PNG Alta Resolução</button>
+        <button id="btn-export-png" class="btn-primary">Gerar PNG Alta Resolução</button>
     </aside>
 
     <main class="preview-container">
@@ -91,12 +99,10 @@
                 <img src="" id="logo-img" class="logo">
                 <div class="live-badge">AO VIVO</div>
             </header>
-            <div class="card-body">
-                <!-- Injetado pelo JS -->
-            </div>
+            <div class="card-body"></div>
             <footer class="card-footer">
                 <div class="accent-bar"></div>
-                <span id="site-url-text">WWW.NOTICIASBR.COM.BR</span>
+                <span id="site-url-text"></span>
             </footer>
         </div>
     </main>
