@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Snapshot Creator Pro</title>
-    <!-- O nome abaixo DEVE ser igual ao arquivo salvo -->
+    <title>News Snapshot Creator Pro - FINAL</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
@@ -14,17 +13,19 @@
         <h2>Snapshot Editor</h2>
         
         <div class="tabs-container">
+            <!-- GERENCIAR PROJETO -->
             <section class="control-group">
-                <h3>0. Gerenciar Sessão</h3>
+                <h3>0. Gerenciar Projeto</h3>
                 <div class="row">
-                    <button id="btn-export-json" class="btn-secondary">Exportar Projeto</button>
-                    <button id="btn-trigger-import" class="btn-secondary">Importar Projeto</button>
+                    <button id="btn-export-json" class="btn-secondary">Salvar JSON</button>
+                    <button id="btn-trigger-import" class="btn-secondary">Abrir JSON</button>
                 </div>
                 <input type="file" id="import-json-file" accept=".json" style="display: none;">
             </section>
 
+            <!-- ESTILO -->
             <section class="control-group">
-                <h3>1. Estilo e Formato</h3>
+                <h3>1. Identidade Visual</h3>
                 <label>Formato</label>
                 <select id="layout-selector">
                     <option value="ratio-16-9">Wide (16:9)</option>
@@ -47,8 +48,9 @@
                 <input type="text" id="edit-site-url">
             </section>
 
+            <!-- NOTÍCIA PRINCIPAL -->
             <section class="control-group">
-                <h3>2. Notícia Principal</h3>
+                <h3>2. Conteúdo Principal</h3>
                 <label>Foto Principal</label>
                 <input type="file" id="edit-main-img" accept="image/*">
                 <label>Categoria | Local</label>
@@ -63,10 +65,11 @@
                 <textarea id="edit-main-body" rows="3"></textarea>
             </section>
 
+            <!-- MINI NOTÍCIAS -->
             <section class="control-group">
-                <h3>3. Mini Notícias</h3>
+                <h3>3. Mini Notícias (3 Itens)</h3>
                 <div class="mini-edit-box">
-                    <label>Item 1</label>
+                    <label>Item 1 (Foto, Título e Resumo)</label>
                     <input type="file" id="edit-thumb-0" accept="image/*">
                     <input type="text" id="edit-title-0">
                     <input type="text" id="edit-resumo-0">
@@ -86,7 +89,7 @@
             </section>
         </div>
 
-        <button id="btn-export-png" class="btn-primary">Gerar PNG Alta Resolução</button>
+        <button id="btn-export-png" class="btn-primary">Baixar PNG Alta Resolução</button>
     </aside>
 
     <main class="preview-container">
@@ -103,6 +106,8 @@
         </div>
     </main>
 
+    <!-- BIBLIOTECA DE EXPORTAÇÃO -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

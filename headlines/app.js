@@ -15,7 +15,9 @@ async function init() {
     }
 }
 
+// Persistência de Projeto (JSON) e Exportação (PNG)
 function setupPersistence() {
+    // Exportar JSON
     document.getElementById('btn-export-json').onclick = () => {
         state.config.current_layout = document.getElementById('layout-selector').value;
         state.config.current_bg = document.getElementById('bg-card-color').value;
@@ -24,10 +26,11 @@ function setupPersistence() {
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         const link = document.createElement('a');
         link.setAttribute('href', dataUri);
-        link.setAttribute('download', 'projeto-snapshot.json');
+        link.setAttribute('download', 'snapshot-projeto.json');
         link.click();
     };
 
+    // Importar JSON
     const fileInput = document.getElementById('import-json-file');
     document.getElementById('btn-trigger-import').onclick = () => fileInput.click();
     fileInput.onchange = (e) => {
@@ -46,6 +49,36 @@ function setupPersistence() {
         };
         reader.readAsText(file);
     };
+
+    // EXPORTAR PNG (ALTA RESOLUÇÃO)
+    document.getElementById('btn-export-png').onclick = exportPNG;
+}
+
+function exportPNG() {
+    const stage = document.getElementById('snapshot-stage');
+    const btn = document.getElementById('btn-export-png');
+    
+    btn.innerText = "Processando...";
+    btn.disabled = true;
+
+    // html2canvas captura o estágio com escala 2x para alta definição
+    html2canvas(stage, {
+        scale: 2, 
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null
+    }).then(canvas => {
+        const image = canvas.toDataURL("image/png", 1.0);
+        const link = document.createElement('a');
+        const filename = `snapshot-${new Date().getTime()}.png`;
+        
+        link.setAttribute('href', image);
+        link.setAttribute('download', filename);
+        link.click();
+
+        btn.innerText = "Baixar PNG Alta Resolução";
+        btn.disabled = false;
+    });
 }
 
 function setupSidebarInputs() {
@@ -106,15 +139,19 @@ function render() {
     const principal = state.noticiaPrincipal;
     const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
+    
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
+    
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mini-news-grid" id="mini-news-container"></div>`;
     } else {
-        cardBody.innerHTML = `${imageHTML}<div class="info-container">${mainContentHTML}<div class="mini-news-grid" id="mini-news-container"></div></div>`;
+        cardBody.innerHTML = `${imageHTML}<div class="info-container">${mainContentHTML} <div class="mini-news-grid" id="mini-news-container"></div></div>`;
     }
+    
     document.getElementById('logo-img').src = state.config.logo_url;
     document.getElementById('site-url-text').innerText = state.config.site_url;
+    
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
