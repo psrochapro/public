@@ -1,6 +1,6 @@
 /**
  * Lógica: News Snapshot Creator Pro
- * Gerencia layouts, cores e injeção de estrutura dinâmica
+ * Gerencia layouts, cores e injeção de estrutura para 3 mini notícias
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -26,13 +26,14 @@ function render() {
     const principal = globalData.noticiaPrincipal;
     const layout = layoutSelector.value;
 
-    // Ajuste de estrutura para o formato 1:1 (Quadrante)
     const cardBody = document.querySelector('.card-body');
+    
+    // Injeção de estrutura dependente do Layout
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
                 <div class="main-image-container">
-                    <img src="${principal.imagem_url}" id="main-img" style="object-fit: cover;">
+                    <img src="${principal.imagem_url}" id="main-img">
                     <div class="timestamp">${principal.data}</div>
                 </div>
                 <div class="news-text">
@@ -44,10 +45,9 @@ function render() {
             <div class="mini-news-grid" id="mini-news-container"></div>
         `;
     } else {
-        // Layout padrão para 16:9 e 9:16
         cardBody.innerHTML = `
             <div class="main-image-container">
-                <img src="${principal.imagem_url}" id="main-img" style="object-fit: cover;">
+                <img src="${principal.imagem_url}" id="main-img">
                 <div class="timestamp">${principal.data}</div>
             </div>
             <div class="info-container">
@@ -61,10 +61,11 @@ function render() {
         `;
     }
 
-    // Injeção da Logo e Mini-notícias
     document.getElementById('logo-img').src = globalData.config.logo_url;
+    
+    // Injeção de APENAS 3 MINI NOTÍCIAS conforme solicitado
     const miniContainer = document.getElementById('mini-news-container');
-    globalData.miniNoticias.slice(0, 4).forEach(item => {
+    globalData.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
                 <img src="${item.thumb_url}" alt="thumb">
@@ -74,7 +75,6 @@ function render() {
     });
 }
 
-// Sistema de Cores (Derivação Automática)
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
@@ -105,7 +105,6 @@ function updateColors() {
     const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
     
-    // Calcula accent do header (mais escuro se fundo claro, mais claro se fundo escuro)
     const diff = mainText === '#111111' ? -10 : 15;
     const headerBg = adjustColor(bgColor, diff); 
     const accentSoft = accentColor + "15"; 
@@ -120,7 +119,6 @@ function updateColors() {
     root.style.setProperty('--contrast-accent', accentContrast);
 }
 
-// Eventos
 accentInput.addEventListener('input', updateColors);
 bgInput.addEventListener('input', updateColors);
 layoutSelector.addEventListener('change', () => {
