@@ -1,6 +1,6 @@
 /**
  * Lógica: News Snapshot Creator Pro
- * Gerencia injeção de estrutura para 3 mini notícias e preenchimento de espaço
+ * Gerencia a injeção de 3 mini notícias e comportamentos de cor
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -25,10 +25,9 @@ function render() {
     if (!globalData) return;
     const principal = globalData.noticiaPrincipal;
     const layout = layoutSelector.value;
-
     const cardBody = document.querySelector('.card-body');
     
-    // Injeção de estrutura dependente do Layout para otimizar espaço
+    // Define estrutura de injeção baseada no layout
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
@@ -76,6 +75,7 @@ function render() {
     });
 }
 
+// Lógica de Cores e Contraste
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
