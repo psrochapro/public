@@ -1,6 +1,6 @@
 /**
  * APP: News Snapshot Creator Pro
- * Lógica de injeção dinâmica e sistema de cores.
+ * Lógica de injeção dinâmica com sistema de ancoragem por grid cell.
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -26,7 +26,7 @@ function render() {
     const layout = layoutSelector.value;
     const cardBody = document.querySelector('.card-body');
     
-    // Wrapper de Imagem que colapsa no tamanho real da foto (Ancoragem Real)
+    // Grid-based wrapper para garantir que a data nunca flutue fora dos pixels
     const imageHTML = `
         <div class="main-image-container">
             <div class="img-anchor-wrapper">
@@ -45,7 +45,6 @@ function render() {
         </div>
     `;
 
-    // Injeção de estrutura inteligente
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
