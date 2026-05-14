@@ -1,6 +1,6 @@
 /**
  * Lógica: News Snapshot Creator Pro
- * Gerencia o render dinâmico e sistema de cores.
+ * Sistema de renderização flexível para evitar cortes e vácuos.
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -26,7 +26,7 @@ function render() {
     const layout = layoutSelector.value;
     const cardBody = document.querySelector('.card-body');
     
-    // Template de Texto Principal
+    // Conteúdo da Notícia Principal
     const mainContentHTML = `
         <div class="news-text">
             <span class="category-tag">${principal.categoria}</span>
@@ -36,7 +36,7 @@ function render() {
         </div>
     `;
 
-    // Diferencia estrutura entre Quadrado e demais para otimizar espaço
+    // Injeção de estrutura inteligente
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
@@ -67,7 +67,7 @@ function render() {
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     
-    // Renderiza as 3 mini notícias do JSON
+    // Renderiza exatamente 3 mini notícias
     globalData.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
@@ -107,7 +107,7 @@ function updateColors() {
     const bgColor = bgInput.value;
     const accentColor = accentInput.value;
     const mainText = getContrastYIQ(bgColor);
-    const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
+    const mutedText = mainText === '#111111' ? '#555555' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
     const diff = mainText === '#111111' ? -12 : 18;
     const headerBg = adjustColor(bgColor, diff); 

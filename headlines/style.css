@@ -24,9 +24,10 @@ body {
 input[type="color"], select, button { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #222; color: white; cursor: pointer; }
 .btn-primary { background: #2563eb; border: none; font-weight: bold; margin-top: auto; padding: 15px; }
 
-/* PREVIEW */
-.preview-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 15px; overflow: hidden; }
+/* PREVIEW CONTAINER */
+.preview-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
 
+/* STAGE */
 #snapshot-stage {
     background: var(--bg-card); color: var(--text-color);
     display: flex; flex-direction: column; box-shadow: 0 40px 100px rgba(0,0,0,0.7);
@@ -34,63 +35,69 @@ input[type="color"], select, button { width: 100%; padding: 10px; border-radius:
 }
 
 .ratio-16-9 #snapshot-stage { aspect-ratio: 16 / 9; width: min(1200px, 92vw); }
-.ratio-1-1 #snapshot-stage { aspect-ratio: 1 / 1; height: 88vh; width: auto; }
-.ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 95vh; width: auto; }
+.ratio-1-1 #snapshot-stage { aspect-ratio: 1 / 1; height: 88vh; }
+.ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 95vh; }
 
 /* HEADER */
-.card-header { padding: 1.5% 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-header); flex-shrink: 0; }
-.logo { height: clamp(20px, 2.8vh, 32px); object-fit: contain; }
-.live-badge { background: var(--accent); color: var(--contrast-accent); font-weight: 900; font-size: 0.7rem; padding: 5px 12px; border-radius: 4px; }
+.card-header { padding: 2% 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-header); flex-shrink: 0; }
+.logo { height: clamp(18px, 2.5vh, 26px); object-fit: contain; }
+.live-badge { background: var(--accent); color: var(--contrast-accent); font-weight: 900; font-size: 0.6rem; padding: 4px 10px; border-radius: 4px; }
 
-/* CORPO */
-.card-body { flex: 1; display: flex; padding: 2.5% 5%; gap: 20px; overflow: hidden; min-height: 0; }
+/* CORPO DINÂMICO */
+.card-body { flex: 1; display: flex; padding: 3% 5%; gap: 20px; overflow: hidden; min-height: 0; }
 
-.main-image-container { background: rgba(0,0,0,0.03); border-radius: 10px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+/* IMAGEM */
+.main-image-container { 
+    background: rgba(0,0,0,0.03); border-radius: 8px; overflow: hidden; position: relative;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
 .main-image-container img { width: 100%; height: 100%; object-fit: cover; } 
-.timestamp { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8); color: white; font-size: 0.65rem; padding: 5px 10px; border-radius: 5px; font-weight: bold; }
+.timestamp { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; font-size: 0.55rem; padding: 3px 7px; border-radius: 4px; }
 
+/* TEXTOS */
 .info-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 .news-text { flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
 
-.category-tag { color: var(--accent); font-weight: 900; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-h1 { font-size: clamp(1.2rem, 3.5vh, 2.2rem); font-weight: 900; line-height: 1.1; margin-bottom: 8px; color: var(--text-color); }
-.subtitle { color: var(--text-color); font-weight: 700; font-size: clamp(0.8rem, 1.7vh, 1.1rem); line-height: 1.3; margin-bottom: 8px; }
-.body-text { color: var(--text-muted); font-size: clamp(0.75rem, 1.5vh, 0.95rem); line-height: 1.35; }
+.category-tag { color: var(--accent); font-weight: 900; font-size: 0.65rem; text-transform: uppercase; margin-bottom: 4px; }
+h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1; margin-bottom: 6px; }
+.subtitle { color: var(--text-color); font-weight: 700; font-size: clamp(0.75rem, 1.4vh, 0.95rem); line-height: 1.2; margin-bottom: 5px; }
+.body-text { color: var(--text-muted); font-size: clamp(0.7rem, 1.3vh, 0.85rem); line-height: 1.3; }
 
 /* MINI NEWS */
-.mini-news-grid { display: grid; gap: 12px; padding: 15px; background: var(--accent-soft); border-radius: 12px; flex-shrink: 0; }
-.mini-item { display: flex; gap: 15px; align-items: center; overflow: hidden; }
-.mini-item img { object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.mini-news-grid { 
+    display: grid; gap: 10px; padding: 12px; background: var(--accent-soft); border-radius: 10px; flex-shrink: 0;
+}
+.mini-item { display: flex; gap: 10px; align-items: center; overflow: hidden; }
+.mini-item img { object-fit: cover; border-radius: 6px; flex-shrink: 0; width: 65px; height: 65px; }
 .mini-item .mini-text { overflow: hidden; }
-.mini-item h4 { font-size: 0.8rem; line-height: 1.2; font-weight: 800; margin-bottom: 3px; }
-.mini-item p { font-size: 0.7rem; color: var(--text-muted); line-height: 1.2; }
+.mini-item h4 { font-size: 0.7rem; line-height: 1.1; font-weight: 800; margin-bottom: 2px; }
+.mini-item p { font-size: 0.6rem; color: var(--text-muted); line-height: 1.1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
 
-/* REGRAS DE FORMATO */
+/* COMPORTAMENTOS ESPECÍFICOS */
 
 /* 16:9 WIDE */
-.ratio-16-9 .main-image-container { flex: 1.3; }
-.ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; padding: 15px; }
-.ratio-16-9 .mini-item img { width: 80px; height: 80px; }
+.ratio-16-9 .main-image-container { flex: 1.2; }
+.ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; }
 
-/* 1:1 QUADRADO - FOCO TOTAL */
+/* 1:1 QUADRADO - ARQUITETURA DE QUADRANTES REFINADA */
 .ratio-1-1 .card-body { flex-direction: column; padding: 0; gap: 0; }
-.ratio-1-1 .top-section { display: flex; gap: 30px; height: 55%; padding: 4% 6% 2% 6%; flex-shrink: 0; overflow: hidden; }
-.ratio-1-1 .main-image-container { width: 48%; height: 100%; flex: none; }
+.ratio-1-1 .top-section { display: flex; gap: 20px; flex: 1.2; padding: 4% 5% 2% 5%; overflow: hidden; }
+.ratio-1-1 .main-image-container { width: 45%; height: 100%; flex: none; }
 .ratio-1-1 .news-text { flex: 1; margin-bottom: 0; }
-.ratio-1-1 .mini-news-grid { grid-template-columns: repeat(3, 1fr); flex: 1; margin: 0 6% 4% 6%; padding: 18px; align-content: center; gap: 20px; }
-.ratio-1-1 .mini-item { flex-direction: column; text-align: center; gap: 10px; }
-.ratio-1-1 .mini-item img { width: clamp(90px, 12vh, 115px); height: clamp(90px, 12vh, 115px); }
-.ratio-1-1 .mini-item h4 { font-size: 0.85rem; }
+.ratio-1-1 .mini-news-grid { 
+    grid-template-columns: repeat(3, 1fr); 
+    flex: 0.8; margin: 0 5% 4% 5%; padding: 12px; 
+    align-content: center; gap: 15px;
+}
+.ratio-1-1 .mini-item { flex-direction: column; text-align: center; gap: 6px; }
+.ratio-1-1 .mini-item img { width: clamp(70px, 10vh, 90px); height: clamp(70px, 10vh, 90px); }
 
-/* 9:16 STORIES - IMPACTO MOBILE */
-.ratio-9-16 .card-body { flex-direction: column; padding: 5% 8%; gap: 15px; }
-.ratio-9-16 .main-image-container { height: 35%; width: 100%; flex: none; }
-.ratio-9-16 .mini-news-grid { grid-template-columns: 1fr; padding: 15px; gap: 15px; }
-.ratio-9-16 .mini-item img { width: 75px; height: 75px; }
-.ratio-9-16 h1 { font-size: clamp(1.5rem, 4vh, 2rem); }
-.ratio-9-16 .subtitle { margin-bottom: 5px; }
+/* 9:16 STORIES */
+.ratio-9-16 .card-body { flex-direction: column; padding: 4% 6%; gap: 15px; }
+.ratio-9-16 .main-image-container { height: 30%; width: 100%; flex: none; }
+.ratio-9-16 .mini-news-grid { grid-template-columns: 1fr; }
 
 /* FOOTER */
 .card-footer { padding: 0 5% 3% 5%; text-align: center; flex-shrink: 0; }
-.accent-bar { height: 6px; background: var(--accent); margin-bottom: 10px; border-radius: 3px; }
-#site-url-text { font-size: 0.65rem; letter-spacing: 5px; font-weight: 900; opacity: 0.3; }
+.accent-bar { height: 5px; background: var(--accent); margin-bottom: 8px; border-radius: 2px; }
+#site-url-text { font-size: 0.6rem; letter-spacing: 4px; font-weight: 900; opacity: 0.3; }
