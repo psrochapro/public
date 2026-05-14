@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Snapshot Creator Pro</title>
+    <title>News Snapshot Creator Pro - LIVE EDITOR</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
@@ -12,23 +12,74 @@
     <aside class="sidebar-editor" id="sidebar">
         <h2>Snapshot Editor</h2>
         
-        <div class="control-group">
-            <label>Formato de Saída</label>
-            <select id="layout-selector">
-                <option value="ratio-16-9">Wide (16:9)</option>
-                <option value="ratio-1-1">Quadrado (1:1)</option>
-                <option value="ratio-9-16">Stories (9:16)</option>
-            </select>
-        </div>
+        <div class="tabs-container">
+            <!-- SEÇÃO ESTILO -->
+            <section class="control-group">
+                <h3>1. Estilo e Formato</h3>
+                <label>Formato</label>
+                <select id="layout-selector">
+                    <option value="ratio-16-9">Wide (16:9)</option>
+                    <option value="ratio-1-1">Quadrado (1:1)</option>
+                    <option value="ratio-9-16">Stories (9:16)</option>
+                </select>
+                <div class="row">
+                    <div>
+                        <label>Fundo Card</label>
+                        <input type="color" id="bg-card-color" value="#ffffff">
+                    </div>
+                    <div>
+                        <label>Destaque</label>
+                        <input type="color" id="accent-color" value="#b3adad">
+                    </div>
+                </div>
+                <label>Logo do Portal (PNG)</label>
+                <input type="file" id="edit-logo" accept="image/*">
+                <label>URL do Site</label>
+                <input type="text" id="edit-site-url">
+            </section>
 
-        <div class="control-group">
-            <label>Cor do Fundo (Card)</label>
-            <input type="color" id="bg-card-color" value="#ffffff">
-        </div>
+            <!-- SEÇÃO NOTÍCIA PRINCIPAL -->
+            <section class="control-group">
+                <h3>2. Notícia Principal</h3>
+                <label>Foto Principal</label>
+                <input type="file" id="edit-main-img" accept="image/*">
+                <label>Categoria | Local</label>
+                <input type="text" id="edit-main-cat">
+                <label>Data / Hora</label>
+                <input type="text" id="edit-main-date">
+                <label>Manchete</label>
+                <textarea id="edit-main-title" rows="2"></textarea>
+                <label>Subtítulo</label>
+                <textarea id="edit-main-sub" rows="2"></textarea>
+                <label>Corpo do Texto</label>
+                <textarea id="edit-main-body" rows="3"></textarea>
+            </section>
 
-        <div class="control-group">
-            <label>Cor de Destaque</label>
-            <input type="color" id="accent-color" value="#b3adad">
+            <!-- SEÇÃO MINI NOTÍCIAS -->
+            <section class="control-group">
+                <h3>3. Mini Notícias (3 itens)</h3>
+                
+                <div class="mini-edit-box">
+                    <label>Item 1 (Foto e Título)</label>
+                    <input type="file" id="edit-thumb-0" accept="image/*">
+                    <input type="text" id="edit-title-0">
+                    <input type="text" id="edit-resumo-0" placeholder="Resumo">
+                </div>
+
+                <div class="mini-edit-box">
+                    <label>Item 2 (Foto e Título)</label>
+                    <input type="file" id="edit-thumb-1" accept="image/*">
+                    <input type="text" id="edit-title-1">
+                    <input type="text" id="edit-resumo-1" placeholder="Resumo">
+                </div>
+
+                <div class="mini-edit-box">
+                    <label>Item 3 (Foto e Título)</label>
+                    <input type="file" id="edit-thumb-2" accept="image/*">
+                    <input type="text" id="edit-title-2">
+                    <input type="text" id="edit-resumo-2" placeholder="Resumo">
+                </div>
+            </section>
         </div>
 
         <button id="btn-export" class="btn-primary">Gerar PNG Alta Resolução</button>
@@ -36,16 +87,13 @@
 
     <main class="preview-container">
         <div id="snapshot-stage">
-            
             <header class="card-header">
                 <img src="" id="logo-img" class="logo">
                 <div class="live-badge">AO VIVO</div>
             </header>
-
             <div class="card-body">
-                <!-- Estrutura injetada dinamicamente pelo JS -->
+                <!-- Injetado pelo JS -->
             </div>
-
             <footer class="card-footer">
                 <div class="accent-bar"></div>
                 <span id="site-url-text">WWW.NOTICIASBR.COM.BR</span>

@@ -1,18 +1,18 @@
 /**
- * APP: News Snapshot Creator Pro
- * Lógica de injeção dinâmica e sistema de cores.
+ * APP: News Snapshot Creator Pro - LIVE EDITOR
+ * Gerencia o estado da aplicação e sincronização em tempo real.
  */
 
-const accentInput = document.getElementById('accent-color');
-const bgInput = document.getElementById('bg-card-color');
-const layoutSelector = document.getElementById('layout-selector');
+let state = null;
 
-let globalData = null;
-
+// Inicialização
 async function init() {
     try {
         const response = await fetch('dados.json');
-        globalData = await response.json();
+        state = await response.json();
+        
+        setupSidebarInputs();
+        syncSidebarWithState();
         render();
         updateColors();
     } catch (e) {
@@ -20,13 +20,75 @@ async function init() {
     }
 }
 
+// Vincula cada input do HTML ao objeto de estado
+function setupSidebarInputs() {
+    // Cores e Layout
+    document.getElementById('layout-selector').onchange = (e) => {
+        document.body.className = e.target.value;
+        render();
+        updateColors();
+    };
+    document.getElementById('bg-card-color').oninput = updateColors;
+    document.getElementById('accent-color').oninput = updateColors;
+
+    // Config Geral
+    document.getElementById('edit-site-url').oninput = (e) => {
+        state.config.site_url = e.target.value;
+        document.getElementById('site-url-text').innerText = e.target.value;
+    };
+
+    // Imagens (Logo, Main, Thumbs) via FileReader
+    handleImageUpload('edit-logo', (result) => { state.config.logo_url = result; render(); });
+    handleImageUpload('edit-main-img', (result) => { state.noticiaPrincipal.imagem_url = result; render(); });
+    
+    // Notícia Principal Textos
+    document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
+    document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
+    document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
+    document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
+    document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
+
+    // Mini Notícias (Loops para os 3 itens)
+    for (let i = 0; i < 3; i++) {
+        handleImageUpload(`edit-thumb-${i}`, (result) => { state.miniNoticias[i].thumb_url = result; render(); });
+        document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
+        document.getElementById(`edit-resumo-${i}`).oninput = (e) => { state.miniNoticias[i].resumo = e.target.value; render(); };
+    }
+}
+
+// Preenche os campos da sidebar com os valores iniciais do JSON
+function syncSidebarWithState() {
+    document.getElementById('edit-site-url').value = state.config.site_url;
+    document.getElementById('edit-main-cat').value = state.noticiaPrincipal.categoria;
+    document.getElementById('edit-main-date').value = state.noticiaPrincipal.data;
+    document.getElementById('edit-main-title').value = state.noticiaPrincipal.titulo;
+    document.getElementById('edit-main-sub').value = state.noticiaPrincipal.subtitulo;
+    document.getElementById('edit-main-body').value = state.noticiaPrincipal.corpo_texto;
+
+    for (let i = 0; i < 3; i++) {
+        document.getElementById(`edit-title-${i}`).value = state.miniNoticias[i].titulo;
+        document.getElementById(`edit-resumo-${i}`).value = state.miniNoticias[i].resumo;
+    }
+}
+
+// Auxiliar para processar upload de imagem local
+function handleImageUpload(id, callback) {
+    document.getElementById(id).onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => callback(event.target.result);
+            reader.readAsDataURL(file);
+        }
+    };
+}
+
 function render() {
-    if (!globalData) return;
-    const principal = globalData.noticiaPrincipal;
-    const layout = layoutSelector.value;
+    if (!state) return;
+    const principal = state.noticiaPrincipal;
+    const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
     
-    // Wrapper refinado para ancoragem perfeita em todos os formatos
     const imageHTML = `
         <div class="main-image-container">
             <div class="img-anchor-wrapper">
@@ -63,13 +125,12 @@ function render() {
         `;
     }
 
-    document.getElementById('logo-img').src = globalData.config.logo_url;
-    document.getElementById('site-url-text').innerText = globalData.config.site_url;
+    document.getElementById('logo-img').src = state.config.logo_url;
+    document.getElementById('site-url-text').innerText = state.config.site_url;
     
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
-    
-    globalData.miniNoticias.slice(0, 3).forEach(item => {
+    state.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
                 <img src="${item.thumb_url}" alt="thumb">
@@ -105,14 +166,15 @@ function adjustColor(hex, amt) {
 }
 
 function updateColors() {
-    const bgColor = bgInput.value;
-    const accentColor = accentInput.value;
+    const bgColor = document.getElementById('bg-card-color').value;
+    const accentColor = document.getElementById('accent-color').value;
+    
     const mainText = getContrastYIQ(bgColor);
     const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
     const diff = mainText === '#111111' ? -12 : 18;
     const headerBg = adjustColor(bgColor, diff); 
-    const accentSoft = accentColor + "40"; 
+    const accentSoft = accentColor + "33"; 
 
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
@@ -123,13 +185,5 @@ function updateColors() {
     root.style.setProperty('--text-muted', mutedText);
     root.style.setProperty('--contrast-accent', accentContrast);
 }
-
-accentInput.addEventListener('input', updateColors);
-bgInput.addEventListener('input', updateColors);
-layoutSelector.addEventListener('change', () => {
-    document.body.className = layoutSelector.value;
-    render();
-    updateColors();
-});
 
 init();
