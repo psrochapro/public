@@ -1,46 +1,33 @@
-/**
- * APP: News Snapshot Creator Pro
- * Lógica: Edição Full Dynamic + Máscara de Enquadramento + Persistência Total
- */
-
 let state = null;
 
 async function init() {
     try {
         const response = await fetch('dados.json');
         state = await response.json();
-        
         setupSidebarInputs();
         setupPersistence();
         syncSidebarWithState();
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro ao iniciar aplicação:", e);
+        console.error("Erro ao iniciar:", e);
     }
 }
 
-// Persistência de Projeto e Exportação de Imagem
 function setupPersistence() {
-    // SALVAR PROJETO (JSON)
     document.getElementById('btn-export-json').onclick = () => {
-        // Sincroniza configurações atuais antes de salvar
         state.config.layout = document.getElementById('layout-selector').value;
         state.config.bg_color = document.getElementById('bg-card-color').value;
         state.config.header_color = document.getElementById('header-color').value;
         state.config.accent_color = document.getElementById('accent-color').value;
-        
-        // O Zoom e Y já são atualizados no oninput
-        
         const dataStr = JSON.stringify(state, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         const link = document.createElement('a');
         link.setAttribute('href', dataUri);
-        link.setAttribute('download', 'projeto-news-snapshot.json');
+        link.setAttribute('download', 'snapshot-projeto.json');
         link.click();
     };
 
-    // ABRIR PROJETO (JSON)
     const fileInput = document.getElementById('import-json-file');
     document.getElementById('btn-trigger-import').onclick = () => fileInput.click();
     fileInput.onchange = (e) => {
@@ -48,59 +35,42 @@ function setupPersistence() {
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (event) => {
-            try {
-                state = JSON.parse(event.target.result);
-                syncSidebarWithState();
-                render();
-                updateColors();
-                alert("Projeto carregado com sucesso!");
-            } catch (err) {
-                alert("Erro ao ler o arquivo JSON.");
-            }
+            state = JSON.parse(event.target.result);
+            syncSidebarWithState();
+            render();
+            updateColors();
         };
         reader.readAsText(file);
     };
 
-    // EXPORTAR PNG
     document.getElementById('btn-export-png').onclick = () => {
         const stage = document.getElementById('snapshot-stage');
         const btn = document.getElementById('btn-export-png');
         btn.innerText = "Gerando Imagem...";
         btn.disabled = true;
-
-        html2canvas(stage, {
-            scale: 2, 
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: null
-        }).then(canvas => {
+        html2canvas(stage, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
             const image = canvas.toDataURL("image/png", 1.0);
             const link = document.createElement('a');
             link.setAttribute('href', image);
-            link.setAttribute('download', `news-snapshot-${new Date().getTime()}.png`);
+            link.setAttribute('download', `snapshot-${new Date().getTime()}.png`);
             link.click();
-            btn.innerText = "Gerar PNG Alta Resolução";
+            btn.innerText = "Baixar PNG Alta Resolução";
             btn.disabled = false;
         });
     };
 }
 
-// Configuração dos Inputs da Sidebar
 function setupSidebarInputs() {
-    // Layout
     document.getElementById('layout-selector').onchange = (e) => {
         state.config.layout = e.target.value;
         document.body.className = e.target.value;
         render();
         updateColors();
     };
-
-    // Cores
     document.getElementById('bg-card-color').oninput = updateColors;
     document.getElementById('header-color').oninput = updateColors;
     document.getElementById('accent-color').oninput = updateColors;
-    
-    // Enquadramento (Aplica no CSS e salva no State)
+
     document.getElementById('edit-img-zoom').oninput = (e) => {
         state.noticiaPrincipal.zoom = e.target.value;
         document.documentElement.style.setProperty('--img-zoom', e.target.value);
@@ -110,24 +80,17 @@ function setupSidebarInputs() {
         document.documentElement.style.setProperty('--img-y', e.target.value + '%');
     };
 
-    // Config e URL
     document.getElementById('edit-site-url').oninput = (e) => {
         state.config.site_url = e.target.value;
         document.getElementById('site-url-text').innerText = e.target.value;
     };
-
-    // Uploads
     handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
     handleImageUpload('edit-main-img', (res) => { state.noticiaPrincipal.imagem_url = res; render(); });
-    
-    // Textos Notícia Principal
     document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
     document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
     document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
     document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
     document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
-
-    // Mini Notícias
     for (let i = 0; i < 3; i++) {
         handleImageUpload(`edit-thumb-${i}`, (res) => { state.miniNoticias[i].thumb_url = res; render(); });
         document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
@@ -135,33 +98,25 @@ function setupSidebarInputs() {
     }
 }
 
-// Sincroniza Sidebar quando um JSON é aberto ou o app inicia
 function syncSidebarWithState() {
-    // Configurações
     document.getElementById('layout-selector').value = state.config.layout || "ratio-16-9";
     document.getElementById('bg-card-color').value = state.config.bg_color || "#ffffff";
     document.getElementById('header-color').value = state.config.header_color || "#f5f5f5";
     document.getElementById('accent-color').value = state.config.accent_color || "#b3adad";
     document.getElementById('edit-site-url').value = state.config.site_url || "";
-    
-    // Enquadramento
     document.getElementById('edit-img-zoom').value = state.noticiaPrincipal.zoom || 1;
     document.getElementById('edit-img-y').value = state.noticiaPrincipal.yPos || 0;
     document.documentElement.style.setProperty('--img-zoom', state.noticiaPrincipal.zoom || 1);
     document.documentElement.style.setProperty('--img-y', (state.noticiaPrincipal.yPos || 0) + '%');
-
-    // Textos
     document.getElementById('edit-main-cat').value = state.noticiaPrincipal.categoria;
     document.getElementById('edit-main-date').value = state.noticiaPrincipal.data;
     document.getElementById('edit-main-title').value = state.noticiaPrincipal.titulo;
     document.getElementById('edit-main-sub').value = state.noticiaPrincipal.subtitulo;
     document.getElementById('edit-main-body').value = state.noticiaPrincipal.corpo_texto;
-    
     for (let i = 0; i < 3; i++) {
         document.getElementById(`edit-title-${i}`).value = state.miniNoticias[i].titulo;
         document.getElementById(`edit-resumo-${i}`).value = state.miniNoticias[i].resumo;
     }
-
     document.body.className = state.config.layout || "ratio-16-9";
 }
 
@@ -182,58 +137,21 @@ function handleImageUpload(id, callback) {
 function render() {
     if (!state) return;
     const principal = state.noticiaPrincipal;
-    const layout = state.config.layout || document.getElementById('layout-selector').value;
+    const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
-    
-    const imageHTML = `
-        <div class="main-image-container">
-            <div class="img-anchor-wrapper">
-                <img src="${principal.imagem_url}" id="main-img">
-                <div class="timestamp">${principal.data}</div>
-            </div>
-        </div>
-    `;
-
-    const mainContentHTML = `
-        <div class="news-text">
-            <span class="category-tag">${principal.categoria}</span>
-            <h1>${principal.titulo}</h1>
-            <p class="subtitle">${principal.subtitulo}</p>
-            <p class="body-text">${principal.corpo_texto}</p>
-        </div>
-    `;
-
+    const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
+    const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
     if (layout === 'ratio-1-1') {
-        cardBody.innerHTML = `
-            <div class="top-section">${imageHTML}${mainContentHTML}</div>
-            <div class="mid-separator"></div>
-            <div class="mini-news-grid" id="mini-news-container"></div>
-        `;
+        cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mid-separator"></div><div class="mini-news-grid" id="mini-news-container"></div>`;
     } else {
-        cardBody.innerHTML = `
-            ${imageHTML}
-            <div class="info-container">
-                ${mainContentHTML}
-                <div class="mini-news-grid" id="mini-news-container"></div>
-            </div>
-        `;
+        cardBody.innerHTML = `${imageHTML}<div class="info-container">${mainContentHTML}<div class="mini-news-grid" id="mini-news-container"></div></div>`;
     }
-
     document.getElementById('logo-img').src = state.config.logo_url;
     document.getElementById('site-url-text').innerText = state.config.site_url;
-    
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
-        miniContainer.innerHTML += `
-            <div class="mini-item">
-                <img src="${item.thumb_url}">
-                <div class="mini-text">
-                    <h4>${item.titulo}</h4>
-                    <p>${item.resumo}</p>
-                </div>
-            </div>
-        `;
+        miniContainer.innerHTML += `<div class="mini-item"><img src="${item.thumb_url}"><div><h4>${item.titulo}</h4><p>${item.resumo}</p></div></div>`;
     });
 }
 
@@ -246,19 +164,24 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#111111' : '#ffffff';
 }
 
+function adjustColor(hex, amt) {
+    let usePound = false; if (hex[0] == "#") { hex = hex.slice(1); usePound = true; }
+    let num = parseInt(hex, 16);
+    let r = (num >> 16) + amt; if (r > 255) r = 255; else if (r < 0) r = 0;
+    let b = ((num >> 8) & 0x00FF) + amt; if (b > 255) b = 255; else if (b < 0) b = 0;
+    let g = (num & 0x0000FF) + amt; if (g > 255) g = 255; else if (g < 0) g = 0;
+    return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
+}
+
 function updateColors() {
     const bgColor = document.getElementById('bg-card-color').value;
     const hColor = document.getElementById('header-color').value;
     const accentColor = document.getElementById('accent-color').value;
-    
-    state.config.header_color = hColor;
-    state.config.bg_color = bgColor;
-    state.config.accent_color = accentColor;
-
     const mainText = getContrastYIQ(bgColor);
+    const headerBg = hColor; 
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
-    root.style.setProperty('--bg-header', hColor);
+    root.style.setProperty('--bg-header', headerBg);
     root.style.setProperty('--accent', accentColor);
     root.style.setProperty('--accent-soft', accentColor + "40");
     root.style.setProperty('--text-color', mainText);
