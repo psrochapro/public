@@ -112,8 +112,6 @@ function updateColors() {
     
     const diff = mainText === '#111111' ? -12 : 18;
     const headerBg = adjustColor(bgColor, diff); 
-    
-    // Aumentada a opacidade de "15" (9%) para "33" (20%) para a cor aparecer mais
     const accentSoft = accentColor + "33"; 
 
     const root = document.documentElement;
