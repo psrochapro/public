@@ -7,7 +7,7 @@
     "categoria": "CIDADE | SP",
     "data": "14 Mai 2026, 11:30 AM",
     "titulo": "O FUTURO URBANO: Grande Obras Transformam a Paisagem de São Paulo",
-    "subtitulo": "Parcerias público-privadas impulsionam novos corredores e espaços públicos, prometendo mobilidade e lazer para 2027.",
+    "subtitulo": "Parcerias público-privadas impulsionam novos corredores e espaços públicos, prometendo mobilidade e lazer para 2027. Atualmente ninguem sabe quais serão as tendências para os próximos semetres mas todos estão penando positivamente.",
     "corpo_texto": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nCurabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.",
     "imagem_url": "assets/main-foto.jpg",
     "link_leia_mais": "#"
@@ -17,7 +17,7 @@
       "id": 1,
       "categoria": "ECONOMIA",
       "titulo": "PIB Cresce 1.2% no 1º Trimestre",
-      "resumo": "Parcerias público-privadas impulsionam novos corredores...",
+      "resumo": "Parcerias público-privadas impulsionam novos corredores e fazem com que seja ampliado o interesse nessa área disputda.",
       "data": "14 mai ago",
       "thumb_url": "assets/thumb-1.jpg"
     },
@@ -25,7 +25,7 @@
       "id": 2,
       "categoria": "ECONOMIA",
       "titulo": "PIB Geral comprimiu no último mês",
-      "resumo": "Novos dados mostram retração no setor de serviços...",
+      "resumo": "Novos dados mostram retração no setor de serviços e fazem com que seja ampliado o interesse nessa área disputda.",
       "data": "14 mai ago",
       "thumb_url": "assets/thumb-2.jpg"
     },
@@ -33,7 +33,7 @@
       "id": 3,
       "categoria": "ESPORTE",
       "titulo": "Novo recorde no atletismo nacional",
-      "resumo": "Atleta quebra marca histórica nos 100m rasos...",
+      "resumo": "Atleta quebra marca histórica nos 100m rasos e fazem com que seja ampliado o interesse nessa área disputda.",
       "data": "13 mai ago",
       "thumb_url": "assets/thumb-3.jpg"
     },
@@ -41,7 +41,7 @@
       "id": 4,
       "categoria": "MUNDO",
       "titulo": "Conferência Global sobre Clima",
-      "resumo": "Líderes discutem novas metas para emissão de carbono...",
+      "resumo": "Líderes discutem novas metas para emissão de carbono e fazem com que seja ampliado o interesse nessa área disputda.",
       "data": "12 mai ago",
       "thumb_url": "assets/thumb-4.jpg"
     }
