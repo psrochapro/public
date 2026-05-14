@@ -1,22 +1,16 @@
-/**
- * APP: News Snapshot Creator Pro
- * Lógica de Edição Live + Injeção de Linha Divisória
- */
-
 let state = null;
 
 async function init() {
     try {
         const response = await fetch('dados.json');
         state = await response.json();
-        
         setupSidebarInputs();
         setupPersistence();
         syncSidebarWithState();
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro ao iniciar aplicação:", e);
+        console.error("Erro ao iniciar:", e);
     }
 }
 
@@ -57,17 +51,11 @@ function setupPersistence() {
         const btn = document.getElementById('btn-export-png');
         btn.innerText = "Gerando Imagem...";
         btn.disabled = true;
-
-        html2canvas(stage, {
-            scale: 2, 
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: null
-        }).then(canvas => {
+        html2canvas(stage, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
             const image = canvas.toDataURL("image/png", 1.0);
             const link = document.createElement('a');
             link.setAttribute('href', image);
-            link.setAttribute('download', `news-snapshot-${new Date().getTime()}.png`);
+            link.setAttribute('download', `snapshot-${new Date().getTime()}.png`);
             link.click();
             btn.innerText = "Baixar PNG Alta Resolução";
             btn.disabled = false;
@@ -134,34 +122,13 @@ function render() {
     const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
     
-    const imageHTML = `
-        <div class="main-image-container">
-            <div class="img-anchor-wrapper">
-                <img src="${principal.imagem_url}" id="main-img">
-                <div class="timestamp">${principal.data}</div>
-            </div>
-        </div>
-    `;
-
-    const mainContentHTML = `
-        <div class="news-text">
-            <span class="category-tag">${principal.categoria}</span>
-            <h1>${principal.titulo}</h1>
-            <p class="subtitle">${principal.subtitulo}</p>
-            <p class="body-text">${principal.corpo_texto}</p>
-        </div>
-    `;
-
-    // Linha divisória injetada entre seções
-    const separatorHTML = `<div class="mid-separator"></div>`;
+    const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
+    const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
 
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
-            <div class="top-section">
-                ${imageHTML}
-                ${mainContentHTML}
-            </div>
-            ${separatorHTML}
+            <div class="top-section">${imageHTML}${mainContentHTML}</div>
+            <div class="mid-separator"></div>
             <div class="mini-news-grid" id="mini-news-container"></div>
         `;
     } else {
@@ -169,7 +136,6 @@ function render() {
             ${imageHTML}
             <div class="info-container">
                 ${mainContentHTML}
-                ${separatorHTML}
                 <div class="mini-news-grid" id="mini-news-container"></div>
             </div>
         `;
@@ -177,19 +143,10 @@ function render() {
 
     document.getElementById('logo-img').src = state.config.logo_url;
     document.getElementById('site-url-text').innerText = state.config.site_url;
-    
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
-        miniContainer.innerHTML += `
-            <div class="mini-item">
-                <img src="${item.thumb_url}" alt="thumb">
-                <div class="mini-text">
-                    <h4>${item.titulo}</h4>
-                    <p>${item.resumo}</p>
-                </div>
-            </div>
-        `;
+        miniContainer.innerHTML += `<div class="mini-item"><img src="${item.thumb_url}"><div><h4>${item.titulo}</h4><p>${item.resumo}</p></div></div>`;
     });
 }
 
@@ -215,7 +172,6 @@ function updateColors() {
     const bgColor = document.getElementById('bg-card-color').value;
     const accentColor = document.getElementById('accent-color').value;
     const mainText = getContrastYIQ(bgColor);
-    const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
     const headerBg = adjustColor(bgColor, mainText === '#111111' ? -12 : 18); 
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
@@ -223,7 +179,7 @@ function updateColors() {
     root.style.setProperty('--accent', accentColor);
     root.style.setProperty('--accent-soft', accentColor + "40");
     root.style.setProperty('--text-color', mainText);
-    root.style.setProperty('--text-muted', mutedText);
+    root.style.setProperty('--text-muted', mainText === '#111111' ? '#444444' : '#bbbbbb');
     root.style.setProperty('--contrast-accent', getContrastYIQ(accentColor));
 }
 
