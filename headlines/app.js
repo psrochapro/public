@@ -1,6 +1,6 @@
 /**
  * Lógica: News Snapshot Creator Pro
- * Gerencia conteúdo e cores com proteção de layout
+ * Gerencia layouts, cores e injeção de estrutura dinâmica
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -21,22 +21,49 @@ async function init() {
     }
 }
 
-// Renderização Principal
 function render() {
     if (!globalData) return;
     const principal = globalData.noticiaPrincipal;
+    const layout = layoutSelector.value;
 
+    // Ajuste de estrutura para o formato 1:1 (Quadrante)
+    const cardBody = document.querySelector('.card-body');
+    if (layout === 'ratio-1-1') {
+        cardBody.innerHTML = `
+            <div class="top-section">
+                <div class="main-image-container">
+                    <img src="${principal.imagem_url}" id="main-img" style="object-fit: cover;">
+                    <div class="timestamp">${principal.data}</div>
+                </div>
+                <div class="news-text">
+                    <span class="category-tag">${principal.categoria}</span>
+                    <h1 id="title">${principal.titulo}</h1>
+                    <p id="subtitle">${principal.subtitulo}</p>
+                </div>
+            </div>
+            <div class="mini-news-grid" id="mini-news-container"></div>
+        `;
+    } else {
+        // Layout padrão para 16:9 e 9:16
+        cardBody.innerHTML = `
+            <div class="main-image-container">
+                <img src="${principal.imagem_url}" id="main-img" style="object-fit: cover;">
+                <div class="timestamp">${principal.data}</div>
+            </div>
+            <div class="info-container">
+                <div class="news-text">
+                    <span class="category-tag">${principal.categoria}</span>
+                    <h1 id="title">${principal.titulo}</h1>
+                    <p id="subtitle">${principal.subtitulo}</p>
+                </div>
+                <div class="mini-news-grid" id="mini-news-container"></div>
+            </div>
+        `;
+    }
+
+    // Injeção da Logo e Mini-notícias
     document.getElementById('logo-img').src = globalData.config.logo_url;
-    document.getElementById('main-img').src = principal.imagem_url;
-    document.getElementById('category').innerText = principal.categoria;
-    document.getElementById('image-date').innerText = principal.data;
-    
-    // Injeção de textos sem cortes bruscos via JS (CSS cuida do clamp)
-    document.getElementById('title').innerText = principal.titulo;
-    document.getElementById('subtitle').innerText = principal.subtitulo;
-
     const miniContainer = document.getElementById('mini-news-container');
-    miniContainer.innerHTML = '';
     globalData.miniNoticias.slice(0, 4).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
@@ -47,7 +74,7 @@ function render() {
     });
 }
 
-// Sistema de Cores e Contraste
+// Sistema de Cores (Derivação Automática)
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
@@ -57,7 +84,6 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#111111' : '#ffffff';
 }
 
-// Gera um tom baseado na cor base
 function adjustColor(hex, amt) {
     let usePound = false;
     if (hex[0] == "#") { hex = hex.slice(1); usePound = true; }
@@ -79,8 +105,7 @@ function updateColors() {
     const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
     
-    // Cabeçalho ganha profundidade com tom derivado
-    // Se o fundo for claro, escurece 10. Se for escuro, clareia 10.
+    // Calcula accent do header (mais escuro se fundo claro, mais claro se fundo escuro)
     const diff = mainText === '#111111' ? -10 : 15;
     const headerBg = adjustColor(bgColor, diff); 
     const accentSoft = accentColor + "15"; 
@@ -95,12 +120,13 @@ function updateColors() {
     root.style.setProperty('--contrast-accent', accentContrast);
 }
 
-// Eventos de Interface
+// Eventos
 accentInput.addEventListener('input', updateColors);
 bgInput.addEventListener('input', updateColors);
 layoutSelector.addEventListener('change', () => {
     document.body.className = layoutSelector.value;
     render();
+    updateColors();
 });
 
 btnToggleUI.addEventListener('click', () => {
@@ -108,10 +134,5 @@ btnToggleUI.addEventListener('click', () => {
     btnToggleUI.innerText = document.body.classList.contains('ui-hidden') 
         ? "Mostrar Interface" : "Ocultar Interface";
 });
-
-// Botão de Exportação
-document.getElementById('btn-export').onclick = () => {
-    alert("Layout e Proporções validados! Vamos para a integração final do Canvas.");
-};
 
 init();
