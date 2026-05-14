@@ -1,3 +1,8 @@
+/**
+ * APP: News Snapshot Creator Pro
+ * Lógica: Edição Full Dynamic + Máscara de Enquadramento + Persistência Total
+ */
+
 let state = null;
 
 async function init() {
@@ -5,34 +10,37 @@ async function init() {
         const response = await fetch('dados.json');
         state = await response.json();
         
-        // Garante que o estado tenha os novos campos de enquadramento
-        if(!state.noticiaPrincipal.zoom) state.noticiaPrincipal.zoom = 1;
-        if(!state.noticiaPrincipal.yPos) state.noticiaPrincipal.yPos = 0;
-        if(!state.config.header_color) state.config.header_color = "#f5f5f5";
-
         setupSidebarInputs();
         setupPersistence();
         syncSidebarWithState();
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro ao iniciar:", e);
+        console.error("Erro ao iniciar aplicação:", e);
     }
 }
 
+// Persistência de Projeto e Exportação de Imagem
 function setupPersistence() {
+    // SALVAR PROJETO (JSON)
     document.getElementById('btn-export-json').onclick = () => {
-        state.config.current_layout = document.getElementById('layout-selector').value;
-        state.config.current_bg = document.getElementById('bg-card-color').value;
-        state.config.current_accent = document.getElementById('accent-color').value;
+        // Sincroniza configurações atuais antes de salvar
+        state.config.layout = document.getElementById('layout-selector').value;
+        state.config.bg_color = document.getElementById('bg-card-color').value;
+        state.config.header_color = document.getElementById('header-color').value;
+        state.config.accent_color = document.getElementById('accent-color').value;
+        
+        // O Zoom e Y já são atualizados no oninput
+        
         const dataStr = JSON.stringify(state, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         const link = document.createElement('a');
         link.setAttribute('href', dataUri);
-        link.setAttribute('download', 'snapshot-projeto.json');
+        link.setAttribute('download', 'projeto-news-snapshot.json');
         link.click();
     };
 
+    // ABRIR PROJETO (JSON)
     const fileInput = document.getElementById('import-json-file');
     document.getElementById('btn-trigger-import').onclick = () => fileInput.click();
     fileInput.onchange = (e) => {
@@ -40,43 +48,59 @@ function setupPersistence() {
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (event) => {
-            state = JSON.parse(event.target.result);
-            syncSidebarWithState();
-            render();
-            updateColors();
+            try {
+                state = JSON.parse(event.target.result);
+                syncSidebarWithState();
+                render();
+                updateColors();
+                alert("Projeto carregado com sucesso!");
+            } catch (err) {
+                alert("Erro ao ler o arquivo JSON.");
+            }
         };
         reader.readAsText(file);
     };
 
+    // EXPORTAR PNG
     document.getElementById('btn-export-png').onclick = () => {
         const stage = document.getElementById('snapshot-stage');
         const btn = document.getElementById('btn-export-png');
         btn.innerText = "Gerando Imagem...";
         btn.disabled = true;
-        html2canvas(stage, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
+
+        html2canvas(stage, {
+            scale: 2, 
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null
+        }).then(canvas => {
             const image = canvas.toDataURL("image/png", 1.0);
             const link = document.createElement('a');
             link.setAttribute('href', image);
-            link.setAttribute('download', `snapshot-${new Date().getTime()}.png`);
+            link.setAttribute('download', `news-snapshot-${new Date().getTime()}.png`);
             link.click();
-            btn.innerText = "Baixar PNG Alta Resolução";
+            btn.innerText = "Gerar PNG Alta Resolução";
             btn.disabled = false;
         });
     };
 }
 
+// Configuração dos Inputs da Sidebar
 function setupSidebarInputs() {
-    // Layout e Cores
+    // Layout
     document.getElementById('layout-selector').onchange = (e) => {
+        state.config.layout = e.target.value;
         document.body.className = e.target.value;
         render();
         updateColors();
     };
-    document.getElementById('bg-card-color').oninput = updateColors;
-    document.getElementById('accent-color').oninput = updateColors;
-    document.getElementById('header-color').oninput = updateColors;
 
-    // Enquadramento
+    // Cores
+    document.getElementById('bg-card-color').oninput = updateColors;
+    document.getElementById('header-color').oninput = updateColors;
+    document.getElementById('accent-color').oninput = updateColors;
+    
+    // Enquadramento (Aplica no CSS e salva no State)
     document.getElementById('edit-img-zoom').oninput = (e) => {
         state.noticiaPrincipal.zoom = e.target.value;
         document.documentElement.style.setProperty('--img-zoom', e.target.value);
@@ -86,19 +110,24 @@ function setupSidebarInputs() {
         document.documentElement.style.setProperty('--img-y', e.target.value + '%');
     };
 
-    // Config e Textos
+    // Config e URL
     document.getElementById('edit-site-url').oninput = (e) => {
         state.config.site_url = e.target.value;
         document.getElementById('site-url-text').innerText = e.target.value;
     };
+
+    // Uploads
     handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
     handleImageUpload('edit-main-img', (res) => { state.noticiaPrincipal.imagem_url = res; render(); });
+    
+    // Textos Notícia Principal
     document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
     document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
     document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
     document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
     document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
 
+    // Mini Notícias
     for (let i = 0; i < 3; i++) {
         handleImageUpload(`edit-thumb-${i}`, (res) => { state.miniNoticias[i].thumb_url = res; render(); });
         document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
@@ -106,12 +135,22 @@ function setupSidebarInputs() {
     }
 }
 
+// Sincroniza Sidebar quando um JSON é aberto ou o app inicia
 function syncSidebarWithState() {
-    document.getElementById('edit-site-url').value = state.config.site_url;
+    // Configurações
+    document.getElementById('layout-selector').value = state.config.layout || "ratio-16-9";
+    document.getElementById('bg-card-color').value = state.config.bg_color || "#ffffff";
     document.getElementById('header-color').value = state.config.header_color || "#f5f5f5";
+    document.getElementById('accent-color').value = state.config.accent_color || "#b3adad";
+    document.getElementById('edit-site-url').value = state.config.site_url || "";
+    
+    // Enquadramento
     document.getElementById('edit-img-zoom').value = state.noticiaPrincipal.zoom || 1;
     document.getElementById('edit-img-y').value = state.noticiaPrincipal.yPos || 0;
-    
+    document.documentElement.style.setProperty('--img-zoom', state.noticiaPrincipal.zoom || 1);
+    document.documentElement.style.setProperty('--img-y', (state.noticiaPrincipal.yPos || 0) + '%');
+
+    // Textos
     document.getElementById('edit-main-cat').value = state.noticiaPrincipal.categoria;
     document.getElementById('edit-main-date').value = state.noticiaPrincipal.data;
     document.getElementById('edit-main-title').value = state.noticiaPrincipal.titulo;
@@ -123,9 +162,7 @@ function syncSidebarWithState() {
         document.getElementById(`edit-resumo-${i}`).value = state.miniNoticias[i].resumo;
     }
 
-    // Aplica os valores no CSS
-    document.documentElement.style.setProperty('--img-zoom', state.noticiaPrincipal.zoom || 1);
-    document.documentElement.style.setProperty('--img-y', (state.noticiaPrincipal.yPos || 0) + '%');
+    document.body.className = state.config.layout || "ratio-16-9";
 }
 
 function handleImageUpload(id, callback) {
@@ -145,13 +182,15 @@ function handleImageUpload(id, callback) {
 function render() {
     if (!state) return;
     const principal = state.noticiaPrincipal;
-    const layout = document.getElementById('layout-selector').value;
+    const layout = state.config.layout || document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
     
     const imageHTML = `
         <div class="main-image-container">
-            <img src="${principal.imagem_url}" id="main-img">
-            <div class="timestamp">${principal.data}</div>
+            <div class="img-anchor-wrapper">
+                <img src="${principal.imagem_url}" id="main-img">
+                <div class="timestamp">${principal.data}</div>
+            </div>
         </div>
     `;
 
@@ -165,17 +204,36 @@ function render() {
     `;
 
     if (layout === 'ratio-1-1') {
-        cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mini-news-grid" id="mini-news-container"></div>`;
+        cardBody.innerHTML = `
+            <div class="top-section">${imageHTML}${mainContentHTML}</div>
+            <div class="mid-separator"></div>
+            <div class="mini-news-grid" id="mini-news-container"></div>
+        `;
     } else {
-        cardBody.innerHTML = `${imageHTML}<div class="info-container">${mainContentHTML}<div class="mini-news-grid" id="mini-news-container"></div></div>`;
+        cardBody.innerHTML = `
+            ${imageHTML}
+            <div class="info-container">
+                ${mainContentHTML}
+                <div class="mini-news-grid" id="mini-news-container"></div>
+            </div>
+        `;
     }
 
     document.getElementById('logo-img').src = state.config.logo_url;
     document.getElementById('site-url-text').innerText = state.config.site_url;
+    
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
-        miniContainer.innerHTML += `<div class="mini-item"><img src="${item.thumb_url}"><div><h4>${item.titulo}</h4><p>${item.resumo}</p></div></div>`;
+        miniContainer.innerHTML += `
+            <div class="mini-item">
+                <img src="${item.thumb_url}">
+                <div class="mini-text">
+                    <h4>${item.titulo}</h4>
+                    <p>${item.resumo}</p>
+                </div>
+            </div>
+        `;
     });
 }
 
@@ -194,6 +252,8 @@ function updateColors() {
     const accentColor = document.getElementById('accent-color').value;
     
     state.config.header_color = hColor;
+    state.config.bg_color = bgColor;
+    state.config.accent_color = accentColor;
 
     const mainText = getContrastYIQ(bgColor);
     const root = document.documentElement;
