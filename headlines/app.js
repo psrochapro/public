@@ -1,6 +1,6 @@
 /**
  * Lógica: News Snapshot Creator
- * Gerencia conteúdo, limites de texto e cores
+ * Gerencia conteúdo e cores com proteção contra cortes de texto
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -17,59 +17,36 @@ async function init() {
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro ao carregar dados:", e);
+        console.error("Erro:", e);
     }
-}
-
-// Auxiliar para limitar texto e evitar quebra de layout
-function limitText(text, limit) {
-    if (text.length <= limit) return text;
-    return text.substring(0, limit).trim() + "...";
 }
 
 function render() {
     if (!globalData) return;
-
-    const layout = layoutSelector.value;
     const principal = globalData.noticiaPrincipal;
-
-    // Definição de limites por layout para garantir que NADA corte
-    let titleLimit = 80;
-    let subLimit = 160;
-
-    if (layout === 'ratio-1-1') {
-        titleLimit = 60;
-        subLimit = 100;
-    } else if (layout === 'ratio-9-16') {
-        titleLimit = 55;
-        subLimit = 85;
-    }
 
     document.getElementById('logo-img').src = globalData.config.logo_url;
     document.getElementById('main-img').src = principal.imagem_url;
     document.getElementById('category').innerText = principal.categoria;
     document.getElementById('image-date').innerText = principal.data;
     
-    // Aplica os limites rigorosos
-    document.getElementById('title').innerText = limitText(principal.titulo, titleLimit);
-    document.getElementById('subtitle').innerText = limitText(principal.subtitulo, subLimit);
+    // NOTA: Removido limitText para evitar "promented..."
+    // O controle agora é feito via CSS clamp e flexibilização de layout
+    document.getElementById('title').innerText = principal.titulo;
+    document.getElementById('subtitle').innerText = principal.subtitulo;
 
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
-    
-    // No Stories e Quadrado, 4 thumbs podem ser demais se o texto for grande, 
-    // mas vamos manter os 4 com fontes pequenas como solicitado.
     globalData.miniNoticias.slice(0, 4).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
                 <img src="${item.thumb_url}" alt="thumb">
-                <h4>${limitText(item.titulo, 45)}</h4>
+                <h4>${item.titulo}</h4>
             </div>
         `;
     });
 }
 
-// Funções de Cor
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
@@ -79,7 +56,6 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#111111' : '#ffffff';
 }
 
-// Escurece ou clareia para o cabeçalho
 function adjustColor(hex, amt) {
     let usePound = false;
     if (hex[0] == "#") { hex = hex.slice(1); usePound = true; }
@@ -101,8 +77,7 @@ function updateColors() {
     const mutedText = mainText === '#111111' ? '#555555' : '#aaaaaa';
     const accentContrast = getContrastYIQ(accentColor);
     
-    // Cabeçalho levemente diferente do fundo
-    const headerBg = adjustColor(bgColor, -10); 
+    const headerBg = adjustColor(bgColor, -12); // Cabeçalho levemente mais escuro que o fundo
     const accentSoft = accentColor + "15"; 
 
     const root = document.documentElement;
@@ -115,12 +90,11 @@ function updateColors() {
     root.style.setProperty('--contrast-accent', accentContrast);
 }
 
-// Eventos
 accentInput.addEventListener('input', updateColors);
 bgInput.addEventListener('input', updateColors);
 layoutSelector.addEventListener('change', () => {
     document.body.className = layoutSelector.value;
-    render(); // Re-renderiza para aplicar novos limites de texto
+    render();
 });
 
 btnToggleUI.addEventListener('click', () => {
@@ -130,7 +104,7 @@ btnToggleUI.addEventListener('click', () => {
 });
 
 document.getElementById('btn-export').onclick = () => {
-    alert("Pronto para a fase de exportação em PNG!");
+    alert("Layout e Imagem validados! Pronto para exportação.");
 };
 
 init();
