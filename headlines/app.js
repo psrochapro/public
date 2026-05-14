@@ -1,40 +1,69 @@
 /**
  * Lógica: News Snapshot Creator
- * Gerencia conteúdo, layouts e cores dinâmicas
+ * Gerencia conteúdo, limites de texto e cores
  */
 
-const stage = document.getElementById('snapshot-stage');
 const accentInput = document.getElementById('accent-color');
 const bgInput = document.getElementById('bg-card-color');
 const layoutSelector = document.getElementById('layout-selector');
 const btnToggleUI = document.getElementById('btn-toggle-ui');
 
+let globalData = null;
+
 async function init() {
     try {
         const response = await fetch('dados.json');
-        const data = await response.json();
-        render(data);
-        updateColors(); // Aplica cores iniciais
+        globalData = await response.json();
+        render();
+        updateColors();
     } catch (e) {
         console.error("Erro ao carregar dados:", e);
     }
 }
 
-function render(data) {
-    document.getElementById('logo-img').src = data.config.logo_url;
-    document.getElementById('main-img').src = data.noticiaPrincipal.imagem_url;
-    document.getElementById('category').innerText = data.noticiaPrincipal.categoria;
-    document.getElementById('title').innerText = data.noticiaPrincipal.titulo;
-    document.getElementById('subtitle').innerText = data.noticiaPrincipal.subtitulo;
-    document.getElementById('image-date').innerText = data.noticiaPrincipal.data;
+// Auxiliar para limitar texto e evitar quebra de layout
+function limitText(text, limit) {
+    if (text.length <= limit) return text;
+    return text.substring(0, limit).trim() + "...";
+}
+
+function render() {
+    if (!globalData) return;
+
+    const layout = layoutSelector.value;
+    const principal = globalData.noticiaPrincipal;
+
+    // Definição de limites por layout para garantir que NADA corte
+    let titleLimit = 80;
+    let subLimit = 160;
+
+    if (layout === 'ratio-1-1') {
+        titleLimit = 60;
+        subLimit = 100;
+    } else if (layout === 'ratio-9-16') {
+        titleLimit = 55;
+        subLimit = 85;
+    }
+
+    document.getElementById('logo-img').src = globalData.config.logo_url;
+    document.getElementById('main-img').src = principal.imagem_url;
+    document.getElementById('category').innerText = principal.categoria;
+    document.getElementById('image-date').innerText = principal.data;
+    
+    // Aplica os limites rigorosos
+    document.getElementById('title').innerText = limitText(principal.titulo, titleLimit);
+    document.getElementById('subtitle').innerText = limitText(principal.subtitulo, subLimit);
 
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
-    data.miniNoticias.slice(0, 4).forEach(item => {
+    
+    // No Stories e Quadrado, 4 thumbs podem ser demais se o texto for grande, 
+    // mas vamos manter os 4 com fontes pequenas como solicitado.
+    globalData.miniNoticias.slice(0, 4).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
                 <img src="${item.thumb_url}" alt="thumb">
-                <h4>${item.titulo}</h4>
+                <h4>${limitText(item.titulo, 45)}</h4>
             </div>
         `;
     });
@@ -50,29 +79,31 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#111111' : '#ffffff';
 }
 
-function darkenColor(hex, percent) {
-    let num = parseInt(hex.replace("#",""),16),
-    amt = Math.round(2.55 * percent),
-    R = (num >> 16) - amt,
-    G = (num >> 8 & 0x00FF) - amt,
-    B = (num & 0x0000FF) - amt;
-    return "#" + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
+// Escurece ou clareia para o cabeçalho
+function adjustColor(hex, amt) {
+    let usePound = false;
+    if (hex[0] == "#") { hex = hex.slice(1); usePound = true; }
+    let num = parseInt(hex, 16);
+    let r = (num >> 16) + amt;
+    if (r > 255) r = 255; else if (r < 0) r = 0;
+    let b = ((num >> 8) & 0x00FF) + amt;
+    if (b > 255) b = 255; else if (b < 0) b = 0;
+    let g = (num & 0x0000FF) + amt;
+    if (g > 255) g = 255; else if (g < 0) g = 0;
+    return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
 }
 
 function updateColors() {
     const bgColor = bgInput.value;
     const accentColor = accentInput.value;
     
-    // Contraste para textos gerais baseados no fundo do card
     const mainText = getContrastYIQ(bgColor);
-    const mutedText = mainText === '#111111' ? '#555555' : '#cccccc';
-    
-    // Contraste para elementos de destaque (ex: badge AO VIVO)
+    const mutedText = mainText === '#111111' ? '#555555' : '#aaaaaa';
     const accentContrast = getContrastYIQ(accentColor);
     
-    // Tons derivados
-    const headerBg = darkenColor(bgColor, 5); // 5% mais escuro para o cabeçalho
-    const accentSoft = accentColor + "15"; // 15 em hexa para opacidade ~8%
+    // Cabeçalho levemente diferente do fundo
+    const headerBg = adjustColor(bgColor, -10); 
+    const accentSoft = accentColor + "15"; 
 
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
@@ -87,9 +118,9 @@ function updateColors() {
 // Eventos
 accentInput.addEventListener('input', updateColors);
 bgInput.addEventListener('input', updateColors);
-
-layoutSelector.addEventListener('change', (e) => {
-    document.body.className = e.target.value;
+layoutSelector.addEventListener('change', () => {
+    document.body.className = layoutSelector.value;
+    render(); // Re-renderiza para aplicar novos limites de texto
 });
 
 btnToggleUI.addEventListener('click', () => {
@@ -99,7 +130,7 @@ btnToggleUI.addEventListener('click', () => {
 });
 
 document.getElementById('btn-export').onclick = () => {
-    alert("Cores e Layout validados! Pronto para exportação.");
+    alert("Pronto para a fase de exportação em PNG!");
 };
 
 init();
