@@ -14,6 +14,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Clock** | Trio Relógio, Timer, Chronômetro | [Acessar App](https://psrochapro.github.io/public/clock/) |
 | **Charts** | Gerador de Gráficos | [Acessar App](https://psrochapro.github.io/public/charts/) |
 | **Citações** | Gerador de Citações | [Acessar App](https://psrochapro.github.io/public/citacoes/) |
+| **Headlines** | Gerador de Headlines | [Acessar App](https://psrochapro.github.io/public/headlines/) |
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.

@@ -2,88 +2,65 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Notícias Dinâmico</title>
+    <title>News Snapshot Generator</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Fontes do Projeto -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
-<body class="admin-visible">
+<body class="ratio-16-9"> <!-- Classe dinâmica: ratio-1-1, ratio-16-9, ratio-9-16 -->
 
-    <!-- SIDEBAR DE CUSTOMIZAÇÃO (Igual ao CitacaoPro) -->
-    <aside class="customizer-sidebar" id="sidebar">
-        <h2>Customização</h2>
+    <aside class="sidebar-editor">
+        <h2>Snapshot Editor</h2>
         
         <div class="control-group">
-            <label>Cor de Destaque</label>
-            <input type="color" id="input-accent-color" value="#003366">
-        </div>
-
-        <div class="control-group">
-            <label>Modo de Visualização</label>
-            <button id="btn-toggle-ui">Ocultar Painel (Ver Notícia)</button>
-        </div>
-
-        <div class="control-group">
-            <label>Exportar Imagem</label>
-            <select id="export-format">
-                <option value="1:1">Quadrado (1:1)</option>
-                <option value="16:9">Wide (16:9)</option>
-                <option value="9:16">Stories (9:16)</option>
+            <label>Formato de Saída</label>
+            <select id="layout-selector">
+                <option value="ratio-16-9">Wide (16:9)</option>
+                <option value="ratio-1-1">Quadrado (1:1)</option>
+                <option value="ratio-9-16">Stories (9:16)</option>
             </select>
-            <button id="btn-export" class="btn-primary">Gerar PNG</button>
         </div>
+
+        <div class="control-group">
+            <label>Cor de Destaque</label>
+            <input type="color" id="accent-color" value="#cc0000">
+        </div>
+
+        <button id="btn-toggle-ui">Ver Apenas Arte</button>
+        <button id="btn-export" class="btn-primary">Baixar PNG</button>
     </aside>
 
-    <!-- ÁREA DO PORTAL -->
-    <main class="portal-wrapper">
-        <header class="portal-header">
-            <div class="container">
-                <img src="" alt="Logo" id="site-logo" class="logo">
-                <nav>
-                    <span>Destaques</span>
-                    <span>Política</span>
-                    <span>Economia</span>
-                    <span>Mundo</span>
-                </nav>
-            </div>
-        </header>
+    <main class="preview-container">
+        <!-- O STAGE é o que vira foto. Tudo dentro dele deve ser conciso -->
+        <div id="snapshot-stage">
+            
+            <header class="card-header">
+                <img src="" id="logo-img" class="logo">
+                <div class="live-badge"><span>●</span> LIVE</div>
+            </header>
 
-        <section class="portal-grid container">
-            <!-- COLUNA PRINCIPAL (70%) -->
-            <article class="main-content" id="main-news-area">
-                <div class="hero-image-container">
-                    <img src="" id="main-img" alt="Notícia Principal">
-                    <div class="meta-info-overlay">
-                        <span id="main-date"></span>
+            <div class="card-body">
+                <div class="main-image-area">
+                    <img src="" id="main-img">
+                    <div class="image-footer" id="image-date"></div>
+                </div>
+
+                <div class="content-area">
+                    <span class="category-badge" id="category"></span>
+                    <h1 id="title"></h1>
+                    <p id="subtitle"></p>
+                    
+                    <div class="sidebar-mini-news" id="mini-news">
+                        <!-- Thumbs aparecem aqui apenas em alguns layouts -->
                     </div>
                 </div>
-                
-                <span class="badge" id="main-category"></span>
-                <h1 id="main-title">Carregando...</h1>
-                <p class="subtitle" id="main-subtitle"></p>
-                
-                <div class="reading-time">Tempo de leitura: <span id="read-time">0</span> min</div>
-                
-                <div class="content-body" id="main-body">
-                    <!-- Texto injetado pelo JS -->
-                </div>
-                
-                <button class="btn-read-more">LEIA MAIS</button>
-            </article>
+            </div>
 
-            <!-- BARRA LATERAL (30%) -->
-            <aside class="sidebar-news">
-                <h3>OUTRAS MINI NOTÍCIAS</h3>
-                <div id="mini-news-container">
-                    <!-- Mini notícias injetadas pelo JS -->
-                </div>
-            </aside>
-        </section>
+            <footer class="card-footer">
+                <div class="footer-line"></div>
+                <span id="site-url">WWW.NOTICIASBR.COM.BR</span>
+            </footer>
+        </div>
     </main>
-
-    <!-- CANVAS OCULTO PARA EXPORTAÇÃO -->
-    <canvas id="export-canvas" style="display:none;"></canvas>
 
     <script src="app.js"></script>
 </body>
