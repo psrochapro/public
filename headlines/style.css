@@ -24,7 +24,7 @@ body {
 input[type="color"], select, button { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #222; color: white; cursor: pointer; }
 .btn-primary { background: #2563eb; border: none; font-weight: bold; margin-top: auto; padding: 15px; }
 
-/* PREVIEW CONTAINER */
+/* PREVIEW */
 .preview-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
 
 /* STAGE */
@@ -46,12 +46,15 @@ input[type="color"], select, button { width: 100%; padding: 10px; border-radius:
 /* CORPO DINÂMICO */
 .card-body { flex: 1; display: flex; padding: 3% 5%; gap: 20px; overflow: hidden; min-height: 0; }
 
-/* IMAGEM */
+/* IMAGEM (MANTENDO PROPORÇÃO REAL) */
 .main-image-container { 
-    background: rgba(0,0,0,0.03); border-radius: 8px; overflow: hidden; position: relative;
+    background: rgba(0,0,0,0.05); /* Fundo sutil para o "vazio" */
+    border-radius: 8px; overflow: hidden; position: relative;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.main-image-container img { width: 100%; height: 100%; object-fit: cover; } 
+/* object-fit: contain garante que a imagem nunca seja cortada */
+.main-image-container img { width: 100%; height: 100%; object-fit: contain; } 
+
 .timestamp { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; font-size: 0.55rem; padding: 3px 7px; border-radius: 4px; }
 
 /* TEXTOS */
@@ -73,7 +76,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .mini-item h4 { font-size: 0.7rem; line-height: 1.1; font-weight: 800; margin-bottom: 2px; }
 .mini-item p { font-size: 0.6rem; color: var(--text-muted); line-height: 1.1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
 
-/* COMPORTAMENTOS ESPECÍFICOS */
+/* AJUSTES POR FORMATO */
 
 /* 16:9 WIDE */
 .ratio-16-9 .main-image-container { flex: 1.2; }
