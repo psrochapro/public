@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Snapshot Generator</title>
+    <title>News Snapshot Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="ratio-16-9">
 
@@ -22,7 +22,7 @@
         </div>
 
         <div class="control-group">
-            <label>Cor de Destaque</label>
+            <label>Cor de Identidade</label>
             <input type="color" id="accent-color" value="#cc0000">
         </div>
 
@@ -30,38 +30,43 @@
             <button id="btn-toggle-ui">Ocultar Interface</button>
         </div>
 
-        <button id="btn-export" class="btn-primary">Baixar PNG Alta Resolução</button>
+        <button id="btn-export" class="btn-primary">Gerar PNG Alta Resolução</button>
     </aside>
 
     <main class="preview-container">
         <div id="snapshot-stage">
             
+            <!-- Faixa de Identidade Superior -->
             <header class="card-header">
                 <img src="" id="logo-img" class="logo">
-                <div class="live-badge"><span>●</span> AO VIVO</div>
+                <div class="live-badge">AO VIVO</div>
             </header>
 
             <div class="card-body">
-                <div class="main-image-area">
-                    <img src="" id="main-img" alt="Notícia">
-                    <div class="image-footer" id="image-date"></div>
+                <!-- Área da Imagem (Proporção Preservada) -->
+                <div class="main-image-container">
+                    <img src="" id="main-img" alt="Principal">
+                    <div class="timestamp" id="image-date"></div>
                 </div>
 
-                <div class="content-area">
-                    <div class="text-wrap">
-                        <span class="category-badge" id="category"></span>
-                        <h1 id="title">Carregando manchete...</h1>
-                        <p id="subtitle"></p>
+                <!-- Bloco de Texto -->
+                <div class="info-container">
+                    <div class="news-text">
+                        <span class="category-tag" id="category"></span>
+                        <h1 id="title">Manchete da Notícia</h1>
+                        <p id="subtitle">O resumo da notícia aparecerá aqui garantindo legibilidade.</p>
                     </div>
-                    
-                    <div class="sidebar-mini-news" id="mini-news-container">
-                        <!-- Thumbs injetadas pelo JS -->
+
+                    <!-- Grid de 4 Thumbs -->
+                    <div class="mini-news-grid" id="mini-news-container">
+                        <!-- Injetado pelo JS -->
                     </div>
                 </div>
             </div>
 
+            <!-- Rodapé Institucional -->
             <footer class="card-footer">
-                <div class="footer-line"></div>
+                <div class="accent-bar"></div>
                 <span id="site-url">WWW.NOTICIASBR.COM.BR</span>
             </footer>
         </div>

@@ -1,76 +1,89 @@
 /**
- * APP: News Snapshot Generator
- * Lógica: Carregamento dinâmico e controle de interface
+ * Lógica do Gerador News Snapshot
+ * Foco: Sincronização de conteúdo e Customização YIQ
  */
 
 const stage = document.getElementById('snapshot-stage');
-const layoutSelector = document.getElementById('layout-selector');
 const accentInput = document.getElementById('accent-color');
+const layoutSelector = document.getElementById('layout-selector');
 const btnToggleUI = document.getElementById('btn-toggle-ui');
 
 async function init() {
     try {
         const response = await fetch('dados.json');
-        if (!response.ok) throw new Error('Falha ao carregar dados.json');
         const data = await response.json();
         render(data);
-    } catch (error) {
-        console.error(error);
-        document.getElementById('title').innerText = "Erro ao carregar dados.json";
+    } catch (e) {
+        console.error("Erro ao carregar dados:", e);
     }
 }
 
 function render(data) {
-    // Dados Globais
+    // Logo e Imagem Principal
     document.getElementById('logo-img').src = data.config.logo_url;
+    document.getElementById('main-img').src = data.noticiaPrincipal.imagem_url;
     
-    // Notícia Principal
-    const principal = data.noticiaPrincipal;
-    document.getElementById('main-img').src = principal.imagem_url;
-    document.getElementById('title').innerText = principal.titulo;
-    document.getElementById('subtitle').innerText = principal.subtitulo;
-    document.getElementById('category').innerText = principal.categoria;
-    document.getElementById('image-date').innerText = principal.data;
+    // Textos Principais (com limites de caracteres por segurança)
+    document.getElementById('category').innerText = data.noticiaPrincipal.categoria;
+    document.getElementById('title').innerText = truncateText(data.noticiaPrincipal.titulo, 80);
+    document.getElementById('subtitle').innerText = truncateText(data.noticiaPrincipal.subtitulo, 220);
+    document.getElementById('image-date').innerText = data.noticiaPrincipal.data;
 
-    // Mini Notícias (Apenas 2 para garantir que caiba no card fixo)
+    // Mini Notícias (Garante as 4)
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     
-    data.miniNoticias.slice(0, 2).forEach(item => {
+    data.miniNoticias.slice(0, 4).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
                 <img src="${item.thumb_url}" alt="thumb">
-                <div class="mini-text">
-                    <h4>${item.titulo}</h4>
-                </div>
+                <h4>${item.titulo}</h4>
             </div>
         `;
     });
 }
 
-// Troca de Proporção (Layout)
-layoutSelector.addEventListener('change', (e) => {
-    document.body.classList.remove('ratio-16-9', 'ratio-1-1', 'ratio-9-16');
-    document.body.classList.add(e.target.value);
-});
+// Auxiliar: Corta texto para não quebrar layout
+function truncateText(text, limit) {
+    return text.length > limit ? text.substring(0, limit) + "..." : text;
+}
 
-// Alteração da Cor de Destaque
+// Lógica de Contraste YIQ (Igual ao CitacaoPro)
+function getContrastYIQ(hexcolor){
+    hexcolor = hexcolor.replace("#", "");
+    const r = parseInt(hexcolor.substr(0,2),16);
+    const g = parseInt(hexcolor.substr(2,2),16);
+    const b = parseInt(hexcolor.substr(4,2),16);
+    const yiq = ((r*299)+(g*587)+(b*114))/1000;
+    return (yiq >= 128) ? '#000000' : '#ffffff';
+}
+
+// Eventos de Customização
 accentInput.addEventListener('input', (e) => {
-    document.documentElement.style.setProperty('--accent', e.target.value);
+    const color = e.target.value;
+    const contrast = getContrastYIQ(color);
+    
+    document.documentElement.style.setProperty('--accent', color);
+    document.documentElement.style.setProperty('--contrast-text', contrast);
+    
+    // Gera um fundo suave baseado na cor de destaque (Alpha 10%)
+    const softColor = color + "1a"; 
+    document.documentElement.style.setProperty('--accent-soft', softColor);
 });
 
-// Mostrar/Ocultar Interface Editor
+layoutSelector.addEventListener('change', (e) => {
+    document.body.className = e.target.value;
+});
+
 btnToggleUI.addEventListener('click', () => {
     document.body.classList.toggle('ui-hidden');
     btnToggleUI.innerText = document.body.classList.contains('ui-hidden') 
-        ? "Mostrar Interface" 
-        : "Ocultar Interface";
+        ? "Mostrar Interface" : "Ocultar Interface";
 });
 
-// Exportação (Placeholder para a próxima fase)
+// Exportação (Em breve integrado com alta definição)
 document.getElementById('btn-export').onclick = () => {
-    alert("Pronto para integrar o motor de renderização do CitacaoPro!");
+    alert("Layout Validado! Próximo passo: Exportação em alta resolução.");
 };
 
-// Iniciar
 init();
