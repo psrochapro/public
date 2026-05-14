@@ -1,6 +1,6 @@
 /**
- * Lógica: News Snapshot Creator
- * Gerencia conteúdo e cores com proteção contra cortes de texto
+ * Lógica: News Snapshot Creator Pro
+ * Gerencia conteúdo e cores com proteção de layout
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -17,10 +17,11 @@ async function init() {
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro:", e);
+        console.error("Erro ao carregar dados:", e);
     }
 }
 
+// Renderização Principal
 function render() {
     if (!globalData) return;
     const principal = globalData.noticiaPrincipal;
@@ -30,8 +31,7 @@ function render() {
     document.getElementById('category').innerText = principal.categoria;
     document.getElementById('image-date').innerText = principal.data;
     
-    // NOTA: Removido limitText para evitar "promented..."
-    // O controle agora é feito via CSS clamp e flexibilização de layout
+    // Injeção de textos sem cortes bruscos via JS (CSS cuida do clamp)
     document.getElementById('title').innerText = principal.titulo;
     document.getElementById('subtitle').innerText = principal.subtitulo;
 
@@ -47,6 +47,7 @@ function render() {
     });
 }
 
+// Sistema de Cores e Contraste
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
@@ -56,6 +57,7 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#111111' : '#ffffff';
 }
 
+// Gera um tom baseado na cor base
 function adjustColor(hex, amt) {
     let usePound = false;
     if (hex[0] == "#") { hex = hex.slice(1); usePound = true; }
@@ -74,10 +76,13 @@ function updateColors() {
     const accentColor = accentInput.value;
     
     const mainText = getContrastYIQ(bgColor);
-    const mutedText = mainText === '#111111' ? '#555555' : '#aaaaaa';
+    const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
     
-    const headerBg = adjustColor(bgColor, -12); // Cabeçalho levemente mais escuro que o fundo
+    // Cabeçalho ganha profundidade com tom derivado
+    // Se o fundo for claro, escurece 10. Se for escuro, clareia 10.
+    const diff = mainText === '#111111' ? -10 : 15;
+    const headerBg = adjustColor(bgColor, diff); 
     const accentSoft = accentColor + "15"; 
 
     const root = document.documentElement;
@@ -90,6 +95,7 @@ function updateColors() {
     root.style.setProperty('--contrast-accent', accentContrast);
 }
 
+// Eventos de Interface
 accentInput.addEventListener('input', updateColors);
 bgInput.addEventListener('input', updateColors);
 layoutSelector.addEventListener('change', () => {
@@ -103,8 +109,9 @@ btnToggleUI.addEventListener('click', () => {
         ? "Mostrar Interface" : "Ocultar Interface";
 });
 
+// Botão de Exportação
 document.getElementById('btn-export').onclick = () => {
-    alert("Layout e Imagem validados! Pronto para exportação.");
+    alert("Layout e Proporções validados! Vamos para a integração final do Canvas.");
 };
 
 init();

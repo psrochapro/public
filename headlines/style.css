@@ -15,7 +15,7 @@ body {
     background: #0a0a0a; overflow: hidden; color: var(--text-color);
 }
 
-/* SIDEBAR */
+/* EDITOR SIDEBAR */
 .sidebar-editor { 
     width: 300px; background: #151515; padding: 25px; color: white; 
     display: flex; flex-direction: column; gap: 15px; border-right: 1px solid #333;
@@ -26,7 +26,7 @@ body.ui-hidden .sidebar-editor { margin-left: -300px; }
 input[type="color"], select, button { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #222; color: white; cursor: pointer; }
 .btn-primary { background: #2563eb; border: none; font-weight: bold; margin-top: auto; padding: 15px; }
 
-/* PREVIEW */
+/* PREVIEW AREA */
 .preview-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
 
 /* STAGE */
@@ -42,61 +42,64 @@ input[type="color"], select, button { width: 100%; padding: 10px; border-radius:
 
 /* HEADER */
 .card-header { 
-    padding: 2% 5%; display: flex; justify-content: space-between; align-items: center; 
-    background: var(--bg-header); flex-shrink: 0;
+    padding: 1.5% 4%; display: flex; justify-content: space-between; align-items: center; 
+    background: var(--bg-header); border-bottom: 1px solid rgba(0,0,0,0.05); flex-shrink: 0;
 }
-.logo { height: clamp(20px, 3.5vh, 32px); object-fit: contain; }
-.live-badge { background: var(--accent); color: var(--contrast-accent); font-weight: 900; font-size: 0.65rem; padding: 4px 10px; border-radius: 4px; }
+.logo { height: clamp(18px, 3vh, 28px); object-fit: contain; }
+.live-badge { background: var(--accent); color: var(--contrast-accent); font-weight: 900; font-size: 0.6rem; padding: 4px 10px; border-radius: 4px; }
 
-/* BODY */
-.card-body { flex: 1; display: flex; padding: 3% 5%; gap: 20px; overflow: hidden; }
+/* CORPO PRINCIPAL */
+.card-body { flex: 1; display: flex; padding: 2.5% 4%; gap: 20px; overflow: hidden; }
 
-/* IMAGEM (CORREÇÃO DE DISTORÇÃO) */
+/* IMAGEM */
 .main-image-container { 
-    background: #333; border-radius: 10px; overflow: hidden; position: relative;
-    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.03); border-radius: 8px; overflow: hidden; position: relative;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-/* object-fit: cover impede a distorção */
-.main-image-container img { width: 100%; height: 100%; object-fit: cover; }
+.main-image-container img { width: 100%; height: 100%; object-fit: cover; } /* SEM DISTORÇÃO */
 .timestamp { 
     position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8);
-    color: white; font-size: 0.6rem; padding: 5px 10px; border-radius: 4px; font-weight: bold;
+    color: white; font-size: 0.6rem; padding: 4px 8px; border-radius: 4px;
 }
 
-/* INFO */
-.info-container { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; }
-.category-tag { color: var(--accent); font-weight: 900; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; }
-h1 { font-size: clamp(1.1rem, 3.2vh, 2.2rem); font-weight: 900; line-height: 1.1; margin-bottom: 10px; }
-#subtitle { color: var(--text-muted); font-size: clamp(0.8rem, 1.7vh, 1rem); line-height: 1.4; margin-bottom: 15px; }
+/* INFO CONTAINER */
+.info-container { flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+.category-tag { color: var(--accent); font-weight: 900; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; }
+h1 { font-size: clamp(1.1rem, 3.2vh, 1.9rem); font-weight: 900; line-height: 1.1; margin-bottom: 8px; }
+#subtitle { color: var(--text-muted); font-size: clamp(0.75rem, 1.6vh, 0.95rem); line-height: 1.3; }
 
-/* MINI NEWS */
+/* MINI NEWS GRID */
 .mini-news-grid { 
-    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    padding: 12px; background: var(--accent-soft); border-radius: 10px; flex-shrink: 0;
+    display: grid; gap: 10px; padding: 12px; 
+    background: var(--accent-soft); border-radius: 8px; flex-shrink: 0;
 }
 .mini-item { display: flex; gap: 10px; align-items: center; }
-.mini-item img { width: clamp(45px, 6vh, 60px); height: clamp(45px, 6vh, 60px); object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+.mini-item img { width: 45px; height: 45px; object-fit: cover; border-radius: 5px; flex-shrink: 0; }
 .mini-item h4 { 
     font-size: 0.65rem; line-height: 1.2; font-weight: 700; 
     display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; 
 }
 
-/* ADAPTAÇÕES DE LAYOUT */
+/* REGRAS ESPECÍFICAS DE POSICIONAMENTO */
 
-/* 16:9 */
-.ratio-16-9 .main-image-container { flex: 1.6; }
+/* WIDE (16:9) - Imagem Reduzida + Lista Única */
+.ratio-16-9 .main-image-container { flex: 1.1; }
+.ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; }
 
-/* 1:1 - Imagem no topo para dar largura ao texto e evitar cortes precoces */
-.ratio-1-1 .card-body { flex-direction: column; }
-.ratio-1-1 .main-image-container { height: 42%; width: 100%; flex: none; }
+/* QUADRADO (1:1) - Split Lado a Lado Total */
+.ratio-1-1 .card-body { flex-direction: row; align-items: stretch; }
+.ratio-1-1 .main-image-container { width: 45%; height: 100%; flex: none; }
+.ratio-1-1 .info-container { width: 55%; padding-left: 5px; }
+.ratio-1-1 .mini-news-grid { grid-template-columns: 1fr; }
+.ratio-1-1 h1 { font-size: clamp(1.1rem, 3vh, 1.6rem); }
 
-/* 9:16 */
+/* STORIES (9:16) - Vertical Stack */
 .ratio-9-16 .card-body { flex-direction: column; }
 .ratio-9-16 .main-image-container { height: 35%; width: 100%; flex: none; }
 .ratio-9-16 .mini-news-grid { grid-template-columns: 1fr; }
 .ratio-9-16 h1 { font-size: 1.5rem; }
 
 /* FOOTER */
-.card-footer { padding: 0 5% 4% 5%; text-align: center; flex-shrink: 0; }
-.accent-bar { height: 6px; background: var(--accent); margin-bottom: 10px; border-radius: 3px; }
+.card-footer { padding: 0 4% 2.5% 4%; text-align: center; flex-shrink: 0; }
+.accent-bar { height: 5px; background: var(--accent); margin-bottom: 8px; border-radius: 2px; }
 #site-url { font-size: 0.6rem; letter-spacing: 4px; font-weight: 900; opacity: 0.3; }
