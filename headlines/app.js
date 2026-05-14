@@ -4,6 +4,10 @@ async function init() {
     try {
         const response = await fetch('dados.json');
         state = await response.json();
+        
+        if(!state.noticiaPrincipal.zoom) state.noticiaPrincipal.zoom = 1;
+        if(!state.noticiaPrincipal.yPos) state.noticiaPrincipal.yPos = 0;
+
         setupSidebarInputs();
         setupPersistence();
         syncSidebarWithState();
@@ -141,11 +145,13 @@ function render() {
     const cardBody = document.querySelector('.card-body');
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
+    
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mid-separator"></div><div class="mini-news-grid" id="mini-news-container"></div>`;
     } else {
         cardBody.innerHTML = `${imageHTML}<div class="info-container">${mainContentHTML}<div class="mini-news-grid" id="mini-news-container"></div></div>`;
     }
+    
     document.getElementById('logo-img').src = state.config.logo_url;
     document.getElementById('site-url-text').innerText = state.config.site_url;
     const miniContainer = document.getElementById('mini-news-container');
@@ -164,24 +170,14 @@ function getContrastYIQ(hexcolor){
     return (yiq >= 128) ? '#111111' : '#ffffff';
 }
 
-function adjustColor(hex, amt) {
-    let usePound = false; if (hex[0] == "#") { hex = hex.slice(1); usePound = true; }
-    let num = parseInt(hex, 16);
-    let r = (num >> 16) + amt; if (r > 255) r = 255; else if (r < 0) r = 0;
-    let b = ((num >> 8) & 0x00FF) + amt; if (b > 255) b = 255; else if (b < 0) b = 0;
-    let g = (num & 0x0000FF) + amt; if (g > 255) g = 255; else if (g < 0) g = 0;
-    return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
-}
-
 function updateColors() {
     const bgColor = document.getElementById('bg-card-color').value;
     const hColor = document.getElementById('header-color').value;
     const accentColor = document.getElementById('accent-color').value;
     const mainText = getContrastYIQ(bgColor);
-    const headerBg = hColor; 
-    const root = document.documentElement;
+    root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
-    root.style.setProperty('--bg-header', headerBg);
+    root.style.setProperty('--bg-header', hColor);
     root.style.setProperty('--accent', accentColor);
     root.style.setProperty('--accent-soft', accentColor + "40");
     root.style.setProperty('--text-color', mainText);
