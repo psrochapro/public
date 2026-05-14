@@ -140,3 +140,11 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .card-footer { padding: 0 5% 2.5% 5%; text-align: center; flex-shrink: 0; }
 .accent-bar { height: 5px; background: var(--accent); margin-bottom: 8px; border-radius: 2px; }
 #site-url-text { font-size: 0.55rem; letter-spacing: 4px; font-weight: 900; opacity: 0.3; }
+
+/* Remove o limite de linhas no layout Stories */
+.ratio-9-16 .mini-item p { 
+    display: block; 
+    overflow: visible; 
+    -webkit-line-clamp: unset; 
+    line-clamp: unset;
+}
