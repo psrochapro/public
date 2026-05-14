@@ -1,6 +1,6 @@
 /**
  * APP: News Snapshot Creator Pro
- * Lógica de Edição Live + Persistência JSON + Exportação PNG
+ * Lógica de Edição Live + Injeção de Linha Divisória
  */
 
 let state = null;
@@ -20,14 +20,11 @@ async function init() {
     }
 }
 
-// Persistência de Projeto e Exportação de Imagem
 function setupPersistence() {
-    // SALVAR PROJETO (JSON)
     document.getElementById('btn-export-json').onclick = () => {
         state.config.current_layout = document.getElementById('layout-selector').value;
         state.config.current_bg = document.getElementById('bg-card-color').value;
         state.config.current_accent = document.getElementById('accent-color').value;
-        
         const dataStr = JSON.stringify(state, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         const link = document.createElement('a');
@@ -36,7 +33,6 @@ function setupPersistence() {
         link.click();
     };
 
-    // ABRIR PROJETO (JSON)
     const fileInput = document.getElementById('import-json-file');
     document.getElementById('btn-trigger-import').onclick = () => fileInput.click();
     fileInput.onchange = (e) => {
@@ -56,7 +52,6 @@ function setupPersistence() {
         reader.readAsText(file);
     };
 
-    // EXPORTAR PNG ALTA RESOLUÇÃO
     document.getElementById('btn-export-png').onclick = () => {
         const stage = document.getElementById('snapshot-stage');
         const btn = document.getElementById('btn-export-png');
@@ -80,7 +75,6 @@ function setupPersistence() {
     };
 }
 
-// Configuração dos Inputs da Sidebar
 function setupSidebarInputs() {
     document.getElementById('layout-selector').onchange = (e) => {
         document.body.className = e.target.value;
@@ -89,21 +83,17 @@ function setupSidebarInputs() {
     };
     document.getElementById('bg-card-color').oninput = updateColors;
     document.getElementById('accent-color').oninput = updateColors;
-    
     document.getElementById('edit-site-url').oninput = (e) => {
         state.config.site_url = e.target.value;
         document.getElementById('site-url-text').innerText = e.target.value;
     };
-
     handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
     handleImageUpload('edit-main-img', (res) => { state.noticiaPrincipal.imagem_url = res; render(); });
-    
     document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
     document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
     document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
     document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
     document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
-
     for (let i = 0; i < 3; i++) {
         handleImageUpload(`edit-thumb-${i}`, (res) => { state.miniNoticias[i].thumb_url = res; render(); });
         document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
@@ -162,12 +152,16 @@ function render() {
         </div>
     `;
 
+    // Linha divisória injetada entre seções
+    const separatorHTML = `<div class="mid-separator"></div>`;
+
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
                 ${imageHTML}
                 ${mainContentHTML}
             </div>
+            ${separatorHTML}
             <div class="mini-news-grid" id="mini-news-container"></div>
         `;
     } else {
@@ -175,6 +169,7 @@ function render() {
             ${imageHTML}
             <div class="info-container">
                 ${mainContentHTML}
+                ${separatorHTML}
                 <div class="mini-news-grid" id="mini-news-container"></div>
             </div>
         `;
