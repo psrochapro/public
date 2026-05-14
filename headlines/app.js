@@ -1,6 +1,6 @@
 /**
  * APP: News Snapshot Creator Pro
- * Lógica de injeção dinâmica com sistema de ancoragem de data.
+ * Lógica de injeção dinâmica e sistema de cores.
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -26,7 +26,6 @@ function render() {
     const layout = layoutSelector.value;
     const cardBody = document.querySelector('.card-body');
     
-    // Wrapper de Imagem que colapsa no tamanho real da foto
     const imageHTML = `
         <div class="main-image-container">
             <div class="img-anchor-wrapper">
@@ -45,7 +44,6 @@ function render() {
         </div>
     `;
 
-    // Injeção de estrutura dependente do formato escolhido
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
@@ -64,11 +62,9 @@ function render() {
         `;
     }
 
-    // Logo e URL
     document.getElementById('logo-img').src = globalData.config.logo_url;
     document.getElementById('site-url-text').innerText = globalData.config.site_url;
     
-    // Injeção das 3 mini notícias com resumo
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     globalData.miniNoticias.slice(0, 3).forEach(item => {
@@ -114,7 +110,7 @@ function updateColors() {
     const accentContrast = getContrastYIQ(accentColor);
     const diff = mainText === '#111111' ? -12 : 18;
     const headerBg = adjustColor(bgColor, diff); 
-    const accentSoft = accentColor + "33"; 
+    const accentSoft = accentColor + "40"; 
 
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
