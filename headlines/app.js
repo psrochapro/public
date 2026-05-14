@@ -1,6 +1,6 @@
 /**
- * Lógica: News Snapshot Creator Pro
- * Gerencia o render dinâmico e o ancoramento perfeito da data.
+ * APP: News Snapshot Creator Pro
+ * Lógica de injeção dinâmica com sistema de ancoragem de data.
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -16,7 +16,7 @@ async function init() {
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro:", e);
+        console.error("Erro ao carregar dados:", e);
     }
 }
 
@@ -26,7 +26,7 @@ function render() {
     const layout = layoutSelector.value;
     const cardBody = document.querySelector('.card-body');
     
-    // Parte de Imagem com Wrapper para ancorar data nos pixels
+    // Wrapper de Imagem que colapsa no tamanho real da foto
     const imageHTML = `
         <div class="main-image-container">
             <div class="img-anchor-wrapper">
@@ -45,7 +45,7 @@ function render() {
         </div>
     `;
 
-    // Injeção de estrutura inteligente
+    // Injeção de estrutura dependente do formato escolhido
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
@@ -64,12 +64,13 @@ function render() {
         `;
     }
 
+    // Logo e URL
     document.getElementById('logo-img').src = globalData.config.logo_url;
     document.getElementById('site-url-text').innerText = globalData.config.site_url;
     
+    // Injeção das 3 mini notícias com resumo
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
-    
     globalData.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
@@ -113,7 +114,7 @@ function updateColors() {
     const accentContrast = getContrastYIQ(accentColor);
     const diff = mainText === '#111111' ? -12 : 18;
     const headerBg = adjustColor(bgColor, diff); 
-    const accentSoft = accentColor + "40"; // Aumentada visibilidade do fundo secundário
+    const accentSoft = accentColor + "33"; 
 
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
