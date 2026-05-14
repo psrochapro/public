@@ -1,6 +1,6 @@
 /**
  * Lógica: News Snapshot Creator Pro
- * Gerencia layouts, cores e injeção de estrutura para 3 mini notícias
+ * Gerencia injeção de estrutura para 3 mini notícias e preenchimento de espaço
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -28,7 +28,7 @@ function render() {
 
     const cardBody = document.querySelector('.card-body');
     
-    // Injeção de estrutura dependente do Layout
+    // Injeção de estrutura dependente do Layout para otimizar espaço
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
@@ -37,7 +37,7 @@ function render() {
                     <div class="timestamp">${principal.data}</div>
                 </div>
                 <div class="news-text">
-                    <span class="category-tag">${principal.categoria}</span>
+                    <span class="category-tag">${principal.category || principal.categoria}</span>
                     <h1 id="title">${principal.titulo}</h1>
                     <p id="subtitle">${principal.subtitulo}</p>
                 </div>
@@ -52,7 +52,7 @@ function render() {
             </div>
             <div class="info-container">
                 <div class="news-text">
-                    <span class="category-tag">${principal.categoria}</span>
+                    <span class="category-tag">${principal.category || principal.categoria}</span>
                     <h1 id="title">${principal.titulo}</h1>
                     <p id="subtitle">${principal.subtitulo}</p>
                 </div>
@@ -63,8 +63,9 @@ function render() {
 
     document.getElementById('logo-img').src = globalData.config.logo_url;
     
-    // Injeção de APENAS 3 MINI NOTÍCIAS conforme solicitado
+    // Injeção de 3 MINI NOTÍCIAS
     const miniContainer = document.getElementById('mini-news-container');
+    miniContainer.innerHTML = '';
     globalData.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
@@ -105,7 +106,7 @@ function updateColors() {
     const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
     
-    const diff = mainText === '#111111' ? -10 : 15;
+    const diff = mainText === '#111111' ? -12 : 18;
     const headerBg = adjustColor(bgColor, diff); 
     const accentSoft = accentColor + "15"; 
 
