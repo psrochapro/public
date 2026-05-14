@@ -2,13 +2,14 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Snapshot Generator</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
-<body class="ratio-16-9"> <!-- Classe dinâmica: ratio-1-1, ratio-16-9, ratio-9-16 -->
+<body class="ratio-16-9">
 
-    <aside class="sidebar-editor">
+    <aside class="sidebar-editor" id="sidebar">
         <h2>Snapshot Editor</h2>
         
         <div class="control-group">
@@ -25,32 +26,36 @@
             <input type="color" id="accent-color" value="#cc0000">
         </div>
 
-        <button id="btn-toggle-ui">Ver Apenas Arte</button>
-        <button id="btn-export" class="btn-primary">Baixar PNG</button>
+        <div class="control-group">
+            <button id="btn-toggle-ui">Ocultar Interface</button>
+        </div>
+
+        <button id="btn-export" class="btn-primary">Baixar PNG Alta Resolução</button>
     </aside>
 
     <main class="preview-container">
-        <!-- O STAGE é o que vira foto. Tudo dentro dele deve ser conciso -->
         <div id="snapshot-stage">
             
             <header class="card-header">
                 <img src="" id="logo-img" class="logo">
-                <div class="live-badge"><span>●</span> LIVE</div>
+                <div class="live-badge"><span>●</span> AO VIVO</div>
             </header>
 
             <div class="card-body">
                 <div class="main-image-area">
-                    <img src="" id="main-img">
+                    <img src="" id="main-img" alt="Notícia">
                     <div class="image-footer" id="image-date"></div>
                 </div>
 
                 <div class="content-area">
-                    <span class="category-badge" id="category"></span>
-                    <h1 id="title"></h1>
-                    <p id="subtitle"></p>
+                    <div class="text-wrap">
+                        <span class="category-badge" id="category"></span>
+                        <h1 id="title">Carregando manchete...</h1>
+                        <p id="subtitle"></p>
+                    </div>
                     
-                    <div class="sidebar-mini-news" id="mini-news">
-                        <!-- Thumbs aparecem aqui apenas em alguns layouts -->
+                    <div class="sidebar-mini-news" id="mini-news-container">
+                        <!-- Thumbs injetadas pelo JS -->
                     </div>
                 </div>
             </div>
