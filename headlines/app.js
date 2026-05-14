@@ -1,12 +1,11 @@
 /**
  * Lógica: News Snapshot Creator Pro
- * Gerencia a injeção de 3 mini notícias e comportamentos de cor
+ * Gerencia conteúdo (Manchete + Subtítulo + Corpo) e 3 mini notícias (Título + Resumo)
  */
 
 const accentInput = document.getElementById('accent-color');
 const bgInput = document.getElementById('bg-card-color');
 const layoutSelector = document.getElementById('layout-selector');
-const btnToggleUI = document.getElementById('btn-toggle-ui');
 
 let globalData = null;
 
@@ -27,7 +26,14 @@ function render() {
     const layout = layoutSelector.value;
     const cardBody = document.querySelector('.card-body');
     
-    // Define estrutura de injeção baseada no layout
+    // Injeção de Conteúdo Completo
+    const mainContentHTML = `
+        <span class="category-tag">${principal.categoria}</span>
+        <h1>${principal.titulo}</h1>
+        <p class="subtitle">${principal.subtitulo}</p>
+        <p class="body-text">${principal.corpo_texto}</p>
+    `;
+
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
@@ -35,11 +41,7 @@ function render() {
                     <img src="${principal.imagem_url}" id="main-img">
                     <div class="timestamp">${principal.data}</div>
                 </div>
-                <div class="news-text">
-                    <span class="category-tag">${principal.category || principal.categoria}</span>
-                    <h1 id="title">${principal.titulo}</h1>
-                    <p id="subtitle">${principal.subtitulo}</p>
-                </div>
+                <div class="news-text">${mainContentHTML}</div>
             </div>
             <div class="mini-news-grid" id="mini-news-container"></div>
         `;
@@ -50,32 +52,32 @@ function render() {
                 <div class="timestamp">${principal.data}</div>
             </div>
             <div class="info-container">
-                <div class="news-text">
-                    <span class="category-tag">${principal.category || principal.categoria}</span>
-                    <h1 id="title">${principal.titulo}</h1>
-                    <p id="subtitle">${principal.subtitulo}</p>
-                </div>
+                <div class="news-text">${mainContentHTML}</div>
                 <div class="mini-news-grid" id="mini-news-container"></div>
             </div>
         `;
     }
 
     document.getElementById('logo-img').src = globalData.config.logo_url;
+    document.getElementById('site-url-text').innerText = globalData.config.site_url;
     
-    // Injeção de 3 MINI NOTÍCIAS
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
+    
+    // 3 Mini Notícias com Título e Resumo
     globalData.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
                 <img src="${item.thumb_url}" alt="thumb">
-                <h4>${item.titulo}</h4>
+                <div class="mini-text">
+                    <h4>${item.titulo}</h4>
+                    <p>${item.resumo}</p>
+                </div>
             </div>
         `;
     });
 }
 
-// Lógica de Cores e Contraste
 function getContrastYIQ(hexcolor){
     hexcolor = hexcolor.replace("#", "");
     const r = parseInt(hexcolor.substr(0,2),16);
@@ -101,12 +103,10 @@ function adjustColor(hex, amt) {
 function updateColors() {
     const bgColor = bgInput.value;
     const accentColor = accentInput.value;
-    
     const mainText = getContrastYIQ(bgColor);
-    const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
+    const mutedText = mainText === '#111111' ? '#555555' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
-    
-    const diff = mainText === '#111111' ? -12 : 18;
+    const diff = mainText === '#111111' ? -10 : 15;
     const headerBg = adjustColor(bgColor, diff); 
     const accentSoft = accentColor + "15"; 
 
@@ -126,12 +126,6 @@ layoutSelector.addEventListener('change', () => {
     document.body.className = layoutSelector.value;
     render();
     updateColors();
-});
-
-btnToggleUI.addEventListener('click', () => {
-    document.body.classList.toggle('ui-hidden');
-    btnToggleUI.innerText = document.body.classList.contains('ui-hidden') 
-        ? "Mostrar Interface" : "Ocultar Interface";
 });
 
 init();
