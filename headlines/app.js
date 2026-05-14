@@ -1,6 +1,6 @@
 /**
  * Lógica: News Snapshot Creator Pro
- * Sistema de renderização flexível e cores vibrantes.
+ * Gerencia o render dinâmico e o ancoramento perfeito da data.
  */
 
 const accentInput = document.getElementById('accent-color');
@@ -16,7 +16,7 @@ async function init() {
         render();
         updateColors();
     } catch (e) {
-        console.error("Erro ao carregar dados:", e);
+        console.error("Erro:", e);
     }
 }
 
@@ -26,7 +26,16 @@ function render() {
     const layout = layoutSelector.value;
     const cardBody = document.querySelector('.card-body');
     
-    // Conteúdo da Notícia Principal
+    // Parte de Imagem com Wrapper para ancorar data nos pixels
+    const imageHTML = `
+        <div class="main-image-container">
+            <div class="img-anchor-wrapper">
+                <img src="${principal.imagem_url}" id="main-img">
+                <div class="timestamp">${principal.data}</div>
+            </div>
+        </div>
+    `;
+
     const mainContentHTML = `
         <div class="news-text">
             <span class="category-tag">${principal.categoria}</span>
@@ -40,20 +49,14 @@ function render() {
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `
             <div class="top-section">
-                <div class="main-image-container">
-                    <img src="${principal.imagem_url}" id="main-img">
-                    <div class="timestamp">${principal.data}</div>
-                </div>
+                ${imageHTML}
                 ${mainContentHTML}
             </div>
             <div class="mini-news-grid" id="mini-news-container"></div>
         `;
     } else {
         cardBody.innerHTML = `
-            <div class="main-image-container">
-                <img src="${principal.imagem_url}" id="main-img">
-                <div class="timestamp">${principal.data}</div>
-            </div>
+            ${imageHTML}
             <div class="info-container">
                 ${mainContentHTML}
                 <div class="mini-news-grid" id="mini-news-container"></div>
@@ -67,7 +70,6 @@ function render() {
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     
-    // Renderiza exatamente 3 mini notícias
     globalData.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
@@ -107,12 +109,11 @@ function updateColors() {
     const bgColor = bgInput.value;
     const accentColor = accentInput.value;
     const mainText = getContrastYIQ(bgColor);
-    const mutedText = mainText === '#111111' ? '#555555' : '#bbbbbb';
+    const mutedText = mainText === '#111111' ? '#444444' : '#bbbbbb';
     const accentContrast = getContrastYIQ(accentColor);
-    
     const diff = mainText === '#111111' ? -12 : 18;
     const headerBg = adjustColor(bgColor, diff); 
-    const accentSoft = accentColor + "33"; 
+    const accentSoft = accentColor + "40"; // Aumentada visibilidade do fundo secundário
 
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
