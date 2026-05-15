@@ -29,7 +29,6 @@ function setupPersistence() {
         const dataStr = JSON.stringify(state, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         
-        // Dynamic filename logic
         let fileName = document.getElementById('export-filename').value.trim() || 'snapshot-projeto';
         if(!fileName.toLowerCase().endsWith('.json')) fileName += '.json';
 
@@ -156,10 +155,24 @@ function render() {
     const principal = state.noticiaPrincipal;
     const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
-    const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
-    const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
     
-    // Layout Logic Preserved Exactly
+    // Alterado de <img> para <div> com background-image para corrigir distorção no html2canvas
+    const imageHTML = `
+        <div class="main-image-container">
+            <div class="img-anchor-wrapper">
+                <div class="main-image-bg" style="background-image: url('${principal.imagem_url}')"></div>
+                <div class="timestamp">${principal.data}</div>
+            </div>
+        </div>`;
+        
+    const mainContentHTML = `
+        <div class="news-text">
+            <span class="category-tag">${principal.categoria}</span>
+            <h1>${principal.titulo}</h1>
+            <p class="subtitle">${principal.subtitulo}</p>
+            <p class="body-text">${principal.corpo_texto}</p>
+        </div>`;
+    
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mid-separator"></div><div class="mini-news-grid" id="mini-news-container"></div>`;
     } else {
@@ -169,14 +182,21 @@ function render() {
     document.getElementById('logo-img').src = state.config.logo_url;
     document.getElementById('site-url-text').innerText = state.config.site_url;
 
-    // Update dynamic badge text
     const badgeEl = document.querySelector('.live-badge');
     if(badgeEl) badgeEl.innerText = state.config.badge_text;
 
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
-        miniContainer.innerHTML += `<div class="mini-item"><img src="${item.thumb_url}"><div><h4>${item.titulo}</h4><p>${item.resumo}</p></div></div>`;
+        // Alterado de <img> para <div> com background-image para corrigir distorção no html2canvas
+        miniContainer.innerHTML += `
+            <div class="mini-item">
+                <div class="mini-thumb" style="background-image: url('${item.thumb_url}')"></div>
+                <div>
+                    <h4>${item.titulo}</h4>
+                    <p>${item.resumo}</p>
+                </div>
+            </div>`;
     });
 }
 
