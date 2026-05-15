@@ -68,20 +68,14 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .mini-item p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* --- A. WIDE (16:9) --- */
-.ratio-16-9 .main-image-container { flex: 1.3; height: 100%; }
-.ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; gap: 10px; padding: 15px; }
-
-/* Ajustes solicitados para o Wide: Aumento de Thumbs e Fontes */
-.ratio-16-9 .mini-item img { 
-    width: 85px; 
-    height: 85px; 
-}
-.ratio-16-9 .mini-item h4 { 
-    font-size: 1rem; 
-}
-.ratio-16-9 .mini-item p { 
-    font-size: 0.85rem; 
-}
+/* Combinação de ajustes para harmonia no layout Wide */
+.ratio-16-9 .card-body { padding: 2.5% 5%; gap: 20px; }
+.ratio-16-9 .main-image-container { flex: 1.15; } /* Imagem um pouco menor para dar espaço ao texto */
+.ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+.ratio-16-9 .mini-item img { width: 75px; height: 75px; } /* Thumb equilibrado */
+.ratio-16-9 .mini-item h4 { font-size: 1rem; } /* Fonte mantida em destaque */
+.ratio-16-9 .mini-item p { font-size: 0.85rem; } /* Fonte mantida em destaque */
+.ratio-16-9 .card-footer { padding-bottom: 1.5%; } /* Rodapé mais baixo */
 
 /* --- B. QUADRADO (1:1) --- */
 .ratio-1-1 .card-body { flex-direction: column; padding: 0; gap: 0; }
