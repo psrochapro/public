@@ -156,15 +156,13 @@ function render() {
     const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
     
-    // Alterado de <img> para <div> com background-image para corrigir distorção no html2canvas
+    // Corrigido: Estrutura simplificada para garantir que a div herde o tamanho do container
     const imageHTML = `
         <div class="main-image-container">
-            <div class="img-anchor-wrapper">
-                <div class="main-image-bg" style="background-image: url('${principal.imagem_url}')"></div>
-                <div class="timestamp">${principal.data}</div>
-            </div>
+            <div class="main-image-bg" style="background-image: url('${principal.imagem_url}')"></div>
+            <div class="timestamp">${principal.data}</div>
         </div>`;
-        
+    
     const mainContentHTML = `
         <div class="news-text">
             <span class="category-tag">${principal.categoria}</span>
@@ -188,7 +186,6 @@ function render() {
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
-        // Alterado de <img> para <div> com background-image para corrigir distorção no html2canvas
         miniContainer.innerHTML += `
             <div class="mini-item">
                 <div class="mini-thumb" style="background-image: url('${item.thumb_url}')"></div>

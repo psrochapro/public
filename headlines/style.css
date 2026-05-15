@@ -48,8 +48,10 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 
 .main-image-container { position: relative; aspect-ratio: 4 / 3; background: #000; border-radius: 8px; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 
-/* AJUSTADO: Usando background em div para evitar distorção no export */
+/* AJUSTADO: Imagem principal ocupa 100% da largura e altura do container pai */
 .main-image-bg { 
+    position: absolute;
+    top: 0; left: 0;
     width: 100%; 
     height: 100%; 
     background-size: cover; 
@@ -73,7 +75,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .mini-news-grid { display: grid; gap: 8px; padding: 12px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 12px; flex-shrink: 0; }
 .mini-item { display: flex; gap: 12px; align-items: center; overflow: hidden; }
 
-/* AJUSTADO: Mini Thumb com background div */
+/* Mini Thumbs com background div */
 .mini-thumb { 
     width: 60px; 
     height: 60px; 
