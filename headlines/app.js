@@ -1,34 +1,38 @@
 let state = null;
 
-// FUNÇÃO DE FORÇA BRUTA: Recorta a imagem para 4:3 centralizado
-async function cropTo43(base64Str) {
+// FUNÇÃO DE FORÇA BRUTA MELHORADA: Recorta com proporção variável
+async function cropImage(base64Str, targetRatio) {
     return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            const targetRatio = 4 / 3;
             let sw, sh, sx, sy;
 
-            // Lógica de corte centralizado
+            // Lógica de corte centralizado dinâmico
             if (img.width / img.height > targetRatio) {
-                // Imagem é mais larga (ex: 16:9) -> corta as laterais
+                // Imagem original é mais larga que o alvo
                 sh = img.height;
                 sw = img.height * targetRatio;
                 sx = (img.width - sw) / 2;
                 sy = 0;
             } else {
-                // Imagem é mais alta -> corta topo e base
+                // Imagem original é mais alta que o alvo
                 sw = img.width;
                 sh = img.width / targetRatio;
                 sx = 0;
                 sy = (img.height - sh) / 2;
             }
 
-            // Define um tamanho de saída fixo e alto (800x600 ou similar) para manter qualidade
-            canvas.width = 1200;
-            canvas.height = 900;
+            // Define resolução de saída alta (1200px na maior aresta)
+            if (targetRatio >= 1) {
+                canvas.width = 1200;
+                canvas.height = 1200 / targetRatio;
+            } else {
+                canvas.height = 1200;
+                canvas.width = 1200 * targetRatio;
+            }
             
             ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
             resolve(canvas.toDataURL('image/jpeg', 0.95));
@@ -137,28 +141,31 @@ function setupSidebarInputs() {
         document.getElementById('site-url-text').innerText = e.target.value;
     };
 
-    handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); }, false); // Logo não precisa de crop
+    handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
+    
+    // NOTÍCIA PRINCIPAL: Crop 4:3
     handleImageUpload('edit-main-img', async (res) => { 
-        const cropped = await cropTo43(res);
+        const cropped = await cropImage(res, 4/3); 
         state.noticiaPrincipal.imagem_url = cropped; 
         render(); 
     });
-    
-    document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
-    document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
-    document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
-    document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
-    document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
-    
+
     for (let i = 0; i < 3; i++) {
+        // MINI NOTÍCIAS: Crop 1:1 (Quadrado)
         handleImageUpload(`edit-thumb-${i}`, async (res) => { 
-            const cropped = await cropTo43(res);
+            const cropped = await cropImage(res, 1/1);
             state.miniNoticias[i].thumb_url = cropped; 
             render(); 
         });
         document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
         document.getElementById(`edit-resumo-${i}`).oninput = (e) => { state.miniNoticias[i].resumo = e.target.value; render(); };
     }
+    
+    document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
+    document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
+    document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
+    document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
+    document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
 }
 
 function syncSidebarWithState() {
