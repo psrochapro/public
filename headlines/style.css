@@ -53,23 +53,19 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
     border-radius: 8px; 
     overflow: hidden; 
     flex-shrink: 0; 
-    display: flex; 
 }
 
-/* Container do Zoom para separar o Transform do Object-fit */
-.img-zoom-wrapper {
+/* FIX: background-size: cover garante o crop sem distorção em qualquer export */
+.main-image-bg {
+    position: absolute;
+    top: 0; left: 0;
     width: 100%;
     height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     transform: scale(var(--img-zoom)) translateY(var(--img-y));
     transition: transform 0.1s ease-out;
-}
-
-/* Imagem usando Object-fit (Alta Qualidade) */
-.main-img-tag {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
 }
 
 .timestamp { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.85); color: white; font-size: 0.55rem; padding: 4px 8px; border-radius: 4px; font-weight: 700; z-index: 10; }
@@ -86,11 +82,13 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .mini-news-grid { display: grid; gap: 8px; padding: 12px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 12px; flex-shrink: 0; }
 .mini-item { display: flex; gap: 12px; align-items: center; overflow: hidden; }
 
-/* Thumbs das mini notícias */
-.mini-thumb-tag { 
+/* FIX: Mini thumbs em alta definição e sem esticar */
+.mini-thumb-bg { 
     width: 60px; 
     height: 60px; 
-    object-fit: cover; 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
     border-radius: 6px; 
     flex-shrink: 0; 
 }
@@ -102,7 +100,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .ratio-16-9 .card-body { padding: 2.5% 5%; gap: 20px; }
 .ratio-16-9 .main-image-container { flex: 1.15; }
 .ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
-.ratio-16-9 .mini-thumb-tag { width: 75px; height: 75px; } 
+.ratio-16-9 .mini-thumb-bg { width: 75px; height: 75px; } 
 .ratio-16-9 .mini-item h4 { font-size: 1rem; }
 .ratio-16-9 .mini-item p { font-size: 0.85rem; }
 .ratio-16-9 .card-footer { padding-bottom: 1.5%; }
@@ -113,7 +111,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .ratio-1-1 .main-image-container { width: 48%; height: 100%; flex: none; }
 .ratio-1-1 .mini-news-grid { grid-template-columns: repeat(3, 1fr); flex: 1; margin: 1% 5% 4% 5%; padding: 25px 15px; gap: 20px; align-content: center; }
 .ratio-1-1 .mini-item { flex-direction: column; text-align: center; gap: 8px; }
-.ratio-1-1 .mini-thumb-tag { width: clamp(125px, 18vh, 180px); height: clamp(125px, 18vh, 180px); border-radius: 10px; }
+.ratio-1-1 .mini-thumb-bg { width: clamp(125px, 18vh, 180px); height: clamp(125px, 18vh, 180px); border-radius: 10px; }
 .ratio-1-1 .mini-item h4 { font-size: 0.95rem; }
 .ratio-1-1 .mini-item p { font-size: 0.8rem; display: block; overflow: visible; -webkit-line-clamp: unset; line-clamp: unset; }
 

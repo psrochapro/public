@@ -56,12 +56,12 @@ function setupPersistence() {
     document.getElementById('btn-export-png').onclick = () => {
         const stage = document.getElementById('snapshot-stage');
         const btn = document.getElementById('btn-export-png');
-        btn.innerText = "Gerando Imagem...";
+        btn.innerText = "Gerando Imagem Ultra HD...";
         btn.disabled = true;
 
-        // Configuração otimizada para alta resolução
+        // SCALE 3 garante que mesmo backgrounds fiquem super nítidos no export
         html2canvas(stage, { 
-            scale: 2, 
+            scale: 3, 
             useCORS: true, 
             allowTaint: false, 
             backgroundColor: null,
@@ -165,12 +165,10 @@ function render() {
     const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
     
-    // Voltamos para <img> para garantir a resolução original no export
+    // SOLUÇÃO: Usamos divs com background para garantir que o html2canvas respeite o crop center
     const imageHTML = `
         <div class="main-image-container">
-            <div class="img-zoom-wrapper">
-                <img src="${principal.imagem_url}" class="main-img-tag" crossOrigin="anonymous">
-            </div>
+            <div class="main-image-bg" style="background-image: url('${principal.imagem_url}')"></div>
             <div class="timestamp">${principal.data}</div>
         </div>`;
     
@@ -199,7 +197,7 @@ function render() {
     state.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
-                <img src="${item.thumb_url}" class="mini-thumb-tag" crossOrigin="anonymous">
+                <div class="mini-thumb-bg" style="background-image: url('${item.thumb_url}')"></div>
                 <div>
                     <h4>${item.titulo}</h4>
                     <p>${item.resumo}</p>
