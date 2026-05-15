@@ -81,23 +81,30 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .mini-item img { width: 60px; height: 60px; aspect-ratio: 1/1; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
 
 .mini-item h4 { font-size: 0.85rem; line-height: 1.1; font-weight: 800; margin-bottom: 2px; }
-.mini-item p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* --- A. WIDE (16:9) - AJUSTES DE 100% --- */
+/* AJUSTADO: Removido line-clamp para não cortar o texto */
+.mini-item p { 
+    font-size: 0.75rem; 
+    color: var(--text-muted); 
+    line-height: 1.2; 
+    display: block; 
+}
+
+/* --- A. WIDE (16:9) --- */
 .ratio-16-9 .card-body { 
-    padding: 2.5% 3%; /* Reduzido padding lateral para ganhar espaço */
+    padding: 2.5% 3%; 
     gap: 25px; 
-    align-items: stretch; /* Garante que os containers ocupem a altura toda */
+    align-items: stretch; 
 }
 .ratio-16-9 .main-image-container { 
     flex: none; 
-    width: 58%; /* Imagem maior para ocupar o palco */
+    width: 58%; 
 }
 .ratio-16-9 .info-container {
-    justify-content: space-between; /* CRUCIAL: Empurra mini notícias para baixo e texto para cima */
+    justify-content: space-between; 
 }
 .ratio-16-9 .news-text {
-    flex: 0 1 auto; /* Não deixa o texto "boiar" no centro */
+    flex: 0 1 auto; 
     justify-content: flex-start;
     padding-top: 5px;
 }
@@ -105,7 +112,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
     grid-template-columns: 1fr; 
     gap: 12px; 
     padding: 15px; 
-    margin-top: 15px; /* Cria o vácuo necessário */
+    margin-top: 15px; 
 }
 .ratio-16-9 .mini-item img { width: 75px; height: 75px; }
 .ratio-16-9 .mini-item h4 { font-size: 1rem; }
@@ -120,7 +127,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .ratio-1-1 .mini-item { flex-direction: column; text-align: center; gap: 8px; }
 .ratio-1-1 .mini-item img { width: clamp(125px, 18vh, 180px); height: clamp(125px, 18vh, 180px); border-radius: 10px; }
 .ratio-1-1 .mini-item h4 { font-size: 0.95rem; }
-.ratio-1-1 .mini-item p { font-size: 0.8rem; display: block; overflow: visible; -webkit-line-clamp: unset; line-clamp: unset; }
+.ratio-1-1 .mini-item p { font-size: 0.8rem; }
 
 /* --- C. STORIES (9:16) --- */
 .ratio-9-16 .card-body { flex-direction: column; padding: 4% 6%; gap: 10px; }
@@ -128,7 +135,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .ratio-9-16 .info-container { flex: 1; justify-content: space-between; }
 .ratio-9-16 .mini-news-grid { grid-template-columns: 1fr; margin-top: auto; }
 .ratio-9-16 .mini-item h4 { font-size: 1rem; } 
-.ratio-9-16 .mini-item p { font-size: 0.85rem; display: block; overflow: visible; -webkit-line-clamp: unset; line-clamp: unset; }
+.ratio-9-16 .mini-item p { font-size: 0.85rem; }
 
 /* --- FOOTER --- */
 .card-footer { padding: 0 5% 2.5% 5%; text-align: center; flex-shrink: 0; }
