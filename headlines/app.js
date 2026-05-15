@@ -1,10 +1,10 @@
 let state = null;
 
-// FUNÇÃO DE FORÇA BRUTA: Recorta com proporção variável
+// FORÇA BRUTA: Recorta a imagem nos pixels para a proporção exata
 async function cropImage(url, targetRatio) {
     return new Promise((resolve) => {
         const img = new Image();
-        img.crossOrigin = "anonymous"; // Previne erro de segurança
+        img.crossOrigin = "anonymous";
         img.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -22,14 +22,14 @@ async function cropImage(url, targetRatio) {
                 sy = (img.height - sh) / 2;
             }
 
-            // Resolução ALTA para o canvas de processamento
+            // Alta resolução para o processamento
             canvas.width = 1600; 
             canvas.height = 1600 / targetRatio;
             
             ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
             resolve(canvas.toDataURL('image/jpeg', 0.95));
         };
-        img.onerror = () => resolve(url); // Fallback se falhar
+        img.onerror = () => resolve(url);
         img.src = url;
     });
 }
@@ -39,7 +39,7 @@ async function init() {
         const response = await fetch('dados.json');
         state = await response.json();
         
-        // PROCESSAMENTO INICIAL: Já corta as fotos do JSON para evitar tarjas pretas e distorção
+        // Ajuste inicial de proporções
         state.noticiaPrincipal.imagem_url = await cropImage(state.noticiaPrincipal.imagem_url, 4/3);
         for (let i = 0; i < state.miniNoticias.length; i++) {
             state.miniNoticias[i].thumb_url = await cropImage(state.miniNoticias[i].thumb_url, 1/1);
@@ -86,7 +86,6 @@ function setupPersistence() {
         const reader = new FileReader();
         reader.onload = async (event) => {
             state = JSON.parse(event.target.result);
-            // Processa novamente ao importar um JSON novo
             state.noticiaPrincipal.imagem_url = await cropImage(state.noticiaPrincipal.imagem_url, 4/3);
             for (let i = 0; i < state.miniNoticias.length; i++) {
                 state.miniNoticias[i].thumb_url = await cropImage(state.miniNoticias[i].thumb_url, 1/1);
@@ -101,10 +100,9 @@ function setupPersistence() {
     document.getElementById('btn-export-png').onclick = () => {
         const stage = document.getElementById('snapshot-stage');
         const btn = document.getElementById('btn-export-png');
-        btn.innerText = "Gerando em 4K...";
+        btn.innerText = "Gerando Imagem Ultra HD...";
         btn.disabled = true;
         
-        // SCALE 3: Essencial para nitidez máxima na imagem principal do Wide
         html2canvas(stage, { 
             scale: 3, 
             useCORS: true, 
@@ -215,7 +213,7 @@ function handleImageUpload(id, callback) {
 function render() {
     if (!state) return;
     const principal = state.noticiaPrincipal;
-    const layout = document.getElementById('layout-selector').value;
+    const layout = state.config.layout;
     const cardBody = document.querySelector('.card-body');
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
