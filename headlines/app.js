@@ -1,5 +1,42 @@
 let state = null;
 
+// FUNÇÃO DE FORÇA BRUTA: Recorta a imagem para 4:3 centralizado
+async function cropTo43(base64Str) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const targetRatio = 4 / 3;
+            let sw, sh, sx, sy;
+
+            // Lógica de corte centralizado
+            if (img.width / img.height > targetRatio) {
+                // Imagem é mais larga (ex: 16:9) -> corta as laterais
+                sh = img.height;
+                sw = img.height * targetRatio;
+                sx = (img.width - sw) / 2;
+                sy = 0;
+            } else {
+                // Imagem é mais alta -> corta topo e base
+                sw = img.width;
+                sh = img.width / targetRatio;
+                sx = 0;
+                sy = (img.height - sh) / 2;
+            }
+
+            // Define um tamanho de saída fixo e alto (800x600 ou similar) para manter qualidade
+            canvas.width = 1200;
+            canvas.height = 900;
+            
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', 0.95));
+        };
+        img.src = base64Str;
+    });
+}
+
 async function init() {
     try {
         const response = await fetch('dados.json');
@@ -56,18 +93,9 @@ function setupPersistence() {
     document.getElementById('btn-export-png').onclick = () => {
         const stage = document.getElementById('snapshot-stage');
         const btn = document.getElementById('btn-export-png');
-        btn.innerText = "Gerando Imagem Ultra HD...";
+        btn.innerText = "Gerando Imagem...";
         btn.disabled = true;
-
-        // SCALE 3 garante que mesmo backgrounds fiquem super nítidos no export
-        html2canvas(stage, { 
-            scale: 3, 
-            useCORS: true, 
-            allowTaint: false, 
-            backgroundColor: null,
-            logging: false,
-            imageTimeout: 0
-        }).then(canvas => {
+        html2canvas(stage, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
             const image = canvas.toDataURL("image/png", 1.0);
             const link = document.createElement('a');
             link.setAttribute('href', image);
@@ -108,15 +136,26 @@ function setupSidebarInputs() {
         state.config.site_url = e.target.value;
         document.getElementById('site-url-text').innerText = e.target.value;
     };
-    handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
-    handleImageUpload('edit-main-img', (res) => { state.noticiaPrincipal.imagem_url = res; render(); });
+
+    handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); }, false); // Logo não precisa de crop
+    handleImageUpload('edit-main-img', async (res) => { 
+        const cropped = await cropTo43(res);
+        state.noticiaPrincipal.imagem_url = cropped; 
+        render(); 
+    });
+    
     document.getElementById('edit-main-cat').oninput = (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); };
     document.getElementById('edit-main-date').oninput = (e) => { state.noticiaPrincipal.data = e.target.value; render(); };
     document.getElementById('edit-main-title').oninput = (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); };
     document.getElementById('edit-main-sub').oninput = (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); };
     document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
+    
     for (let i = 0; i < 3; i++) {
-        handleImageUpload(`edit-thumb-${i}`, (res) => { state.miniNoticias[i].thumb_url = res; render(); });
+        handleImageUpload(`edit-thumb-${i}`, async (res) => { 
+            const cropped = await cropTo43(res);
+            state.miniNoticias[i].thumb_url = cropped; 
+            render(); 
+        });
         document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
         document.getElementById(`edit-resumo-${i}`).oninput = (e) => { state.miniNoticias[i].resumo = e.target.value; render(); };
     }
@@ -164,21 +203,8 @@ function render() {
     const principal = state.noticiaPrincipal;
     const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
-    
-    // SOLUÇÃO: Usamos divs com background para garantir que o html2canvas respeite o crop center
-    const imageHTML = `
-        <div class="main-image-container">
-            <div class="main-image-bg" style="background-image: url('${principal.imagem_url}')"></div>
-            <div class="timestamp">${principal.data}</div>
-        </div>`;
-    
-    const mainContentHTML = `
-        <div class="news-text">
-            <span class="category-tag">${principal.categoria}</span>
-            <h1>${principal.titulo}</h1>
-            <p class="subtitle">${principal.subtitulo}</p>
-            <p class="body-text">${principal.corpo_texto}</p>
-        </div>`;
+    const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
+    const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
     
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mid-separator"></div><div class="mini-news-grid" id="mini-news-container"></div>`;
@@ -195,14 +221,7 @@ function render() {
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
-        miniContainer.innerHTML += `
-            <div class="mini-item">
-                <div class="mini-thumb-bg" style="background-image: url('${item.thumb_url}')"></div>
-                <div>
-                    <h4>${item.titulo}</h4>
-                    <p>${item.resumo}</p>
-                </div>
-            </div>`;
+        miniContainer.innerHTML += `<div class="mini-item"><img src="${item.thumb_url}"><div><h4>${item.titulo}</h4><p>${item.resumo}</p></div></div>`;
     });
 }
 
