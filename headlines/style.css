@@ -46,19 +46,31 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 
 .card-body { flex: 1; display: flex; padding: 3% 5%; gap: 15px; overflow: hidden; min-height: 0; }
 
-.main-image-container { position: relative; aspect-ratio: 4 / 3; background: #000; border-radius: 8px; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.main-image-container { 
+    position: relative; 
+    aspect-ratio: 4 / 3; 
+    background: #000; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    flex-shrink: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
 
-/* AJUSTADO: Imagem principal ocupa 100% da largura e altura do container pai */
-.main-image-bg { 
+/* TÉCNICA DE ALTA RESOLUÇÃO: Usamos IMG real com posicionamento manual */
+.main-image-render {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; 
-    height: 100%; 
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    transform: scale(var(--img-zoom)) translateY(var(--img-y)); 
-    transition: transform 0.1s ease-out; 
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    /* Centraliza e aplica o Zoom e Y do usuário */
+    transform: translate(-50%, calc(-50% + var(--img-y))) scale(var(--img-zoom));
+    transition: transform 0.1s ease-out;
+    display: block;
 }
 
 .timestamp { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.85); color: white; font-size: 0.55rem; padding: 4px 8px; border-radius: 4px; font-weight: 700; z-index: 10; }
@@ -75,15 +87,24 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .mini-news-grid { display: grid; gap: 8px; padding: 12px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 12px; flex-shrink: 0; }
 .mini-item { display: flex; gap: 12px; align-items: center; overflow: hidden; }
 
-/* Mini Thumbs com background div */
-.mini-thumb { 
-    width: 60px; 
-    height: 60px; 
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    border-radius: 6px; 
-    flex-shrink: 0; 
+/* Mini Thumbs com alta resolução */
+.mini-thumb-container {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+.mini-thumb-render {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
 }
 
 .mini-item h4 { font-size: 0.85rem; line-height: 1.1; font-weight: 800; margin-bottom: 2px; }
@@ -93,7 +114,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .ratio-16-9 .card-body { padding: 2.5% 5%; gap: 20px; }
 .ratio-16-9 .main-image-container { flex: 1.15; }
 .ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
-.ratio-16-9 .mini-item .mini-thumb { width: 75px; height: 75px; } 
+.ratio-16-9 .mini-thumb-container { width: 75px; height: 75px; } 
 .ratio-16-9 .mini-item h4 { font-size: 1rem; }
 .ratio-16-9 .mini-item p { font-size: 0.85rem; }
 .ratio-16-9 .card-footer { padding-bottom: 1.5%; }
@@ -104,7 +125,7 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 .ratio-1-1 .main-image-container { width: 48%; height: 100%; flex: none; }
 .ratio-1-1 .mini-news-grid { grid-template-columns: repeat(3, 1fr); flex: 1; margin: 1% 5% 4% 5%; padding: 25px 15px; gap: 20px; align-content: center; }
 .ratio-1-1 .mini-item { flex-direction: column; text-align: center; gap: 8px; }
-.ratio-1-1 .mini-item .mini-thumb { width: clamp(125px, 18vh, 180px); height: clamp(125px, 18vh, 180px); border-radius: 10px; }
+.ratio-1-1 .mini-thumb-container { width: clamp(125px, 18vh, 180px); height: clamp(125px, 18vh, 180px); border-radius: 10px; }
 .ratio-1-1 .mini-item h4 { font-size: 0.95rem; }
 .ratio-1-1 .mini-item p { font-size: 0.8rem; display: block; overflow: visible; -webkit-line-clamp: unset; line-clamp: unset; }
 

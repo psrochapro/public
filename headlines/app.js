@@ -58,7 +58,15 @@ function setupPersistence() {
         const btn = document.getElementById('btn-export-png');
         btn.innerText = "Gerando Imagem...";
         btn.disabled = true;
-        html2canvas(stage, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
+        
+        // Scale 3 para garantir nitidez profissional em 4K
+        html2canvas(stage, { 
+            scale: 3, 
+            useCORS: true, 
+            allowTaint: true, 
+            backgroundColor: null,
+            logging: false
+        }).then(canvas => {
             const image = canvas.toDataURL("image/png", 1.0);
             const link = document.createElement('a');
             link.setAttribute('href', image);
@@ -156,10 +164,10 @@ function render() {
     const layout = document.getElementById('layout-selector').value;
     const cardBody = document.querySelector('.card-body');
     
-    // Corrigido: Estrutura simplificada para garantir que a div herde o tamanho do container
+    // Voltamos para a tag <img> para máxima nitidez, mas usaremos CSS especial para não distorcer
     const imageHTML = `
         <div class="main-image-container">
-            <div class="main-image-bg" style="background-image: url('${principal.imagem_url}')"></div>
+            <img src="${principal.imagem_url}" class="main-image-render">
             <div class="timestamp">${principal.data}</div>
         </div>`;
     
@@ -188,7 +196,9 @@ function render() {
     state.miniNoticias.slice(0, 3).forEach(item => {
         miniContainer.innerHTML += `
             <div class="mini-item">
-                <div class="mini-thumb" style="background-image: url('${item.thumb_url}')"></div>
+                <div class="mini-thumb-container">
+                    <img src="${item.thumb_url}" class="mini-thumb-render">
+                </div>
                 <div>
                     <h4>${item.titulo}</h4>
                     <p>${item.resumo}</p>
