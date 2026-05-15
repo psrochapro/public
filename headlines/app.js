@@ -1,43 +1,36 @@
 let state = null;
 
-// FUNÇÃO DE FORÇA BRUTA MELHORADA: Recorta com proporção variável
-async function cropImage(base64Str, targetRatio) {
+// FUNÇÃO DE FORÇA BRUTA: Recorta com proporção variável
+async function cropImage(url, targetRatio) {
     return new Promise((resolve) => {
         const img = new Image();
+        img.crossOrigin = "anonymous"; // Previne erro de segurança
         img.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
             let sw, sh, sx, sy;
-
-            // Lógica de corte centralizado dinâmico
             if (img.width / img.height > targetRatio) {
-                // Imagem original é mais larga que o alvo
                 sh = img.height;
                 sw = img.height * targetRatio;
                 sx = (img.width - sw) / 2;
                 sy = 0;
             } else {
-                // Imagem original é mais alta que o alvo
                 sw = img.width;
                 sh = img.width / targetRatio;
                 sx = 0;
                 sy = (img.height - sh) / 2;
             }
 
-            // Define resolução de saída alta (1200px na maior aresta)
-            if (targetRatio >= 1) {
-                canvas.width = 1200;
-                canvas.height = 1200 / targetRatio;
-            } else {
-                canvas.height = 1200;
-                canvas.width = 1200 * targetRatio;
-            }
+            // Resolução ALTA para o canvas de processamento
+            canvas.width = 1600; 
+            canvas.height = 1600 / targetRatio;
             
             ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
             resolve(canvas.toDataURL('image/jpeg', 0.95));
         };
-        img.src = base64Str;
+        img.onerror = () => resolve(url); // Fallback se falhar
+        img.src = url;
     });
 }
 
@@ -46,6 +39,12 @@ async function init() {
         const response = await fetch('dados.json');
         state = await response.json();
         
+        // PROCESSAMENTO INICIAL: Já corta as fotos do JSON para evitar tarjas pretas e distorção
+        state.noticiaPrincipal.imagem_url = await cropImage(state.noticiaPrincipal.imagem_url, 4/3);
+        for (let i = 0; i < state.miniNoticias.length; i++) {
+            state.miniNoticias[i].thumb_url = await cropImage(state.miniNoticias[i].thumb_url, 1/1);
+        }
+
         if(!state.noticiaPrincipal.zoom) state.noticiaPrincipal.zoom = 1;
         if(!state.noticiaPrincipal.yPos) state.noticiaPrincipal.yPos = 0;
         if(!state.config.badge_text) state.config.badge_text = "ÚLTIMAS NOTÍCIAS IMPORTANTES";
@@ -85,8 +84,13 @@ function setupPersistence() {
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = async (event) => {
             state = JSON.parse(event.target.result);
+            // Processa novamente ao importar um JSON novo
+            state.noticiaPrincipal.imagem_url = await cropImage(state.noticiaPrincipal.imagem_url, 4/3);
+            for (let i = 0; i < state.miniNoticias.length; i++) {
+                state.miniNoticias[i].thumb_url = await cropImage(state.miniNoticias[i].thumb_url, 1/1);
+            }
             syncSidebarWithState();
             render();
             updateColors();
@@ -97,9 +101,16 @@ function setupPersistence() {
     document.getElementById('btn-export-png').onclick = () => {
         const stage = document.getElementById('snapshot-stage');
         const btn = document.getElementById('btn-export-png');
-        btn.innerText = "Gerando Imagem...";
+        btn.innerText = "Gerando em 4K...";
         btn.disabled = true;
-        html2canvas(stage, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
+        
+        // SCALE 3: Essencial para nitidez máxima na imagem principal do Wide
+        html2canvas(stage, { 
+            scale: 3, 
+            useCORS: true, 
+            allowTaint: true, 
+            backgroundColor: null 
+        }).then(canvas => {
             const image = canvas.toDataURL("image/png", 1.0);
             const link = document.createElement('a');
             link.setAttribute('href', image);
@@ -143,18 +154,14 @@ function setupSidebarInputs() {
 
     handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
     
-    // NOTÍCIA PRINCIPAL: Crop 4:3
     handleImageUpload('edit-main-img', async (res) => { 
-        const cropped = await cropImage(res, 4/3); 
-        state.noticiaPrincipal.imagem_url = cropped; 
+        state.noticiaPrincipal.imagem_url = await cropImage(res, 4/3); 
         render(); 
     });
 
     for (let i = 0; i < 3; i++) {
-        // MINI NOTÍCIAS: Crop 1:1 (Quadrado)
         handleImageUpload(`edit-thumb-${i}`, async (res) => { 
-            const cropped = await cropImage(res, 1/1);
-            state.miniNoticias[i].thumb_url = cropped; 
+            state.miniNoticias[i].thumb_url = await cropImage(res, 1/1); 
             render(); 
         });
         document.getElementById(`edit-title-${i}`).oninput = (e) => { state.miniNoticias[i].titulo = e.target.value; render(); };
