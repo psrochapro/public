@@ -357,7 +357,7 @@ function render() {
             ctx.save();
             ctx.font = `bold ${titleSize}px Montserrat`;
             ctx.globalAlpha = 0.5;
-            ctx.fillText(titleText, textAnchorX, drawY - titleSize - 20);
+            ctx.fillText(titleText, textAnchorX, drawY - titleSize - 25);
             ctx.restore();
         }
 
