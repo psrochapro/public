@@ -12,6 +12,16 @@
         <aside class="sidebar">
             <h1>Citação<span>Pro</span></h1>
             
+            <!-- NOVA SEÇÃO: GERENCIAR PROJETO -->
+            <section class="control-group">
+                <h3>0. Gerenciar Projeto</h3>
+                <div class="row">
+                    <button id="btn-save-json" class="btn-management">Salvar JSON</button>
+                    <button id="btn-load-json" class="btn-management">Abrir JSON</button>
+                </div>
+                <input type="file" id="input-import-json" accept=".json" style="display: none;">
+            </section>
+
             <section class="control-group">
                 <h3>1. Conteúdo</h3>
                 <input type="text" id="input-title" placeholder="Título (ex: Citação)" value="Citação">

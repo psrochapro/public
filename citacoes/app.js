@@ -4,10 +4,19 @@ const inputs = document.querySelectorAll('input, textarea, select');
 const btnDownload = document.getElementById('btn-download');
 const btnRemoveImg = document.getElementById('btn-remove-img');
 
+// Elementos de Gerenciamento
+const btnSaveJson = document.getElementById('btn-save-json');
+const btnLoadJson = document.getElementById('btn-load-json');
+const inputImportJson = document.getElementById('input-import-json');
+
 let userImage = null;
 
 function init() {
-    inputs.forEach(input => input.addEventListener('input', render));
+    inputs.forEach(input => {
+        if (input.id !== 'input-import-json') {
+            input.addEventListener('input', render);
+        }
+    });
     
     document.getElementById('input-file').addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -33,6 +42,11 @@ function init() {
         render();
     };
 
+    // Listeners para JSON
+    btnSaveJson.onclick = exportProject;
+    btnLoadJson.onclick = () => inputImportJson.click();
+    inputImportJson.onchange = importProject;
+
     render();
 }
 
@@ -45,6 +59,68 @@ function loadImage(src) {
         render();
     };
     img.src = src;
+}
+
+// Funções de Gerenciamento de Projeto (JSON)
+function exportProject() {
+    const projectData = {
+        settings: {},
+        imageData: null
+    };
+
+    // Salva todos os valores dos inputs
+    inputs.forEach(input => {
+        if (input.id && input.id !== 'input-file' && input.id !== 'input-import-json') {
+            projectData.settings[input.id] = input.value;
+        }
+    });
+
+    // Se houver imagem, converte para Base64 para salvar dentro do JSON
+    if (userImage) {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = userImage.width;
+        tempCanvas.height = userImage.height;
+        const tCtx = tempCanvas.getContext('2d');
+        tCtx.drawImage(userImage, 0, 0);
+        projectData.imageData = tempCanvas.toDataURL('image/png');
+    }
+
+    const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `citacao-projeto-${new Date().getTime()}.json`;
+    link.click();
+}
+
+function importProject(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const projectData = JSON.parse(ev.target.result);
+            
+            // Restaura configurações
+            for (const id in projectData.settings) {
+                const el = document.getElementById(id);
+                if (el) el.value = projectData.settings[id];
+            }
+
+            // Restaura imagem
+            if (projectData.imageData) {
+                loadImage(projectData.imageData);
+            } else {
+                userImage = null;
+                render();
+            }
+        } catch (err) {
+            alert("Erro ao ler o arquivo JSON.");
+            console.error(err);
+        }
+    };
+    reader.readAsText(file);
 }
 
 function getContrastYIQ(hexcolor){
@@ -133,18 +209,15 @@ function processText(context, text, maxWidth, fontSize, fontFace) {
     return { lines, lineHeight: fontSize * (fontFace === 'Dancing Script' ? 1.4 : 1.25) };
 }
 
-// MOLDURA REFEITA COM CROP SEAMLESS (QUADRADO E CÍRCULO)
 function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWeight, focusYPercent, zoomPercent) {
     ctx.save();
     
-    // 1. Sombra da moldura (se houver borda)
     if (borderWeight > 0) {
         ctx.shadowColor = "rgba(0,0,0,0.3)";
         ctx.shadowBlur = 20;
         ctx.shadowOffsetY = 10;
     }
 
-    // 2. Máscara de recorte (Clip) - Agora funciona para Quadrado e Círculo
     ctx.save();
     ctx.beginPath();
     if (shape === 'circle') {
@@ -156,7 +229,6 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
 
     ctx.filter = filter;
 
-    // 3. Cálculos de Zoom e Posição
     const zoomFactor = zoomPercent / 100;
     const imgRatio = img.width / img.height;
     
@@ -173,9 +245,8 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
     const dy = y + (size - drawH) * (focusYPercent / 100);
 
     ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, drawW, drawH);
-    ctx.restore(); // Fecha o clip
+    ctx.restore();
 
-    // 4. Bordas por cima
     if (borderWeight > 0) {
         ctx.save();
         ctx.shadowColor = "transparent";
@@ -190,7 +261,7 @@ function drawImgWithFrame(img, x, y, size, shape, filter, accentColor, borderWei
         }
         ctx.restore();
     }
-    ctx.restore(); // Fecha o shadow save
+    ctx.restore();
 }
 
 function render() {

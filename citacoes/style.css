@@ -3,6 +3,7 @@
     --sidebar-bg: #1e293b;
     --accent: #6366f1;
     --text-main: #f8fafc;
+    --btn-manage-bg: #2d3748;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,6 +63,24 @@ input, textarea, select {
 label { font-size: 0.65rem; color: #94a3b8; margin-bottom: 4px; display: block; }
 
 .image-input-wrapper { display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; }
+
+/* Estilo dos Botões de JSON */
+.btn-management {
+    background: var(--btn-manage-bg);
+    color: white;
+    border: none;
+    padding: 12px 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    flex: 1;
+    transition: background 0.2s;
+}
+
+.btn-management:hover {
+    background: #4a5568;
+}
 
 .btn-secondary {
     background: #ef4444;
