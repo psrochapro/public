@@ -69,7 +69,19 @@ h1 { font-size: clamp(1.1rem, 2.8vh, 1.8rem); font-weight: 900; line-height: 1.1
 
 /* --- A. WIDE (16:9) --- */
 .ratio-16-9 .main-image-container { flex: 1.3; height: 100%; }
-.ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; }
+.ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; gap: 10px; padding: 15px; }
+
+/* Ajustes solicitados para o Wide: Aumento de Thumbs e Fontes */
+.ratio-16-9 .mini-item img { 
+    width: 85px; 
+    height: 85px; 
+}
+.ratio-16-9 .mini-item h4 { 
+    font-size: 1rem; 
+}
+.ratio-16-9 .mini-item p { 
+    font-size: 0.85rem; 
+}
 
 /* --- B. QUADRADO (1:1) --- */
 .ratio-1-1 .card-body { flex-direction: column; padding: 0; gap: 0; }
