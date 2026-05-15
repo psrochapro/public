@@ -2,6 +2,7 @@
   "config": {
     "logo_url": "assets/logo.png",
     "site_url": "WWW.NOTICIASBR.COM.BR",
+    "badge_text": "ÚLTIMAS NOTÍCIAS IMPORTANTES",
     "header_color": "#f5f5f5",
     "bg_color": "#ffffff",
     "accent_color": "#b3adad",
@@ -19,7 +20,7 @@
   },
   "miniNoticias": [
     { "titulo": "Notícia 1", "resumo": "Resumo 1", "thumb_url": "assets/thumb-1.jpg" },
-    { "titulo": "Notícia 2", "resumo": "Resumo 2", "thumb_url": "assets/thumb-2.jpg" },
+    { "titulo": "Notícia 2", "resumo": "Resumo 2", "thumb_url": "assets/thumb-3.jpg" },
     { "titulo": "Notícia 3", "resumo": "Resumo 3", "thumb_url": "assets/thumb-3.jpg" }
   ]
 }

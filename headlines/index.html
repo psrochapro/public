@@ -16,6 +16,8 @@
             <!-- GERENCIAR PROJETO -->
             <section class="control-group">
                 <h3>0. Gerenciar Projeto</h3>
+                <label>Nome do Arquivo (Exportar)</label>
+                <input type="text" id="export-filename" placeholder="snapshot-projeto" value="snapshot-projeto">
                 <div class="row">
                     <button id="btn-export-json" class="btn-secondary">Salvar JSON</button>
                     <button id="btn-trigger-import" class="btn-secondary">Abrir JSON</button>
@@ -32,6 +34,10 @@
                     <option value="ratio-1-1">Quadrado (1:1)</option>
                     <option value="ratio-9-16">Stories (9:16)</option>
                 </select>
+
+                <label>Texto do Badge (Topo)</label>
+                <input type="text" id="edit-badge-text">
+
                 <div class="row">
                     <div>
                         <label>Fundo Card</label>

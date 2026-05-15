@@ -7,6 +7,7 @@ async function init() {
         
         if(!state.noticiaPrincipal.zoom) state.noticiaPrincipal.zoom = 1;
         if(!state.noticiaPrincipal.yPos) state.noticiaPrincipal.yPos = 0;
+        if(!state.config.badge_text) state.config.badge_text = "ÚLTIMAS NOTÍCIAS IMPORTANTES";
 
         setupSidebarInputs();
         setupPersistence();
@@ -24,11 +25,17 @@ function setupPersistence() {
         state.config.bg_color = document.getElementById('bg-card-color').value;
         state.config.header_color = document.getElementById('header-color').value;
         state.config.accent_color = document.getElementById('accent-color').value;
+        
         const dataStr = JSON.stringify(state, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        // Dynamic filename logic
+        let fileName = document.getElementById('export-filename').value.trim() || 'snapshot-projeto';
+        if(!fileName.toLowerCase().endsWith('.json')) fileName += '.json';
+
         const link = document.createElement('a');
         link.setAttribute('href', dataUri);
-        link.setAttribute('download', 'snapshot-projeto.json');
+        link.setAttribute('download', fileName);
         link.click();
     };
 
@@ -75,6 +82,11 @@ function setupSidebarInputs() {
     document.getElementById('header-color').oninput = updateColors;
     document.getElementById('accent-color').oninput = updateColors;
 
+    document.getElementById('edit-badge-text').oninput = (e) => {
+        state.config.badge_text = e.target.value;
+        render();
+    };
+
     document.getElementById('edit-img-zoom').oninput = (e) => {
         state.noticiaPrincipal.zoom = e.target.value;
         document.documentElement.style.setProperty('--img-zoom', e.target.value);
@@ -104,6 +116,7 @@ function setupSidebarInputs() {
 
 function syncSidebarWithState() {
     document.getElementById('layout-selector').value = state.config.layout || "ratio-16-9";
+    document.getElementById('edit-badge-text').value = state.config.badge_text || "";
     document.getElementById('bg-card-color').value = state.config.bg_color || "#ffffff";
     document.getElementById('header-color').value = state.config.header_color || "#f5f5f5";
     document.getElementById('accent-color').value = state.config.accent_color || "#b3adad";
@@ -146,6 +159,7 @@ function render() {
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
     
+    // Layout Logic Preserved Exactly
     if (layout === 'ratio-1-1') {
         cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mid-separator"></div><div class="mini-news-grid" id="mini-news-container"></div>`;
     } else {
@@ -154,6 +168,11 @@ function render() {
     
     document.getElementById('logo-img').src = state.config.logo_url;
     document.getElementById('site-url-text').innerText = state.config.site_url;
+
+    // Update dynamic badge text
+    const badgeEl = document.querySelector('.live-badge');
+    if(badgeEl) badgeEl.innerText = state.config.badge_text;
+
     const miniContainer = document.getElementById('mini-news-container');
     miniContainer.innerHTML = '';
     state.miniNoticias.slice(0, 3).forEach(item => {
