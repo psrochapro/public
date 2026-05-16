@@ -52,17 +52,20 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 .ratio-1-1 #snapshot-stage { aspect-ratio: 1 / 1; height: 90vh; }
 .ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 96vh; }
 
+/* 1. This locks the header to the original slim height */
 .card-header { 
-    height: 65px;            /* This locks the header size */
-    padding: 0 5%;           /* Removed top/bottom padding (1.5% -> 0) */
+    height: 48px;            /* The original height was approx 45-50px */
+    padding: 0 5%;           /* We change 1.5% to 0 to stop the bar from growing */
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
     background: var(--bg-header); 
     flex-shrink: 0; 
 }
+
+/* 2. This makes the logo take up almost all available vertical space */
 .logo { 
-    height: 50px;            /* Increased from 26px to 50px */
+    height: 36px;            /* Increased from 26px to 36px */
     width: auto; 
     object-fit: contain;
     display: block;
