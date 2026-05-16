@@ -7,6 +7,12 @@ const DEFAULT_TYPOGRAPHY = {
         title: { size: 28, color: "#111111" }, sub: { size: 14, color: "#111111" },
         body: { size: 13, color: "#555555" }, mini_t: { size: 16, color: "#111111" }, mini_d: { size: 13, color: "#555555" }
     },
+    "ratio-4-3": {
+        badge: { size: 11, color: "#ffffff" }, url: { size: 10, color: "#111111" },
+        cat: { size: 12, color: "#b3adad" }, date: { size: 10, color: "#ffffff" },
+        title: { size: 32, color: "#111111" }, sub: { size: 16, color: "#111111" },
+        body: { size: 14, color: "#555555" }, mini_t: { size: 17, color: "#111111" }, mini_d: { size: 13, color: "#555555" }
+    },
     "ratio-1-1": {
         badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
         cat: { size: 14, color: "#b3adad" }, date: { size: 12, color: "#ffffff" },
@@ -75,7 +81,7 @@ function sanitizeState() {
     if(state.config.global_typography === undefined) state.config.global_typography = false;
     
     if(!state.layoutSettings) state.layoutSettings = JSON.parse(JSON.stringify(DEFAULT_TYPOGRAPHY));
-    ["ratio-16-9", "ratio-1-1", "ratio-9-16"].forEach(l => {
+    ["ratio-16-9", "ratio-4-3", "ratio-1-1", "ratio-9-16"].forEach(l => {
         if(!state.layoutSettings[l]) {
             state.layoutSettings[l] = JSON.parse(JSON.stringify(DEFAULT_TYPOGRAPHY[l]));
         }
@@ -208,7 +214,7 @@ function handleTypographyInput() {
 
     if (isGlobal) {
         // Aplica a todos os layouts registrados no state
-        ["ratio-16-9", "ratio-1-1", "ratio-9-16"].forEach(l => {
+        ["ratio-16-9", "ratio-4-3", "ratio-1-1", "ratio-9-16"].forEach(l => {
             state.layoutSettings[l][elementKey].size = newSize;
             state.layoutSettings[l][elementKey].color = newColor;
         });

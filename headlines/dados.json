@@ -20,6 +20,17 @@
       "mini_t": { "size": 16, "color": "#111111" },
       "mini_d": { "size": 13, "color": "#555555" }
     },
+    "ratio-4-3": {
+      "badge": { "size": 11, "color": "#ffffff" },
+      "url": { "size": 10, "color": "#111111" },
+      "cat": { "size": 12, "color": "#b3adad" },
+      "date": { "size": 10, "color": "#ffffff" },
+      "title": { "size": 32, "color": "#111111" },
+      "sub": { "size": 16, "color": "#111111" },
+      "body": { "size": 14, "color": "#555555" },
+      "mini_t": { "size": 17, "color": "#111111" },
+      "mini_d": { "size": 13, "color": "#555555" }
+    },
     "ratio-1-1": {
       "badge": { "size": 12, "color": "#ffffff" },
       "url": { "size": 11, "color": "#111111" },

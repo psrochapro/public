@@ -48,6 +48,7 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 #snapshot-stage { background: var(--bg-card); color: var(--text-color); display: flex; flex-direction: column; box-shadow: 0 40px 100px rgba(0,0,0,0.7); position: relative; overflow: hidden; }
 
 .ratio-16-9 #snapshot-stage { aspect-ratio: 16 / 9; width: min(1200px, 94vw); }
+.ratio-4-3 #snapshot-stage { aspect-ratio: 4 / 3; width: min(1000px, 94vw); }
 .ratio-1-1 #snapshot-stage { aspect-ratio: 1 / 1; height: 90vh; }
 .ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 96vh; }
 
@@ -141,6 +142,14 @@ h1 {
 .ratio-16-9 .mini-news-grid { grid-template-columns: 1fr; gap: 12px; padding: 15px; margin-top: 15px; }
 .ratio-16-9 .mini-item img { width: 75px; height: 75px; }
 .ratio-16-9 .card-footer { padding-bottom: 1.5%; }
+
+/* --- D. CLASSIC (4:3) --- */
+.ratio-4-3 .card-body { padding: 3% 4%; gap: 20px; align-items: stretch; }
+.ratio-4-3 .main-image-container { flex: none; width: 52%; }
+.ratio-4-3 .info-container { justify-content: space-between; }
+.ratio-4-3 .news-text { flex: 0 1 auto; justify-content: flex-start; padding-top: 2px; }
+.ratio-4-3 .mini-news-grid { grid-template-columns: 1fr; gap: 10px; padding: 12px; margin-top: 10px; }
+.ratio-4-3 .mini-item img { width: 65px; height: 65px; }
 
 /* --- B. QUADRADO (1:1) --- */
 .ratio-1-1 .card-body { flex-direction: column; padding: 0; gap: 0; }
