@@ -25,7 +25,7 @@
       "url": { "size": 10, "color": "#111111" },
       "cat": { "size": 12, "color": "#b3adad" },
       "date": { "size": 10, "color": "#ffffff" },
-      "title": { "size": 32, "color": "#111111" },
+      "title": { "size": 30, "color": "#111111" },
       "sub": { "size": 16, "color": "#111111" },
       "body": { "size": 14, "color": "#555555" },
       "mini_t": { "size": 17, "color": "#111111" },

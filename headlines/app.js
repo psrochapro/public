@@ -10,7 +10,7 @@ const DEFAULT_TYPOGRAPHY = {
     "ratio-4-3": {
         badge: { size: 11, color: "#ffffff" }, url: { size: 10, color: "#111111" },
         cat: { size: 12, color: "#b3adad" }, date: { size: 10, color: "#ffffff" },
-        title: { size: 32, color: "#111111" }, sub: { size: 16, color: "#111111" },
+        title: { size: 30, color: "#111111" }, sub: { size: 16, color: "#111111" },
         body: { size: 14, color: "#555555" }, mini_t: { size: 17, color: "#111111" }, mini_d: { size: 13, color: "#555555" }
     },
     "ratio-1-1": {
@@ -288,7 +288,8 @@ function render() {
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const mainContentHTML = `<div class="news-text"><span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p><p class="body-text">${principal.corpo_texto}</p></div>`;
     
-    if (layout === 'ratio-1-1') {
+    // Agora o 4:3 usa a mesma estrutura empilhada do 1:1
+    if (layout === 'ratio-1-1' || layout === 'ratio-4-3') {
         cardBody.innerHTML = `<div class="top-section">${imageHTML}${mainContentHTML}</div><div class="mid-separator"></div><div class="mini-news-grid" id="mini-news-container"></div>`;
     } else {
         cardBody.innerHTML = `${imageHTML}<div class="info-container">${mainContentHTML}<div class="mini-news-grid" id="mini-news-container"></div></div>`;

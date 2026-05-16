@@ -143,21 +143,14 @@ h1 {
 .ratio-16-9 .mini-item img { width: 75px; height: 75px; }
 .ratio-16-9 .card-footer { padding-bottom: 1.5%; }
 
-/* --- D. CLASSIC (4:3) --- */
-.ratio-4-3 .card-body { padding: 3% 4%; gap: 20px; align-items: stretch; }
-.ratio-4-3 .main-image-container { flex: none; width: 52%; }
-.ratio-4-3 .info-container { justify-content: space-between; }
-.ratio-4-3 .news-text { flex: 0 1 auto; justify-content: flex-start; padding-top: 2px; }
-.ratio-4-3 .mini-news-grid { grid-template-columns: 1fr; gap: 10px; padding: 12px; margin-top: 10px; }
-.ratio-4-3 .mini-item img { width: 65px; height: 65px; }
-
-/* --- B. QUADRADO (1:1) --- */
-.ratio-1-1 .card-body { flex-direction: column; padding: 0; gap: 0; }
-.ratio-1-1 .top-section { display: flex; gap: 25px; flex: 1.2; padding: 3% 5% 1% 5%; overflow: hidden; align-items: center; }
-.ratio-1-1 .main-image-container { width: 48%; height: auto; flex: none; }
-.ratio-1-1 .mini-news-grid { grid-template-columns: repeat(3, 1fr); flex: 1; margin: 1% 5% 4% 5%; padding: 25px 15px; gap: 20px; align-content: center; }
-.ratio-1-1 .mini-item { flex-direction: column; text-align: center; gap: 8px; }
-.ratio-1-1 .mini-item img { width: clamp(125px, 18vh, 180px); height: clamp(125px, 18vh, 180px); border-radius: 10px; }
+/* --- B. QUADRADO (1:1) & CLASSIC (4:3) --- */
+/* Compartilham a mesma distribuição vertical */
+.ratio-1-1 .card-body, .ratio-4-3 .card-body { flex-direction: column; padding: 0; gap: 0; }
+.ratio-1-1 .top-section, .ratio-4-3 .top-section { display: flex; gap: 25px; flex: 1.2; padding: 3% 5% 1% 5%; overflow: hidden; align-items: center; }
+.ratio-1-1 .main-image-container, .ratio-4-3 .main-image-container { width: 48%; height: auto; flex: none; }
+.ratio-1-1 .mini-news-grid, .ratio-4-3 .mini-news-grid { grid-template-columns: repeat(3, 1fr); flex: 1; margin: 1% 5% 4% 5%; padding: 25px 15px; gap: 20px; align-content: center; }
+.ratio-1-1 .mini-item, .ratio-4-3 .mini-item { flex-direction: column; text-align: center; gap: 8px; }
+.ratio-1-1 .mini-item img, .ratio-4-3 .mini-item img { width: clamp(100px, 16vh, 180px); height: clamp(100px, 16vh, 180px); border-radius: 10px; }
 
 /* --- C. STORIES (9:16) --- */
 .ratio-9-16 .card-body { flex-direction: column; padding: 4% 6%; gap: 10px; }
