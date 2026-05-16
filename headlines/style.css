@@ -53,7 +53,8 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 .ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 96vh; }
 
 .card-header { 
-    padding: 2% 5%; /* Increased top/bottom padding from 1.5% to 2% or 3% */
+    height: 65px;            /* This locks the header size */
+    padding: 0 5%;           /* Removed top/bottom padding (1.5% -> 0) */
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
@@ -61,9 +62,10 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
     flex-shrink: 0; 
 }
 .logo { 
-    height: clamp(40px, 8vh, 80px); /* Increased from 16-26px to 40-80px */
+    height: 50px;            /* Increased from 26px to 50px */
     width: auto; 
-    object-fit: contain; 
+    object-fit: contain;
+    display: block;
 }
 
 .live-badge { 
