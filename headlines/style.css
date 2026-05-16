@@ -53,7 +53,7 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 .ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 96vh; }
 
 .card-header { padding: 1.5% 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-header); flex-shrink: 0; }
-.logo { height: clamp(22px, 3.5vh, 42px); object-fit: contain; }
+.logo { height: clamp(30px, 3.5vh, 42px); object-fit: contain; }
 
 .live-badge { 
     background: var(--accent); 
