@@ -52,24 +52,8 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 .ratio-1-1 #snapshot-stage { aspect-ratio: 1 / 1; height: 90vh; }
 .ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 96vh; }
 
-/* 1. This locks the header to the original slim height */
-.card-header { 
-    height: 48px;            /* The original height was approx 45-50px */
-    padding: 0 5%;           /* We change 1.5% to 0 to stop the bar from growing */
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    background: var(--bg-header); 
-    flex-shrink: 0; 
-}
-
-/* 2. This makes the logo take up almost all available vertical space */
-.logo { 
-    height: 38px;            /* Increased from 26px to 38px */
-    width: auto; 
-    object-fit: contain;
-    display: block;
-}
+.card-header { padding: 1.5% 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-header); flex-shrink: 0; }
+.logo { height: clamp(16px, 2.5vh, 26px); object-fit: contain; }
 
 .live-badge { 
     background: var(--accent); 
