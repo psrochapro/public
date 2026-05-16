@@ -8,6 +8,41 @@
     "accent_color": "#b3adad",
     "layout": "ratio-16-9"
   },
+  "layoutSettings": {
+    "ratio-16-9": {
+      "badge": { "size": 10, "color": "#ffffff" },
+      "url": { "size": 9, "color": "#111111" },
+      "cat": { "size": 11, "color": "#b3adad" },
+      "date": { "size": 9, "color": "#ffffff" },
+      "title": { "size": 28, "color": "#111111" },
+      "sub": { "size": 14, "color": "#111111" },
+      "body": { "size": 13, "color": "#555555" },
+      "mini_t": { "size": 16, "color": "#111111" },
+      "mini_d": { "size": 13, "color": "#555555" }
+    },
+    "ratio-1-1": {
+      "badge": { "size": 12, "color": "#ffffff" },
+      "url": { "size": 11, "color": "#111111" },
+      "cat": { "size": 14, "color": "#b3adad" },
+      "date": { "size": 12, "color": "#ffffff" },
+      "title": { "size": 36, "color": "#111111" },
+      "sub": { "size": 18, "color": "#111111" },
+      "body": { "size": 15, "color": "#555555" },
+      "mini_t": { "size": 18, "color": "#111111" },
+      "mini_d": { "size": 14, "color": "#555555" }
+    },
+    "ratio-9-16": {
+      "badge": { "size": 14, "color": "#ffffff" },
+      "url": { "size": 12, "color": "#111111" },
+      "cat": { "size": 16, "color": "#b3adad" },
+      "date": { "size": 14, "color": "#ffffff" },
+      "title": { "size": 42, "color": "#111111" },
+      "sub": { "size": 20, "color": "#111111" },
+      "body": { "size": 17, "color": "#555555" },
+      "mini_t": { "size": 20, "color": "#111111" },
+      "mini_d": { "size": 16, "color": "#555555" }
+    }
+  },
   "noticiaPrincipal": {
     "categoria": "CIDADE | SP",
     "data": "14 Mai 2026, 11:30 AM",

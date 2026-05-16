@@ -1,5 +1,27 @@
 let state = null;
 
+// Default values for safety if JSON is missing them
+const DEFAULT_TYPOGRAPHY = {
+    "ratio-16-9": {
+        badge: { size: 10, color: "#ffffff" }, url: { size: 9, color: "#111111" },
+        cat: { size: 11, color: "#b3adad" }, date: { size: 9, color: "#ffffff" },
+        title: { size: 28, color: "#111111" }, sub: { size: 14, color: "#111111" },
+        body: { size: 13, color: "#555555" }, mini_t: { size: 16, color: "#111111" }, mini_d: { size: 13, color: "#555555" }
+    },
+    "ratio-1-1": {
+        badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
+        cat: { size: 14, color: "#b3adad" }, date: { size: 12, color: "#ffffff" },
+        title: { size: 36, color: "#111111" }, sub: { size: 18, color: "#111111" },
+        body: { size: 15, color: "#555555" }, mini_t: { size: 18, color: "#111111" }, mini_d: { size: 14, color: "#555555" }
+    },
+    "ratio-9-16": {
+        badge: { size: 14, color: "#ffffff" }, url: { size: 12, color: "#111111" },
+        cat: { size: 16, color: "#b3adad" }, date: { size: 14, color: "#ffffff" },
+        title: { size: 42, color: "#111111" }, sub: { size: 20, color: "#111111" },
+        body: { size: 17, color: "#555555" }, mini_t: { size: 20, color: "#111111" }, mini_d: { size: 16, color: "#555555" }
+    }
+};
+
 async function cropImage(url, targetRatio) {
     return new Promise((resolve) => {
         const img = new Image();
@@ -29,23 +51,37 @@ async function init() {
         const response = await fetch('dados.json');
         state = await response.json();
         
+        // Load settings and ensure all fields exist
+        sanitizeState();
+
         state.noticiaPrincipal.imagem_url = await cropImage(state.noticiaPrincipal.imagem_url, 4/3);
         for (let i = 0; i < state.miniNoticias.length; i++) {
             state.miniNoticias[i].thumb_url = await cropImage(state.miniNoticias[i].thumb_url, 1/1);
         }
 
-        if(!state.noticiaPrincipal.zoom) state.noticiaPrincipal.zoom = 1;
-        if(!state.noticiaPrincipal.yPos) state.noticiaPrincipal.yPos = 0;
-        if(!state.config.badge_text) state.config.badge_text = "ÚLTIMAS NOTÍCIAS IMPORTANTES";
-
         setupSidebarInputs();
         setupPersistence();
         syncSidebarWithState();
+        applyTypographyToCSS();
         render();
         updateColors();
     } catch (e) {
         console.error("Erro ao iniciar:", e);
     }
+}
+
+function sanitizeState() {
+    if(!state.noticiaPrincipal.zoom) state.noticiaPrincipal.zoom = 1;
+    if(!state.noticiaPrincipal.yPos) state.noticiaPrincipal.yPos = 0;
+    if(!state.config.badge_text) state.config.badge_text = "ÚLTIMAS NOTÍCIAS IMPORTANTES";
+    
+    // Ensure Layout Settings exist for all formats
+    if(!state.layoutSettings) state.layoutSettings = JSON.parse(JSON.stringify(DEFAULT_TYPOGRAPHY));
+    ["ratio-16-9", "ratio-1-1", "ratio-9-16"].forEach(l => {
+        if(!state.layoutSettings[l]) {
+            state.layoutSettings[l] = JSON.parse(JSON.stringify(DEFAULT_TYPOGRAPHY[l]));
+        }
+    });
 }
 
 function setupPersistence() {
@@ -72,11 +108,13 @@ function setupPersistence() {
         const reader = new FileReader();
         reader.onload = async (event) => {
             state = JSON.parse(event.target.result);
+            sanitizeState();
             state.noticiaPrincipal.imagem_url = await cropImage(state.noticiaPrincipal.imagem_url, 4/3);
             for (let i = 0; i < state.miniNoticias.length; i++) {
                 state.miniNoticias[i].thumb_url = await cropImage(state.miniNoticias[i].thumb_url, 1/1);
             }
             syncSidebarWithState();
+            applyTypographyToCSS();
             render();
             updateColors();
         };
@@ -104,6 +142,8 @@ function setupSidebarInputs() {
     document.getElementById('layout-selector').onchange = (e) => {
         state.config.layout = e.target.value;
         document.body.className = e.target.value;
+        syncTypographyUI();
+        applyTypographyToCSS();
         render();
         updateColors();
     };
@@ -111,6 +151,12 @@ function setupSidebarInputs() {
     document.getElementById('header-color').oninput = updateColors;
     document.getElementById('accent-color').oninput = updateColors;
     document.getElementById('edit-badge-text').oninput = (e) => { state.config.badge_text = e.target.value; render(); };
+    
+    // Typography Listeners
+    document.getElementById('text-element-selector').onchange = syncTypographyUI;
+    document.getElementById('edit-font-size').oninput = handleTypographyInput;
+    document.getElementById('edit-font-color').oninput = handleTypographyInput;
+
     document.getElementById('edit-img-zoom').oninput = (e) => {
         state.noticiaPrincipal.zoom = e.target.value;
         document.documentElement.style.setProperty('--img-zoom', e.target.value);
@@ -143,6 +189,37 @@ function setupSidebarInputs() {
     document.getElementById('edit-main-body').oninput = (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); };
 }
 
+function syncTypographyUI() {
+    const layout = state.config.layout || "ratio-16-9";
+    const elementKey = document.getElementById('text-element-selector').value.replace('-', '_');
+    const settings = state.layoutSettings[layout][elementKey];
+    
+    document.getElementById('edit-font-size').value = settings.size;
+    document.getElementById('edit-font-color').value = settings.color;
+}
+
+function handleTypographyInput() {
+    const layout = state.config.layout || "ratio-16-9";
+    const elementKey = document.getElementById('text-element-selector').value.replace('-', '_');
+    
+    state.layoutSettings[layout][elementKey].size = document.getElementById('edit-font-size').value;
+    state.layoutSettings[layout][elementKey].color = document.getElementById('edit-font-color').value;
+    
+    applyTypographyToCSS();
+}
+
+function applyTypographyToCSS() {
+    const layout = state.config.layout || "ratio-16-9";
+    const settings = state.layoutSettings[layout];
+    const root = document.documentElement;
+
+    Object.keys(settings).forEach(key => {
+        const cssKey = key.replace('_', '-'); 
+        root.style.setProperty(`--fs-${cssKey}`, `${settings[key].size / 16}rem`);
+        root.style.setProperty(`--clr-${cssKey}`, settings[key].color);
+    });
+}
+
 function syncSidebarWithState() {
     const layout = state.config.layout || "ratio-16-9";
     document.getElementById('layout-selector').value = layout;
@@ -165,6 +242,7 @@ function syncSidebarWithState() {
         document.getElementById(`edit-resumo-${i}`).value = state.miniNoticias[i].resumo;
     }
     document.body.className = layout;
+    syncTypographyUI();
 }
 
 function handleImageUpload(id, callback) {

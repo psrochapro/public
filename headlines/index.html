@@ -111,6 +111,35 @@
                     <input type="text" id="edit-resumo-2">
                 </div>
             </section>
+
+            <!-- TIPOGRAFIA -->
+            <section class="control-group">
+                <h3>4. Tipografia & Cores de Texto</h3>
+                <label>Selecionar Elemento</label>
+                <select id="text-element-selector">
+                    <option value="badge">Texto do Badge (Topo)</option>
+                    <option value="url">URL do Site</option>
+                    <option value="cat">Categoria | Local</option>
+                    <option value="date">Data / Hora</option>
+                    <option value="title">Manchete (H1)</option>
+                    <option value="sub">Subtítulo</option>
+                    <option value="body">Corpo do Texto</option>
+                    <option value="mini-t">Título Mini Notícia</option>
+                    <option value="mini-d">Resumo Mini Notícia</option>
+                </select>
+
+                <div class="row">
+                    <div style="flex: 2;">
+                        <label>Tamanho (px)</label>
+                        <input type="range" id="edit-font-size" min="8" max="100" step="1">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Cor</label>
+                        <input type="color" id="edit-font-color">
+                    </div>
+                </div>
+                <p style="font-size: 0.6rem; color: #888; margin-top: -5px;">Ajustes independentes por layout.</p>
+            </section>
         </div>
 
         <button id="btn-export-png" class="btn-primary">Gerar PNG Alta Resolução</button>
