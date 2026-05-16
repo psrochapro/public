@@ -52,8 +52,19 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 .ratio-1-1 #snapshot-stage { aspect-ratio: 1 / 1; height: 90vh; }
 .ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 96vh; }
 
-.card-header { padding: 1.5% 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-header); flex-shrink: 0; }
-.logo { height: clamp(30px, 3.5vh, 42px); object-fit: contain; }
+.card-header { 
+    padding: 2% 5%; /* Increased top/bottom padding from 1.5% to 2% or 3% */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: var(--bg-header); 
+    flex-shrink: 0; 
+}
+.logo { 
+    height: clamp(40px, 8vh, 80px); /* Increased from 16-26px to 40-80px */
+    width: auto; 
+    object-fit: contain; 
+}
 
 .live-badge { 
     background: var(--accent); 
