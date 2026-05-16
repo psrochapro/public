@@ -1,6 +1,5 @@
 let state = null;
 
-// Default values for safety if JSON is missing them
 const DEFAULT_TYPOGRAPHY = {
     "ratio-16-9": {
         badge: { size: 10, color: "#ffffff" }, url: { size: 9, color: "#111111" },
@@ -51,7 +50,6 @@ async function init() {
         const response = await fetch('dados.json');
         state = await response.json();
         
-        // Load settings and ensure all fields exist
         sanitizeState();
 
         state.noticiaPrincipal.imagem_url = await cropImage(state.noticiaPrincipal.imagem_url, 4/3);
@@ -74,8 +72,8 @@ function sanitizeState() {
     if(!state.noticiaPrincipal.zoom) state.noticiaPrincipal.zoom = 1;
     if(!state.noticiaPrincipal.yPos) state.noticiaPrincipal.yPos = 0;
     if(!state.config.badge_text) state.config.badge_text = "ÚLTIMAS NOTÍCIAS IMPORTANTES";
+    if(state.config.global_typography === undefined) state.config.global_typography = false;
     
-    // Ensure Layout Settings exist for all formats
     if(!state.layoutSettings) state.layoutSettings = JSON.parse(JSON.stringify(DEFAULT_TYPOGRAPHY));
     ["ratio-16-9", "ratio-1-1", "ratio-9-16"].forEach(l => {
         if(!state.layoutSettings[l]) {
@@ -90,6 +88,7 @@ function setupPersistence() {
         state.config.bg_color = document.getElementById('bg-card-color').value;
         state.config.header_color = document.getElementById('header-color').value;
         state.config.accent_color = document.getElementById('accent-color').value;
+        state.config.global_typography = document.getElementById('global-typography-toggle').checked;
         const dataStr = JSON.stringify(state, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         let fileName = document.getElementById('export-filename').value.trim() || 'snapshot-projeto';
@@ -153,6 +152,9 @@ function setupSidebarInputs() {
     document.getElementById('edit-badge-text').oninput = (e) => { state.config.badge_text = e.target.value; render(); };
     
     // Typography Listeners
+    document.getElementById('global-typography-toggle').onchange = (e) => {
+        state.config.global_typography = e.target.checked;
+    };
     document.getElementById('text-element-selector').onchange = syncTypographyUI;
     document.getElementById('edit-font-size').oninput = handleTypographyInput;
     document.getElementById('edit-font-color').oninput = handleTypographyInput;
@@ -199,11 +201,23 @@ function syncTypographyUI() {
 }
 
 function handleTypographyInput() {
-    const layout = state.config.layout || "ratio-16-9";
+    const isGlobal = document.getElementById('global-typography-toggle').checked;
     const elementKey = document.getElementById('text-element-selector').value.replace('-', '_');
-    
-    state.layoutSettings[layout][elementKey].size = document.getElementById('edit-font-size').value;
-    state.layoutSettings[layout][elementKey].color = document.getElementById('edit-font-color').value;
+    const newSize = document.getElementById('edit-font-size').value;
+    const newColor = document.getElementById('edit-font-color').value;
+
+    if (isGlobal) {
+        // Aplica a todos os layouts registrados no state
+        ["ratio-16-9", "ratio-1-1", "ratio-9-16"].forEach(l => {
+            state.layoutSettings[l][elementKey].size = newSize;
+            state.layoutSettings[l][elementKey].color = newColor;
+        });
+    } else {
+        // Aplica apenas ao layout atual
+        const layout = state.config.layout || "ratio-16-9";
+        state.layoutSettings[layout][elementKey].size = newSize;
+        state.layoutSettings[layout][elementKey].color = newColor;
+    }
     
     applyTypographyToCSS();
 }
@@ -223,6 +237,7 @@ function applyTypographyToCSS() {
 function syncSidebarWithState() {
     const layout = state.config.layout || "ratio-16-9";
     document.getElementById('layout-selector').value = layout;
+    document.getElementById('global-typography-toggle').checked = !!state.config.global_typography;
     document.getElementById('edit-badge-text').value = state.config.badge_text || "";
     document.getElementById('bg-card-color').value = state.config.bg_color || "#ffffff";
     document.getElementById('header-color').value = state.config.header_color || "#f5f5f5";
@@ -297,7 +312,7 @@ function updateColors() {
     const hColor = document.getElementById('header-color').value;
     const accentColor = document.getElementById('accent-color').value;
     const mainText = getContrastYIQ(bgColor);
-    root = document.documentElement;
+    const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
     root.style.setProperty('--bg-header', hColor);
     root.style.setProperty('--accent', accentColor);

@@ -115,6 +115,15 @@
             <!-- TIPOGRAFIA -->
             <section class="control-group">
                 <h3>4. Tipografia & Cores de Texto</h3>
+                
+                <div style="background: #222; padding: 10px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <label style="margin-bottom: 0;">Aplicar a todos os layouts?</label>
+                        <input type="checkbox" id="global-typography-toggle" style="width: auto; margin-bottom: 0; cursor: pointer;">
+                    </div>
+                    <p style="font-size: 0.55rem; color: #888; margin-top: 5px;">Se ativo, a cor/tamanho mudará em 16:9, 1:1 e 9:16 ao mesmo tempo.</p>
+                </div>
+
                 <label>Selecionar Elemento</label>
                 <select id="text-element-selector">
                     <option value="badge">Texto do Badge (Topo)</option>
@@ -138,7 +147,6 @@
                         <input type="color" id="edit-font-color">
                     </div>
                 </div>
-                <p style="font-size: 0.6rem; color: #888; margin-top: -5px;">Ajustes independentes por layout.</p>
             </section>
         </div>
 
