@@ -52,8 +52,20 @@ input[type="text"], input[type="color"], select, textarea, input[type="file"], i
 .ratio-1-1 #snapshot-stage { aspect-ratio: 1 / 1; height: 90vh; }
 .ratio-9-16 #snapshot-stage { aspect-ratio: 9 / 16; height: 96vh; }
 
-.card-header { padding: 1.5% 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-header); flex-shrink: 0; }
-.logo { height: clamp(16px, 2.5vh, 26px); object-fit: contain; }
+.card-header { 
+    padding: 0.5% 5%; /* Reduzido de 1.5% para 0.5% para dar espaço à logo sem crescer o header */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: var(--bg-header); 
+    flex-shrink: 0; 
+}
+
+.logo { 
+    height: clamp(24px, 4.2vh, 45px); /* Aumentado o limite de 26px para 45px */
+    width: auto;
+    object-fit: contain; 
+}
 
 .live-badge { 
     background: var(--accent); 
