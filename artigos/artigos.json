@@ -6,5 +6,13 @@
     "pasta": "artigo_001",
     "imagem": "artigo_001/headline.png",
     "pdf": "artigo_001/artigo.pdf"
+  },
+  {
+    "id": "artigo_002",
+    "titulo": "Artigo de Teste (Navegação Lateral)",
+    "data": "19/05/2026",
+    "pasta": "artigo_001",
+    "imagem": "artigo_001/headline.png",
+    "pdf": "artigo_001/artigo.pdf"
   }
 ]
