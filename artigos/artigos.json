@@ -18,5 +18,15 @@
     "pasta": "artigo_002",
     "imagem": "artigo_002/headline.png",
     "pdf": "artigo_002/artigo.pdf"
+  },
+  {
+    "id": "artigo_003",
+    "titulo": "BSC Balanced Scorecard",
+    "autor": "Paulo Sergio Rocha",
+    "data": "01/08/2011",
+    "descricao": "Desafios na implementação do BSC.",
+    "pasta": "artigo_002",
+    "imagem": "artigo_002/headline.png",
+    "pdf": "artigo_002/artigo.pdf"
   }
 ]
