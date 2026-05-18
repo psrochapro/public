@@ -53,8 +53,9 @@ function renderizarListaLateral() {
             selecionarArtigo(indiceReal);
         };
 
+        // Correção TP: Mapeado para artigo.imagem do JSON
         card.innerHTML = `
-            <img src="${artigo.headline}" alt="Miniatura">
+            <img src="${artigo.imagem}" alt="Miniatura">
             <div class="info">
                 <h3>${artigo.titulo}</h3>
                 <span class="autor">Por: ${artigo.autor}</span>
@@ -77,8 +78,10 @@ function selecionarArtigo(index) {
 
     // Atualiza textos e imagens do Glassmorphism
     document.getElementById('preview-titulo').innerText = artigo.titulo;
-    document.getElementById('preview-headline').src = artigo.headline;
-    document.getElementById('glass-bg').style.backgroundImage = `url('${artigo.headline}')`;
+    
+    // Correção TP: Mapeado para artigo.imagem do JSON
+    document.getElementById('preview-headline').src = artigo.imagem;
+    document.getElementById('glass-bg').style.backgroundImage = `url('${artigo.imagem}')`;
 
     // Atualiza a ação do botão para abrir o respectivo PDF
     const btnLer = document.getElementById('btn-ler-artigo');

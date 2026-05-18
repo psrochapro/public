@@ -18,7 +18,7 @@ body {
     overflow: hidden;
 }
 
-/* Barra Lateral */
+/* Barra Lateral - Ampliada */
 .sidebar {
     width: 340px;
     min-width: 340px;
@@ -37,7 +37,6 @@ body {
     color: #495057;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-top: 5px;
 }
 
 /* Container e Formatação da Logo */
@@ -207,7 +206,7 @@ body {
     width: 95%;
     max-width: 960px;
     height: auto;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 3;     /* Restaura a proporção widescreen perfeita */
     max-height: 92vh;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(16px);
@@ -234,14 +233,14 @@ body {
     flex-shrink: 0;
 }
 
-/* Correção da Headline: Proporção natural sem deformidade e sem silhueta escura */
+/* Otimização da Headline: Centralizada e visível por completo, sem achatamento e sem silhueta escura */
 .preview-headline-glass {
     width: 100%;
     height: auto;
     flex: 1;
-    object-fit: contain;
-    background: transparent;
-    box-shadow: none;
+    object-fit: contain;     /* Restaura o infográfico 100% visível, sem cortes e sem achatamento */
+    background: transparent; /* Remove a silhueta escura artificial */
+    box-shadow: none;        /* Remove sombras nas bordas vazias da imagem */
     min-height: 0;
 }
 
