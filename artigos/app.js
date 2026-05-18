@@ -38,46 +38,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Busca o HTML do artigo e corrige o caminho das imagens internas
+    // 3. Renderiza a headline e incorpora o leitor de PDF nativo
     function carregarArtigo(artigo) {
         visualizador.innerHTML = '<p class="placeholder-text">A carregar artigo...</p>';
 
-        fetch(artigo.html)
-            .then(response => {
-                if (!response.ok) throw new Error('Não foi possível carregar o conteúdo do artigo.');
-                return response.text();
-            })
-            .then(htmlConteudo => {
-                // Cria um elemento temporário na memória para manipular os caminhos
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlConteudo, 'text/html');
-                
-                // Encontra todas as imagens do artigo e ajusta o src para apontar para a pasta correta
-                const imagensInternas = doc.querySelectorAll('img');
-                imagensInternas.forEach(img => {
-                    const srcAtual = img.getAttribute('src');
-                    // Se o caminho for relativo (ex: images/image1.png), ajusta para artigo_001/images/image1.png
-                    if (srcAtual && !srcAtual.startsWith('http') && !srcAtual.startsWith('/')) {
-                        img.setAttribute('src', `${artigo.pasta}/${srcAtual}`);
-                    }
-                });
-
-                // Obtém o HTML atualizado com os caminhos corrigidos
-                const htmlCorrigido = doc.body.innerHTML;
-
-                // Monta a estrutura final na tela
-                visualizador.innerHTML = `
-                    <img src="${artigo.imagem}" class="headline-principal" alt="${artigo.titulo}">
-                    <div class="conteudo-html-artigo">
-                        ${htmlCorrigido}
-                    </div>
-                `;
-                
-                document.querySelector('.content-viewer').scrollTop = 0;
-            })
-            .catch(error => {
-                console.error(error);
-                visualizador.innerHTML = `<p class="placeholder-text" style="color: #dc3545;">Erro ao abrir o artigo selecionado.</p>`;
-            });
+        // Monta a estrutura com a Headline no topo e o PDF integrado abaixo
+        // Usamos #toolbar=0&navpanes=0 para ocultar barras desnecessárias do leitor de PDF e manter o visual limpo
+        visualizador.innerHTML = `
+            <img src="${artigo.imagem}" class="headline-principal" alt="${artigo.titulo}">
+            <div class="leitor-pdf-container" style="width: 100%; height: calc(100vh - 250px); margin-top: 20px;">
+                <iframe 
+                    src="${artigo.pdf}#toolbar=0&navpanes=0" 
+                    width="100%" 
+                    height="100%" 
+                    style="border: none; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+                    title="${artigo.titulo}">
+                </iframe>
+            </div>
+        `;
+        
+        // Garante o scroll para o topo ao mudar de artigo
+        document.querySelector('.content-viewer').scrollTop = 0;
     }
 });
