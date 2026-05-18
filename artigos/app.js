@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     // 2. Renderiza a lista lateral com base no array fornecido
-    function renderizarIndice(artigos ParaExibir) {
+    function renderizarIndice(artigosParaExibir) {
         listaContainer.innerHTML = '';
         
         if (artigosParaExibir.length === 0) {

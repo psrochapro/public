@@ -159,7 +159,9 @@ body {
 
 /* Container do PDF em Tela Cheia */
 .leitor-pdf-cheio {
-    width: 100%;
-    height: 100%;
+    flex: 1;          /* Força o iframe a crescer e ocupar toda a altura restante */
+    width: 100%;      /* Ocupa toda a largura da área principal */
+    height: 100%;     /* Ocupa toda a altura disponível */
     border: none;
+    display: block;
 }
