@@ -1,5 +1,15 @@
 [
   {
+    "id": "artigo_003",
+    "titulo": "Governança de Business Intelligence",
+    "autor": "Paulo Sergio Rocha",
+    "data": "18/05/2026",
+    "descricao": "Como implementar a Governaça de BI.",
+    "pasta": "artigo_003",
+    "imagem": "artigo_003/headline.png",
+    "pdf": "artigo_003/artigo.pdf"
+  },
+  {
     "id": "artigo_001",
     "titulo": "Modelo Híbrido Supera Dilema de BI",
     "autor": "Paulo Sergio Rocha",
@@ -18,15 +28,5 @@
     "pasta": "artigo_002",
     "imagem": "artigo_002/headline.png",
     "pdf": "artigo_002/artigo.pdf"
-  },
-  {
-    "id": "artigo_003",
-    "titulo": "Governança de Business Intelligence",
-    "autor": "Paulo Sergio Rocha",
-    "data": "18/05/2026",
-    "descricao": "Como implementar a Governaça de BI.",
-    "pasta": "artigo_003",
-    "imagem": "artigo_003/headline.png",
-    "pdf": "artigo_003/artigo.pdf"
   }
 ]
