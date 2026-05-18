@@ -217,15 +217,14 @@ body {
     flex-shrink: 0;
 }
 
-/* Alinhamento da Headline para casar com o formato 4:3 do Card */
+/* Correção da Headline: Proporção natural sem deformidade e sem silhueta escura */
 .preview-headline-glass {
     width: 100%;
     height: auto;
     flex: 1;
-    aspect-ratio: 4 / 3;     /* Força a imagem a preencher exatamente os limites de proporção desejados */
-    object-fit: fill;        /* Alinha as bordas perfeitamente removendo a silhueta lateral sobressalente */
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    object-fit: contain;     /* Preserva o aspecto nativo e perfeito do arquivo */
+    background: transparent; /* Remove qualquer fundo que possa gerar silhueta artificial */
+    box-shadow: none;        /* Remove sombras nas bordas vazias da imagem */
     min-height: 0;
 }
 
