@@ -1,4 +1,4 @@
-/* Configurações Gerais / Reset Minimalista */
+/* Reset Minimalista */
 * {
     margin: 0;
     padding: 0;
@@ -6,20 +6,18 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #333;
     background-color: #f8f9fa;
-    line-height: 1.25; /* Alinhado ao padrão de leitura de documentos */
 }
 
-/* Estrutura de Colunas (Layout) */
 .container {
     display: flex;
     height: 100vh;
     overflow: hidden;
 }
 
-/* Barra Lateral (Índice de Artigos) */
+/* Barra Lateral */
 .sidebar {
     width: 300px;
     background-color: #ffffff;
@@ -29,7 +27,7 @@ body {
 }
 
 .sidebar h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 20px;
     color: #495057;
     text-transform: uppercase;
@@ -42,7 +40,7 @@ body {
     gap: 12px;
 }
 
-/* Item do Artigo na Lista (Card/Thumb) */
+/* Card de Navegação Lateral */
 .artigo-thumb-card {
     cursor: pointer;
     border: 1px solid #dee2e6;
@@ -68,69 +66,78 @@ body {
 }
 
 .artigo-thumb-card h3 {
-    font-size: 0.95rem;
-    margin-bottom: 5px;
+    font-size: 0.9rem;
     color: #212529;
+    line-height: 1.3;
 }
 
-.artigo-thumb-card span {
-    font-size: 0.8rem;
-    color: #868e96;
-}
-
-/* Área Principal de Leitura */
+/* Área Principal */
 .content-viewer {
     flex: 1;
-    overflow-y: auto;
     background-color: #ffffff;
-    padding: 40px;
+    overflow: hidden; /* Evita rolagens duplas na janela principal */
 }
 
 .artigo-completo {
-    max-width: 850px;
-    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .placeholder-text {
     text-align: center;
     color: #868e96;
-    margin-top: 20vh;
+    margin: auto;
     font-size: 1.1rem;
 }
 
-/* Exibição da Headline - Sem Cortes */
-.headline-principal {
+/* Tela de Preview (Capa do Artigo) */
+.preview-container {
+    max-width: 700px;
+    margin: auto;
+    padding: 40px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+
+.preview-titulo {
+    font-size: 1.8rem;
+    color: #212529;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.preview-headline {
     width: 100%;
-    height: auto; /* Altera de tamanho fixo para automático para não cortar */
-    display: block;
+    height: auto;
     border-radius: 8px;
-    margin-bottom: 35px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
-/* Isolamento do Conteúdo do Artigo (Preserva os estilos do Google Docs) */
-.conteudo-html-artigo {
-    margin-top: 20px;
-    color: initial; /* Reseta para não herdar bloqueios do app */
+/* Botão de Ação Minimalista */
+.btn-ler-artigo {
+    background-color: #212529;
+    color: #ffffff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-/* Garante que as tabelas fiquem bem estruturadas e com bordas visíveis */
-.conteudo-html-artigo table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin: 24px 0 !important;
+.btn-ler-artigo:hover {
+    background-color: #495057;
 }
 
-.conteudo-html-artigo td, .conteudo-html-artigo th {
-    border: 1px solid #cccccc !important;
-    padding: 10px !important;
-    vertical-align: top;
-}
-
-/* Força as imagens internas do texto a respeitarem os limites da página */
-.conteudo-html-artigo img {
-    max-width: 100% !important;
-    height: auto !important;
-    display: block;
-    margin: 20px auto;
+/* Container do PDF em Tela Cheia */
+.leitor-pdf-cheio {
+    width: 100%;
+    height: 100%;
+    border: none;
 }
