@@ -18,7 +18,7 @@ body {
     overflow: hidden;
 }
 
-/* Barra Lateral - Ampliada para dar mais respiro ao texto longo */
+/* Barra Lateral */
 .sidebar {
     width: 340px;
     min-width: 340px;
@@ -62,7 +62,7 @@ body {
     gap: 16px;
 }
 
-/* Card de Navegação Lateral - Versão com Descrição Completa */
+/* Card de Navegação Lateral */
 .artigo-thumb-card {
     cursor: pointer;
     border: 1px solid #dee2e6;
@@ -108,7 +108,6 @@ body {
     font-weight: 500;
 }
 
-/* Remoção do Clamp: O texto agora flui naturalmente por completo */
 .artigo-thumb-card .descricao {
     font-size: 0.8rem;
     color: #495057;
@@ -184,7 +183,7 @@ body {
     z-index: 1;
 }
 
-/* Card Central Expandido Dinamicamente */
+/* Card Central */
 .preview-card-central {
     position: relative;
     z-index: 2;
@@ -216,12 +215,13 @@ body {
     flex-shrink: 0;
 }
 
-/* Otimização da Imagem de Capa para Preenchimento */
+/* Trava Dinâmica em Aspect Ratio 4:3 */
 .preview-headline-glass {
     width: 100%;
     height: auto;
     max-height: 60vh;
-    object-fit: contain;
+    aspect-ratio: 4 / 3;     /* Força a proporção ideal de fotografia/slideshow */
+    object-fit: cover;       /* Garante preenchimento completo cortando sobras de forma inteligente */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     flex-shrink: 1;
