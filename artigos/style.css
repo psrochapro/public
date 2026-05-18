@@ -23,15 +23,34 @@ body {
     background-color: #ffffff;
     border-right: 1px solid #e9ecef;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     overflow-y: auto;
 }
 
 .sidebar h2 {
     font-size: 1.1rem;
-    margin-bottom: 20px;
     color: #495057;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Campo de Busca Minimalista */
+.input-busca {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    outline: none;
+    background-color: #f8f9fa;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.input-busca:focus {
+    border-color: #212529;
+    background-color: #ffffff;
 }
 
 .lista-artigos {
@@ -75,7 +94,7 @@ body {
 .content-viewer {
     flex: 1;
     background-color: #ffffff;
-    overflow: hidden; /* Evita rolagens duplas na janela principal */
+    overflow: hidden;
 }
 
 .artigo-completo {
@@ -94,7 +113,8 @@ body {
 
 /* Tela de Preview (Capa do Artigo) */
 .preview-container {
-    max-width: 700px;
+    width: 100%;
+    max-width: 100%;
     margin: auto;
     padding: 40px 20px;
     text-align: center;
@@ -109,10 +129,12 @@ body {
     color: #212529;
     font-weight: 700;
     line-height: 1.3;
+    max-width: 85%;
 }
 
 .preview-headline {
     width: 100%;
+    max-width: 85%;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.1);
