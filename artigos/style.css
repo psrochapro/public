@@ -183,12 +183,14 @@ body {
     z-index: 1;
 }
 
-/* Card Central */
+/* Card Central - Proporção de aspecto 4:3 travada no container externo */
 .preview-card-central {
     position: relative;
     z-index: 2;
     width: 95%;
     max-width: 960px;
+    height: auto;
+    aspect-ratio: 4 / 3;     /* Mantém o card externo rigorosamente em proporção de slide */
     max-height: 92vh;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(16px);
@@ -215,16 +217,14 @@ body {
     flex-shrink: 0;
 }
 
-/* Trava Dinâmica em Aspect Ratio 4:3 */
+/* Imagem adaptável sem perdas internas */
 .preview-headline-glass {
     width: 100%;
     height: auto;
-    max-height: 60vh;
-    aspect-ratio: 4 / 3;     /* Força a proporção ideal de fotografia/slideshow */
-    object-fit: cover;       /* Garante preenchimento completo cortando sobras de forma inteligente */
+    flex: 1;                 /* Ocupa dinamicamente todo o espaço restante do container */
+    object-fit: contain;     /* Preserva o infográfico 100% visível, sem cortes nas bordas */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    flex-shrink: 1;
     min-height: 0;
 }
 
@@ -241,6 +241,7 @@ body {
     transition: background-color 0.2s, transform 0.2s;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     flex-shrink: 0;
+    margin-top: 5px;
 }
 
 .btn-ler-artigo-glass:hover {
