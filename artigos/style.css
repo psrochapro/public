@@ -59,38 +59,79 @@ body {
 .lista-artigos {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px; /* Espaço ligeiramente maior devido ao novo volume de texto */
 }
 
-/* Card de Navegação Lateral */
+/* Card de Navegação Lateral - Versão Informativa */
 .artigo-thumb-card {
     cursor: pointer;
     border: 1px solid #dee2e6;
-    border-radius: 6px;
+    border-radius: 8px;
     overflow: hidden;
     background: #fff;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: flex;
+    flex-direction: column;
 }
 
 .artigo-thumb-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+    border-color: #ced4da;
 }
 
 .artigo-thumb-card img {
     width: 100%;
     height: auto;
     display: block;
+    border-bottom: 1px solid #f1f3f5;
 }
 
+/* Bloco de Conteúdo Interno da Miniatura */
 .artigo-thumb-card .info {
-    padding: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .artigo-thumb-card h3 {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 600;
     color: #212529;
     line-height: 1.3;
+}
+
+.artigo-thumb-card .autor {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.artigo-thumb-card .descricao {
+    font-size: 0.8rem;
+    color: #495057;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limita estritamente a 3 linhas para não estourar a barra lateral */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+/* Rodapé Interno do Card */
+.artigo-thumb-card .meta-footer {
+    border-top: 1px dashed #f1f3f5;
+    margin-top: 4px;
+    padding-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.artigo-thumb-card .data {
+    font-size: 0.75rem;
+    color: #969faf;
 }
 
 /* Área Principal de Visualização */
@@ -127,7 +168,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 30px; /* Mantém respiro elegante nas bordas extremas */
+    padding: 30px;
 }
 
 /* Imagem de fundo duplicada e ultra desfocada */
@@ -148,9 +189,9 @@ body {
 .preview-card-central {
     position: relative;
     z-index: 2;
-    width: 95%;              /* Expandido para aproveitar as laterais */
-    max-width: 960px;        /* Limite mais generoso de largura (ideal para resoluções widescreen) */
-    max-height: 92vh;        /* Aproveita o espaço vertical sem encostar no topo/rodapé */
+    width: 95%;
+    max-width: 960px;
+    max-height: 92vh;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -180,8 +221,8 @@ body {
 .preview-headline-glass {
     width: 100%;
     height: auto;
-    max-height: 60vh;        /* Expandido de 50vh para 60vh para ocupar a área ociosa vertical */
-    object-fit: contain;     /* Preserva as proporções exatas da imagem */
+    max-height: 60vh;
+    object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     flex-shrink: 1;
