@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3>${artigo.titulo}</h3>
                 </div>
             `;
-            card.addEventListener('click', () => mostrarPreview(artigo));
+            card.addEventListener('click', () => mostrarPreviewGlass(artigo));
             listaContainer.appendChild(card);
         });
     }
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     campoBusca.addEventListener('input', (e) => {
         const termoBusca = e.target.value.toLowerCase().trim();
         
-        // Filtra comparando o termo digitado com o título do artigo
         const artigosFiltrados = bancoArtigos.filter(artigo => {
             return artigo.titulo.toLowerCase().includes(termoBusca);
         });
@@ -52,13 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
         renderizarIndice(artigosFiltrados);
     });
 
-    // 4. Estado 1: Mostra apenas a Capa/Preview (Headline + Botão)
-    function mostrarPreview(artigo) {
+    // 4. Estado 1: Modo Slideshow Glassmorphism (Fundo desfocado + Card Central)
+    function mostrarPreviewGlass(artigo) {
         visualizador.innerHTML = `
-            <div class="preview-container">
-                <h1 class="preview-titulo">${artigo.titulo}</h1>
-                <img src="${artigo.imagem}" class="preview-headline" alt="${artigo.titulo}">
-                <button id="btn-iniciar-leitura" class="btn-ler-artigo">Ler Artigo Completo</button>
+            <div class="preview-glass-wrapper">
+                <div class="glass-bg-blur" style="background-image: url('${artigo.imagem}');"></div>
+                
+                <div class="preview-card-central">
+                    <h1 class="preview-titulo-glass">${artigo.titulo}</h1>
+                    <img src="${artigo.imagem}" class="preview-headline-glass" alt="${artigo.titulo}">
+                    <button id="btn-iniciar-leitura" class="btn-ler-artigo-glass">Abrir Documento PDF</button>
+                </div>
             </div>
         `;
 

@@ -14,12 +14,14 @@ body {
 .container {
     display: flex;
     height: 100vh;
+    width: 100vw;
     overflow: hidden;
 }
 
 /* Barra Lateral */
 .sidebar {
     width: 300px;
+    min-width: 300px;
     background-color: #ffffff;
     border-right: 1px solid #e9ecef;
     padding: 20px;
@@ -27,6 +29,7 @@ body {
     flex-direction: column;
     gap: 15px;
     overflow-y: auto;
+    z-index: 10; /* Garante que a barra lateral fique acima do fundo desfocado */
 }
 
 .sidebar h2 {
@@ -90,11 +93,12 @@ body {
     line-height: 1.3;
 }
 
-/* Área Principal */
+/* Área Principal de Visualização */
 .content-viewer {
     flex: 1;
-    background-color: #ffffff;
+    background-color: #1a1a1a; /* Fundo escuro elegante para destacar o efeito */
     overflow: hidden;
+    position: relative;
 }
 
 .artigo-completo {
@@ -106,60 +110,93 @@ body {
 
 .placeholder-text {
     text-align: center;
-    color: #868e96;
+    color: #a0a0a0;
     margin: auto;
     font-size: 1.1rem;
+    z-index: 2;
 }
 
-/* Tela de Preview (Capa do Artigo) - Permite rolagem interna segura se a tela for minúscula */
-.preview-container {
+/* Efeito Glassmorphism Dinâmico */
+.preview-glass-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    padding: 30px 20px;
-    text-align: center;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
     align-items: center;
     justify-content: center;
-    overflow-y: auto; 
+    overflow: hidden;
 }
 
-.preview-titulo {
-    font-size: 1.6rem;
-    color: #212529;
-    font-weight: 700;
+/* Imagem de fundo duplicada e ultra desfocada */
+.glass-bg-blur {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px) brightness(0.4);
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+/* Card Central Flutuante */
+.preview-card-central {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 680px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.preview-titulo-glass {
+    font-size: 1.5rem;
+    color: #ffffff;
+    font-weight: 600;
     line-height: 1.3;
-    max-width: 85%;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    text-align: center;
 }
 
-/* Restrição Inteligente: Limita largura e altura proporcional à tela do usuário */
-.preview-headline {
-    width: auto;
-    max-width: 85%;
+.preview-headline-glass {
+    width: 100%;
     height: auto;
-    max-height: 45vh; /* Garante que a imagem nunca ocupe mais de 45% da altura total da tela */
+    max-height: 40vh;
     object-fit: contain;
     border-radius: 8px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* Botão de Ação Minimalista */
-.btn-ler-artigo {
-    background-color: #212529;
-    color: #ffffff;
+/* Botão Minimalista para o Modo Glass */
+.btn-ler-artigo-glass {
+    background-color: #ffffff;
+    color: #1a1a1a;
     border: none;
-    padding: 12px 24px;
+    padding: 12px 30px;
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-bottom: 10px;
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.btn-ler-artigo:hover {
-    background-color: #495057;
+.btn-ler-artigo-glass:hover {
+    background-color: #e5e5e5;
+    transform: translateY(-1px);
 }
 
 /* Container do PDF em Tela Cheia */
@@ -169,4 +206,5 @@ body {
     height: 100%;
     border: none;
     display: block;
+    z-index: 3; /* Fica por cima do efeito de desfoque */
 }
