@@ -29,7 +29,7 @@ body {
     flex-direction: column;
     gap: 15px;
     overflow-y: auto;
-    z-index: 10; /* Garante que a barra lateral fique acima do fundo desfocado */
+    z-index: 10;
 }
 
 .sidebar h2 {
@@ -96,7 +96,7 @@ body {
 /* Área Principal de Visualização */
 .content-viewer {
     flex: 1;
-    background-color: #1a1a1a; /* Fundo escuro elegante para destacar o efeito */
+    background-color: #1a1a1a;
     overflow: hidden;
     position: relative;
 }
@@ -127,6 +127,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding: 20px; /* Margem de segurança para o card nunca colar nas bordas do navegador */
 }
 
 /* Imagem de fundo duplicada e ultra desfocada */
@@ -143,44 +144,51 @@ body {
     z-index: 1;
 }
 
-/* Card Central Flutuante */
+/* Card Central Flutuante Adaptável */
 .preview-card-central {
     position: relative;
     z-index: 2;
-    width: 90%;
+    width: 100%;
     max-width: 680px;
+    max-height: 90vh; /* Impede o card de passar de 90% da altura do navegador */
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
-    padding: 30px;
+    padding: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between; /* Distribui o espaço entre título, imagem e botão uniformemente */
+    gap: 15px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    overflow: hidden; /* Mantém os elementos contidos */
 }
 
 .preview-titulo-glass {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: #ffffff;
     font-weight: 600;
     line-height: 1.3;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     text-align: center;
+    flex-shrink: 0; /* Impede o título de esmagar */
 }
 
+/* Restrição Fluida Inteligente da Imagem */
 .preview-headline-glass {
-    width: 100%;
+    max-width: 100%;
     height: auto;
-    max-height: 40vh;
+    max-height: 50vh; /* Ajuste fino: a imagem ocupa no máximo metade do espaço vertical do navegador */
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    flex-shrink: 1; /* Permite que a imagem encolha se o monitor for muito baixo */
+    min-height: 0; /* Correção CSS para flexbox permitir encolhimento de mídias */
 }
 
-/* Botão Minimalista para o Modo Glass */
+/* Botão Fixo e Acessível */
 .btn-ler-artigo-glass {
     background-color: #ffffff;
     color: #1a1a1a;
@@ -192,6 +200,7 @@ body {
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    flex-shrink: 0; /* Garante que o botão nunca suma ou diminua de tamanho */
 }
 
 .btn-ler-artigo-glass:hover {
@@ -206,5 +215,5 @@ body {
     height: 100%;
     border: none;
     display: block;
-    z-index: 3; /* Fica por cima do efeito de desfoque */
+    z-index: 3;
 }
