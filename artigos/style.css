@@ -127,7 +127,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 20px; /* Margem de segurança para o card nunca colar nas bordas do navegador */
+    padding: 30px; /* Mantém respiro elegante nas bordas extremas */
 }
 
 /* Imagem de fundo duplicada e ultra desfocada */
@@ -144,13 +144,13 @@ body {
     z-index: 1;
 }
 
-/* Card Central Flutuante Adaptável */
+/* Card Central Expandido Dinamicamente */
 .preview-card-central {
     position: relative;
     z-index: 2;
-    width: 100%;
-    max-width: 680px;
-    max-height: 90vh; /* Impede o card de passar de 90% da altura do navegador */
+    width: 95%;              /* Expandido para aproveitar as laterais */
+    max-width: 960px;        /* Limite mais generoso de largura (ideal para resoluções widescreen) */
+    max-height: 92vh;        /* Aproveita o espaço vertical sem encostar no topo/rodapé */
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -160,32 +160,32 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* Distribui o espaço entre título, imagem e botão uniformemente */
+    justify-content: space-between;
     gap: 15px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    overflow: hidden; /* Mantém os elementos contidos */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
 }
 
 .preview-titulo-glass {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     color: #ffffff;
     font-weight: 600;
     line-height: 1.3;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     text-align: center;
-    flex-shrink: 0; /* Impede o título de esmagar */
+    flex-shrink: 0;
 }
 
-/* Restrição Fluida Inteligente da Imagem */
+/* Otimização da Imagem de Capa para Preenchimento */
 .preview-headline-glass {
-    max-width: 100%;
+    width: 100%;
     height: auto;
-    max-height: 50vh; /* Ajuste fino: a imagem ocupa no máximo metade do espaço vertical do navegador */
-    object-fit: contain;
+    max-height: 60vh;        /* Expandido de 50vh para 60vh para ocupar a área ociosa vertical */
+    object-fit: contain;     /* Preserva as proporções exatas da imagem */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    flex-shrink: 1; /* Permite que a imagem encolha se o monitor for muito baixo */
-    min-height: 0; /* Correção CSS para flexbox permitir encolhimento de mídias */
+    flex-shrink: 1;
+    min-height: 0;
 }
 
 /* Botão Fixo e Acessível */
@@ -193,14 +193,14 @@ body {
     background-color: #ffffff;
     color: #1a1a1a;
     border: none;
-    padding: 12px 30px;
+    padding: 12px 35px;
     font-size: 0.95rem;
     font-weight: 600;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    flex-shrink: 0; /* Garante que o botão nunca suma ou diminua de tamanho */
+    flex-shrink: 0;
 }
 
 .btn-ler-artigo-glass:hover {
