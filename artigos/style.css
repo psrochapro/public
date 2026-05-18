@@ -18,10 +18,10 @@ body {
     overflow: hidden;
 }
 
-/* Barra Lateral */
+/* Barra Lateral - Ampliada para dar mais respiro ao texto longo */
 .sidebar {
-    width: 300px;
-    min-width: 300px;
+    width: 340px;
+    min-width: 340px;
     background-color: #ffffff;
     border-right: 1px solid #e9ecef;
     padding: 20px;
@@ -59,10 +59,10 @@ body {
 .lista-artigos {
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Espaço ligeiramente maior devido ao novo volume de texto */
+    gap: 16px;
 }
 
-/* Card de Navegação Lateral - Versão Informativa */
+/* Card de Navegação Lateral - Versão com Descrição Completa */
 .artigo-thumb-card {
     cursor: pointer;
     border: 1px solid #dee2e6;
@@ -108,22 +108,21 @@ body {
     font-weight: 500;
 }
 
+/* Remoção do Clamp: O texto agora flui naturalmente por completo */
 .artigo-thumb-card .descricao {
     font-size: 0.8rem;
     color: #495057;
     line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limita estritamente a 3 linhas para não estourar a barra lateral */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: block;
+    overflow: visible;
+    text-overflow: clip;
     margin-top: 2px;
 }
 
 /* Rodapé Interno do Card */
 .artigo-thumb-card .meta-footer {
     border-top: 1px dashed #f1f3f5;
-    margin-top: 4px;
+    margin-top: 6px;
     padding-top: 8px;
     display: flex;
     justify-content: flex-end;
