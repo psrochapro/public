@@ -33,13 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             
-            // Evento de clique para abrir o artigo correspondente
             card.addEventListener('click', () => carregarArtigo(artigo));
             listaContainer.appendChild(card);
         });
     }
 
-    // 3. Busca o HTML do artigo e renderiza junto com a headline grande
+    // 3. Busca o HTML do artigo e corrige o caminho das imagens internas
     function carregarArtigo(artigo) {
         visualizador.innerHTML = '<p class="placeholder-text">A carregar artigo...</p>';
 
@@ -49,15 +48,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.text();
             })
             .then(htmlConteudo => {
-                // Monta a estrutura: Imagem Headline em cima, conteúdo estruturado embaixo
+                // Cria um elemento temporário na memória para manipular os caminhos
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlConteudo, 'text/html');
+                
+                // Encontra todas as imagens do artigo e ajusta o src para apontar para a pasta correta
+                const imagensInternas = doc.querySelectorAll('img');
+                imagensInternas.forEach(img => {
+                    const srcAtual = img.getAttribute('src');
+                    // Se o caminho for relativo (ex: images/image1.png), ajusta para artigo_001/images/image1.png
+                    if (srcAtual && !srcAtual.startsWith('http') && !srcAtual.startsWith('/')) {
+                        img.setAttribute('src', `${artigo.pasta}/${srcAtual}`);
+                    }
+                });
+
+                // Obtém o HTML atualizado com os caminhos corrigidos
+                const htmlCorrigido = doc.body.innerHTML;
+
+                // Monta a estrutura final na tela
                 visualizador.innerHTML = `
                     <img src="${artigo.imagem}" class="headline-principal" alt="${artigo.titulo}">
                     <div class="conteudo-html-artigo">
-                        ${htmlConteudo}
+                        ${htmlCorrigido}
                     </div>
                 `;
                 
-                // Força o scroll do visualizador para o topo ao mudar de artigo
                 document.querySelector('.content-viewer').scrollTop = 0;
             })
             .catch(error => {
