@@ -6,10 +6,10 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: Arial, sans-serif;
     color: #333;
     background-color: #f8f9fa;
-    line-height: 1.6;
+    line-height: 1.25; /* Alinhado ao padrão de leitura de documentos */
 }
 
 /* Estrutura de Colunas (Layout) */
@@ -87,7 +87,7 @@ body {
 }
 
 .artigo-completo {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
 }
 
@@ -98,37 +98,39 @@ body {
     font-size: 1.1rem;
 }
 
-/* Exibição do Artigo Ativo */
+/* Exibição da Headline - Sem Cortes */
 .headline-principal {
     width: 100%;
-    max-height: 400px;
-    object-fit: cover;
+    height: auto; /* Altera de tamanho fixo para automático para não cortar */
+    display: block;
     border-radius: 8px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Estilização para o HTML injetado vindo do Google Docs */
+/* Isolamento do Conteúdo do Artigo (Preserva os estilos do Google Docs) */
 .conteudo-html-artigo {
     margin-top: 20px;
+    color: initial; /* Reseta para não herdar bloqueios do app */
 }
 
-/* Estilo para garantir que as tabelas importadas do Docs fiquem limpas e responsivas */
+/* Garante que as tabelas fiquem bem estruturadas e com bordas visíveis */
 .conteudo-html-artigo table {
     width: 100% !important;
-    border-collapse: collapse;
-    margin: 20px 0;
+    border-collapse: collapse !important;
+    margin: 24px 0 !important;
 }
 
-.conteudo-html-artigo th, .conteudo-html-artigo td {
-    border: 1px solid #dee2e6;
-    padding: 12px;
-    text-align: left;
+.conteudo-html-artigo td, .conteudo-html-artigo th {
+    border: 1px solid #cccccc !important;
+    padding: 10px !important;
+    vertical-align: top;
 }
 
+/* Força as imagens internas do texto a respeitarem os limites da página */
 .conteudo-html-artigo img {
-    max-width: 100%;
-    height: auto;
+    max-width: 100% !important;
+    height: auto !important;
     display: block;
     margin: 20px auto;
 }
