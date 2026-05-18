@@ -10,16 +10,30 @@
 
     <div class="container">
         <aside class="sidebar">
-            <h2>Artigos e Publicações PSRochaPro</h2>
-            <input type="text" id="busca-artigo" class="input-busca" placeholder="Buscar artigo por nome...">
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo do Repositório" class="repo-logo">
+            </div>
             
-            <div id="lista-artigos" class="lista-artigos">
-                </div>
+            <h2>Artigos e Publicações</h2>
+            <input type="text" id="input-busca" class="input-busca" placeholder="Buscar artigo por nome...">
+            <div id="lista-artigos" class="lista-artigos"></div>
         </aside>
 
-        <main class="content-viewer">
-            <div id="artigo-completo" class="artigo-completo">
-                <p class="placeholder-text">Selecione um artigo na barra lateral para iniciar.</p>
+        <main class="content-viewer" id="content-viewer">
+            <div id="artigo-completo" class="artigo-completo" style="display: none;">
+                </div>
+
+            <div id="preview-container" class="preview-glass-wrapper">
+                <div id="glass-bg" class="glass-bg-blur"></div>
+                
+                <div class="preview-card-central">
+                    <button class="nav-arrow prev-arrow" onclick="navegarArtigo(-1)">&#10094;</button>
+                    <button class="nav-arrow next-arrow" onclick="navegarArtigo(1)">&#10095;</button>
+
+                    <h2 class="preview-titulo-glass" id="preview-titulo">Selecione um Artigo</h2>
+                    <img src="" alt="Headline" class="preview-headline-glass" id="preview-headline">
+                    <button class="btn-ler-artigo-glass" id="btn-ler-artigo">Abrir Documento PDF</button>
+                </div>
             </div>
         </main>
     </div>
