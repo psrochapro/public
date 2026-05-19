@@ -39,6 +39,7 @@ function renderApp() {
                         <span class="contato-item">🔗 <a href="${cvData.perfil.contatos.portfolio}" target="_blank">Portfólio</a></span>
                         <span class="contato-item">💼 <a href="${cvData.perfil.contatos.linkedin}" target="_blank">LinkedIn</a></span>
                         <span class="contato-item">🎓 <a href="${cvData.perfil.contatos.lattes}" target="_blank">Lattes</a></span>
+                        <span class="contato-item">📑 <a href="${cvData.perfil.contatos.publicacoes}" target="_blank">Publicações</a></span>
                     </div>
                 </div>
             </header>
