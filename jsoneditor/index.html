@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern JSON Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Ícones via CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-database"></i>
+                <h1>JSON <span>Editor</span></h1>
+            </div>
+            <div class="actions">
+                <label for="upload-json" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload
+                </label>
+                <input type="file" id="upload-json" accept=".json" hidden>
+                
+                <button id="export-json" class="btn btn-success">
+                    <i class="fas fa-download"></i> Exportar
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div class="table-controls">
+                <h2>Registros</h2>
+                <button id="add-record" class="btn btn-add">
+                    <i class="fas fa-plus"></i> Novo Registro
+                </button>
+            </div>
+            
+            <div id="json-viewer" class="table-responsive">
+                <p class="empty-msg">Faça upload de um arquivo para começar.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Edição/Criação -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Editar Registro</h3>
+            <form id="edit-form">
+                <div id="form-fields">
+                    <!-- Campos gerados dinamicamente -->
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-save">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
