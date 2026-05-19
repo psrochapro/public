@@ -3,57 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Editor Ultra</title>
+    <title>JSON Ultra Editor</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
     <div class="app-wrapper">
         <aside class="sidebar">
-            <div class="logo">
-                <i class="fas fa-database"></i>
-                <span>JSON <b>Ultra</b></span>
-            </div>
-            <nav id="sections-menu">
-                <!-- Abas geradas via JS -->
-                <p class="menu-empty">Carregue um JSON...</p>
-            </nav>
+            <div class="logo"><i class="fas fa-layer-group"></i> <span>JSON <b>Ultra</b></span></div>
+            <nav id="sections-menu"></nav>
             <div class="sidebar-footer">
-                <label for="upload-json" class="btn btn-primary block">
-                    <i class="fas fa-upload"></i> Upload
-                </label>
+                <label for="upload-json" class="btn btn-upload"><i class="fas fa-cloud-upload-alt"></i> Abrir JSON</label>
                 <input type="file" id="upload-json" accept=".json" hidden>
             </div>
         </aside>
 
         <main class="main-content">
             <header>
-                <div class="header-info">
+                <div class="header-left">
                     <h2 id="current-section-title">Bem-vindo</h2>
-                    <div class="insertion-pref">
-                        Novos no: 
-                        <select id="insert-pos">
-                            <option value="top">Topo</option>
-                            <option value="bottom">Fim</option>
-                        </select>
+                    <div id="list-controls" class="list-controls" style="display:none">
+                        <span>Novos no:</span>
+                        <select id="insert-pos"><option value="top">Topo</option><option value="bottom">Fim</option></select>
                     </div>
                 </div>
-                <div class="header-actions">
-                    <button id="add-record" class="btn btn-add"><i class="fas fa-plus"></i> Novo</button>
-                    <button id="export-json" class="btn btn-success"><i class="fas fa-download"></i> Exportar Tudo</button>
+                <div class="header-right">
+                    <button id="add-record" class="btn btn-add"><i class="fas fa-plus"></i> Novo Registro</button>
+                    <button id="export-json" class="btn btn-save-all"><i class="fas fa-download"></i> Exportar JSON</button>
                 </div>
             </header>
 
-            <section id="table-container" class="table-responsive">
-                <div class="welcome-screen">
-                    <i class="fas fa-file-import"></i>
-                    <p>Selecione um arquivo JSON para começar a editar as seções.</p>
+            <div id="content-area" class="content-area">
+                <div class="welcome">
+                    <i class="fas fa-database"></i>
+                    <p>Carregue um arquivo JSON para começar a edição profissional.</p>
                 </div>
-            </section>
+            </div>
         </main>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
