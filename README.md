@@ -16,6 +16,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Citações** | Gerador de Citações | [Acessar App](https://apps-privados.vercel.app/citacoes/) |
 | **Headlines** | Gerador de Headlines | [Acessar App](https://apps-privados.vercel.app/headlines/) |
 | **Artigos** | Repositório de Artigos | [Acessar App](https://psrochapro.github.io/public/artigos/) |
+| **JSON** | Editpor de JSON | [Acessar App](https://psrochapro.github.io/public/jsoneditor/) |
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.
