@@ -3,50 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Editor Pro</title>
+    <title>JSON Editor Ultra</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="container">
-        <header>
+    <div class="app-wrapper">
+        <aside class="sidebar">
             <div class="logo">
-                <i class="fas fa-edit"></i>
-                <h1>JSON <span>Editor Pro</span></h1>
+                <i class="fas fa-database"></i>
+                <span>JSON <b>Ultra</b></span>
             </div>
-            <div class="actions">
-                <label for="upload-json" class="btn btn-primary">
+            <nav id="sections-menu">
+                <!-- Abas geradas via JS -->
+                <p class="menu-empty">Carregue um JSON...</p>
+            </nav>
+            <div class="sidebar-footer">
+                <label for="upload-json" class="btn btn-primary block">
                     <i class="fas fa-upload"></i> Upload
                 </label>
                 <input type="file" id="upload-json" accept=".json" hidden>
-                
-                <button id="export-json" class="btn btn-success">
-                    <i class="fas fa-download"></i> Exportar
-                </button>
             </div>
-        </header>
+        </aside>
 
-        <main>
-            <div class="table-controls">
-                <div class="left-controls">
-                    <h2>Registros</h2>
-                    <div class="insertion-preference">
-                        <span>Novos registros no:</span>
+        <main class="main-content">
+            <header>
+                <div class="header-info">
+                    <h2 id="current-section-title">Bem-vindo</h2>
+                    <div class="insertion-pref">
+                        Novos no: 
                         <select id="insert-pos">
                             <option value="top">Topo</option>
                             <option value="bottom">Fim</option>
                         </select>
                     </div>
                 </div>
-                <button id="add-record" class="btn btn-add">
-                    <i class="fas fa-plus"></i> Novo Registro
-                </button>
-            </div>
-            
-            <div id="json-viewer" class="table-responsive">
-                <p class="empty-msg">Faça upload de um arquivo para começar.</p>
-            </div>
+                <div class="header-actions">
+                    <button id="add-record" class="btn btn-add"><i class="fas fa-plus"></i> Novo</button>
+                    <button id="export-json" class="btn btn-success"><i class="fas fa-download"></i> Exportar Tudo</button>
+                </div>
+            </header>
+
+            <section id="table-container" class="table-responsive">
+                <div class="welcome-screen">
+                    <i class="fas fa-file-import"></i>
+                    <p>Selecione um arquivo JSON para começar a editar as seções.</p>
+                </div>
+            </section>
         </main>
     </div>
 
