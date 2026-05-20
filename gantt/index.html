@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gantt SEPLAN Pro | v23 Estabilizada</title>
+    <title>Gantt SEPLAN Pro | Layout Fixo v24</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -18,18 +18,18 @@
             --cat-bg: #f1f5f9;
             --sidebar-w: 350px; 
             --col-month-w: 60px; 
-            --col-week-w: 90px; /* Reduzido de 120px para 90px */
+            --col-week-w: 90px;
         }
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
         .app-container { max-width: 100%; margin: 0 auto; }
 
-        /* Toolbar Superior Flutuante */
+        /* Toolbar Superior - Fixa no Topo da Página */
         .toolbar-container { 
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             padding: 12px 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
             margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; 
-            flex-wrap: wrap; gap: 10px; position: sticky; top: 10px; z-index: 2000; border: 1px solid var(--white);
+            flex-wrap: wrap; gap: 10px; position: sticky; top: 10px; z-index: 3000; border: 1px solid var(--white);
         }
         .controls-left { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
         .filter-group { display: flex; gap: 8px; align-items: center; font-size: 11px; font-weight: 700; color: var(--text-light); }
@@ -44,44 +44,50 @@
         select, input[type="date"] { padding: 5px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; font-weight: 600; }
 
         /* Area de Captura */
-        #capture-zone { background: var(--white); padding: 25px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 20px; width: fit-content; min-width: 100%; position: relative; }
+        #capture-zone { 
+            background: var(--white); padding: 25px; border-radius: 15px; 
+            border: 1px solid var(--border); margin-bottom: 20px; 
+            width: fit-content; min-width: 100%; position: relative; 
+        }
         
-        /* Título Fixo Horizontal e Verticalmente */
+        /* Título - Fixo Horizontalmente em relação à tela, mas rola com a página */
         header { 
-            text-align: center; margin-bottom: 20px; 
-            position: sticky; left: 0; right: 0; top: 70px; z-index: 1500;
-            background: rgba(255,255,255,0.8); padding: 10px; border-radius: 10px;
+            text-align: center; margin-bottom: 30px; 
+            position: sticky; left: 0; width: calc(100vw - 100px); /* Garante que o título não fuja da visão */
+            z-index: 2500; background: white; padding: 10px 0;
         }
         h1 { font-size: 1.8rem; font-weight: 800; margin: 0; letter-spacing: -1px; outline: none; }
         .subtitle { color: var(--text-light); font-size: 0.85rem; margin-top: 5px; }
 
         /* Gantt Scroll Area */
         .gantt-scroll-area { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: #fff; position: relative; width: 100%; }
-        .gantt-container { position: relative; display: flex; flex-direction: column; width: fit-content; }
+        .gantt-container { position: relative; display: flex; flex-direction: column; width: fit-content; padding-top: 10px; }
         
-        /* Cabeçalho do Gráfico Fixo no Topo do Scroll */
-        .gantt-header { display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); background: #fcfcfc; position: sticky; top: 0; z-index: 500; }
+        /* Cabeçalho do Gráfico (Meses/Semanas) */
+        .gantt-header { 
+            display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); 
+            background: #fcfcfc; position: sticky; top: 0; z-index: 1000; 
+        }
         
         .time-col { 
-            text-align: center; font-size: 8px; padding: 10px 2px; color: var(--text-light); font-weight: 800; 
+            text-align: center; font-size: 8px; padding: 12px 2px; color: var(--text-light); font-weight: 800; 
             border-left: 1px solid var(--border); flex: 0 0 auto; 
-            white-space: nowrap; overflow: hidden;
         }
         .view-monthly .time-col { width: var(--col-month-w); }
-        .view-weekly .time-col { width: var(--col-week-w); font-size: 7.5px; } /* Fonte menor para caber no 90px */
+        .view-weekly .time-col { width: var(--col-week-w); font-size: 7.5px; }
 
         /* Categorias */
         .category-row { 
             display: flex; min-height: 32px; align-items: center; background: var(--cat-bg); cursor: pointer; 
             border-bottom: 1px solid var(--border); font-weight: 700; font-size: 10px;
-            padding-left: 10px; position: sticky; left: 0; z-index: 400; border-left: 5px solid var(--primary);
+            padding-left: 10px; position: sticky; left: 0; z-index: 800; border-left: 5px solid var(--primary);
         }
         
         /* Linhas */
         .gantt-row { display: flex; min-height: 38px; align-items: center; border-bottom: 1px solid #f8fafc; position: relative; }
         .task-label { 
             width: var(--sidebar-w); min-width: var(--sidebar-w); font-size: 10.5px; padding: 6px 15px 6px 40px; 
-            color: var(--text-light); background: white; position: sticky; left: 0; z-index: 300; 
+            color: var(--text-light); background: white; position: sticky; left: 0; z-index: 700; 
             border-right: 1px solid #f1f5f9; line-height: 1.3; white-space: normal; word-wrap: break-word;
             box-shadow: 2px 0 5px rgba(0,0,0,0.02);
         }
@@ -91,21 +97,21 @@
         .bar { position: absolute; height: 14px; top: 50%; transform: translateY(-50%); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); cursor: pointer; z-index: 10; }
         .progress-fill { height: 100%; border-radius: 10px; background: rgba(0,0,0,0.15); pointer-events: none; }
         
-        /* Tooltip Master JS */
+        /* Tooltip Master */
         #master-tooltip {
             position: fixed; display: none; background: #1e293b; color: white; 
             padding: 8px 12px; border-radius: 6px; font-size: 10px; line-height: 1.4;
-            z-index: 99999; pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 10000; pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             white-space: pre; border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Linha de Hoje */
+        /* Linha de Hoje - Aumentado z-index para ficar acima de tudo */
         .today-line { 
             position: absolute; top: 0; bottom: 0; width: 2px; 
-            background: var(--danger); z-index: 1000 !important; pointer-events: none; 
+            background: var(--danger); z-index: 1200 !important; pointer-events: none; 
         }
         .today-line::before { 
-            content: 'HOJE'; position: absolute; top: -20px; left: -12px; 
+            content: 'HOJE'; position: absolute; top: -25px; left: -12px; 
             background: var(--danger); color: white; font-size: 7px; 
             padding: 1px 4px; border-radius: 2px; font-weight: 800; 
         }
@@ -136,8 +142,8 @@
             <div class="filter-group">
                 <span>VISÃO:</span>
                 <select id="view-mode" onchange="changeView()">
-                    <option value="monthly" selected>Mensal (Resumido)</option>
-                    <option value="weekly">Semanal (Intervalos)</option>
+                    <option value="monthly" selected>Mensal (Macro)</option>
+                    <option value="weekly">Semanal (Zoom)</option>
                 </select>
             </div>
         </div>
@@ -155,7 +161,7 @@
 
     <div class="gantt-scroll-area">
         <div id="capture-zone">
-            <header id="project-header">
+            <header>
                 <h1 id="main-title" contenteditable="true"></h1>
                 <p class="subtitle">Acompanhamento de Cronograma e Prazos SEPLAN</p>
             </header>
@@ -186,21 +192,19 @@
 <script>
     let tasks = [];
     let collapsedCategories = new Set(); 
-    let filterStart = null;
-    let filterEnd = null;
-    let viewMode = 'monthly';
+    let filterStart = null, filterEnd = null, viewMode = 'monthly';
 
     const pxPerDayMonthly = 60 / 30.44; 
     const pxPerDayWeekly = 90 / 7;     
 
     window.onload = () => {
         try {
-            const savedTasks = localStorage.getItem('gantt_v23_tasks');
-            const savedTitle = localStorage.getItem('gantt_v23_title');
+            const savedTasks = localStorage.getItem('gantt_v24_tasks');
+            const savedTitle = localStorage.getItem('gantt_v24_title');
             if (savedTasks) tasks = JSON.parse(savedTasks);
             const titleEl = document.getElementById('main-title');
             titleEl.innerText = savedTitle || "Cronograma de Implantação";
-            titleEl.onblur = () => localStorage.setItem('gantt_v23_title', titleEl.innerText);
+            titleEl.onblur = () => localStorage.setItem('gantt_v24_title', titleEl.innerText);
         } catch(e) { tasks = []; }
         render();
     };
@@ -233,7 +237,7 @@
         tasks.sort((a, b) => new Date(a.start) - new Date(b.start));
         renderTable();
         renderGantt();
-        localStorage.setItem('gantt_v23_tasks', JSON.stringify(tasks));
+        localStorage.setItem('gantt_v24_tasks', JSON.stringify(tasks));
     }
 
     function renderTable() {
@@ -278,7 +282,6 @@
         }
         
         const pxPerDay = (viewMode === 'monthly') ? pxPerDayMonthly : pxPerDayWeekly;
-
         const header = document.createElement('div');
         header.className = 'gantt-header';
         let temp = new Date(minDate);
@@ -289,21 +292,19 @@
                 col.innerText = `${temp.getMonth() + 1}/${temp.getFullYear().toString().substr(-2)}`;
                 temp.setMonth(temp.getMonth() + 1);
             } else {
-                let weekEnd = new Date(temp); weekEnd.setDate(temp.getDate() + 6);
-                col.innerText = `${temp.getDate()} a ${weekEnd.getDate()}/${weekEnd.getMonth()+1}/${weekEnd.getFullYear().toString().substr(-2)}`;
+                let wEnd = new Date(temp); wEnd.setDate(temp.getDate() + 6);
+                col.innerText = `${temp.getDate()} a ${wEnd.getDate()}/${wEnd.getMonth()+1}/${wEnd.getFullYear().toString().substr(-2)}`;
                 temp.setDate(temp.getDate() + 7);
             }
             header.appendChild(col);
         }
-        
         const actualChartEndDate = new Date(temp);
         const totalMs = actualChartEndDate - minDate;
         container.appendChild(header);
 
         const today = new Date();
         if (today >= minDate && today <= actualChartEndDate) {
-            const diffDays = (today - minDate) / (1000 * 60 * 60 * 24);
-            const leftPx = diffDays * pxPerDay;
+            const leftPx = ((today - minDate) / (1000 * 60 * 60 * 24)) * pxPerDay;
             const line = document.createElement('div');
             line.className = 'today-line';
             line.style.left = `calc(var(--sidebar-w) + ${leftPx}px)`;
@@ -322,11 +323,8 @@
 
             if (!collapsed) {
                 groups[cat].forEach(task => {
-                    const tS = new Date(task.start + "T00:00:00");
-                    const tE = new Date(task.end + "T00:00:00");
-                    const drawStart = Math.max(tS, minDate);
-                    const drawEnd = Math.min(tE, actualChartEndDate);
-
+                    const tS = new Date(task.start + "T00:00:00"), tE = new Date(task.end + "T00:00:00");
+                    const drawStart = Math.max(tS, minDate), drawEnd = Math.min(tE, actualChartEndDate);
                     if (drawEnd > drawStart) {
                         const leftPx = ((drawStart - minDate) / (1000 * 60 * 60 * 24)) * pxPerDay;
                         const widthPx = ((drawEnd - drawStart) / (1000 * 60 * 60 * 24)) * pxPerDay;
