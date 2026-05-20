@@ -24,7 +24,7 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
         .app-container { max-width: 100%; margin: 0 auto; }
 
-        /* Toolbar Superior - Fixa no Topo da Página */
+        /* Toolbar Superior */
         .toolbar-container { 
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             padding: 12px 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
@@ -50,20 +50,22 @@
             width: fit-content; min-width: 100%; position: relative; 
         }
         
-        /* Título - Fixo Horizontalmente em relação à tela, mas rola com a página */
+        /* Título - Ajustado para evitar rolagem horizontal desnecessária */
         header { 
             text-align: center; margin-bottom: 30px; 
-            position: sticky; left: 0; width: calc(100vw - 100px); /* Garante que o título não fuja da visão */
+            position: sticky; left: 0; width: 100%;
             z-index: 2500; background: white; padding: 10px 0;
         }
-        h1 { font-size: 1.8rem; font-weight: 800; margin: 0; letter-spacing: -1px; outline: none; }
-        .subtitle { color: var(--text-light); font-size: 0.85rem; margin-top: 5px; }
+        h1 { font-size: 1.8rem; font-weight: 800; margin: 0; letter-spacing: -1px; outline: none; display: inline-block; border-bottom: 2px solid transparent; }
+        h1:focus { border-bottom-color: var(--primary); }
+        
+        .subtitle { color: var(--text-light); font-size: 0.85rem; margin-top: 5px; outline: none; border-bottom: 1px solid transparent; display: block; width: fit-content; margin-left: auto; margin-right: auto; }
+        .subtitle:focus { border-bottom-color: var(--primary); }
 
         /* Gantt Scroll Area */
         .gantt-scroll-area { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: #fff; position: relative; width: 100%; }
         .gantt-container { position: relative; display: flex; flex-direction: column; width: fit-content; padding-top: 10px; }
         
-        /* Cabeçalho do Gráfico (Meses/Semanas) */
         .gantt-header { 
             display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); 
             background: #fcfcfc; position: sticky; top: 0; z-index: 1000; 
@@ -76,14 +78,12 @@
         .view-monthly .time-col { width: var(--col-month-w); }
         .view-weekly .time-col { width: var(--col-week-w); font-size: 7.5px; }
 
-        /* Categorias */
         .category-row { 
             display: flex; min-height: 32px; align-items: center; background: var(--cat-bg); cursor: pointer; 
             border-bottom: 1px solid var(--border); font-weight: 700; font-size: 10px;
             padding-left: 10px; position: sticky; left: 0; z-index: 800; border-left: 5px solid var(--primary);
         }
         
-        /* Linhas */
         .gantt-row { display: flex; min-height: 38px; align-items: center; border-bottom: 1px solid #f8fafc; position: relative; }
         .task-label { 
             width: var(--sidebar-w); min-width: var(--sidebar-w); font-size: 10.5px; padding: 6px 15px 6px 40px; 
@@ -93,19 +93,16 @@
         }
         .timeline-area { position: relative; flex-grow: 1; align-self: stretch; min-height: 38px; overflow: hidden; }
         
-        /* Barras */
         .bar { position: absolute; height: 14px; top: 50%; transform: translateY(-50%); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); cursor: pointer; z-index: 10; }
         .progress-fill { height: 100%; border-radius: 10px; background: rgba(0,0,0,0.15); pointer-events: none; }
         
-        /* Tooltip Master */
         #master-tooltip {
             position: fixed; display: none; background: #1e293b; color: white; 
-            padding: 8px 12px; border-radius: 6px; font-size: 10px; line-height: 1.4;
+            padding: 10px 15px; border-radius: 8px; font-size: 10px; line-height: 1.4;
             z-index: 10000; pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             white-space: pre; border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Linha de Hoje - Aumentado z-index para ficar acima de tudo */
         .today-line { 
             position: absolute; top: 0; bottom: 0; width: 2px; 
             background: var(--danger); z-index: 1200 !important; pointer-events: none; 
@@ -116,7 +113,6 @@
             padding: 1px 4px; border-radius: 2px; font-weight: 800; 
         }
 
-        /* Tabela */
         .editor-section { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 10px; font-size: 10px; color: var(--text-light); text-transform: uppercase; border-bottom: 2px solid var(--bg); }
@@ -130,7 +126,6 @@
 <div id="master-tooltip"></div>
 
 <div class="app-container">
-    
     <div class="toolbar-container">
         <div class="controls-left">
             <div class="filter-group">
@@ -163,7 +158,7 @@
         <div id="capture-zone">
             <header>
                 <h1 id="main-title" contenteditable="true"></h1>
-                <p class="subtitle">Linha do Tempo</p>
+                <p id="main-subtitle" class="subtitle" contenteditable="true"></p>
             </header>
             <div class="gantt-container view-monthly" id="gantt-container"></div>
         </div>
@@ -201,10 +196,18 @@
         try {
             const savedTasks = localStorage.getItem('gantt_v24_tasks');
             const savedTitle = localStorage.getItem('gantt_v24_title');
+            const savedSubtitle = localStorage.getItem('gantt_v24_subtitle');
+            
             if (savedTasks) tasks = JSON.parse(savedTasks);
+            
             const titleEl = document.getElementById('main-title');
+            const subEl = document.getElementById('main-subtitle');
+            
             titleEl.innerText = savedTitle || "Digite o nome do seu plano";
+            subEl.innerText = savedSubtitle || "Linha do Tempo";
+            
             titleEl.onblur = () => localStorage.setItem('gantt_v24_title', titleEl.innerText);
+            subEl.onblur = () => localStorage.setItem('gantt_v24_subtitle', subEl.innerText);
         } catch(e) { tasks = []; }
         render();
     };
@@ -367,13 +370,16 @@
     }
     function removeTask(i) { if(confirm("Remover?")) { tasks.splice(i, 1); render(); } }
     function resetData() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
-    function exportToJSON() { const blob = new Blob([JSON.stringify({ title: document.getElementById('main-title').innerText, tasks }, null, 2)], { type: "application/json" }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "cronograma.json"; a.click(); }
+    function exportToJSON() { const blob = new Blob([JSON.stringify({ title: document.getElementById('main-title').innerText, subtitle: document.getElementById('main-subtitle').innerText, tasks }, null, 2)], { type: "application/json" }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "cronograma.json"; a.click(); }
     function importFromJSON(e) {
         const file = e.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = (ev) => {
             const d = JSON.parse(ev.target.result);
-            tasks = d.tasks; document.getElementById('main-title').innerText = d.title || "Projeto"; render();
+            tasks = d.tasks; 
+            document.getElementById('main-title').innerText = d.title || "Digite o nome do seu plano";
+            document.getElementById('main-subtitle').innerText = d.subtitle || "Linha do Tempo";
+            render();
         };
         reader.readAsText(file);
     }
