@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gantt SEPLAN Pro | Edição Definitiva</title>
+    <title>Gantt SEPLAN Pro | Precisão Total v14</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -17,7 +17,7 @@
             --danger: #ef4444;
             --cat-bg: #f1f5f9;
             --sidebar-w: 380px;
-            --col-width-weekly: 120px;
+            --col-w: 120px;
         }
 
         * { box-sizing: border-box; }
@@ -26,7 +26,7 @@
         
         /* Toolbar Flutuante */
         .toolbar-container { 
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             padding: 15px 25px; border-radius: 16px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
@@ -57,15 +57,12 @@
         .gantt-scroll-area { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: #fff; position: relative; }
         .gantt-container { position: relative; display: flex; flex-direction: column; width: fit-content; min-width: 100%; }
         
-        /* Header Fixo no Scroll */
         .gantt-header { display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); background: #fcfcfc; position: sticky; top: 0; z-index: 500; }
         
         .time-col { 
             text-align: center; font-size: 9px; padding: 12px 0; color: var(--text-light); font-weight: 800; 
-            border-left: 1px solid var(--border); flex-shrink: 0;
+            border-left: 1px solid var(--border); width: var(--col-w); flex: 0 0 var(--col-w);
         }
-        .view-monthly .time-col { flex: 1; min-width: 100px; }
-        .view-weekly .time-col { width: var(--col-width-weekly); }
 
         /* Categorias */
         .category-row { 
@@ -83,20 +80,19 @@
         }
         .timeline-area { position: relative; flex-grow: 1; align-self: stretch; min-height: 40px; }
         
-        /* Barras e Tooltip */
+        /* Barras */
         .bar { 
-            position: absolute; height: 18px; top: 50%; transform: translateY(-50%); border-radius: 20px; 
+            position: absolute; height: 16px; top: 50%; transform: translateY(-50%); border-radius: 20px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.08); cursor: pointer; z-index: 10;
         }
         .progress-fill { height: 100%; border-radius: 20px; background: rgba(0,0,0,0.15); pointer-events: none; }
         
-        /* Tooltip Master */
-        .bar:hover::after {
-            content: attr(data-tooltip);
-            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; color: white; padding: 10px 14px; border-radius: 8px;
-            font-size: 10px; line-height: 1.5; white-space: pre; z-index: 99999 !important; 
-            pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        /* Tooltip Master (JavaScript Driven) */
+        #master-tooltip {
+            position: fixed; display: none; background: #1e293b; color: white; 
+            padding: 10px 15px; border-radius: 8px; font-size: 11px; line-height: 1.5;
+            z-index: 99999; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            white-space: pre; border: 1px solid rgba(255,255,255,0.1);
         }
 
         /* Linha de Hoje */
@@ -114,12 +110,14 @@
         .editor-section { background: white; padding: 25px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 12px; font-size: 10px; color: var(--text-light); text-transform: uppercase; border-bottom: 2px solid var(--bg); }
-        td { padding: 6px 12px; border-bottom: 1px solid #f1f5f9; }
+        td { padding: 4px 12px; border-bottom: 1px solid #f1f5f9; }
         input { border: 1px solid var(--border); padding: 7px 12px; border-radius: 8px; width: 100%; font-size: 12px; }
-        input[type="color"] { width: 34px; height: 34px; padding: 0; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
+
+<!-- Tooltip Único Global -->
+<div id="master-tooltip"></div>
 
 <div class="app-container">
     
@@ -190,14 +188,12 @@
     let viewMode = 'monthly';
 
     window.onload = () => {
-        const savedTasks = localStorage.getItem('gantt_final_v14_tasks');
-        const savedTitle = localStorage.getItem('gantt_final_v14_title');
+        const savedTasks = localStorage.getItem('gantt_final_v15_tasks');
+        const savedTitle = localStorage.getItem('gantt_final_v15_title');
         if (savedTasks) tasks = JSON.parse(savedTasks);
-        
         const titleEl = document.getElementById('main-title');
         titleEl.innerText = savedTitle || "Cronograma de Implantação";
-        titleEl.onblur = () => localStorage.setItem('gantt_final_v14_title', titleEl.innerText);
-        
+        titleEl.onblur = () => localStorage.setItem('gantt_final_v15_title', titleEl.innerText);
         render();
     };
 
@@ -223,14 +219,13 @@
         tasks.sort((a, b) => new Date(a.start) - new Date(b.start));
         renderTable();
         renderGantt();
-        localStorage.setItem('gantt_final_v14_tasks', JSON.stringify(tasks));
+        localStorage.setItem('gantt_final_v15_tasks', JSON.stringify(tasks));
     }
 
     function renderTable() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
         const filtered = tasks.filter(t => (!filterStart || t.end >= filterStart) && (!filterEnd || t.start <= filterEnd));
-        
         filtered.forEach((task) => {
             const index = tasks.indexOf(task);
             const tr = document.createElement('tr');
@@ -249,24 +244,23 @@
 
     function renderGantt() {
         const container = document.getElementById('gantt-container');
-        container.className = `gantt-container view-${viewMode}`;
         container.innerHTML = '';
         
         const filtered = tasks.filter(t => (!filterStart || t.end >= filterStart) && (!filterEnd || t.start <= filterEnd));
         if (filtered.length === 0 && tasks.length === 0) return;
 
-        // Limites de tempo baseados no filtro ou no projeto total
+        // Limites Precisos
         const allDates = tasks.flatMap(t => [new Date(t.start + "T00:00:00"), new Date(t.end + "T00:00:00")]);
         let minDate = filterStart ? new Date(filterStart + "T00:00:00") : new Date(Math.min(...allDates));
         let maxDate = filterEnd ? new Date(filterEnd + "T00:00:00") : new Date(Math.max(...allDates));
         
-        // Ajustar margens de escala
-        minDate.setDate(1); 
-        maxDate.setMonth(maxDate.getMonth() + 1); 
-        maxDate.setDate(1);
+        // Se NÃO houver filtro, arredondamos para o mês. Se houver, respeitamos a data exata.
+        if (!filterStart) minDate.setDate(1);
+        if (!filterEnd) { maxDate.setMonth(maxDate.getMonth() + 1); maxDate.setDate(1); }
+        
         const totalMs = maxDate - minDate;
 
-        // Header
+        // Header Dinâmico
         const header = document.createElement('div');
         header.className = 'gantt-header';
         let temp = new Date(minDate);
@@ -275,24 +269,18 @@
             col.className = 'time-col';
             if (viewMode === 'monthly') {
                 col.innerText = `${temp.getMonth() + 1}/${temp.getFullYear()}`;
+                col.style.width = '120px'; col.style.flex = '1';
                 temp.setMonth(temp.getMonth() + 1);
             } else {
                 col.innerText = `S${Math.ceil(temp.getDate() / 7)} ${temp.getMonth()+1}/${temp.getFullYear().toString().substr(-2)}`;
+                col.style.width = '120px'; col.style.flex = '0 0 120px';
                 temp.setDate(temp.getDate() + 7);
             }
             header.appendChild(col);
         }
         container.appendChild(header);
 
-        // Agrupamento
-        const groups = filtered.reduce((acc, t) => {
-            const c = t.cat || "Geral";
-            if (!acc[c]) acc[c] = [];
-            acc[c].push(t);
-            return acc;
-        }, {});
-
-        // Linha de Hoje
+        // Hoje
         const today = new Date();
         if (today >= minDate && today <= maxDate) {
             const left = ((today - minDate) / totalMs) * 100;
@@ -301,6 +289,13 @@
             line.style.left = `calc(var(--sidebar-w) + ${left}%)`;
             container.appendChild(line);
         }
+
+        const groups = filtered.reduce((acc, t) => {
+            const c = t.cat || "Geral";
+            if (!acc[c]) acc[c] = [];
+            acc[c].push(t);
+            return acc;
+        }, {});
 
         Object.keys(groups).forEach(cat => {
             const collapsed = collapsedCategories.has(cat);
@@ -314,29 +309,44 @@
                 groups[cat].forEach(task => {
                     const tS = new Date(task.start + "T00:00:00");
                     const tE = new Date(task.end + "T00:00:00");
-                    const drawStart = tS < minDate ? minDate : tS;
-                    const drawEnd = tE > maxDate ? maxDate : tE;
+                    const drawStart = Math.max(tS, minDate);
+                    const drawEnd = Math.min(tE, maxDate);
 
                     if (drawEnd > drawStart) {
                         const left = ((drawStart - minDate) / totalMs) * 100;
                         const width = ((drawEnd - drawStart) / totalMs) * 100;
-
                         const row = document.createElement('div');
                         row.className = 'gantt-row';
-                        const tooltip = `${task.name}\n${task.start.split('-').reverse().join('/')} até ${task.end.split('-').reverse().join('/')}\nProgresso: ${task.prog || 0}%`;
-                        row.innerHTML = `
-                            <div class="task-label">${task.name}</div>
-                            <div class="timeline-area">
-                                <div class="bar" data-tooltip="${tooltip}" style="left:${left}%; width:${width}%; background:${task.color || '#4a90e2'}">
-                                    <div class="progress-fill" style="width:${task.prog || 0}%"></div>
-                                </div>
-                            </div>`;
+                        const ttText = `${task.name.toUpperCase()}\n${task.start.split('-').reverse().join('/')} até ${task.end.split('-').reverse().join('/')}\nProgresso: ${task.prog || 0}%`;
+                        
+                        const bar = document.createElement('div');
+                        bar.className = 'bar';
+                        bar.style.left = `${left}%`; bar.style.width = `${width}%`;
+                        bar.style.background = task.color || '#4a90e2';
+                        bar.innerHTML = `<div class="progress-fill" style="width:${task.prog || 0}%"></div>`;
+                        
+                        // Sistema de Tooltip JS
+                        bar.onmouseenter = (e) => showTooltip(e, ttText);
+                        bar.onmousemove = (e) => moveTooltip(e);
+                        bar.onmouseleave = hideTooltip;
+
+                        row.innerHTML = `<div class="task-label">${task.name}</div>`;
+                        const area = document.createElement('div');
+                        area.className = 'timeline-area';
+                        area.appendChild(bar);
+                        row.appendChild(area);
                         container.appendChild(row);
                     }
                 });
             }
         });
     }
+
+    // Funções de Tooltip
+    const tooltip = document.getElementById('master-tooltip');
+    function showTooltip(e, text) { tooltip.innerText = text; tooltip.style.display = 'block'; moveTooltip(e); }
+    function moveTooltip(e) { tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY + 15) + 'px'; }
+    function hideTooltip() { tooltip.style.display = 'none'; }
 
     function toggleAllGroups() {
         const allCats = [...new Set(tasks.map(t => t.cat || "Geral"))];
@@ -352,32 +362,25 @@
         tasks.push({ id: Date.now(), name: "Nova Tarefa", start, end, cat: "Geral", color: "#60a5fa", prog: 0 });
         render();
     }
-    function removeTask(i) { if(confirm("Remover atividade?")) { tasks.splice(i, 1); render(); } }
-    function resetData() { if(confirm("Deseja apagar tudo e resetar o sistema?")) { localStorage.clear(); location.reload(); } }
+    function removeTask(i) { if(confirm("Remover?")) { tasks.splice(i, 1); render(); } }
+    function resetData() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
     
     function exportToJSON() {
         const blob = new Blob([JSON.stringify({ title: document.getElementById('main-title').innerText, tasks }, null, 2)], { type: "application/json" });
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "cronograma.json"; a.click();
     }
     function importFromJSON(e) {
-        const file = e.target.files[0];
-        if (!file) return;
         const reader = new FileReader();
         reader.onload = (ev) => {
             const d = JSON.parse(ev.target.result);
             tasks = d.tasks; document.getElementById('main-title').innerText = d.title || "Projeto"; render();
         };
-        reader.readAsText(file);
+        reader.readAsText(e.target.files[0]);
     }
     function exportToPNG() {
         const area = document.getElementById('capture-zone');
-        html2canvas(area, { 
-            scale: 2, 
-            scrollX: 0, 
-            scrollY: 0,
-            useCORS: true
-        }).then(canvas => {
-            const a = document.createElement('a'); a.download = 'cronograma_completo.png'; a.href = canvas.toDataURL(); a.click();
+        html2canvas(area, { scale: 2, scrollX: 0, scrollY: 0, useCORS: true }).then(canvas => {
+            const a = document.createElement('a'); a.download = 'cronograma.png'; a.href = canvas.toDataURL(); a.click();
         });
     }
 </script>
