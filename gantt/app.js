@@ -1,53 +1,55 @@
-// Dados Iniciais Conforme Especificação
+// Dados Iniciais
 const DEFAULT_DATA = [
-    { id: 1, name: "1. Ambientação SEPLAN e Curso Preparatório", start: "2026-03-02", end: "2026-03-20", cat: "Integração", color: "#a8dadc" },
-    { id: 2, name: "11. Relacionamento e Interação com EPROC/SEPLAN", start: "2026-03-02", end: "2027-02-28", cat: "Gestão", color: "#457b9d" },
-    { id: 3, name: "7. Priorização do Mapeamento de Processos", start: "2026-04-10", end: "2026-09-30", cat: "Mapeamento", color: "#f1faee" },
-    { id: 4, name: "8. Priorização da Melhoria de Processos (Legado)", start: "2026-04-10", end: "2026-10-10", cat: "Melhoria", color: "#e9c46a" },
-    { id: 5, name: "10. Melhorias por meio de Ferramentas Tecnológicas", start: "2026-04-10", end: "2027-02-28", cat: "Tecnologia", color: "#8ecae6" },
-    { id: 6, name: "2. Análise Organizacional (Diagnóstico)", start: "2026-04-28", end: "2026-05-10", cat: "Diagnóstico", color: "#ffb703" },
-    { id: 7, name: "3. Desenvolvimento ou Melhoria do Planejamento Estratégico", start: "2026-05-10", end: "2026-06-10", cat: "Planejamento", color: "#2a9d8f" },
-    { id: 8, name: "6. Núcleos de Gestão de Processos (NUPROC)", start: "2026-05-10", end: "2026-08-10", cat: "Gestão", color: "#457b9d" },
-    { id: 9, name: "5. Cultura e Metodologia para Gestão por Processos", start: "2026-05-10", end: "2026-10-10", cat: "Cultura", color: "#e76f51" },
-    { id: 10, name: "4. Identificação dos Processos Organizacionais", start: "2026-06-10", end: "2026-08-10", cat: "Mapeamento", color: "#f1faee" },
-    { id: 11, name: "9. Monitoramento e Controle dos Processos", start: "2026-06-10", end: "2027-02-28", cat: "Gestão", color: "#457b9d" }
+    { id: 1, name: "1. Ambientação SEPLAN", start: "2026-03-02", end: "2026-03-20", cat: "Integração", color: "#a8dadc" },
+    { id: 2, name: "11. Relacionamento EPROC", start: "2026-03-02", end: "2027-02-28", cat: "Gestão", color: "#457b9d" }
 ];
 
-let tasks = JSON.parse(localStorage.getItem('gantt_tasks')) || DEFAULT_DATA;
+let tasks = [];
 
-// Inicialização
+// Tenta carregar do LocalStorage, se falhar ou estiver vazio, usa o padrão
+try {
+    const saved = localStorage.getItem('gantt_tasks');
+    tasks = (saved && JSON.parse(saved).length > 0) ? JSON.parse(saved) : [...DEFAULT_DATA];
+} catch (e) {
+    tasks = [...DEFAULT_DATA];
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initTitle();
     renderAll();
 });
 
 function initTitle() {
-    const title = localStorage.getItem('gantt_title');
-    if (title) document.getElementById('main-title').innerText = title;
-    
-    document.getElementById('main-title').addEventListener('blur', (e) => {
-        localStorage.setItem('gantt_title', e.target.innerText);
-    });
+    const title = localStorage.getItem('gantt_title') || "Plano de Ação - SEPLAN 2026";
+    const titleEl = document.getElementById('main-title');
+    if (titleEl) {
+        titleEl.innerText = title;
+        titleEl.addEventListener('blur', (e) => {
+            localStorage.setItem('gantt_title', e.target.innerText);
+        });
+    }
 }
 
 function renderAll() {
-    // Ordenar por data de início
+    // Ordenação segura
     tasks.sort((a, b) => new Date(a.start) - new Date(b.start));
     
     renderTable();
     renderGantt();
+    
+    // Salva o estado atual
     localStorage.setItem('gantt_tasks', JSON.stringify(tasks));
 }
 
-// Renderiza a Tabela de Edição
 function renderTable() {
     const tbody = document.getElementById('table-body');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     tasks.forEach((task, index) => {
-        const start = new Date(task.start);
-        const end = new Date(task.end);
-        const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+        const start = new Date(task.start + "T00:00:00");
+        const end = new Date(task.end + "T00:00:00");
+        const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) || 0;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -55,7 +57,7 @@ function renderTable() {
             <td><input type="text" value="${task.cat}" onchange="updateTask(${index}, 'cat', this.value)"></td>
             <td><input type="date" value="${task.start}" onchange="updateTask(${index}, 'start', this.value)"></td>
             <td><input type="date" value="${task.end}" onchange="updateTask(${index}, 'end', this.value)"></td>
-            <td style="font-size: 12px; color: #666">${duration}d</td>
+            <td style="font-size: 11px;">${diff}d</td>
             <td><input type="color" value="${task.color || '#4a90e2'}" onchange="updateTask(${index}, 'color', this.value)"></td>
             <td><button class="btn btn-danger" onclick="removeTask(${index})" style="padding: 2px 8px;">×</button></td>
         `;
@@ -63,60 +65,69 @@ function renderTable() {
     });
 }
 
-// Renderiza o Gráfico de Gantt
 function renderGantt() {
     const container = document.getElementById('gantt-container');
+    if (!container) return;
     container.innerHTML = '';
 
-    if (tasks.length === 0) return;
+    // Se não houver tarefas, exibe aviso e sai da função para não quebrar o JS
+    if (tasks.length === 0) {
+        container.innerHTML = '<p style="padding:20px; color:#999; text-align:center;">Nenhuma atividade cadastrada.</p>';
+        return;
+    }
 
-    // Calcular limites do gráfico
-    const dates = tasks.flatMap(t => [new Date(t.start), new Date(t.end)]);
-    const minDate = new Date(Math.min(...dates));
-    minDate.setDate(1); // Começar no dia 1 do mês inicial
-    const maxDate = new Date(Math.max(...dates));
-    maxDate.setMonth(maxDate.getMonth() + 1); // Estender um mês
+    // Cálculo de limites de data (Proteção contra datas inválidas)
+    const dates = tasks.flatMap(t => [new Date(t.start + "T00:00:00"), new Date(t.end + "T00:00:00")]);
+    let minDate = new Date(Math.min(...dates));
+    let maxDate = new Date(Math.max(...dates));
+
+    // Fallback se as datas forem inválidas
+    if (isNaN(minDate)) minDate = new Date();
+    if (isNaN(maxDate)) maxDate = new Date();
+
+    minDate.setDate(1); 
+    maxDate.setMonth(maxDate.getMonth() + 2); // Espaço extra no final
 
     const totalDays = (maxDate - minDate) / (1000 * 60 * 60 * 24);
 
-    // Criar cabeçalho de meses
+    // Gerar Cabeçalho de Meses
     const header = document.createElement('div');
     header.className = 'gantt-header-months';
-    let current = new Date(minDate);
-    while (current < maxDate) {
-        const monthBox = document.createElement('div');
-        monthBox.className = 'month-col';
-        monthBox.innerText = `${current.getMonth() + 1}/${current.getFullYear()}`;
-        header.appendChild(monthBox);
-        current.setMonth(current.getMonth() + 1);
+    let tempDate = new Date(minDate);
+    while (tempDate < maxDate) {
+        const mCol = document.createElement('div');
+        mCol.className = 'month-col';
+        mCol.innerText = `${tempDate.getMonth() + 1}/${tempDate.getFullYear()}`;
+        header.appendChild(mCol);
+        tempDate.setMonth(tempDate.getMonth() + 1);
     }
     container.appendChild(header);
 
-    // Criar Linha de "Hoje"
+    // Linha do Dia Atual
     const today = new Date();
     if (today >= minDate && today <= maxDate) {
-        const leftPercent = ((today - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
+        const leftP = ((today - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
         const line = document.createElement('div');
         line.className = 'today-line';
-        line.style.left = `calc(250px + ${leftPercent}%)`;
+        line.style.left = `calc(250px + ${leftP}%)`;
         container.appendChild(line);
     }
 
-    // Criar linhas das tarefas
+    // Desenhar Barras
     tasks.forEach(task => {
-        const taskStart = new Date(task.start);
-        const taskEnd = new Date(task.end);
+        const tStart = new Date(task.start + "T00:00:00");
+        const tEnd = new Date(task.end + "T00:00:00");
         
-        const left = ((taskStart - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
-        const width = ((taskEnd - taskStart) / (1000 * 60 * 60 * 24) / totalDays) * 100;
+        const left = ((tStart - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
+        const width = ((tEnd - tStart) / (1000 * 60 * 60 * 24) / totalDays) * 100;
 
         const row = document.createElement('div');
         row.className = 'gantt-row';
         row.innerHTML = `
-            <div class="task-label" title="${task.name}">${task.name}</div>
+            <div class="task-label">${task.name}</div>
             <div class="timeline-area">
                 <div class="bar" style="left: ${left}%; width: ${width}%; background-color: ${task.color || '#4a90e2'}">
-                    ${width > 5 ? task.cat : ''}
+                    <span style="overflow:hidden; text-overflow:ellipsis;">${width > 8 ? task.cat : ''}</span>
                 </div>
             </div>
         `;
@@ -124,19 +135,18 @@ function renderGantt() {
     });
 }
 
-// Funções de CRUD
 function updateTask(index, field, value) {
     tasks[index][field] = value;
     renderAll();
 }
 
 function addTask() {
-    const lastTask = tasks[tasks.length - 1];
+    const todayStr = new Date().toISOString().split('T')[0];
     tasks.push({
         id: Date.now(),
         name: "Nova Atividade",
-        start: lastTask ? lastTask.start : "2026-03-01",
-        end: lastTask ? lastTask.end : "2026-03-31",
+        start: todayStr,
+        end: todayStr,
         cat: "Geral",
         color: "#4a90e2"
     });
@@ -144,38 +154,29 @@ function addTask() {
 }
 
 function removeTask(index) {
-    if (confirm("Deseja excluir esta atividade?")) {
+    if (confirm("Excluir esta atividade?")) {
         tasks.splice(index, 1);
         renderAll();
     }
 }
 
 function resetData() {
-    if (confirm("Isso apagará todas as alterações. Deseja continuar?")) {
-        tasks = [...DEFAULT_DATA];
+    if (confirm("Resetar para os dados originais?")) {
+        tasks = JSON.parse(JSON.stringify(DEFAULT_DATA));
         renderAll();
     }
 }
 
-// Exportação e Importação
-function exportToPNG() {
-    const area = document.getElementById('gantt-capture-area');
-    html2canvas(area).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'cronograma-gantt.png';
-        link.href = canvas.toDataURL();
-        link.click();
-    });
-}
-
 function exportToJSON() {
-    const dataStr = JSON.stringify({ title: document.getElementById('main-title').innerText, tasks: tasks });
+    const dataStr = JSON.stringify({ 
+        title: document.getElementById('main-title').innerText, 
+        tasks: tasks 
+    }, null, 2);
     const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = "cronograma.json";
-    link.click();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "cronograma.json";
+    a.click();
 }
 
 function importFromJSON(event) {
@@ -185,14 +186,26 @@ function importFromJSON(event) {
     reader.onload = (e) => {
         try {
             const imported = JSON.parse(e.target.result);
-            if (imported.tasks) {
+            if (imported.tasks && Array.isArray(imported.tasks)) {
                 tasks = imported.tasks;
                 if (imported.title) document.getElementById('main-title').innerText = imported.title;
                 renderAll();
+                alert("Dados importados com sucesso!");
             }
         } catch (err) {
-            alert("Erro ao ler o arquivo JSON.");
+            alert("Erro ao importar: Arquivo JSON inválido.");
         }
     };
     reader.readAsText(file);
+    event.target.value = ''; // Limpa o input para permitir re-importar o mesmo arquivo
+}
+
+function exportToPNG() {
+    const area = document.getElementById('gantt-capture-area');
+    html2canvas(area, { backgroundColor: "#ffffff" }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'gantt-seplan.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    });
 }
