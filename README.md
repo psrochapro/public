@@ -17,6 +17,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Headlines** | Gerador de Headlines | [Acessar App](https://apps-privados.vercel.app/headlines/) |
 | **Artigos** | Repositório de Artigos | [Acessar App](https://psrochapro.github.io/public/artigos/) |
 | **JSON** | Editor de JSON | [Acessar App](https://psrochapro.github.io/public/jsoneditor/) |
+| **Gantt** | Gerador de Gantt | [Acessar App](https://psrochapro.github.io/public/gantt/) |
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.
