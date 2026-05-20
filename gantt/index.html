@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gantt SEPLAN Pro | Precisão & Zoom</title>
+    <title>Gantt SEPLAN Pro | Layout Adaptativo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -16,8 +16,7 @@
             --white: #ffffff;
             --danger: #ef4444;
             --cat-bg: #f1f5f9;
-            --gantt-row-h: 30px;
-            --sidebar-w: 320px;
+            --sidebar-w: 380px; /* Aumentado para nomes longos */
         }
 
         * { box-sizing: border-box; }
@@ -29,11 +28,10 @@
             background: white; padding: 15px 25px; border-radius: 16px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
-            position: sticky; top: 10px; z-index: 100;
         }
-        .controls-left { display: flex; gap: 20px; align-items: center; }
+        .controls-left { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
         .filter-group { display: flex; gap: 8px; align-items: center; font-size: 11px; font-weight: 700; color: var(--text-light); }
-        .button-group { display: flex; gap: 8px; }
+        .button-group { display: flex; gap: 8px; flex-wrap: wrap; }
         
         .btn { 
             padding: 9px 15px; border: none; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700;
@@ -44,49 +42,51 @@
         .btn-danger { background: #fff1f2; color: var(--danger); }
         .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 
-        select { padding: 6px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; font-weight: 600; cursor: pointer; }
+        select, input[type="date"] { padding: 6px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; font-weight: 600; }
 
         /* Capture Zone */
         #capture-zone { background: var(--white); padding: 30px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 25px; }
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 2.1rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { font-size: 2.1rem; font-weight: 800; margin: 0; letter-spacing: -1px; outline: none; }
         .subtitle { color: var(--text-light); font-size: 0.9rem; margin-top: 5px; }
 
         /* Gantt Grid */
         .gantt-scroll-area { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
-        .gantt-container { position: relative; min-width: 100%; transition: width 0.3s ease; }
+        .gantt-container { position: relative; min-width: 100%; display: flex; flex-direction: column; }
         
-        /* Largura dinâmica baseada no Zoom */
-        .view-monthly { min-width: 1200px; }
-        .view-weekly { min-width: 2500px; }
+        .view-monthly { min-width: 1300px; }
+        .view-weekly { min-width: 2800px; }
 
-        .gantt-header { display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); background: #fcfcfc; }
-        .time-col { flex: 1; text-align: center; font-size: 9px; padding: 10px 0; color: var(--text-light); font-weight: 800; border-left: 1px solid var(--border); white-space: nowrap; }
+        .gantt-header { display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); background: #fcfcfc; position: sticky; top: 0; z-index: 40; }
+        .time-col { flex: 1; text-align: center; font-size: 9px; padding: 12px 0; color: var(--text-light); font-weight: 800; border-left: 1px solid var(--border); }
 
+        /* Agrupador */
         .category-row { 
-            display: flex; height: 36px; align-items: center; background: var(--cat-bg); cursor: pointer; 
+            display: flex; min-height: 36px; align-items: center; background: var(--cat-bg); cursor: pointer; 
             border-bottom: 1px solid var(--border); font-weight: 700; font-size: 11px;
-            padding-left: 15px; position: sticky; left: 0; z-index: 20;
+            padding-left: 15px; position: sticky; left: 0; z-index: 30; border-left: 6px solid var(--primary);
         }
         
-        .gantt-row { display: flex; height: var(--gantt-row-h); align-items: center; border-bottom: 1px solid #f8fafc; position: relative; }
+        /* Linhas - Altura Flexível */
+        .gantt-row { display: flex; min-height: 36px; align-items: center; border-bottom: 1px solid #f8fafc; position: relative; }
         .task-label { 
-            width: var(--sidebar-w); min-width: var(--sidebar-w); font-size: 11px; padding: 0 15px 0 40px; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-light);
-            background: white; position: sticky; left: 0; z-index: 10; border-right: 1px solid #f1f5f9;
+            width: var(--sidebar-w); min-width: var(--sidebar-w); font-size: 11px; padding: 8px 15px 8px 45px; 
+            color: var(--text-light); background: white; position: sticky; left: 0; z-index: 10; 
+            border-right: 1px solid #f1f5f9; line-height: 1.3; white-space: normal; /* Permite quebra de linha */
+            word-wrap: break-word; display: flex; align-items: center;
         }
-        .timeline-area { position: relative; flex-grow: 1; height: 100%; }
+        .timeline-area { position: relative; flex-grow: 1; align-self: stretch; min-height: 36px; }
         
         /* Barras */
         .bar { 
-            position: absolute; height: 16px; top: 7px; border-radius: 20px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; 
+            position: absolute; height: 16px; top: 50%; transform: translateY(-50%); border-radius: 20px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; z-index: 5;
         }
-        .progress-fill { height: 100%; border-radius: 20px; background: rgba(0,0,0,0.2); pointer-events: none; }
+        .progress-fill { height: 100%; border-radius: 20px; background: rgba(0,0,0,0.15); pointer-events: none; }
         
         /* Linha de Hoje */
-        .today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--danger); z-index: 30; pointer-events: none; }
-        .today-line::before { content: 'HOJE'; position: absolute; top: -15px; left: -15px; background: var(--danger); color: white; font-size: 8px; padding: 2px 5px; border-radius: 3px; }
+        .today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--danger); z-index: 25; pointer-events: none; }
+        .today-line::before { content: 'HOJE'; position: absolute; top: -18px; left: -15px; background: var(--danger); color: white; font-size: 8px; padding: 2px 5px; border-radius: 3px; font-weight: 800; }
 
         /* Tooltip */
         .bar:hover::after {
@@ -99,10 +99,10 @@
         /* Tabela */
         .editor-section { background: white; padding: 25px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 10px; font-size: 10px; color: var(--text-light); text-transform: uppercase; border-bottom: 2px solid var(--bg); }
-        td { padding: 4px 10px; border-bottom: 1px solid #f1f5f9; }
+        th { text-align: left; padding: 12px; font-size: 10px; color: var(--text-light); text-transform: uppercase; border-bottom: 2px solid var(--bg); }
+        td { padding: 5px 12px; border-bottom: 1px solid #f1f5f9; }
         input { border: 1px solid var(--border); padding: 7px 10px; border-radius: 6px; width: 100%; font-size: 12px; }
-        input[type="color"] { width: 30px; height: 30px; padding: 0; border: none; cursor: pointer; }
+        input[type="color"] { width: 34px; height: 34px; padding: 0; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -115,6 +115,7 @@
                 <span>FILTRAR PERÍODO</span>
                 <input type="date" id="filter-start" onchange="applyFilters()">
                 <input type="date" id="filter-end" onchange="applyFilters()">
+                <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 5px 10px; font-size: 9px;">Limpar</button>
             </div>
             <div class="filter-group">
                 <span>VISÃO:</span>
@@ -139,7 +140,7 @@
     <div id="capture-zone">
         <header>
             <h1 id="main-title" contenteditable="true"></h1>
-            <p class="subtitle">Acompanhamento de Cronograma e Prazos</p>
+            <p class="subtitle">Acompanhamento de Cronograma e Prazos SEPLAN</p>
         </header>
 
         <div class="gantt-scroll-area">
@@ -152,8 +153,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 35%;">Atividade</th>
-                        <th style="width: 15%;">Categoria</th>
+                        <th style="width: 38%;">Descrição da Atividade</th>
+                        <th style="width: 14%;">Categoria</th>
                         <th style="width: 12%;">Início</th>
                         <th style="width: 12%;">Término</th>
                         <th style="width: 8%;">Progresso %</th>
@@ -175,13 +176,13 @@
     let viewMode = 'monthly';
 
     window.onload = () => {
-        const savedTasks = localStorage.getItem('gantt_v10_tasks');
-        const savedTitle = localStorage.getItem('gantt_v10_title');
+        const savedTasks = localStorage.getItem('gantt_v11_tasks');
+        const savedTitle = localStorage.getItem('gantt_v11_title');
         if (savedTasks) tasks = JSON.parse(savedTasks);
         
         const titleEl = document.getElementById('main-title');
         titleEl.innerText = savedTitle || "Cronograma de Implantação";
-        titleEl.onblur = () => localStorage.setItem('gantt_v10_title', titleEl.innerText);
+        titleEl.onblur = () => localStorage.setItem('gantt_v11_title', titleEl.innerText);
         
         render();
     };
@@ -199,11 +200,18 @@
         render();
     }
 
+    function clearFilters() {
+        document.getElementById('filter-start').value = "";
+        document.getElementById('filter-end').value = "";
+        filterStart = filterEnd = null;
+        render();
+    }
+
     function render() {
         tasks.sort((a, b) => new Date(a.start) - new Date(b.start));
         renderTable();
         renderGantt();
-        localStorage.setItem('gantt_v10_tasks', JSON.stringify(tasks));
+        localStorage.setItem('gantt_v11_tasks', JSON.stringify(tasks));
     }
 
     function renderTable() {
@@ -219,7 +227,7 @@
                 <td><input type="text" value="${task.cat}" onchange="updateTask(${index}, 'cat', this.value)"></td>
                 <td><input type="date" value="${task.start}" onchange="updateTask(${index}, 'start', this.value)"></td>
                 <td><input type="date" value="${task.end}" onchange="updateTask(${index}, 'end', this.value)"></td>
-                <td><input type="number" value="${task.prog || 0}" onchange="updateTask(${index}, 'prog', this.value)"></td>
+                <td><input type="number" min="0" max="100" value="${task.prog || 0}" onchange="updateTask(${index}, 'prog', this.value)"></td>
                 <td><input type="color" value="${task.color || '#4a90e2'}" onchange="updateTask(${index}, 'color', this.value)"></td>
                 <td><button onclick="removeTask(${index})" style="background:none; border:none; color:#cbd5e0; cursor:pointer;">&times;</button></td>
             `;
@@ -258,7 +266,6 @@
                 temp.setMonth(temp.getMonth() + 1);
             }
         } else {
-            // Visão Semanal
             while (temp < maxDate) {
                 const col = document.createElement('div');
                 col.className = 'time-col';
@@ -269,7 +276,7 @@
         }
         container.appendChild(header);
 
-        // Hoje (Linha de Sincronia)
+        // Linha de Hoje
         const today = new Date();
         if (today >= minDate && today <= maxDate) {
             const left = ((today - minDate) / totalMs) * 100;
@@ -290,7 +297,7 @@
             const collapsed = collapsedCategories.has(cat);
             const crow = document.createElement('div');
             crow.className = 'category-row';
-            crow.innerHTML = `<span class="cat-icon">${collapsed ? '▶' : '▼'}</span> ${cat.toUpperCase()} (${groups[cat].length})`;
+            crow.innerHTML = `<span style="margin-right:10px">${collapsed ? '▶' : '▼'}</span> ${cat.toUpperCase()} (${groups[cat].length})`;
             crow.onclick = () => { collapsed ? collapsedCategories.delete(cat) : collapsedCategories.add(cat); renderGantt(); };
             container.appendChild(crow);
 
@@ -298,20 +305,26 @@
                 groups[cat].forEach(task => {
                     const tS = new Date(task.start + "T00:00:00");
                     const tE = new Date(task.end + "T00:00:00");
-                    const left = ((tS - minDate) / totalMs) * 100;
-                    const width = ((tE - tS) / totalMs) * 100;
+                    
+                    const drawStart = tS < minDate ? minDate : tS;
+                    const drawEnd = tE > maxDate ? maxDate : tE;
 
-                    const row = document.createElement('div');
-                    row.className = 'gantt-row';
-                    const tooltip = `${task.name}\nInício: ${task.start}\nTérmino: ${task.end}\nProgresso: ${task.prog}%`;
-                    row.innerHTML = `
-                        <div class="task-label">${task.name}</div>
-                        <div class="timeline-area">
-                            <div class="bar" data-tooltip="${tooltip}" style="left:${left}%; width:${width}%; background:${task.color || '#4a90e2'}">
-                                <div class="progress-fill" style="width:${task.prog || 0}%"></div>
-                            </div>
-                        </div>`;
-                    container.appendChild(row);
+                    if (drawEnd > drawStart) {
+                        const left = ((drawStart - minDate) / totalMs) * 100;
+                        const width = ((drawEnd - drawStart) / totalMs) * 100;
+
+                        const row = document.createElement('div');
+                        row.className = 'gantt-row';
+                        const tooltip = `${task.name}\n${task.start} até ${task.end}\nProgresso: ${task.prog}%`;
+                        row.innerHTML = `
+                            <div class="task-label">${task.name}</div>
+                            <div class="timeline-area">
+                                <div class="bar" data-tooltip="${tooltip}" style="left:${left}%; width:${width}%; background:${task.color || '#4a90e2'}">
+                                    <div class="progress-fill" style="width:${task.prog || 0}%"></div>
+                                </div>
+                            </div>`;
+                        container.appendChild(row);
+                    }
                 });
             }
         });
@@ -326,6 +339,7 @@
     }
     function removeTask(i) { if(confirm("Remover?")) { tasks.splice(i, 1); render(); } }
     function resetData() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
+    
     function exportToJSON() {
         const blob = new Blob([JSON.stringify({ title: document.getElementById('main-title').innerText, tasks }, null, 2)], { type: "application/json" });
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "cronograma.json"; a.click();
@@ -339,9 +353,7 @@
         reader.readAsText(e.target.files[0]);
     }
     function exportToPNG() {
-        const area = document.getElementById('capture-zone');
-        // Forçar renderização completa para captura
-        html2canvas(area, { scale: 2, useCORS: true, logging: false }).then(canvas => {
+        html2canvas(document.getElementById('capture-zone'), { scale: 2 }).then(canvas => {
             const a = document.createElement('a'); a.download = 'cronograma.png'; a.href = canvas.toDataURL(); a.click();
         });
     }
