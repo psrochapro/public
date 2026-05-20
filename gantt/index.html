@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Cronograma | SPA</title>
+    <title>Gerenciador de Cronograma | Final</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -15,123 +15,59 @@
             --border: #dcdfe3;
             --white: #ffffff;
             --placeholder: #aab2bd;
+            /* Alturas Compactas */
+            --gantt-row-h: 32px;
+            --table-row-padding: 4px;
         }
 
-        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 40px 20px; margin: 0; line-height: 1.6; }
-        .app-container { max-width: 1200px; margin: 0 auto; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; line-height: 1.4; }
+        .app-container { max-width: 1300px; margin: 0 auto; }
         
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { 
-            font-size: 2.5rem; 
-            font-weight: 700; 
-            outline: none; 
-            padding: 10px; 
-            border-radius: 8px; 
-            transition: all 0.3s;
-            display: inline-block;
-            min-width: 300px;
-        }
-        h1:empty:before { content: "Digite o título do projeto..."; color: var(--placeholder); font-weight: 300; }
-        h1:hover { background: rgba(74, 144, 226, 0.05); }
-        h1:focus { background: white; box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2); }
-        
-        .subtitle { color: var(--placeholder); font-size: 1.1rem; margin-top: -10px; }
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { font-size: 2.2rem; font-weight: 700; outline: none; padding: 5px 15px; border-radius: 8px; display: inline-block; }
+        h1:empty:before { content: "Título do Projeto"; color: var(--placeholder); }
+        h1:focus { background: white; box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1); }
+        .subtitle { color: var(--placeholder); font-size: 0.95rem; margin: 0; }
 
         /* Toolbar */
-        .toolbar { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-        .btn { 
-            padding: 12px 24px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 14px; 
-            font-weight: 600; 
-            transition: all 0.2s; 
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .toolbar { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .btn { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
         .btn-secondary { background: white; color: var(--text); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: #f8f9fa; border-color: #ccd1d9; }
         .btn-danger { background: #fff5f5; color: var(--danger); border: 1px solid #fed7d7; }
-        .btn-danger:hover { background: #feb2b2; }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
 
         /* Gantt Chart Area */
-        .gantt-wrapper { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
-            overflow-x: auto; 
-            margin-bottom: 40px; 
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-        }
-        .gantt-container { position: relative; min-width: 1000px; }
-        
-        .empty-state { 
-            text-align: center; 
-            padding: 60px 20px; 
-            color: var(--placeholder); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            gap: 15px;
-        }
-        .empty-state-icon { font-size: 48px; opacity: 0.3; }
+        .gantt-wrapper { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 25px; }
+        .gantt-container { position: relative; min-width: 1100px; }
+        .gantt-header-months { display: flex; margin-left: 260px; border-bottom: 1px solid var(--bg); }
+        .month-col { flex: 1; text-align: center; font-size: 10px; padding: 10px 0; color: #a0aec0; font-weight: 700; border-left: 1px solid #f8f9fa; }
 
-        /* Gantt Grid */
-        .gantt-header-months { display: flex; margin-left: 280px; border-bottom: 2px solid var(--bg); margin-bottom: 10px; }
-        .month-col { flex: 1; text-align: center; font-size: 11px; padding: 15px 0; color: #a0aec0; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-        .gantt-row { display: flex; height: 50px; align-items: center; border-bottom: 1px solid var(--bg); }
-        .task-label { width: 280px; font-size: 13px; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; color: #4a5568; }
+        /* Gantt Rows Compactos */
+        .gantt-row { display: flex; height: var(--gantt-row-h); align-items: center; border-bottom: 1px solid #f8f9fa; }
+        .task-label { width: 260px; font-size: 11.5px; padding-right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #4a5568; }
         .timeline-area { position: relative; flex-grow: 1; height: 100%; }
+        
         .bar { 
-            position: absolute; 
-            height: 28px; 
-            top: 11px; 
-            border-radius: 14px; 
-            display: flex; 
-            align-items: center; 
-            padding: 0 15px; 
-            color: white; 
-            font-size: 11px; 
-            font-weight: 600; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07); 
-            white-space: nowrap;
-            transition: transform 0.2s;
+            position: absolute; height: 18px; top: 7px; border-radius: 9px; 
+            display: flex; align-items: center; padding: 0 10px; 
+            font-size: 9px; font-weight: 700; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            white-space: nowrap; transition: width 0.3s, left 0.3s;
         }
-        .bar:hover { transform: scaleY(1.1); z-index: 20; }
-        .today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--danger); z-index: 10; pointer-events: none; opacity: 0.6; }
 
-        /* Editor Section */
-        .editor-section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h3 { margin-top: 0; margin-bottom: 25px; font-weight: 700; color: #2d3748; }
-        
+        .today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--danger); z-index: 10; pointer-events: none; opacity: 0.5; }
+
+        /* Tabela Compacta */
+        .editor-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 12px 15px; font-size: 12px; text-transform: uppercase; color: #718096; letter-spacing: 0.05em; border-bottom: 2px solid var(--bg); }
-        td { padding: 12px 15px; border-bottom: 1px solid var(--bg); }
+        th { text-align: left; padding: 8px 12px; font-size: 11px; text-transform: uppercase; color: #a0aec0; border-bottom: 2px solid var(--bg); }
+        td { padding: var(--table-row-padding) 12px; border-bottom: 1px solid #f8f9fa; }
         
-        input[type="text"], input[type="date"] { 
-            border: 1px solid var(--border); 
-            padding: 8px 12px; 
-            border-radius: 6px; 
-            width: 90%; 
-            font-size: 14px; 
-            transition: border-color 0.2s;
-            color: #4a5568;
-        }
-        input:focus { border-color: var(--primary); outline: none; }
-        input[type="color"] { border: none; width: 32px; height: 32px; cursor: pointer; background: none; padding: 0; }
-
-        @media (max-width: 768px) {
-            .gantt-wrapper { padding: 15px; }
-            h1 { font-size: 1.8rem; }
-        }
+        input[type="text"], input[type="date"] { border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; width: 90%; font-size: 13px; color: #4a5568; }
+        input[type="color"] { border: none; width: 28px; height: 28px; cursor: pointer; background: none; padding: 0; vertical-align: middle; }
+        
+        .empty-msg { text-align: center; padding: 40px; color: var(--placeholder); font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -139,68 +75,65 @@
 <div class="app-container">
     <header>
         <h1 id="main-title" contenteditable="true"></h1>
-        <p class="subtitle">Planejamento Visual e Gestão de Tempo</p>
+        <p class="subtitle">Gestão de Cronograma Visual</p>
     </header>
 
     <section class="toolbar">
-        <button onclick="addTask()" class="btn btn-primary"><span>+</span> Nova Atividade</button>
+        <button onclick="addTask()" class="btn btn-primary">+ Nova Atividade</button>
         <button onclick="exportToPNG()" class="btn btn-secondary">Download Imagem</button>
-        <button onclick="exportToJSON()" class="btn btn-secondary">Exportar Dados</button>
+        <button onclick="exportToJSON()" class="btn btn-secondary">Exportar JSON</button>
         <label for="import-json" class="btn btn-secondary" style="cursor:pointer">Importar JSON</label>
         <input type="file" id="import-json" accept=".json" style="display:none" onchange="importFromJSON(event)">
-        <button onclick="resetData()" class="btn btn-danger">Limpar Tudo</button>
+        <button onclick="resetData()" class="btn btn-danger">Limpar Dados</button>
     </section>
 
     <div id="gantt-capture-area" class="gantt-wrapper">
-        <div class="gantt-container" id="gantt-container">
-            <!-- Renderizado via JS -->
-        </div>
+        <div class="gantt-container" id="gantt-container"></div>
     </div>
 
     <section class="editor-section">
-        <h3>Quadro de Atividades</h3>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 35%;">Descrição da Atividade</th>
-                        <th>Categoria</th>
-                        <th>Início</th>
-                        <th>Término</th>
-                        <th>Duração</th>
-                        <th>Cor</th>
-                        <th></th>
+                        <th style="width: 35%;">Atividade</th>
+                        <th style="width: 15%;">Categoria</th>
+                        <th style="width: 15%;">Início</th>
+                        <th style="width: 15%;">Término</th>
+                        <th style="width: 8%;">Duração</th>
+                        <th style="width: 5%;">Cor</th>
+                        <th style="width: 7%;"></th>
                     </tr>
                 </thead>
-                <tbody id="table-body">
-                    <!-- Renderizado via JS -->
-                </tbody>
+                <tbody id="table-body"></tbody>
             </table>
         </div>
     </section>
 </div>
 
 <script>
-    // Inicialização Profissional: Lista de tarefas vazia
     let tasks = [];
 
+    // Função para detectar se a cor é clara ou escura e retornar a cor do texto ideal
+    function getContrastColor(hexcolor) {
+        if (!hexcolor) return 'white';
+        // Remove o # se existir
+        hexcolor = hexcolor.replace("#", "");
+        // Converte para RGB
+        const r = parseInt(hexcolor.substr(0, 2), 16);
+        const g = parseInt(hexcolor.substr(2, 2), 16);
+        const b = parseInt(hexcolor.substr(4, 2), 16);
+        // Calcula a luminosidade (fórmula YIQ)
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= 128) ? 'black' : 'white';
+    }
+
     window.onload = () => {
-        const savedTasks = localStorage.getItem('gantt_pro_tasks');
-        const savedTitle = localStorage.getItem('gantt_pro_title');
-        
-        if (savedTasks) {
-            tasks = JSON.parse(savedTasks);
-        }
-
-        const titleEl = document.getElementById('main-title');
-        if (savedTitle) {
-            titleEl.innerText = savedTitle;
-        }
-
-        titleEl.addEventListener('blur', () => {
-            localStorage.setItem('gantt_pro_title', titleEl.innerText);
-        });
-
+        const savedTasks = localStorage.getItem('gantt_final_tasks');
+        const savedTitle = localStorage.getItem('gantt_final_title');
+        if (savedTasks) tasks = JSON.parse(savedTasks);
+        if (savedTitle) document.getElementById('main-title').innerText = savedTitle;
+        document.getElementById('main-title').onblur = () => localStorage.setItem('gantt_final_title', document.getElementById('main-title').innerText);
         render();
     };
 
@@ -208,32 +141,34 @@
         tasks.sort((a, b) => new Date(a.start) - new Date(b.start));
         renderTable();
         renderGantt();
-        localStorage.setItem('gantt_pro_tasks', JSON.stringify(tasks));
+        localStorage.setItem('gantt_final_tasks', JSON.stringify(tasks));
+    }
+
+    function renderGanttOnly() {
+        renderGantt();
+        localStorage.setItem('gantt_final_tasks', JSON.stringify(tasks));
     }
 
     function renderTable() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
-
         if (tasks.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 40px; color: #a0aec0;">Nenhuma atividade para exibir. Clique em "+ Nova Atividade".</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="empty-msg">Nenhuma atividade cadastrada.</td></tr>`;
             return;
         }
-
         tasks.forEach((task, index) => {
             const d1 = new Date(task.start + "T00:00:00");
             const d2 = new Date(task.end + "T00:00:00");
             const diff = isNaN(d1) || isNaN(d2) ? 0 : Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
-
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><input type="text" placeholder="Ex: Mapeamento de Processos" value="${task.name}" oninput="updateTask(${index}, 'name', this.value)"></td>
-                <td><input type="text" placeholder="Categoria" value="${task.cat}" oninput="updateTask(${index}, 'cat', this.value)"></td>
+                <td><input type="text" value="${task.name}" onchange="updateTask(${index}, 'name', this.value)"></td>
+                <td><input type="text" value="${task.cat}" onchange="updateTask(${index}, 'cat', this.value)"></td>
                 <td><input type="date" value="${task.start}" onchange="updateTask(${index}, 'start', this.value)"></td>
                 <td><input type="date" value="${task.end}" onchange="updateTask(${index}, 'end', this.value)"></td>
-                <td style="font-size:12px; font-weight:bold; color:#718096">${diff >= 0 ? diff : 0}d</td>
+                <td style="font-size:11px; font-weight:bold; color:#a0aec0">${diff >= 0 ? diff : 0}d</td>
                 <td><input type="color" value="${task.color || '#4a90e2'}" onchange="updateTask(${index}, 'color', this.value)"></td>
-                <td><button onclick="removeTask(${index})" style="background:none; border:none; color:#cbd5e0; cursor:pointer; font-size:18px;">&times;</button></td>
+                <td style="text-align:right"><button onclick="removeTask(${index})" style="background:none; border:none; color:#cbd5e0; cursor:pointer; font-size:16px;">&times;</button></td>
             `;
             tbody.appendChild(tr);
         });
@@ -242,21 +177,11 @@
     function renderGantt() {
         const container = document.getElementById('gantt-container');
         container.innerHTML = '';
-
-        if (tasks.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">📊</div>
-                    <strong>Seu gráfico aparecerá aqui</strong>
-                    <span>Adicione atividades abaixo para começar a visualizar sua linha do tempo.</span>
-                </div>`;
-            return;
-        }
+        if (tasks.length === 0) return;
 
         const allDates = tasks.flatMap(t => [new Date(t.start + "T00:00:00"), new Date(t.end + "T00:00:00")]);
         let minDate = new Date(Math.min(...allDates));
         let maxDate = new Date(Math.max(...allDates));
-
         minDate.setDate(1);
         maxDate.setMonth(maxDate.getMonth() + 1);
         maxDate.setDate(1);
@@ -280,7 +205,7 @@
             const left = ((today - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
             const line = document.createElement('div');
             line.className = 'today-line';
-            line.style.left = `calc(280px + ${left}%)`;
+            line.style.left = `calc(260px + ${left}%)`;
             container.appendChild(line);
         }
 
@@ -289,14 +214,15 @@
             const tEnd = new Date(task.end + "T00:00:00");
             const left = ((tStart - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
             const width = ((tEnd - tStart) / (1000 * 60 * 60 * 24) / totalDays) * 100;
+            const textColor = getContrastColor(task.color || '#4a90e2');
 
             const row = document.createElement('div');
             row.className = 'gantt-row';
             row.innerHTML = `
                 <div class="task-label" title="${task.name}">${task.name || '(Sem nome)'}</div>
                 <div class="timeline-area">
-                    <div class="bar" style="left: ${left}%; width: ${width}%; background-color: ${task.color || '#4a90e2'}">
-                        <span style="overflow:hidden; text-overflow:ellipsis;">${width > 12 ? task.cat : ''}</span>
+                    <div class="bar" style="left: ${left}%; width: ${width}%; background-color: ${task.color || '#4a90e2'}; color: ${textColor}">
+                        <span>${width > 10 ? task.cat : ''}</span>
                     </div>
                 </div>
             `;
@@ -306,19 +232,13 @@
 
     function updateTask(index, field, value) {
         tasks[index][field] = value;
-        render();
+        if(field === 'start' || field === 'end') render(); 
+        else renderGanttOnly();
     }
 
     function addTask() {
         const today = new Date().toISOString().split('T')[0];
-        tasks.push({
-            id: Date.now(),
-            name: "",
-            start: today,
-            end: today,
-            cat: "",
-            color: "#4a90e2"
-        });
+        tasks.push({ id: Date.now(), name: "", start: today, end: today, cat: "", color: "#4a90e2" });
         render();
     }
 
@@ -328,7 +248,7 @@
     }
 
     function resetData() {
-        if (confirm("Tem certeza que deseja limpar todos os dados do projeto?")) {
+        if (confirm("Limpar todos os dados?")) {
             tasks = [];
             document.getElementById('main-title').innerText = "";
             localStorage.clear();
@@ -341,7 +261,7 @@
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = "projeto-cronograma.json";
+        a.download = "cronograma.json";
         a.click();
     }
 
@@ -367,12 +287,11 @@
         const area = document.getElementById('gantt-capture-area');
         html2canvas(area, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
             const link = document.createElement('a');
-            link.download = 'cronograma-gantt.png';
+            link.download = 'cronograma.png';
             link.href = canvas.toDataURL();
             link.click();
         });
     }
 </script>
-
 </body>
 </html>
