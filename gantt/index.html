@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gantt SEPLAN Pro | Layout Fixo v24</title>
+    <title>Gantt Pro | Layout Fixo v24</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -163,7 +163,7 @@
         <div id="capture-zone">
             <header>
                 <h1 id="main-title" contenteditable="true"></h1>
-                <p class="subtitle">Acompanhamento de Cronograma e Prazos SEPLAN</p>
+                <p class="subtitle">Linha do Tempo</p>
             </header>
             <div class="gantt-container view-monthly" id="gantt-container"></div>
         </div>
@@ -203,7 +203,7 @@
             const savedTitle = localStorage.getItem('gantt_v24_title');
             if (savedTasks) tasks = JSON.parse(savedTasks);
             const titleEl = document.getElementById('main-title');
-            titleEl.innerText = savedTitle || "Cronograma de Implantação";
+            titleEl.innerText = savedTitle || "Digite o nome do seu plano";
             titleEl.onblur = () => localStorage.setItem('gantt_v24_title', titleEl.innerText);
         } catch(e) { tasks = []; }
         render();
