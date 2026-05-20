@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gantt SEPLAN Pro | Precisão Total v14</title>
+    <title>Gantt SEPLAN Pro | Versão Estabilizada v15</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -17,7 +17,8 @@
             --danger: #ef4444;
             --cat-bg: #f1f5f9;
             --sidebar-w: 380px;
-            --col-w: 120px;
+            --col-month: 80px;
+            --col-week: 100px;
         }
 
         * { box-sizing: border-box; }
@@ -55,14 +56,16 @@
 
         /* Gantt Grid */
         .gantt-scroll-area { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: #fff; position: relative; }
-        .gantt-container { position: relative; display: flex; flex-direction: column; width: fit-content; min-width: 100%; }
+        .gantt-container { position: relative; display: flex; flex-direction: column; width: max-content; min-width: 100%; }
         
         .gantt-header { display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); background: #fcfcfc; position: sticky; top: 0; z-index: 500; }
         
         .time-col { 
             text-align: center; font-size: 9px; padding: 12px 0; color: var(--text-light); font-weight: 800; 
-            border-left: 1px solid var(--border); width: var(--col-w); flex: 0 0 var(--col-w);
+            border-left: 1px solid var(--border); flex: 0 0 auto;
         }
+        .view-monthly .time-col { width: var(--col-month); }
+        .view-weekly .time-col { width: var(--col-week); }
 
         /* Categorias */
         .category-row { 
@@ -87,7 +90,7 @@
         }
         .progress-fill { height: 100%; border-radius: 20px; background: rgba(0,0,0,0.15); pointer-events: none; }
         
-        /* Tooltip Master (JavaScript Driven) */
+        /* Tooltip Master JS */
         #master-tooltip {
             position: fixed; display: none; background: #1e293b; color: white; 
             padding: 10px 15px; border-radius: 8px; font-size: 11px; line-height: 1.5;
@@ -112,11 +115,16 @@
         th { text-align: left; padding: 12px; font-size: 10px; color: var(--text-light); text-transform: uppercase; border-bottom: 2px solid var(--bg); }
         td { padding: 4px 12px; border-bottom: 1px solid #f1f5f9; }
         input { border: 1px solid var(--border); padding: 7px 12px; border-radius: 8px; width: 100%; font-size: 12px; }
+        
+        /* Estilo do Seletor de Cor - QUADRADO EFICIENTE */
+        input[type="color"] { 
+            width: 40px; height: 30px; padding: 2px; border: 1px solid var(--border); 
+            border-radius: 4px; cursor: pointer; background: #fff;
+        }
     </style>
 </head>
 <body>
 
-<!-- Tooltip Único Global -->
 <div id="master-tooltip"></div>
 
 <div class="app-container">
@@ -132,8 +140,8 @@
             <div class="filter-group">
                 <span>VISÃO:</span>
                 <select id="view-mode" onchange="changeView()">
-                    <option value="monthly">Mensal (Macro)</option>
-                    <option value="weekly">Semanal (Zoom)</option>
+                    <option value="monthly">Mensal (Fixo 80px)</option>
+                    <option value="weekly">Semanal (Fixo 100px)</option>
                 </select>
             </div>
         </div>
@@ -244,23 +252,21 @@
 
     function renderGantt() {
         const container = document.getElementById('gantt-container');
+        container.className = `gantt-container view-${viewMode}`;
         container.innerHTML = '';
         
         const filtered = tasks.filter(t => (!filterStart || t.end >= filterStart) && (!filterEnd || t.start <= filterEnd));
         if (filtered.length === 0 && tasks.length === 0) return;
 
-        // Limites Precisos
         const allDates = tasks.flatMap(t => [new Date(t.start + "T00:00:00"), new Date(t.end + "T00:00:00")]);
         let minDate = filterStart ? new Date(filterStart + "T00:00:00") : new Date(Math.min(...allDates));
         let maxDate = filterEnd ? new Date(filterEnd + "T00:00:00") : new Date(Math.max(...allDates));
         
-        // Se NÃO houver filtro, arredondamos para o mês. Se houver, respeitamos a data exata.
         if (!filterStart) minDate.setDate(1);
         if (!filterEnd) { maxDate.setMonth(maxDate.getMonth() + 1); maxDate.setDate(1); }
         
         const totalMs = maxDate - minDate;
 
-        // Header Dinâmico
         const header = document.createElement('div');
         header.className = 'gantt-header';
         let temp = new Date(minDate);
@@ -269,18 +275,15 @@
             col.className = 'time-col';
             if (viewMode === 'monthly') {
                 col.innerText = `${temp.getMonth() + 1}/${temp.getFullYear()}`;
-                col.style.width = '120px'; col.style.flex = '1';
                 temp.setMonth(temp.getMonth() + 1);
             } else {
                 col.innerText = `S${Math.ceil(temp.getDate() / 7)} ${temp.getMonth()+1}/${temp.getFullYear().toString().substr(-2)}`;
-                col.style.width = '120px'; col.style.flex = '0 0 120px';
                 temp.setDate(temp.getDate() + 7);
             }
             header.appendChild(col);
         }
         container.appendChild(header);
 
-        // Hoje
         const today = new Date();
         if (today >= minDate && today <= maxDate) {
             const left = ((today - minDate) / totalMs) * 100;
@@ -325,7 +328,6 @@
                         bar.style.background = task.color || '#4a90e2';
                         bar.innerHTML = `<div class="progress-fill" style="width:${task.prog || 0}%"></div>`;
                         
-                        // Sistema de Tooltip JS
                         bar.onmouseenter = (e) => showTooltip(e, ttText);
                         bar.onmousemove = (e) => moveTooltip(e);
                         bar.onmouseleave = hideTooltip;
@@ -342,7 +344,6 @@
         });
     }
 
-    // Funções de Tooltip
     const tooltip = document.getElementById('master-tooltip');
     function showTooltip(e, text) { tooltip.innerText = text; tooltip.style.display = 'block'; moveTooltip(e); }
     function moveTooltip(e) { tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY + 15) + 'px'; }
