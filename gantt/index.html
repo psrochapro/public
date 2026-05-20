@@ -18,41 +18,43 @@
         <section class="toolbar">
             <button onclick="exportToPNG()" class="btn btn-secondary">Download PNG</button>
             <button onclick="exportToJSON()" class="btn btn-secondary">Exportar JSON</button>
-            <label for="import-json" class="btn btn-secondary">Importar JSON</label>
-            <input type="file" id="import-json" accept=".json" hidden onchange="importFromJSON(event)">
+            <label for="import-json" class="btn btn-secondary" style="cursor:pointer">Importar JSON</label>
+            <input type="file" id="import-json" accept=".json" style="display:none" onchange="importFromJSON(event)">
             <button onclick="resetData()" class="btn btn-danger">Resetar Dados</button>
         </section>
 
         <!-- Área do Gráfico -->
         <div id="gantt-capture-area" class="gantt-wrapper">
             <div class="gantt-container" id="gantt-container">
-                <!-- Escala de meses e barras serão injetadas aqui via JS -->
+                <!-- Injetado via JS -->
             </div>
         </div>
 
-        <!-- Painel de Controle (Tabela) -->
+        <!-- Painel de Controle -->
         <section class="editor-section">
             <div class="card">
                 <h3>Editar Atividades</h3>
                 <div class="table-responsive">
-                    <table id="data-table">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Atividade</th>
                                 <th>Categoria</th>
                                 <th>Início</th>
                                 <th>Término</th>
-                                <th>Dias</th>
+                                <th title="Duração em dias">Dias</th>
                                 <th>Cor</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody id="table-body">
-                            <!-- Linhas injetadas via JS -->
+                            <!-- Injetado via JS -->
                         </tbody>
                     </table>
                 </div>
-                <button onclick="addTask()" class="btn btn-primary" style="margin-top: 15px;">+ Adicionar Atividade</button>
+                <div style="margin-top: 15px;">
+                    <button id="btn-add" onclick="addTask()" class="btn btn-primary">+ Adicionar Atividade</button>
+                </div>
             </div>
         </section>
     </div>
