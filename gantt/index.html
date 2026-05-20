@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gantt SEPLAN Pro | Crop de Barras v18</title>
+    <title>Gantt SEPLAN Pro | Versão Final Consolidada</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -17,7 +17,6 @@
             --danger: #ef4444;
             --cat-bg: #f1f5f9;
             --sidebar-w: 350px;
-            /* Larguras Fixas Reduzidas */
             --col-month-w: 60px;
             --col-week-w: 80px;
         }
@@ -26,7 +25,7 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
         .app-container { max-width: 100%; margin: 0 auto; }
         
-        /* Toolbar */
+        /* Toolbar Flutuante Superior */
         .toolbar-container { 
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             padding: 12px 25px; border-radius: 12px; 
@@ -49,18 +48,27 @@
 
         select, input[type="date"] { padding: 5px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; font-weight: 600; }
 
-        /* Area de Captura */
+        /* Área de Captura do PNG */
         #capture-zone { background: var(--white); padding: 25px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 20px; width: fit-content; min-width: 100%; }
         header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 1.8rem; font-weight: 800; margin: 0; letter-spacing: -1px; outline: none; }
         .subtitle { color: var(--text-light); font-size: 0.85rem; margin-top: 5px; }
 
-        /* Gantt Scroll Area */
-        .gantt-scroll-area { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: #fff; position: relative; width: 100%; }
-        .gantt-container { position: relative; display: flex; flex-direction: column; width: fit-content; }
+        /* Gantt Scroll e Layout */
+        .gantt-scroll-area { 
+            overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; 
+            background: #fff; position: relative; width: 100%;
+        }
+        .gantt-container { 
+            position: relative; display: flex; flex-direction: column; 
+            width: fit-content; 
+        }
         
-        .gantt-header { display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); background: #fcfcfc; position: sticky; top: 0; z-index: 500; }
-        
+        /* Cabeçalho do Gráfico */
+        .gantt-header { 
+            display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid var(--border); 
+            background: #fcfcfc; position: sticky; top: 0; z-index: 500; 
+        }
         .time-col { 
             text-align: center; font-size: 8px; padding: 10px 0; color: var(--text-light); font-weight: 800; 
             border-left: 1px solid var(--border); flex: 0 0 auto; 
@@ -68,33 +76,31 @@
         .view-monthly .time-col { width: var(--col-month-w); }
         .view-weekly .time-col { width: var(--col-week-w); }
 
-        /* Categorias */
+        /* Categorias (Sanfonas) */
         .category-row { 
             display: flex; min-height: 32px; align-items: center; background: var(--cat-bg); cursor: pointer; 
             border-bottom: 1px solid var(--border); font-weight: 700; font-size: 10px;
             padding-left: 10px; position: sticky; left: 0; z-index: 400; border-left: 5px solid var(--primary);
         }
         
-        /* Linhas */
+        /* Linhas de Atividades */
         .gantt-row { display: flex; min-height: 38px; align-items: center; border-bottom: 1px solid #f8fafc; position: relative; }
         .task-label { 
             width: var(--sidebar-w); min-width: var(--sidebar-w); font-size: 10.5px; padding: 6px 15px 6px 40px; 
             color: var(--text-light); background: white; position: sticky; left: 0; z-index: 300; 
             border-right: 1px solid #f1f5f9; line-height: 1.3; white-space: normal; word-wrap: break-word;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02); /* Sombra de separação */
         }
-        .timeline-area { 
-            position: relative; flex-grow: 1; align-self: stretch; min-height: 38px; 
-            overflow: hidden; /* Corta qualquer vazamento visual residual */
-        }
+        .timeline-area { position: relative; flex-grow: 1; align-self: stretch; min-height: 38px; overflow: hidden; }
         
-        /* Barras com Crop */
+        /* Barras de Gantt */
         .bar { 
             position: absolute; height: 14px; top: 50%; transform: translateY(-50%); border-radius: 10px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.08); cursor: pointer; z-index: 10;
         }
         .progress-fill { height: 100%; border-radius: 10px; background: rgba(0,0,0,0.15); pointer-events: none; }
         
-        /* Tooltip Master */
+        /* Tooltip Master (Dica Voadora) */
         #master-tooltip {
             position: fixed; display: none; background: #1e293b; color: white; 
             padding: 8px 12px; border-radius: 6px; font-size: 10px; line-height: 1.4;
@@ -108,12 +114,12 @@
             background: var(--danger); z-index: 1000 !important; pointer-events: none; 
         }
         .today-line::before { 
-            content: 'HOJE'; position: absolute; top: -15px; left: -12px; 
+            content: 'HOJE'; position: absolute; top: -18px; left: -12px; 
             background: var(--danger); color: white; font-size: 7px; 
             padding: 1px 4px; border-radius: 2px; font-weight: 800; 
         }
 
-        /* Tabela */
+        /* Tabela de Cadastro */
         .editor-section { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 10px; font-size: 10px; color: var(--text-light); text-transform: uppercase; border-bottom: 2px solid var(--bg); }
@@ -131,16 +137,16 @@
     <div class="toolbar-container">
         <div class="controls-left">
             <div class="filter-group">
-                <span>PERÍODO</span>
+                <span>FILTRAR PERÍODO:</span>
                 <input type="date" id="filter-start" onchange="applyFilters()">
                 <input type="date" id="filter-end" onchange="applyFilters()">
                 <button class="btn btn-secondary" onclick="clearFilters()">LIMPAR</button>
             </div>
             <div class="filter-group">
-                <span>VISÃO</span>
+                <span>VISÃO:</span>
                 <select id="view-mode" onchange="changeView()">
-                    <option value="monthly">Mensal (60px)</option>
-                    <option value="weekly">Semanal (80px)</option>
+                    <option value="monthly">Mensal (Resumido)</option>
+                    <option value="weekly">Semanal (Zoom Real)</option>
                 </select>
             </div>
         </div>
@@ -150,7 +156,7 @@
             <button onclick="toggleAllGroups()" class="btn btn-secondary">⇅ EXP/REC TUDO</button>
             <button onclick="exportToPNG()" class="btn btn-secondary">BAIXAR PNG</button>
             <button onclick="exportToJSON()" class="btn btn-secondary">SALVAR JSON</button>
-            <label for="import-json" class="btn btn-secondary" style="cursor:pointer">IMPORTAR</label>
+            <label for="import-json" class="btn btn-secondary" style="cursor:pointer">IMPORTAR JSON</label>
             <input type="file" id="import-json" accept=".json" style="display:none" onchange="importFromJSON(event)">
             <button onclick="resetData()" class="btn btn-danger">RESET</button>
         </div>
@@ -193,9 +199,9 @@
     let filterEnd = null;
     let viewMode = 'monthly';
 
-    // Pixels por dia (Fixo)
-    const pxPerDayMonthly = 60 / 30.44; // Média de dias por mês
-    const pxPerDayWeekly = 80 / 7;     // Exato 7 dias
+    // Pixels por dia (Matemática de Escala Real)
+    const pxPerDayMonthly = 60 / 30.44; 
+    const pxPerDayWeekly = 80 / 7;     
 
     window.onload = () => {
         const savedTasks = localStorage.getItem('gantt_v18_tasks');
@@ -260,18 +266,15 @@
         const filtered = tasks.filter(t => (!filterStart || t.end >= filterStart) && (!filterEnd || t.start <= filterEnd));
         if (filtered.length === 0 && tasks.length === 0) return;
 
-        // --- DEFINIÇÃO DOS LIMITES DO GRÁFICO ---
         const allDates = tasks.flatMap(t => [new Date(t.start + "T00:00:00"), new Date(t.end + "T00:00:00")]);
         let minDate = filterStart ? new Date(filterStart + "T00:00:00") : new Date(Math.min(...allDates));
         let maxDate = filterEnd ? new Date(filterEnd + "T00:00:00") : new Date(Math.max(...allDates));
         
-        // Se não houver filtro, arredondamos para visualização limpa
         if (!filterStart) minDate.setDate(1);
         if (!filterEnd) { maxDate.setMonth(maxDate.getMonth() + 1); maxDate.setDate(1); }
         
         const pxPerDay = (viewMode === 'monthly') ? pxPerDayMonthly : pxPerDayWeekly;
 
-        // --- GERAR CABEÇALHO ---
         const header = document.createElement('div');
         header.className = 'gantt-header';
         let temp = new Date(minDate);
@@ -288,15 +291,14 @@
             header.appendChild(col);
         }
         
-        // Data final baseada no último cabeçalho gerado para precisão milimétrica
         const actualChartEndDate = new Date(temp);
-        const totalDurationDays = (actualChartEndDate - minDate) / (1000 * 60 * 60 * 24);
         container.appendChild(header);
 
-        // --- LINHA DE HOJE ---
+        // Linha de Hoje
         const today = new Date();
         if (today >= minDate && today <= actualChartEndDate) {
-            const leftPx = ((today - minDate) / (1000 * 60 * 60 * 24)) * pxPerDay;
+            const diffDays = (today - minDate) / (1000 * 60 * 60 * 24);
+            const leftPx = diffDays * pxPerDay;
             const line = document.createElement('div');
             line.className = 'today-line';
             line.style.left = `calc(var(--sidebar-w) + ${leftPx}px)`;
@@ -310,7 +312,6 @@
             return acc;
         }, {});
 
-        // --- RENDERIZAR TAREFAS COM CROP ---
         Object.keys(groups).forEach(cat => {
             const collapsed = collapsedCategories.has(cat);
             const crow = document.createElement('div');
@@ -324,7 +325,6 @@
                     const tS = new Date(task.start + "T00:00:00");
                     const tE = new Date(task.end + "T00:00:00");
                     
-                    // LÓGICA DE CROP (CORTE): A barra só existe entre minDate e actualChartEndDate
                     const drawStart = Math.max(tS, minDate);
                     const drawEnd = Math.min(tE, actualChartEndDate);
 
@@ -379,7 +379,7 @@
         render();
     }
     function removeTask(i) { if(confirm("Remover atividade?")) { tasks.splice(i, 1); render(); } }
-    function resetData() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
+    function resetData() { if(confirm("Deseja apagar tudo?")) { localStorage.clear(); location.reload(); } }
     function exportToJSON() {
         const blob = new Blob([JSON.stringify({ title: document.getElementById('main-title').innerText, tasks }, null, 2)], { type: "application/json" });
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "cronograma.json"; a.click();
