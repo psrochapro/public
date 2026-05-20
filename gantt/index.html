@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Cronograma Pro | Filtro Dinâmico</title>
+    <title>Gerenciador de Cronograma Pro | SEPLAN</title>
+    <!-- Biblioteca para exportação de imagem -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -21,17 +22,10 @@
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
         .app-container { max-width: 1450px; margin: 0 auto; }
         
-        #capture-zone { background: white; padding: 35px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 2.2rem; font-weight: 800; outline: none; padding: 5px 15px; border-radius: 8px; display: inline-block; margin: 0; color: #1a202c; }
-        h1:empty:before { content: "Título do Projeto"; color: #cbd5e0; }
-        .subtitle { color: #a0aec0; font-size: 0.95rem; margin: 5px 0 0 0; }
-
-        /* Toolbar e Filtros */
-        .toolbar { display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 25px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .button-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        /* Barra de Ferramentas e Filtros */
+        .toolbar-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .filter-group { display: flex; gap: 15px; align-items: center; font-size: 13px; font-weight: 600; color: #718096; background: #f8f9fa; padding: 8px 20px; border-radius: 30px; }
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         
         .btn { padding: 9px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; transition: 0.2s; text-transform: uppercase; }
         .btn-primary { background: var(--primary); color: white; }
@@ -39,7 +33,14 @@
         .btn-danger { background: #fff5f5; color: var(--danger); border: 1px solid #fed7d7; }
         .btn:hover { opacity: 0.8; transform: translateY(-1px); }
 
-        /* Gantt Layout */
+        /* Zona de Captura (Título + Gráfico) */
+        #capture-zone { background: white; padding: 35px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { font-size: 2.2rem; font-weight: 800; outline: none; padding: 5px 15px; border-radius: 8px; display: inline-block; margin: 0; color: #1a202c; }
+        h1:empty:before { content: "Título do Projeto"; color: #cbd5e0; }
+        .subtitle { color: #a0aec0; font-size: 0.95rem; margin: 5px 0 0 0; }
+
+        /* Gráfico de Gantt */
         .gantt-container { position: relative; min-width: 1100px; margin-top: 20px; border: 1px solid #f0f0f0; border-radius: 4px; overflow: hidden; }
         .gantt-header-months { display: flex; margin-left: var(--sidebar-w); border-bottom: 1px solid #edf2f7; background: #fafafa; }
         .month-col { flex: 1; text-align: center; font-size: 10px; padding: 10px 0; color: #a0aec0; font-weight: 700; border-left: 1px solid #f0f0f0; }
@@ -47,20 +48,18 @@
         .category-row { 
             display: flex; height: 34px; align-items: center; background: var(--cat-bg); cursor: pointer; 
             border-bottom: 1px solid #edf2f7; font-weight: 700; font-size: 12px; color: #4a5568; 
-            padding-left: 10px; position: sticky; left: 0; border-left: 4px solid #cbd5e0;
+            padding-left: 10px; position: sticky; left: 0; border-left: 4px solid #cbd5e0; transition: background 0.2s;
         }
+        .category-row:hover { background: #f1f3f5; }
         .cat-icon { margin-right: 10px; color: #a0aec0; width: 14px; text-align: center; font-size: 10px; }
 
         .gantt-row { display: flex; height: var(--gantt-row-h); align-items: center; border-bottom: 1px solid #f7fafc; }
         .task-label { width: var(--sidebar-w); font-size: 11px; padding-left: 35px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #718096; }
-        .timeline-area { position: relative; flex-grow: 1; height: 100%; border-left: 1px solid #edf2f7; background-image: linear-gradient(to right, #f9f9f9 1px, transparent 1px); background-size: 20% 100%; }
+        .timeline-area { position: relative; flex-grow: 1; height: 100%; border-left: 1px solid #edf2f7; }
         
-        .bar { 
-            position: absolute; height: 14px; top: 7px; border-radius: 7px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: help; transition: all 0.3s;
-        }
+        .bar { position: absolute; height: 14px; top: 7px; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: help; transition: all 0.3s; }
         
-        /* Tooltip */
+        /* Tooltip flutuante */
         .bar:hover::after {
             content: attr(data-tooltip);
             position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
@@ -71,7 +70,7 @@
 
         .today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--danger); z-index: 5; opacity: 0.4; }
 
-        /* Edição */
+        /* Painel de Edição */
         .editor-section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th { text-align: left; padding: 10px; font-size: 11px; color: #a0aec0; text-transform: uppercase; border-bottom: 2px solid #f7fafc; }
@@ -87,9 +86,10 @@
 
 <div class="app-container">
     
-    <div class="toolbar">
+    <!-- Barra de Ferramentas -->
+    <div class="toolbar-container">
         <div class="filter-group">
-            <span>PERÍODO:</span>
+            <span>FILTRAR PERÍODO:</span>
             <input type="date" id="filter-start" onchange="applyFilters()">
             <span>até</span>
             <input type="date" id="filter-end" onchange="applyFilters()">
@@ -98,7 +98,7 @@
         
         <div class="button-group">
             <button onclick="addTask()" class="btn btn-primary"><span>+</span> Nova Atividade</button>
-            <button onclick="toggleAllGroups()" class="btn btn-secondary">⇅ Exp/Rec Tudo</button>
+            <button onclick="toggleAllGroups()" class="btn btn-secondary">⇅ Expandir/Recolher Tudo</button>
             <button onclick="exportToPNG()" class="btn btn-secondary">Download PNG</button>
             <button onclick="exportToJSON()" class="btn btn-secondary">Exportar JSON</button>
             <label for="import-json" class="btn btn-secondary" style="cursor:pointer">Importar JSON</label>
@@ -107,6 +107,7 @@
         </div>
     </div>
 
+    <!-- Área Visual (Capturada no PNG) -->
     <div id="capture-zone">
         <header>
             <h1 id="main-title" contenteditable="true"></h1>
@@ -116,6 +117,7 @@
         <div class="gantt-container" id="gantt-container"></div>
     </div>
 
+    <!-- Tabela de Dados -->
     <section class="editor-section">
         <div style="overflow-x: auto;">
             <table>
@@ -141,18 +143,21 @@
     let filterStart = null;
     let filterEnd = null;
 
+    // Carregamento Inicial
     window.onload = () => {
-        const savedTasks = localStorage.getItem('gantt_v7_tasks');
-        const savedTitle = localStorage.getItem('gantt_v7_title');
+        const savedTasks = localStorage.getItem('gantt_final_tasks');
+        const savedTitle = localStorage.getItem('gantt_final_title');
+        
         if (savedTasks) tasks = JSON.parse(savedTasks);
         
         const titleEl = document.getElementById('main-title');
         titleEl.innerText = savedTitle || "Título do Projeto";
-        titleEl.onblur = () => localStorage.setItem('gantt_v7_title', titleEl.innerText);
+        titleEl.onblur = () => localStorage.setItem('gantt_final_title', titleEl.innerText);
         
         render();
     };
 
+    // Filtros
     function applyFilters() {
         filterStart = document.getElementById('filter-start').value;
         filterEnd = document.getElementById('filter-end').value;
@@ -167,25 +172,25 @@
         render();
     }
 
+    // Renderização Geral
     function render() {
         tasks.sort((a, b) => new Date(a.start) - new Date(b.start));
         renderTable();
         renderGantt();
-        localStorage.setItem('gantt_v7_tasks', JSON.stringify(tasks));
+        localStorage.setItem('gantt_final_tasks', JSON.stringify(tasks));
     }
 
     function renderTable() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
         
-        // Na tabela, mostramos apenas o que passa no filtro de data para manter consistência
         const filteredTasks = tasks.filter(t => {
             if (!filterStart || !filterEnd) return true;
             return (t.end >= filterStart && t.start <= filterEnd);
         });
 
         if (filteredTasks.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Nenhuma atividade no período selecionado.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Nenhuma atividade no período ou cadastrada.</td></tr>`;
             return;
         }
 
@@ -193,8 +198,8 @@
             const index = tasks.indexOf(task);
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><input type="text" value="${task.name}" onchange="updateTask(${index}, 'name', this.value)"></td>
-                <td><input type="text" value="${task.cat}" onchange="updateTask(${index}, 'cat', this.value)"></td>
+                <td><input type="text" value="${task.name}" placeholder="Nome da tarefa" onchange="updateTask(${index}, 'name', this.value)"></td>
+                <td><input type="text" value="${task.cat}" placeholder="Categoria" onchange="updateTask(${index}, 'cat', this.value)"></td>
                 <td><input type="date" value="${task.start}" onchange="updateTask(${index}, 'start', this.value)"></td>
                 <td><input type="date" value="${task.end}" onchange="updateTask(${index}, 'end', this.value)"></td>
                 <td><input type="color" value="${task.color || '#4a90e2'}" onchange="updateTask(${index}, 'color', this.value)"></td>
@@ -214,11 +219,11 @@
         });
 
         if (filteredTasks.length === 0) {
-            container.innerHTML = '<div class="empty-state">Nenhuma atividade visível neste período.</div>';
+            container.innerHTML = '<div class="empty-state">Nenhum dado visível no cronograma.</div>';
             return;
         }
 
-        // Definir limites do gráfico (X-Axis)
+        // Definir eixo do tempo
         let minDate, maxDate;
         if (filterStart && filterEnd) {
             minDate = new Date(filterStart + "T00:00:00");
@@ -234,7 +239,7 @@
         maxDate.setDate(1);
         const totalDays = (maxDate - minDate) / (1000 * 60 * 60 * 24);
 
-        // Header de Meses
+        // Meses Header
         const header = document.createElement('div');
         header.className = 'gantt-header-months';
         let temp = new Date(minDate);
@@ -247,7 +252,7 @@
         }
         container.appendChild(header);
 
-        // Grupos
+        // Agrupamento por Categoria
         const groups = filteredTasks.reduce((acc, task) => {
             const cat = task.cat || "Geral";
             if (!acc[cat]) acc[cat] = [];
@@ -255,7 +260,7 @@
             return acc;
         }, {});
 
-        // Hoje
+        // Linha Hoje
         const today = new Date();
         if (today >= minDate && today <= maxDate) {
             const left = ((today - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
@@ -265,11 +270,12 @@
             container.appendChild(line);
         }
 
+        // Desenhar Categorias e Barras
         Object.keys(groups).forEach(catName => {
             const isCollapsed = collapsedCategories.has(catName);
             const catRow = document.createElement('div');
             catRow.className = 'category-row';
-            catRow.innerHTML = `<span class="cat-icon">${isCollapsed ? '⬛' : '▼'}</span> ${catName} (${groups[catName].length})`;
+            catRow.innerHTML = `<span class="cat-icon">${isCollapsed ? '▶' : '▼'}</span> ${catName.toUpperCase()} (${groups[catName].length})`;
             catRow.onclick = () => toggleCategory(catName);
             container.appendChild(catRow);
 
@@ -279,29 +285,32 @@
                     let tEnd = new Date(task.end + "T00:00:00");
                     const realDiff = Math.ceil((tEnd - tStart) / (1000 * 60 * 60 * 24));
                     
-                    // Lógica de Clipping (Corte visual para o filtro)
+                    // Clipping visual para o filtro
                     const drawStart = tStart < minDate ? minDate : tStart;
                     const drawEnd = tEnd > maxDate ? maxDate : tEnd;
                     
-                    const left = ((drawStart - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
-                    const width = ((drawEnd - drawStart) / (1000 * 60 * 60 * 24) / totalDays) * 100;
+                    if (drawEnd > drawStart) {
+                        const left = ((drawStart - minDate) / (1000 * 60 * 60 * 24) / totalDays) * 100;
+                        const width = ((drawEnd - drawStart) / (1000 * 60 * 60 * 24) / totalDays) * 100;
 
-                    const row = document.createElement('div');
-                    row.className = 'gantt-row';
-                    const tt = `${task.name.toUpperCase()}\nDe: ${task.start.split('-').reverse().join('/')}\nAté: ${task.end.split('-').reverse().join('/')}\nDuração Total: ${realDiff} dias`;
+                        const row = document.createElement('div');
+                        row.className = 'gantt-row';
+                        const tt = `${task.name.toUpperCase()}\nInício: ${task.start.split('-').reverse().join('/')}\nTérmino: ${task.end.split('-').reverse().join('/')}\nDuração: ${realDiff} dias`;
 
-                    row.innerHTML = `
-                        <div class="task-label">${task.name}</div>
-                        <div class="timeline-area">
-                            <div class="bar" data-tooltip="${tt}" style="left: ${left}%; width: ${width}%; background-color: ${task.color || '#4a90e2'};"></div>
-                        </div>
-                    `;
-                    container.appendChild(row);
+                        row.innerHTML = `
+                            <div class="task-label">${task.name}</div>
+                            <div class="timeline-area">
+                                <div class="bar" data-tooltip="${tt}" style="left: ${left}%; width: ${width}%; background-color: ${task.color || '#4a90e2'};"></div>
+                            </div>
+                        `;
+                        container.appendChild(row);
+                    }
                 });
             }
         });
     }
 
+    // Ações
     function toggleCategory(catName) {
         if (collapsedCategories.has(catName)) collapsedCategories.delete(catName);
         else collapsedCategories.add(catName);
@@ -327,19 +336,23 @@
     }
 
     function removeTask(index) {
-        if(confirm("Excluir tarefa?")) { tasks.splice(index, 1); render(); }
+        if(confirm("Excluir esta tarefa?")) { tasks.splice(index, 1); render(); }
     }
 
     function resetData() {
-        if (confirm("Resetar sistema? Isso apagará tudo!")) { localStorage.clear(); location.reload(); }
+        if (confirm("ATENÇÃO: Deseja apagar permanentemente todos os dados?")) {
+            localStorage.clear();
+            location.reload();
+        }
     }
 
+    // Exportação
     function exportToJSON() {
         const data = { title: document.getElementById('main-title').innerText, tasks: tasks };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = "cronograma.json";
+        a.download = "cronograma_seplan.json";
         a.click();
     }
 
@@ -350,17 +363,26 @@
         reader.onload = (e) => {
             try {
                 const imported = JSON.parse(e.target.result);
-                if (imported.tasks) { tasks = imported.tasks; document.getElementById('main-title').innerText = imported.title || "Projeto"; render(); }
-            } catch (err) { alert("JSON inválido."); }
+                if (imported.tasks) {
+                    tasks = imported.tasks;
+                    document.getElementById('main-title').innerText = imported.title || "Projeto";
+                    render();
+                }
+            } catch (err) { alert("Arquivo JSON inválido."); }
         };
         reader.readAsText(file);
     }
 
     function exportToPNG() {
         const area = document.getElementById('capture-zone');
-        html2canvas(area, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
+        html2canvas(area, { 
+            scale: 2, 
+            backgroundColor: "#ffffff",
+            scrollX: 0,
+            scrollY: -window.scrollY
+        }).then(canvas => {
             const link = document.createElement('a');
-            link.download = 'cronograma.png';
+            link.download = 'cronograma_completo.png';
             link.href = canvas.toDataURL("image/png");
             link.click();
         });
