@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Cronograma | Gantt</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Biblioteca para exportar imagem -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1 id="main-title" contenteditable="true">Plano de Ação - SEPLAN 2026</h1>
+            <p class="subtitle">Gerenciador de Processos e Linha do Tempo</p>
+        </header>
+
+        <section class="toolbar">
+            <button onclick="exportToPNG()" class="btn btn-secondary">Download PNG</button>
+            <button onclick="exportToJSON()" class="btn btn-secondary">Exportar JSON</button>
+            <label for="import-json" class="btn btn-secondary">Importar JSON</label>
+            <input type="file" id="import-json" accept=".json" hidden onchange="importFromJSON(event)">
+            <button onclick="resetData()" class="btn btn-danger">Resetar Dados</button>
+        </section>
+
+        <!-- Área do Gráfico -->
+        <div id="gantt-capture-area" class="gantt-wrapper">
+            <div class="gantt-container" id="gantt-container">
+                <!-- Escala de meses e barras serão injetadas aqui via JS -->
+            </div>
+        </div>
+
+        <!-- Painel de Controle (Tabela) -->
+        <section class="editor-section">
+            <div class="card">
+                <h3>Editar Atividades</h3>
+                <div class="table-responsive">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Atividade</th>
+                                <th>Categoria</th>
+                                <th>Início</th>
+                                <th>Término</th>
+                                <th>Dias</th>
+                                <th>Cor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Linhas injetadas via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <button onclick="addTask()" class="btn btn-primary" style="margin-top: 15px;">+ Adicionar Atividade</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

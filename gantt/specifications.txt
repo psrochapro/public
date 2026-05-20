@@ -1,0 +1,52 @@
+Crie uma aplicação web do tipo Single Page Application (SPA) em um arquivo único (index.html com CSS e JS embutidos) para ser hospedado no GitHub Pages. A aplicação é um gerenciador interativo e minimalista de Linha do Tempo / Gráfico de Gantt.
+
+Siga estritamente as especificações e requisitos abaixo:
+
+---
+
+### 1. DADOS INICIAIS DA APLICAÇÃO
+Carregue por padrão os seguintes dados estruturados para que o gráfico não inicie vazio:
+- "1. Ambientação SEPLAN e Curso Preparatório" | Início: 02/03/2026 | Término: 20/03/2026 | Categoria: Integração
+- "11. Relacionamento e Interação com EPROC/SEPLAN" | Início: 02/03/2026 | Término: 28/02/2027 | Categoria: Gestão
+- "7. Priorização do Mapeamento de Processos" | Início: 10/04/2026 | Término: 30/09/2026 | Categoria: Mapeamento
+- "8. Priorização da Melhoria de Processos (Legado)" | Início: 10/04/2026 | Término: 10/10/2026 | Categoria: Melhoria
+- "10. Melhorias por meio de Ferramentas Tecnológicas" | Início: 10/04/2026 | Término: 28/02/2027 | Categoria: Tecnologia
+- "2. Análise Organizacional (Diagnóstico)" | Início: 28/04/2026 | Término: 10/05/2026 | Categoria: Diagnóstico
+- "3. Desenvolvimento ou Melhoria do Planejamento Estratégico" | Início: 10/05/2026 | Término: 10/06/2026 | Categoria: Planejamento
+- "6. Núcleos de Gestão de Processos (NUPROC)" | Início: 10/05/2026 | Término: 10/08/2026 | Categoria: Gestão
+- "5. Cultura e Metodologia para Gestão por Processos" | Início: 10/05/2026 | Término: 10/10/2026 | Categoria: Cultura
+- "4. Identificação dos Processos Organizacionais" | Início: 10/06/2026 | Término: 10/08/2026 | Categoria: Mapeamento
+- "9. Monitoramento e Controle dos Processos" | Início: 10/06/2026 | Término: 28/02/2027 | Categoria: Gestão
+
+---
+
+### 2. ARQUITETURA, DESIGN E LAYOUT
+- **Tecnologias:** HTML5, CSS3 moderno (utilizando CSS Variables, Flexbox ou CSS Grid nativos) e Vanilla JavaScript (ES6+). Proibido frameworks pesados. É permitido usar bibliotecas via CDN apenas se estritamente necessário (como 'html2canvas' para exportar imagem).
+- **Estética Minimalista:** Foco absoluto na centralização, alinhamento preciso, espaços em branco generosos e distribuição harmônica dos elementos. Paleta de cores sóbria (tons pastel, cinzas e desaturados).
+- **Responsividade:** O layout deve se ajustar elegantemente em telas desktop de resoluções variadas.
+
+---
+
+### 3. REQUISITOS DE FUNCIONALIDADES
+
+#### A. Gráfico de Gantt Interativo
+- **Ordenação Cronológica:** As atividades devem ser ordenadas e exibidas de cima para baixo de acordo com a data de início mais antiga.
+- **Escala de Tempo:** O topo do gráfico deve exibir a escala de tempo dividida por meses (Ex: 03/2026, 04/2026...) com linhas verticais sutis de grade.
+- **Tratamento de Texto:** O nome da atividade deve aparecer de forma elegante (de preferência flutuando dentro da barra ou posicionado de forma fixa ao lado esquerdo/direito dela), garantindo que textos longos não fiquem cortados ou sobrepostos às linhas do gráfico.
+- **Indicador de Dia Atual:** Uma linha vertical sutil vermelha destacando o dia de hoje (data atual) na escala de tempo.
+
+#### B. Painel de Controle e Edição In-line
+- **Tabela de Dados:** Uma tabela clara que permita editar os dados das atividades diretamente (in-line).
+- **Campos Editáveis:** Nome da Atividade, Data de Início (seletor de data), Data de Término (seletor de data), Categoria/Grupo, e Seletor de Cor individual.
+- **Duração Calculada:** Exibir uma coluna calculada automaticamente com a duração em dias (`Término - Início`).
+- **Título Personalizado:** Um campo de texto editável no painel que altera dinamicamente o título principal do projeto no topo do gráfico.
+
+#### C. Integração, Importação e Exportação
+- **Exportar/Importar JSON:** Botões para baixar o estado atual dos dados em um arquivo `.json` e para carregar um arquivo `.json` salvo anteriormente para restaurar o gráfico.
+- **Exportar como PNG:** Um botão dedicado para capturar a área do gráfico de Gantt e realizar o download como uma imagem PNG limpa (sem os botões e tabelas de configuração).
+- **Persistência Local (LocalStorage):** Toda alteração feita na tabela ou no título deve ser salva automaticamente no navegador para manter os dados caso a página seja atualizada.
+
+---
+
+### 4. FORMATO DA ENTREGA
+Entregue o código completo, sem omissões ou marcações de "insira o código aqui". O arquivo único deve estar pronto para salvar como `index.html` e publicar diretamente no GitHub Pages.

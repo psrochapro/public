@@ -1,0 +1,170 @@
+:root {
+    --primary: #4a90e2;
+    --danger: #e74c3c;
+    --bg: #f4f7f9;
+    --text: #2c3e50;
+    --border: #dcdfe3;
+    --white: #ffffff;
+    --row-height: 45px;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 20px;
+}
+
+.app-container {
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-weight: 300;
+    margin-bottom: 5px;
+    outline: none;
+    transition: background 0.2s;
+}
+
+h1:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn-primary { background: var(--primary); color: white; }
+.btn-secondary { background: #6c757d; color: white; }
+.btn-danger { background: #f8d7da; color: #721c24; }
+.btn:hover { opacity: 0.85; }
+
+/* Gantt Chart */
+.gantt-wrapper {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    overflow-x: auto;
+    margin-bottom: 30px;
+}
+
+.gantt-container {
+    position: relative;
+    min-width: 1000px;
+}
+
+.gantt-header-months {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-left: 250px; /* Espaço do nome da tarefa */
+}
+
+.month-col {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    padding: 10px 0;
+    border-left: 1px solid #f0f0f0;
+    color: #999;
+}
+
+.gantt-row {
+    display: flex;
+    height: var(--row-height);
+    align-items: center;
+    border-bottom: 1px solid #fafafa;
+}
+
+.task-label {
+    width: 250px;
+    font-size: 13px;
+    padding-right: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.timeline-area {
+    position: relative;
+    flex-grow: 1;
+    height: 100%;
+}
+
+.bar {
+    position: absolute;
+    height: 24px;
+    top: 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Indicador de Hoje */
+.today-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--danger);
+    z-index: 10;
+}
+
+/* Tabela de Dados */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+    color: #666;
+}
+
+td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+input[type="text"], input[type="date"], select {
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    width: 100%;
+}
