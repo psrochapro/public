@@ -15,14 +15,33 @@
                 <button id="btn-trigger-import" class="btn-secondary">Abrir</button>
                 <button id="btn-export-json" class="btn-secondary" style="background: #15803d;">Salvar</button>
             </div>
-            <div class="action-row"><input type="text" id="export-filename" placeholder="Nome do arquivo..." style="margin-bottom: 0;"></div>
-            <div class="action-row" style="margin-top: 8px;"><button id="btn-export-theme" class="btn-secondary">Exp. Tema</button><button id="btn-trigger-theme-import" class="btn-secondary">Imp. Tema</button></div>
-            <input type="file" id="import-json-file" accept=".news, .json" style="display: none;"><input type="file" id="import-theme-file" accept=".json" style="display: none;">
+            <div class="action-row">
+                <input type="text" id="export-filename" placeholder="Nome do arquivo..." style="margin-bottom: 8px;">
+            </div>
+            
+            <!-- NOVO: Seletor de Formato Fixo no Topo -->
+            <div class="action-row">
+                <select id="layout-selector-top" style="background: #2563eb; color: white; font-weight: bold; border: none; margin-bottom: 8px;">
+                    <option value="ratio-16-9">Wide (16:9)</option>
+                    <option value="ratio-4-3">Clássico (4:3)</option>
+                    <option value="ratio-1-1">Quadrado (1:1)</option>
+                    <option value="ratio-4-5">Portrait (4:5)</option>
+                    <option value="ratio-9-16">Stories (9:16)</option>
+                </select>
+            </div>
+
+            <div class="action-row">
+                <button id="btn-export-theme" class="btn-secondary">Exp. Tema</button>
+                <button id="btn-trigger-theme-import" class="btn-secondary">Imp. Tema</button>
+            </div>
+            <input type="file" id="import-json-file" accept=".news, .json" style="display: none;">
+            <input type="file" id="import-theme-file" accept=".json" style="display: none;">
         </header>
+
         <div class="tabs-container">
             <details open><summary>1. Arquivos e Imagens</summary>
                 <div class="section-content">
-                    <label>Formato de Saída</label>
+                    <label>Formato de Saída (Atalho)</label>
                     <select id="layout-selector">
                         <option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option>
                     </select>
@@ -37,6 +56,7 @@
                     <div class="asset-group"><label>Thumbs Mini Notícias</label><div class="row-thumbs"><input type="file" id="edit-thumb-0" class="file-mini"><input type="file" id="edit-thumb-1" class="file-mini"><input type="file" id="edit-thumb-2" class="file-mini"></div></div>
                 </div>
             </details>
+
             <details><summary>2. Redação e Conteúdo</summary>
                 <div class="section-content">
                     <label>Texto do Badge (Topo)</label><input type="text" id="edit-badge-text">
@@ -54,6 +74,7 @@
                     </div>
                 </div>
             </details>
+
             <details><summary>3. Ajustes de Espaçamento</summary>
                 <div class="section-content">
                     <div class="row">
@@ -71,6 +92,7 @@
                     <div class="row"><div><label>Margem Inferior (%)</label><input type="range" id="edit-footer-m" min="0.5" max="10" step="0.1"></div></div>
                 </div>
             </details>
+
             <details><summary>4. Cores e Tipografia</summary>
                 <div class="section-content">
                     <div class="color-grid">
@@ -80,6 +102,8 @@
                     </div>
                     <div class="typography-box">
                         <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;"><input type="checkbox" id="global-typography-toggle" style="width: auto; margin: 0;"> Sincronizar Global?</label>
+                        
+                        <!-- Nomenclatura Atualizada conforme solicitado -->
                         <select id="text-element-selector">
                             <option value="badge">Badge</option>
                             <option value="url">URL</option>
@@ -91,12 +115,16 @@
                             <option value="mini-t">Título Mini Notícia</option>
                             <option value="mini-d">Mini Notícia</option>
                         </select>
+
                         <div class="row">
                             <div><label>Tamanho (px)</label><input type="range" id="edit-font-size" min="8" max="100" step="1"></div>
                             <div style="max-width: 80px;"><label>Cor</label><input type="color" id="edit-font-color"></div>
                         </div>
                     </div>
-                    <label style="margin-top: 15px;">Atalho Formato</label><select id="layout-selector-bottom"><option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option></select>
+                    <label style="margin-top: 15px;">Atalho Formato</label>
+                    <select id="layout-selector-bottom">
+                        <option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option>
+                    </select>
                 </div>
             </details>
         </div>

@@ -9,7 +9,7 @@ function setupSidebarInputs() {
         if (el) el[event] = callback;
     };
 
-    // --- LÓGICA DE ACORDEÃO EXCLUSIVO (NOVO) ---
+    // --- LÓGICA DE ACORDEÃO EXCLUSIVO ---
     const allDetails = document.querySelectorAll('.tabs-container details');
     allDetails.forEach(det => {
         det.addEventListener('toggle', () => {
@@ -25,15 +25,27 @@ function setupSidebarInputs() {
         const val = e.target.value;
         state.config.layout = val;
         document.body.className = val;
-        const sel1 = document.getElementById('layout-selector');
-        const sel2 = document.getElementById('layout-selector-bottom');
-        if(sel1) sel1.value = val;
-        if(sel2) sel2.value = val;
-        syncTypographyUI(); applyTypographyToCSS(); render(); updateColors();
+        
+        // SINCRONIZAÇÃO DOS 3 SELETORES DE LAYOUT
+        const selTop = document.getElementById('layout-selector-top');
+        const selMid = document.getElementById('layout-selector');
+        const selBottom = document.getElementById('layout-selector-bottom');
+        
+        if(selTop) selTop.value = val;
+        if(selMid) selMid.value = val;
+        if(selBottom) selBottom.value = val;
+        
+        syncTypographyUI(); 
+        applyTypographyToCSS(); 
+        render(); 
+        updateColors();
     };
 
+    // Listeners para os seletores de layout
+    safeListener('layout-selector-top', 'onchange', handleLayoutChange);
     safeListener('layout-selector', 'onchange', handleLayoutChange);
     safeListener('layout-selector-bottom', 'onchange', handleLayoutChange);
+
     handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
     handleImageUpload('edit-main-img', async (res) => { state.noticiaPrincipal.imagem_url = await cropImage(res, 4/3); render(); });
 
@@ -112,7 +124,12 @@ function handleTypographyInput() {
 function syncSidebarWithState() {
     const layout = state.config.layout || "ratio-16-9";
     const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
-    setVal('layout-selector', layout); setVal('layout-selector-bottom', layout);
+    
+    // Sincroniza os 3 menus de layout com o estado
+    setVal('layout-selector-top', layout);
+    setVal('layout-selector', layout); 
+    setVal('layout-selector-bottom', layout);
+
     const toggle = document.getElementById('global-typography-toggle');
     if(toggle) toggle.checked = !!state.config.global_typography;
     const s = state.layoutSettings[layout];
