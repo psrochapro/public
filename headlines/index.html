@@ -3,170 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Snapshot Creator Pro - MODULAR</title>
+    <title>Headlines Snap Pro</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="ratio-16-9">
 
-    <aside class="sidebar-editor" id="sidebar">
-        <h2>Snapshot Editor</h2>
+    <aside class="sidebar-editor">
+        <!-- FIXED TOP ACTIONS -->
+        <header class="sidebar-header">
+            <h2>Snapshot Editor</h2>
+            <div class="action-row">
+                <button id="btn-new-project" class="btn-secondary" style="background: #0369a1;">Novo Projeto</button>
+                <button id="btn-trigger-import" class="btn-secondary">Abrir (.news)</button>
+            </div>
+            <div class="action-row">
+                <button id="btn-export-json" class="btn-secondary" style="background: #15803d;">Salvar (.news)</button>
+                <input type="text" id="export-filename" placeholder="nome-do-arquivo" style="margin-bottom: 0;">
+            </div>
+            <div class="action-row" style="margin-top: 8px;">
+                <button id="btn-export-theme" class="btn-secondary">Exp. Tema</button>
+                <button id="btn-trigger-theme-import" class="btn-secondary">Imp. Tema</button>
+            </div>
+            
+            <!-- Hidden File Inputs -->
+            <input type="file" id="import-json-file" accept=".news, .json" style="display: none;">
+            <input type="file" id="import-theme-file" accept=".json" style="display: none;">
+        </header>
         
+        <!-- SCROLLABLE ACCORDION CONTENT -->
         <div class="tabs-container">
-            <!-- 0. GERENCIAR PROJETO -->
-            <section class="control-group">
-                <h3>0. Gerenciar Projeto</h3>
-                <label>Nome do Arquivo (Exportar)</label>
-                <input type="text" id="export-filename" placeholder="snapshot-projeto" value="snapshot-projeto">
-                <div class="row">
-                    <button id="btn-export-json" class="btn-secondary">Salvar Projeto (.news)</button>
-                    <button id="btn-trigger-import" class="btn-secondary">Abrir Projeto</button>
-                </div>
-                <div class="row" style="margin-top: 8px; border-top: 1px solid #333; padding-top: 8px;">
-                    <button id="btn-export-theme" class="btn-secondary" style="background: #1e293b;">Exportar Tema</button>
-                    <button id="btn-trigger-theme-import" class="btn-secondary" style="background: #1e293b;">Importar Tema</button>
-                </div>
-                <!-- Inputs de arquivo escondidos -->
-                <input type="file" id="import-json-file" accept=".news, .json" style="display: none;">
-                <input type="file" id="import-theme-file" accept=".json" style="display: none;">
-            </section>
+            
+            <!-- 1. IDENTIDADE -->
+            <details open>
+                <summary>1. Identidade & Layout</summary>
+                <div class="section-content">
+                    <label>Formato de Saída</label>
+                    <select id="layout-selector">
+                        <option value="ratio-16-9">Wide (16:9)</option>
+                        <option value="ratio-4-3">Clássico (4:3)</option>
+                        <option value="ratio-1-1">Quadrado (1:1)</option>
+                        <option value="ratio-4-5">Portrait (4:5)</option>
+                        <option value="ratio-9-16">Stories (9:16)</option>
+                    </select>
 
-            <!-- 1. IDENTIDADE VISUAL -->
-            <section class="control-group">
-                <h3>1. Identidade Visual</h3>
-                <label>Formato</label>
-                <select id="layout-selector">
-                    <option value="ratio-16-9">Wide (16:9)</option>
-                    <option value="ratio-4-3">Clássico (4:3)</option>
-                    <option value="ratio-1-1">Quadrado (1:1)</option>
-                    <option value="ratio-4-5">Portrait (4:5)</option>
-                    <option value="ratio-9-16">Stories (9:16)</option>
-                </select>
+                    <label>Texto do Badge Topo</label>
+                    <input type="text" id="edit-badge-text">
 
-                <label>Texto do Badge (Topo)</label>
-                <input type="text" id="edit-badge-text">
+                    <div class="row">
+                        <div>
+                            <label>Fundo Card</label>
+                            <input type="color" id="bg-card-color">
+                        </div>
+                        <div>
+                            <label>Fundo Header</label>
+                            <input type="color" id="header-color">
+                        </div>
+                    </div>
+                    <label>Cor de Destaque</label>
+                    <input type="color" id="accent-color">
 
-                <div class="row">
-                    <div>
-                        <label>Fundo Card</label>
-                        <input type="color" id="bg-card-color" value="#ffffff">
-                    </div>
-                    <div>
-                        <label>Cor Header</label>
-                        <input type="color" id="header-color" value="#f5f5f5">
-                    </div>
+                    <label>Logo (PNG Transparente)</label>
+                    <input type="file" id="edit-logo" accept="image/*">
+                    <label>URL / Rodapé</label>
+                    <input type="text" id="edit-site-url">
                 </div>
-                <div class="row">
-                    <div>
-                        <label>Destaque</label>
-                        <input type="color" id="accent-color" value="#b3adad">
-                    </div>
-                </div>
-                <label>Logo do Portal (PNG)</label>
-                <input type="file" id="edit-logo" accept="image/*">
-                <label>URL do Site</label>
-                <input type="text" id="edit-site-url">
-            </section>
+            </details>
 
             <!-- 2. NOTÍCIA PRINCIPAL -->
-            <section class="control-group">
-                <h3>2. Notícia Principal</h3>
-                <label>Foto Principal</label>
-                <input type="file" id="edit-main-img" accept="image/*">
-                
-                <div class="row">
-                    <div>
-                        <label>Zoom Foto</label>
-                        <input type="range" id="edit-img-zoom" min="1" max="3" step="0.01" value="1">
+            <details>
+                <summary>2. Conteúdo Principal</summary>
+                <div class="section-content">
+                    <label>Foto Principal</label>
+                    <input type="file" id="edit-main-img" accept="image/*">
+                    
+                    <div class="row">
+                        <div>
+                            <label>Zoom</label>
+                            <input type="range" id="edit-img-zoom" min="1" max="3" step="0.01">
+                        </div>
+                        <div>
+                            <label>Posição Y</label>
+                            <input type="range" id="edit-img-y" min="-100" max="100" step="1">
+                        </div>
                     </div>
-                    <div>
-                        <label>Posição Y</label>
-                        <input type="range" id="edit-img-y" min="-100" max="100" step="1" value="0">
-                    </div>
-                </div>
 
-                <label>Categoria | Local</label>
-                <input type="text" id="edit-main-cat">
-                <label>Data / Hora</label>
-                <input type="text" id="edit-main-date">
-                <label>Manchete</label>
-                <textarea id="edit-main-title" rows="2"></textarea>
-                <label>Subtítulo</label>
-                <textarea id="edit-main-sub" rows="2"></textarea>
-                <label>Corpo do Texto</label>
-                <textarea id="edit-main-body" rows="3"></textarea>
-            </section>
+                    <label>Categoria | Local</label>
+                    <input type="text" id="edit-main-cat">
+                    <label>Data / Hora</label>
+                    <input type="text" id="edit-main-date">
+                    <label>Manchete</label>
+                    <textarea id="edit-main-title" rows="2"></textarea>
+                    <label>Subtítulo</label>
+                    <textarea id="edit-main-sub" rows="2"></textarea>
+                    <label>Texto Completo</label>
+                    <textarea id="edit-main-body" rows="4"></textarea>
+                </div>
+            </details>
 
             <!-- 3. MINI NOTÍCIAS -->
-            <section class="control-group">
-                <h3>3. Mini Notícias</h3>
-                <div class="mini-edit-box">
-                    <label>Item 1</label>
-                    <input type="file" id="edit-thumb-0" accept="image/*">
-                    <input type="text" id="edit-title-0" placeholder="Título 1">
-                    <input type="text" id="edit-resumo-0" placeholder="Resumo 1">
+            <details>
+                <summary>3. Mini Notícias (Rodapé)</summary>
+                <div class="section-content">
+                    <div class="mini-edit-box">
+                        <label>Notícia 1</label>
+                        <input type="file" id="edit-thumb-0" accept="image/*">
+                        <input type="text" id="edit-title-0" placeholder="Título">
+                        <input type="text" id="edit-resumo-0" placeholder="Resumo">
+                    </div>
+                    <div class="mini-edit-box">
+                        <label>Notícia 2</label>
+                        <input type="file" id="edit-thumb-1" accept="image/*">
+                        <input type="text" id="edit-title-1" placeholder="Título">
+                        <input type="text" id="edit-resumo-1" placeholder="Resumo">
+                    </div>
+                    <div class="mini-edit-box">
+                        <label>Notícia 3</label>
+                        <input type="file" id="edit-thumb-2" accept="image/*">
+                        <input type="text" id="edit-title-2" placeholder="Título">
+                        <input type="text" id="edit-resumo-2" placeholder="Resumo">
+                    </div>
                 </div>
-                <div class="mini-edit-box">
-                    <label>Item 2</label>
-                    <input type="file" id="edit-thumb-1" accept="image/*">
-                    <input type="text" id="edit-title-1" placeholder="Título 2">
-                    <input type="text" id="edit-resumo-1" placeholder="Resumo 2">
-                </div>
-                <div class="mini-edit-box">
-                    <label>Item 3</label>
-                    <input type="file" id="edit-thumb-2" accept="image/*">
-                    <input type="text" id="edit-title-2" placeholder="Título 3">
-                    <input type="text" id="edit-resumo-2" placeholder="Resumo 3">
-                </div>
-            </section>
+            </details>
 
             <!-- 4. TIPOGRAFIA -->
-            <section class="control-group">
-                <h3>4. Tipografia & Cores</h3>
-                
-                <div style="background: #222; padding: 10px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <label style="margin-bottom: 0;">Global?</label>
-                        <input type="checkbox" id="global-typography-toggle" style="width: auto; margin-bottom: 0;">
+            <details>
+                <summary>4. Tipografia & Ajustes Finos</summary>
+                <div class="section-content">
+                    <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #334155;">
+                        <label style="margin-bottom: 0; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="global-typography-toggle" style="width: auto; margin: 0;">
+                            Sincronizar entre todos os formatos?
+                        </label>
                     </div>
+
+                    <label>Selecionar Elemento</label>
+                    <select id="text-element-selector">
+                        <option value="badge">Badge Topo</option>
+                        <option value="url">URL Site</option>
+                        <option value="cat">Categoria</option>
+                        <option value="date">Data/Selo</option>
+                        <option value="title">Manchete (H1)</option>
+                        <option value="sub">Subtítulo</option>
+                        <option value="body">Corpo do Texto</option>
+                        <option value="mini-t">Título Mini</option>
+                        <option value="mini-d">Resumo Mini</option>
+                    </select>
+
+                    <div class="row">
+                        <div>
+                            <label>Tamanho (px)</label>
+                            <input type="range" id="edit-font-size" min="8" max="100" step="1">
+                        </div>
+                        <div>
+                            <label>Cor</label>
+                            <input type="color" id="edit-font-color">
+                        </div>
+                    </div>
+                    
+                    <label style="margin-top: 15px;">Atalho de Formato</label>
+                    <select id="layout-selector-bottom">
+                        <option value="ratio-16-9">Wide (16:9)</option>
+                        <option value="ratio-4-3">Clássico (4:3)</option>
+                        <option value="ratio-1-1">Quadrado (1:1)</option>
+                        <option value="ratio-4-5">Portrait (4:5)</option>
+                        <option value="ratio-9-16">Stories (9:16)</option>
+                    </select>
                 </div>
-
-                <label>Elemento</label>
-                <select id="text-element-selector">
-                    <option value="badge">Badge Topo</option>
-                    <option value="url">URL Site</option>
-                    <option value="cat">Categoria</option>
-                    <option value="date">Data</option>
-                    <option value="title">Manchete</option>
-                    <option value="sub">Subtítulo</option>
-                    <option value="body">Corpo</option>
-                    <option value="mini-t">Mini Título</option>
-                    <option value="mini-d">Mini Resumo</option>
-                </select>
-
-                <div class="row">
-                    <div style="flex: 2;">
-                        <label>Size</label>
-                        <input type="range" id="edit-font-size" min="8" max="100" step="1">
-                    </div>
-                    <div style="flex: 1;">
-                        <label>Cor</label>
-                        <input type="color" id="edit-font-color">
-                    </div>
-                </div>
-            </section>
-
-            <!-- ATALHO FORMATO -->
-            <section class="control-group" style="border-bottom: none; margin-top: 10px;">
-                <label>Atalho de Formato</label>
-                <select id="layout-selector-bottom">
-                    <option value="ratio-16-9">Wide (16:9)</option>
-                    <option value="ratio-4-3">Clássico (4:3)</option>
-                    <option value="ratio-1-1">Quadrado (1:1)</option>
-                    <option value="ratio-4-5">Portrait (4:5)</option>
-                    <option value="ratio-9-16">Stories (9:16)</option>
-                </select>
-            </section>
+            </details>
         </div>
 
         <button id="btn-export-png" class="btn-primary">Baixar PNG Alta Resolução</button>
@@ -176,11 +180,9 @@
         <div id="snapshot-stage">
             <header class="card-header">
                 <img src="" id="logo-img" class="logo">
-                <div class="live-badge">ÚLTIMAS NOTÍCIAS IMPORTANTES</div>
+                <div class="live-badge">ÚLTIMAS NOTÍCIAS</div>
             </header>
-            <div class="card-body">
-                <!-- Conteúdo gerado pelo renderer.js -->
-            </div>
+            <div class="card-body"></div>
             <footer class="card-footer">
                 <div class="accent-bar"></div>
                 <span id="site-url-text"></span>
@@ -188,11 +190,11 @@
         </div>
     </main>
 
-    <!-- BIBLIOTECAS -->
+    <!-- LIBS -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    <!-- MÓDULOS -->
+    <!-- APP -->
     <script src="js/state.js"></script>
     <script src="js/image-utils.js"></script>
     <script src="js/renderer.js"></script>
