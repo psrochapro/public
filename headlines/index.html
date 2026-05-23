@@ -26,7 +26,7 @@
                     <select id="layout-selector">
                         <option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option>
                     </select>
-                    <div class="asset-group"><label>Logo do Portal</label><input type="file" id="edit-logo" accept="image/*"></div>
+                    <div class="asset-group"><label>Logo do Portal (PNG)</label><input type="file" id="edit-logo" accept="image/*"></div>
                     <div class="asset-group">
                         <label>Foto Principal</label><input type="file" id="edit-main-img" accept="image/*">
                         <div class="row">
@@ -39,13 +39,13 @@
             </details>
             <details><summary>2. Redação e Conteúdo</summary>
                 <div class="section-content">
-                    <label>Badge Topo</label><input type="text" id="edit-badge-text">
-                    <label>Categoria</label><input type="text" id="edit-main-cat">
-                    <label>Data</label><input type="text" id="edit-main-date">
+                    <label>Texto do Badge (Topo)</label><input type="text" id="edit-badge-text">
+                    <label>Categoria | Local</label><input type="text" id="edit-main-cat">
+                    <label>Data / Hora</label><input type="text" id="edit-main-date">
                     <label>Manchete</label><textarea id="edit-main-title" rows="2"></textarea>
                     <label>Subtítulo</label><textarea id="edit-main-sub" rows="2"></textarea>
-                    <label>Corpo</label><textarea id="edit-main-body" rows="4"></textarea>
-                    <label>URL Rodapé</label><input type="text" id="edit-site-url">
+                    <label>Corpo da Notícia</label><textarea id="edit-main-body" rows="4"></textarea>
+                    <label>URL / Rodapé</label><input type="text" id="edit-site-url">
                     <div class="mini-news-inputs">
                         <h4 class="sub-label">Textos Mini Notícias</h4>
                         <div class="mini-edit-box"><label>Item 1</label><textarea id="edit-title-0" rows="1"></textarea><textarea id="edit-resumo-0" rows="2"></textarea></div>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="row">
                         <div><label>Gap Card (px)</label><input type="range" id="edit-gap-card" min="0" max="100" step="1"></div>
-                        <div><label>Respiro Mini-Rodapé (px)</label><input type="range" id="edit-mini-footer-gap" min="0" max="50" step="1"></div>
+                        <div><label>Espaço Mini-Rodapé (px)</label><input type="range" id="edit-mini-footer-gap" min="0" max="50" step="1"></div>
                     </div>
                     <div class="row">
                         <div><label>Gap Mini (px)</label><input type="range" id="edit-mini-gap" min="0" max="40" step="1"></div>
@@ -79,16 +79,24 @@
                         <div class="color-control"><label>Destaque</label><input type="color" id="accent-color"></div>
                     </div>
                     <div class="typography-box">
-                        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;"><input type="checkbox" id="global-typography-toggle" style="width: auto; margin: 0;"> Global?</label>
+                        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;"><input type="checkbox" id="global-typography-toggle" style="width: auto; margin: 0;"> Sincronizar Global?</label>
                         <select id="text-element-selector">
-                            <option value="badge">Badge</option><option value="url">URL</option><option value="cat">Cat</option><option value="date">Data</option><option value="title">Manchete</option><option value="sub">Sub</option><option value="body">Corpo</option><option value="mini-t">Mini T</option><option value="mini-d">Mini R</option>
+                            <option value="badge">Texto do Badge (Topo)</option>
+                            <option value="url">URL do Site</option>
+                            <option value="cat">Categoria | Local</option>
+                            <option value="date">Data / Hora</option>
+                            <option value="title">Manchete (H1)</option>
+                            <option value="sub">Subtítulo</option>
+                            <option value="body">Corpo do Texto</option>
+                            <option value="mini-t">Título Mini Notícia</option>
+                            <option value="mini-d">Resumo Mini Notícia</option>
                         </select>
                         <div class="row">
-                            <div><label>Size</label><input type="range" id="edit-font-size" min="8" max="100" step="1"></div>
+                            <div><label>Tamanho (px)</label><input type="range" id="edit-font-size" min="8" max="100" step="1"></div>
                             <div style="max-width: 80px;"><label>Cor</label><input type="color" id="edit-font-color"></div>
                         </div>
                     </div>
-                    <label style="margin-top: 15px;">Formato (Atalho)</label><select id="layout-selector-bottom"><option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option></select>
+                    <label style="margin-top: 15px;">Atalho Formato</label><select id="layout-selector-bottom"><option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option></select>
                 </div>
             </details>
         </div>
