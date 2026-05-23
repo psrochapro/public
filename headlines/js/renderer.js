@@ -44,7 +44,6 @@ function render() {
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const textBaseHTML = `<span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p>`;
     
-    // RESTAURAÇÃO DO HTML ESTRUTURAL
     if (layout === 'ratio-4-5') {
         cardBody.innerHTML = `
             <div class="layout-4-5-wrapper">
@@ -105,7 +104,6 @@ function applyTypographyToCSS() {
     const layout = state.config.layout || "ratio-16-9";
     const settings = state.layoutSettings[layout];
     const root = document.documentElement;
-
     Object.keys(settings).forEach(key => {
         if (typeof settings[key] === 'object' && settings[key].size) {
             const cssKey = key.replace('_', '-'); 
@@ -113,7 +111,6 @@ function applyTypographyToCSS() {
             root.style.setProperty(`--clr-${cssKey}`, settings[key].color);
         }
     });
-
     root.style.setProperty('--layout-padding-y', `${settings.padding_y}%`);
     root.style.setProperty('--layout-padding-x', `${settings.padding_x}%`);
     root.style.setProperty('--layout-gap', `${settings.gap_card}px`);
