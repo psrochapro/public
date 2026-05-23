@@ -18,7 +18,7 @@ const DEFAULT_TYPOGRAPHY = {
         cat: { size: 14, color: "#b3adad" }, date: { size: 12, color: "#ffffff" },
         title: { size: 36, color: "#111111" }, sub: { size: 18, color: "#111111" },
         body: { size: 15, color: "#555555" }, mini_t: { size: 18, color: "#111111" }, mini_d: { size: 14, color: "#555555" },
-        padding_y: 3, padding_x: 5, gap_card: 25, footer_m: 4, mini_gap: 20, mini_padding: 25, mini_footer_gap: 0
+        padding_y: 3, padding_x: 5, gap_card: 25, footer_m: 2.5, mini_gap: 20, mini_padding: 25, mini_footer_gap: 25
     },
     "ratio-4-5": {
         badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
@@ -104,6 +104,7 @@ function applyTypographyToCSS() {
     const layout = state.config.layout || "ratio-16-9";
     const settings = state.layoutSettings[layout];
     const root = document.documentElement;
+
     Object.keys(settings).forEach(key => {
         if (typeof settings[key] === 'object' && settings[key].size) {
             const cssKey = key.replace('_', '-'); 
@@ -111,6 +112,7 @@ function applyTypographyToCSS() {
             root.style.setProperty(`--clr-${cssKey}`, settings[key].color);
         }
     });
+
     root.style.setProperty('--layout-padding-y', `${settings.padding_y}%`);
     root.style.setProperty('--layout-padding-x', `${settings.padding_x}%`);
     root.style.setProperty('--layout-gap', `${settings.gap_card}px`);
