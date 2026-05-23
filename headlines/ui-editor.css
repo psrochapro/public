@@ -19,11 +19,12 @@ details { border-bottom: 1px solid #222; }
 summary {
     padding: 15px 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
     color: #888; cursor: pointer; list-style: none; display: flex; justify-content: space-between;
-    background: #151515; position: sticky; top: 0; z-index: 5;
+    background: #151515; /* Removido sticky para evitar ghosting */
 }
 summary:hover { background: #222; color: #eee; }
 summary::after { content: '＋'; color: #60a5fa; }
 details[open] summary::after { content: '－'; }
+details[open] summary { background: #0a0a0a; color: white; border-bottom: 1px solid #222; }
 
 .section-content { padding: 15px 20px; background: #151515; }
 
@@ -33,7 +34,6 @@ details[open] summary::after { content: '－'; }
 
 .sidebar-editor label { display: block; font-size: 0.65rem; margin-bottom: 6px; color: #aaa; font-weight: bold; }
 
-/* RESGATE DOS INPUTS ORIGINAIS */
 .sidebar-editor input[type="text"], 
 .sidebar-editor select, 
 .sidebar-editor textarea, 
@@ -46,6 +46,11 @@ details[open] summary::after { content: '－'; }
 
 .color-grid { display: flex; gap: 10px; margin-bottom: 10px; }
 .color-control { flex: 1; text-align: center; }
+
+input[type="color"] {
+    -webkit-appearance: none; appearance: none; border: 2px solid #333;
+    width: 100%; height: 38px; cursor: pointer; background: none; border-radius: 6px; overflow: hidden;
+}
 
 .row-thumbs { display: flex; gap: 5px; }
 .file-mini { font-size: 0.6rem !important; padding: 4px !important; }

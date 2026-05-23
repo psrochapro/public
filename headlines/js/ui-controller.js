@@ -1,8 +1,25 @@
+/**
+ * UI CONTROLLER
+ * Handles all sidebar interactions and event listeners.
+ */
+
 function setupSidebarInputs() {
     const safeListener = (id, event, callback) => {
         const el = document.getElementById(id);
         if (el) el[event] = callback;
     };
+
+    // --- LÓGICA DE ACORDEÃO EXCLUSIVO (NOVO) ---
+    const allDetails = document.querySelectorAll('.tabs-container details');
+    allDetails.forEach(det => {
+        det.addEventListener('toggle', () => {
+            if (det.open) {
+                allDetails.forEach(other => {
+                    if (other !== det) other.open = false;
+                });
+            }
+        });
+    });
 
     const handleLayoutChange = (e) => {
         const val = e.target.value;
