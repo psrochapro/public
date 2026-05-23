@@ -44,7 +44,7 @@ function render() {
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const textBaseHTML = `<span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p>`;
     
-    // RESTAURAÇÃO EXATA DOS HTML STRINGS ORIGINAIS
+    // RESTAURAÇÃO DO HTML ESTRUTURAL
     if (layout === 'ratio-4-5') {
         cardBody.innerHTML = `
             <div class="layout-4-5-wrapper">
