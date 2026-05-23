@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Headlines Snap Pro</title>
+    <!-- 1. The Sacred Design CSS -->
     <link rel="stylesheet" href="style.css">
+    <!-- 2. The Editor UI CSS (Isolated) -->
+    <link rel="stylesheet" href="ui-editor.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="ratio-16-9">
 
     <aside class="sidebar-editor">
-        <!-- FIXED TOP ACTIONS -->
         <header class="sidebar-header">
             <h2>Snapshot Editor</h2>
             <div class="action-row">
@@ -26,15 +28,11 @@
                 <button id="btn-trigger-theme-import" class="btn-secondary">Imp. Tema</button>
             </div>
             
-            <!-- Hidden File Inputs -->
             <input type="file" id="import-json-file" accept=".news, .json" style="display: none;">
             <input type="file" id="import-theme-file" accept=".json" style="display: none;">
         </header>
         
-        <!-- SCROLLABLE ACCORDION CONTENT -->
         <div class="tabs-container">
-            
-            <!-- 1. IDENTIDADE -->
             <details open>
                 <summary>1. Identidade & Layout</summary>
                 <div class="section-content">
@@ -63,20 +61,18 @@
                     <label>Cor de Destaque</label>
                     <input type="color" id="accent-color">
 
-                    <label>Logo (PNG Transparente)</label>
+                    <label>Logo (PNG)</label>
                     <input type="file" id="edit-logo" accept="image/*">
                     <label>URL / Rodapé</label>
                     <input type="text" id="edit-site-url">
                 </div>
             </details>
 
-            <!-- 2. NOTÍCIA PRINCIPAL -->
             <details>
                 <summary>2. Conteúdo Principal</summary>
                 <div class="section-content">
                     <label>Foto Principal</label>
                     <input type="file" id="edit-main-img" accept="image/*">
-                    
                     <div class="row">
                         <div>
                             <label>Zoom</label>
@@ -87,7 +83,6 @@
                             <input type="range" id="edit-img-y" min="-100" max="100" step="1">
                         </div>
                     </div>
-
                     <label>Categoria | Local</label>
                     <input type="text" id="edit-main-cat">
                     <label>Data / Hora</label>
@@ -101,9 +96,8 @@
                 </div>
             </details>
 
-            <!-- 3. MINI NOTÍCIAS -->
             <details>
-                <summary>3. Mini Notícias (Rodapé)</summary>
+                <summary>3. Mini Notícias</summary>
                 <div class="section-content">
                     <div class="mini-edit-box">
                         <label>Notícia 1</label>
@@ -126,33 +120,30 @@
                 </div>
             </details>
 
-            <!-- 4. TIPOGRAFIA -->
             <details>
-                <summary>4. Tipografia & Ajustes Finos</summary>
+                <summary>4. Tipografia & Ajustes</summary>
                 <div class="section-content">
-                    <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #334155;">
-                        <label style="margin-bottom: 0; display: flex; align-items: center; gap: 10px;">
-                            <input type="checkbox" id="global-typography-toggle" style="width: auto; margin: 0;">
-                            Sincronizar entre todos os formatos?
-                        </label>
-                    </div>
+                    <label style="display: flex; align-items: center; gap: 10px; background: #222; padding: 10px; border-radius: 4px;">
+                        <input type="checkbox" id="global-typography-toggle" style="width: auto; margin: 0;">
+                        Sincronizar Global?
+                    </label>
 
-                    <label>Selecionar Elemento</label>
+                    <label style="margin-top: 15px;">Selecionar Elemento</label>
                     <select id="text-element-selector">
                         <option value="badge">Badge Topo</option>
                         <option value="url">URL Site</option>
                         <option value="cat">Categoria</option>
                         <option value="date">Data/Selo</option>
-                        <option value="title">Manchete (H1)</option>
+                        <option value="title">Manchete</option>
                         <option value="sub">Subtítulo</option>
-                        <option value="body">Corpo do Texto</option>
+                        <option value="body">Corpo</option>
                         <option value="mini-t">Título Mini</option>
                         <option value="mini-d">Resumo Mini</option>
                     </select>
 
                     <div class="row">
                         <div>
-                            <label>Tamanho (px)</label>
+                            <label>Size</label>
                             <input type="range" id="edit-font-size" min="8" max="100" step="1">
                         </div>
                         <div>
@@ -160,8 +151,7 @@
                             <input type="color" id="edit-font-color">
                         </div>
                     </div>
-                    
-                    <label style="margin-top: 15px;">Atalho de Formato</label>
+                    <label style="margin-top: 15px;">Atalho Formato</label>
                     <select id="layout-selector-bottom">
                         <option value="ratio-16-9">Wide (16:9)</option>
                         <option value="ratio-4-3">Clássico (4:3)</option>
@@ -190,11 +180,9 @@
         </div>
     </main>
 
-    <!-- LIBS -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    <!-- APP -->
     <script src="js/state.js"></script>
     <script src="js/image-utils.js"></script>
     <script src="js/renderer.js"></script>
