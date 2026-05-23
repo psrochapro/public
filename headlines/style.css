@@ -88,7 +88,9 @@ h1 { color: var(--clr-title); font-size: var(--fs-title); font-weight: 900; line
     padding: var(--layout-padding-y) var(--layout-padding-x) 1% var(--layout-padding-x); 
     overflow: hidden; align-items: center; 
 }
-.ratio-1-1 .main-image-container, .ratio-4-3 .main-image-container { width: 50%; height: auto; flex: none; }
+.ratio-1-1 .main-image-container { width: 60%; height: auto; flex: none; }
+.ratio-4-3 .main-image-container { width: 50%; height: auto; flex: none; }
+
 .ratio-1-1 .mini-news-grid, .ratio-4-3 .mini-news-grid { 
     grid-template-columns: repeat(3, 1fr); 
     margin-left: 5%; margin-right: 5%; 
