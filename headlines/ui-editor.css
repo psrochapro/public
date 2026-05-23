@@ -54,7 +54,7 @@ details[open] summary { background: #0a0a0a; color: white; border-bottom: 1px so
 /* Grouping Styles */
 .asset-group { background: #1a1a1a; padding: 12px; border-radius: 6px; border: 1px solid #333; margin-bottom: 15px; }
 .mini-edit-box { background: #1a1a1a; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #252525; }
-.sub-label { font-size: 0.65rem; color: #60a5fa; text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+.sub-label { font-size: 0.65rem; color: #60a5fa; text-transform: uppercase; margin: 15px 0 10px 0; border-bottom: 1px solid #333; padding-bottom: 5px; }
 
 /* Form Elements */
 .sidebar-editor label { display: block; font-size: 0.65rem; margin-bottom: 6px; color: #aaa; font-weight: bold; }
@@ -70,13 +70,12 @@ details[open] summary { background: #0a0a0a; color: white; border-bottom: 1px so
 
 .sidebar-editor textarea { resize: vertical; min-height: 40px; }
 
-/* COLOR PICKER REFORMADO */
+/* COLOR PICKER */
 .color-grid { display: flex; gap: 10px; margin-bottom: 20px; }
 .color-control { flex: 1; text-align: center; }
-
 input[type="color"] {
     -webkit-appearance: none;
-    appearance: none; /* CORREÇÃO: Adicionado para compatibilidade padrão */
+    appearance: none;
     border: 2px solid #333;
     width: 100%;
     height: 38px;
@@ -89,10 +88,8 @@ input[type="color"] {
 input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
 input[type="color"]::-webkit-color-swatch { border: none; }
 
-/* MINI THUMBS ROW */
 .row-thumbs { display: flex; gap: 5px; }
 .file-mini { font-size: 0.6rem !important; padding: 4px !important; }
-
 .sidebar-editor .row { display: flex; gap: 10px; }
 
 .btn-secondary { background: #334155; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }

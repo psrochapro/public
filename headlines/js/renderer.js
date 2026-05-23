@@ -4,7 +4,6 @@ const DEFAULT_TYPOGRAPHY = {
         cat: { size: 11, color: "#b3adad" }, date: { size: 9, color: "#ffffff" },
         title: { size: 28, color: "#111111" }, sub: { size: 14, color: "#111111" },
         body: { size: 13, color: "#555555" }, mini_t: { size: 16, color: "#111111" }, mini_d: { size: 13, color: "#555555" },
-        // Layout Metrics (Legacy 16:9 Values)
         padding_y: 2.5, padding_x: 3, gap_card: 25, mini_gap: 12, mini_padding: 15
     },
     "ratio-4-3": {
@@ -12,7 +11,6 @@ const DEFAULT_TYPOGRAPHY = {
         cat: { size: 12, color: "#b3adad" }, date: { size: 10, color: "#ffffff" },
         title: { size: 30, color: "#111111" }, sub: { size: 16, color: "#111111" },
         body: { size: 14, color: "#555555" }, mini_t: { size: 17, color: "#111111" }, mini_d: { size: 13, color: "#555555" },
-        // Layout Metrics (Standard Legacy Values)
         padding_y: 5, padding_x: 6, gap_card: 30, mini_gap: 15, mini_padding: 18
     },
     "ratio-1-1": {
@@ -96,8 +94,6 @@ function applyTypographyToCSS() {
     const layout = state.config.layout || "ratio-16-9";
     const settings = state.layoutSettings[layout];
     const root = document.documentElement;
-
-    // Apply Typography
     Object.keys(settings).forEach(key => {
         if (typeof settings[key] === 'object' && settings[key].size) {
             const cssKey = key.replace('_', '-'); 
@@ -105,8 +101,6 @@ function applyTypographyToCSS() {
             root.style.setProperty(`--clr-${cssKey}`, settings[key].color);
         }
     });
-
-    // Apply Layout Spacing (Isolamento Total)
     root.style.setProperty('--layout-padding-y', `${settings.padding_y}%`);
     root.style.setProperty('--layout-padding-x', `${settings.padding_x}%`);
     root.style.setProperty('--layout-gap', `${settings.gap_card}px`);

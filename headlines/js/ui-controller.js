@@ -1,8 +1,3 @@
-/**
- * UI CONTROLLER
- * Handles all sidebar interactions and event listeners.
- */
-
 function setupSidebarInputs() {
     const safeListener = (id, event, callback) => {
         const el = document.getElementById(id);
@@ -17,22 +12,18 @@ function setupSidebarInputs() {
         const val = e.target.value;
         state.config.layout = val;
         document.body.className = val;
-        
         const sel1 = document.getElementById('layout-selector');
         const sel2 = document.getElementById('layout-selector-bottom');
         if(sel1) sel1.value = val;
         if(sel2) sel2.value = val;
-        
         syncTypographyUI();
         applyTypographyToCSS();
         render();
         updateColors();
     };
 
-    // --- 1. Identidade e Arquivos ---
     safeListener('layout-selector', 'onchange', handleLayoutChange);
     safeListener('layout-selector-bottom', 'onchange', handleLayoutChange);
-    
     handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
     handleImageUpload('edit-main-img', async (res) => { 
         state.noticiaPrincipal.imagem_url = await cropImage(res, 4/3); 
@@ -52,13 +43,11 @@ function setupSidebarInputs() {
         state.noticiaPrincipal.zoom = e.target.value;
         document.documentElement.style.setProperty('--img-zoom', e.target.value);
     });
-    
     safeListener('edit-img-y', 'oninput', (e) => {
         state.noticiaPrincipal.yPos = e.target.value;
         document.documentElement.style.setProperty('--img-y', e.target.value + '%');
     });
 
-    // --- 2. Redação ---
     safeListener('edit-badge-text', 'oninput', (e) => { state.config.badge_text = e.target.value; render(); });
     safeListener('edit-main-cat', 'oninput', (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); });
     safeListener('edit-main-date', 'oninput', (e) => { state.noticiaPrincipal.data = e.target.value; render(); });
@@ -71,7 +60,6 @@ function setupSidebarInputs() {
         if(urlDisplay) urlDisplay.innerText = e.target.value;
     });
 
-    // --- 3. Estilo e Espaçamento ---
     const updateSpacing = (key) => (e) => {
         const layout = state.config.layout || "ratio-16-9";
         state.layoutSettings[layout][key] = parseFloat(e.target.value);
@@ -84,19 +72,9 @@ function setupSidebarInputs() {
     safeListener('edit-mini-gap', 'oninput', updateSpacing('mini_gap'));
     safeListener('edit-mini-padding', 'oninput', updateSpacing('mini_padding'));
 
-    safeListener('bg-card-color', 'oninput', () => { 
-        state.config.bg_color = document.getElementById('bg-card-color').value; 
-        updateColors(); 
-    });
-    safeListener('header-color', 'oninput', () => { 
-        state.config.header_color = document.getElementById('header-color').value; 
-        updateColors(); 
-    });
-    safeListener('accent-color', 'oninput', () => { 
-        state.config.accent_color = document.getElementById('accent-color').value; 
-        updateColors(); 
-    });
-    
+    safeListener('bg-card-color', 'oninput', () => { state.config.bg_color = document.getElementById('bg-card-color').value; updateColors(); });
+    safeListener('header-color', 'oninput', () => { state.config.header_color = document.getElementById('header-color').value; updateColors(); });
+    safeListener('accent-color', 'oninput', () => { state.config.accent_color = document.getElementById('accent-color').value; updateColors(); });
     safeListener('global-typography-toggle', 'onchange', (e) => { state.config.global_typography = e.target.checked; });
     safeListener('text-element-selector', 'onchange', syncTypographyUI);
     safeListener('edit-font-size', 'oninput', handleTypographyInput);
@@ -139,20 +117,16 @@ function handleTypographyInput() {
 function syncSidebarWithState() {
     const layout = state.config.layout || "ratio-16-9";
     const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
-
     setVal('layout-selector', layout);
     setVal('layout-selector-bottom', layout);
     const toggle = document.getElementById('global-typography-toggle');
     if(toggle) toggle.checked = !!state.config.global_typography;
-
-    // Sync Spacing Sliders
     const s = state.layoutSettings[layout];
     setVal('edit-padding-y', s.padding_y);
     setVal('edit-padding-x', s.padding_x);
     setVal('edit-gap-card', s.gap_card);
     setVal('edit-mini-gap', s.mini_gap);
     setVal('edit-mini-padding', s.mini_padding);
-
     setVal('edit-badge-text', state.config.badge_text || "");
     setVal('bg-card-color', state.config.bg_color || "#ffffff");
     setVal('header-color', state.config.header_color || "#f5f5f5");
@@ -160,16 +134,13 @@ function syncSidebarWithState() {
     setVal('edit-site-url', state.config.site_url || "");
     setVal('edit-img-zoom', state.noticiaPrincipal.zoom || 1);
     setVal('edit-img-y', state.noticiaPrincipal.yPos || 0);
-
     document.documentElement.style.setProperty('--img-zoom', state.noticiaPrincipal.zoom || 1);
     document.documentElement.style.setProperty('--img-y', (state.noticiaPrincipal.yPos || 0) + '%');
-
     setVal('edit-main-cat', state.noticiaPrincipal.categoria);
     setVal('edit-main-date', state.noticiaPrincipal.data);
     setVal('edit-main-title', state.noticiaPrincipal.titulo);
     setVal('edit-main-sub', state.noticiaPrincipal.subtitulo);
     setVal('edit-main-body', state.noticiaPrincipal.corpo_texto);
-
     for (let i = 0; i < 3; i++) {
         setVal(`edit-title-${i}`, state.miniNoticias[i].titulo);
         setVal(`edit-resumo-${i}`, state.miniNoticias[i].resumo);

@@ -35,11 +35,8 @@ function sanitizeState() {
         if(!state.layoutSettings[l]) {
             state.layoutSettings[l] = JSON.parse(JSON.stringify(DEFAULT_TYPOGRAPHY[l]));
         }
-
-        // Lógica de Retrocompatibilidade para Espaçamentos
         const s = state.layoutSettings[l];
         const d = DEFAULT_TYPOGRAPHY[l];
-
         if (s.padding_y === undefined) s.padding_y = d.padding_y;
         if (s.padding_x === undefined) s.padding_x = d.padding_x;
         if (s.gap_card === undefined) s.gap_card = d.gap_card;
