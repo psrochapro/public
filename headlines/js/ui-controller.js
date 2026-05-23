@@ -1,5 +1,11 @@
+/**
+ * UI CONTROLLER
+ * Handles all sidebar interactions and event listeners.
+ */
+
 function setupSidebarInputs() {
     // Helper function to prevent "Cannot set properties of null" errors
+    // If an ID is missing in the HTML, it just logs a warning instead of crashing.
     const safeListener = (id, event, callback) => {
         const el = document.getElementById(id);
         if (el) {
@@ -13,6 +19,7 @@ function setupSidebarInputs() {
         const val = e.target.value;
         state.config.layout = val;
         document.body.className = val;
+        
         // Sync both selectors if they exist
         const sel1 = document.getElementById('layout-selector');
         const sel2 = document.getElementById('layout-selector-bottom');
@@ -25,31 +32,54 @@ function setupSidebarInputs() {
         updateColors();
     };
 
-    // 1. Identidade Visual
+    // --- 1. Identidade Visual ---
     safeListener('layout-selector', 'onchange', handleLayoutChange);
     safeListener('layout-selector-bottom', 'onchange', handleLayoutChange);
-    safeListener('bg-card-color', 'oninput', () => { state.config.bg_color = document.getElementById('bg-card-color').value; updateColors(); });
-    safeListener('header-color', 'oninput', () => { state.config.header_color = document.getElementById('header-color').value; updateColors(); });
-    safeListener('accent-color', 'oninput', () => { state.config.accent_color = document.getElementById('accent-color').value; updateColors(); });
-    safeListener('edit-badge-text', 'oninput', (e) => { state.config.badge_text = e.target.value; render(); });
-    safeListener('edit-site-url', 'oninput', (e) => { state.config.site_url = e.target.value; document.getElementById('site-url-text').innerText = e.target.value; });
+    
+    safeListener('bg-card-color', 'oninput', () => { 
+        state.config.bg_color = document.getElementById('bg-card-color').value; 
+        updateColors(); 
+    });
+    
+    safeListener('header-color', 'oninput', () => { 
+        state.config.header_color = document.getElementById('header-color').value; 
+        updateColors(); 
+    });
+    
+    safeListener('accent-color', 'oninput', () => { 
+        state.config.accent_color = document.getElementById('accent-color').value; 
+        updateColors(); 
+    });
+    
+    safeListener('edit-badge-text', 'oninput', (e) => { 
+        state.config.badge_text = e.target.value; 
+        render(); 
+    });
+    
+    safeListener('edit-site-url', 'oninput', (e) => { 
+        state.config.site_url = e.target.value; 
+        const urlDisplay = document.getElementById('site-url-text');
+        if(urlDisplay) urlDisplay.innerText = e.target.value;
+    });
 
-    // 2. Notícia Principal
+    // --- 2. Notícia Principal ---
     safeListener('edit-img-zoom', 'oninput', (e) => {
         state.noticiaPrincipal.zoom = e.target.value;
         document.documentElement.style.setProperty('--img-zoom', e.target.value);
     });
+    
     safeListener('edit-img-y', 'oninput', (e) => {
         state.noticiaPrincipal.yPos = e.target.value;
         document.documentElement.style.setProperty('--img-y', e.target.value + '%');
     });
+
     safeListener('edit-main-cat', 'oninput', (e) => { state.noticiaPrincipal.categoria = e.target.value; render(); });
     safeListener('edit-main-date', 'oninput', (e) => { state.noticiaPrincipal.data = e.target.value; render(); });
     safeListener('edit-main-title', 'oninput', (e) => { state.noticiaPrincipal.titulo = e.target.value; render(); });
     safeListener('edit-main-sub', 'oninput', (e) => { state.noticiaPrincipal.subtitulo = e.target.value; render(); });
     safeListener('edit-main-body', 'oninput', (e) => { state.noticiaPrincipal.corpo_texto = e.target.value; render(); });
 
-    // 3. Mini Notícias
+    // --- 3. Mini Notícias ---
     for (let i = 0; i < 3; i++) {
         handleImageUpload(`edit-thumb-${i}`, async (res) => { 
             state.miniNoticias[i].thumb_url = await cropImage(res, 1/1); 
@@ -59,13 +89,16 @@ function setupSidebarInputs() {
         safeListener(`edit-resumo-${i}`, 'oninput', (e) => { state.miniNoticias[i].resumo = e.target.value; render(); });
     }
 
-    // 4. Tipografia
-    safeListener('global-typography-toggle', 'onchange', (e) => { state.config.global_typography = e.target.checked; });
+    // --- 4. Tipografia ---
+    safeListener('global-typography-toggle', 'onchange', (e) => { 
+        state.config.global_typography = e.target.checked; 
+    });
+    
     safeListener('text-element-selector', 'onchange', syncTypographyUI);
     safeListener('edit-font-size', 'oninput', handleTypographyInput);
     safeListener('edit-font-color', 'oninput', handleTypographyInput);
 
-    // Logos e Imagens (usam o helper do image-utils)
+    // Logos e Imagens principais
     handleImageUpload('edit-logo', (res) => { state.config.logo_url = res; render(); });
     handleImageUpload('edit-main-img', async (res) => { 
         state.noticiaPrincipal.imagem_url = await cropImage(res, 4/3); 
@@ -96,8 +129,13 @@ function handleTypographyInput() {
     if(!selector) return;
 
     const elementKey = selector.value.replace('-', '_');
-    const newSize = document.getElementById('edit-font-size').value;
-    const newColor = document.getElementById('edit-font-color').value;
+    const sizeInput = document.getElementById('edit-font-size');
+    const colorInput = document.getElementById('edit-font-color');
+    
+    if(!sizeInput || !colorInput) return;
+
+    const newSize = sizeInput.value;
+    const newColor = colorInput.value;
 
     if (isGlobal) {
         ["ratio-16-9", "ratio-4-3", "ratio-1-1", "ratio-4-5", "ratio-9-16"].forEach(l => {
@@ -116,7 +154,10 @@ function syncSidebarWithState() {
     const layout = state.config.layout || "ratio-16-9";
     
     // Helper to set value only if element exists
-    const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+    const setVal = (id, val) => { 
+        const el = document.getElementById(id); 
+        if(el) el.value = val; 
+    };
 
     setVal('layout-selector', layout);
     setVal('layout-selector-bottom', layout);
