@@ -18,15 +18,15 @@
 }
 .sidebar-header h2 { font-size: 0.8rem; text-transform: uppercase; color: #60a5fa; letter-spacing: 1px; margin-bottom: 15px; }
 
-.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.action-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 5px; margin-bottom: 8px; }
 
-/* The Tabs Container with Scroll Fix */
+/* The Tabs Container */
 .tabs-container { 
     flex: 1; 
     overflow-y: auto; 
     scrollbar-width: thin;
     scrollbar-color: #444 #151515;
-    scrollbar-gutter: stable; /* Prevents jumping when scrollbar appears */
+    scrollbar-gutter: stable;
 }
 
 /* Accordion Styles */
@@ -51,31 +51,50 @@ details[open] summary { background: #0a0a0a; color: white; border-bottom: 1px so
 
 .section-content { padding: 20px; background: #151515; }
 
+/* Grouping Styles */
+.asset-group { background: #1a1a1a; padding: 12px; border-radius: 6px; border: 1px solid #333; margin-bottom: 15px; }
+.mini-edit-box { background: #1a1a1a; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #252525; }
+.sub-label { font-size: 0.65rem; color: #60a5fa; text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+
 /* Form Elements */
-.sidebar-editor label { display: block; font-size: 0.65rem; margin-bottom: 4px; color: #aaa; font-weight: bold; }
+.sidebar-editor label { display: block; font-size: 0.65rem; margin-bottom: 6px; color: #aaa; font-weight: bold; }
 .sidebar-editor input[type="text"], 
-.sidebar-editor input[type="color"], 
 .sidebar-editor select, 
 .sidebar-editor textarea, 
 .sidebar-editor input[type="file"], 
 .sidebar-editor input[type="range"] { 
     width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #333; 
-    background: #222; color: #eee; font-size: 0.8rem; margin-bottom: 10px;
+    background: #222; color: #eee; font-size: 0.8rem; margin-bottom: 12px;
+    font-family: inherit;
 }
+
+.sidebar-editor textarea { resize: vertical; min-height: 40px; }
+
+/* COLOR PICKER REFORMADO */
+.color-grid { display: flex; gap: 10px; margin-bottom: 20px; }
+.color-control { flex: 1; text-align: center; }
+
+input[type="color"] {
+    -webkit-appearance: none;
+    border: 2px solid #333;
+    width: 100%;
+    height: 38px;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: none; }
+
+/* MINI THUMBS ROW */
+.row-thumbs { display: flex; gap: 5px; }
+.file-mini { font-size: 0.6rem !important; padding: 4px !important; }
 
 .sidebar-editor .row { display: flex; gap: 10px; }
-.sidebar-editor .mini-edit-box { background: #222; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #333; }
 
-.btn-secondary { background: #334155; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+.btn-secondary { background: #334155; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
 .btn-primary { background: #2563eb; color: white; border: none; padding: 18px; font-weight: bold; cursor: pointer; width: 100%; border-top: 1px solid #333; }
 
-/* Ensure the preview area doesn't have scrollbars */
-.preview-container { 
-    flex: 1; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px; 
-    overflow: hidden; 
-    background: #0a0a0a;
-}
+.preview-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; background: #0a0a0a; }
