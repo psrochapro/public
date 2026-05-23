@@ -11,7 +11,7 @@ const DEFAULT_TYPOGRAPHY = {
         cat: { size: 12, color: "#b3adad" }, date: { size: 10, color: "#ffffff" },
         title: { size: 30, color: "#111111" }, sub: { size: 16, color: "#111111" },
         body: { size: 14, color: "#555555" }, mini_t: { size: 17, color: "#111111" }, mini_d: { size: 13, color: "#555555" },
-        padding_y: 5, padding_x: 6, gap_card: 30, footer_m: 1.5, mini_gap: 15, mini_padding: 18, mini_footer_gap: 5
+        padding_y: 5, padding_x: 6, gap_card: 25, footer_m: 1.5, mini_gap: 15, mini_padding: 18, mini_footer_gap: 5
     },
     "ratio-1-1": {
         badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
