@@ -71,7 +71,19 @@ function setupSidebarInputs() {
         if(urlDisplay) urlDisplay.innerText = e.target.value;
     });
 
-    // --- 3. Cores e Estilo ---
+    // --- 3. Estilo e Espaçamento ---
+    const updateSpacing = (key) => (e) => {
+        const layout = state.config.layout || "ratio-16-9";
+        state.layoutSettings[layout][key] = parseFloat(e.target.value);
+        applyTypographyToCSS();
+    };
+
+    safeListener('edit-padding-y', 'oninput', updateSpacing('padding_y'));
+    safeListener('edit-padding-x', 'oninput', updateSpacing('padding_x'));
+    safeListener('edit-gap-card', 'oninput', updateSpacing('gap_card'));
+    safeListener('edit-mini-gap', 'oninput', updateSpacing('mini_gap'));
+    safeListener('edit-mini-padding', 'oninput', updateSpacing('mini_padding'));
+
     safeListener('bg-card-color', 'oninput', () => { 
         state.config.bg_color = document.getElementById('bg-card-color').value; 
         updateColors(); 
@@ -132,6 +144,14 @@ function syncSidebarWithState() {
     setVal('layout-selector-bottom', layout);
     const toggle = document.getElementById('global-typography-toggle');
     if(toggle) toggle.checked = !!state.config.global_typography;
+
+    // Sync Spacing Sliders
+    const s = state.layoutSettings[layout];
+    setVal('edit-padding-y', s.padding_y);
+    setVal('edit-padding-x', s.padding_x);
+    setVal('edit-gap-card', s.gap_card);
+    setVal('edit-mini-gap', s.mini_gap);
+    setVal('edit-mini-padding', s.mini_padding);
 
     setVal('edit-badge-text', state.config.badge_text || "");
     setVal('bg-card-color', state.config.bg_color || "#ffffff");
