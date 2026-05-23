@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Headlines Snap Pro</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="ui-editor.css">
+    <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="ui-editor.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="ratio-16-9">
-
     <aside class="sidebar-editor">
         <header class="sidebar-header">
             <h2>Snapshot Editor</h2>
@@ -18,56 +15,29 @@
                 <button id="btn-trigger-import" class="btn-secondary">Abrir</button>
                 <button id="btn-export-json" class="btn-secondary" style="background: #15803d;">Salvar</button>
             </div>
-            <div class="action-row">
-                <input type="text" id="export-filename" placeholder="Nome do arquivo..." style="margin-bottom: 0;">
-            </div>
-            <div class="action-row" style="margin-top: 8px;">
-                <button id="btn-export-theme" class="btn-secondary">Exp. Tema</button>
-                <button id="btn-trigger-theme-import" class="btn-secondary">Imp. Tema</button>
-            </div>
-            <input type="file" id="import-json-file" accept=".news, .json" style="display: none;">
-            <input type="file" id="import-theme-file" accept=".json" style="display: none;">
+            <div class="action-row"><input type="text" id="export-filename" placeholder="Nome do arquivo..." style="margin-bottom: 0;"></div>
+            <div class="action-row" style="margin-top: 8px;"><button id="btn-export-theme" class="btn-secondary">Exp. Tema</button><button id="btn-trigger-theme-import" class="btn-secondary">Imp. Tema</button></div>
+            <input type="file" id="import-json-file" accept=".news, .json" style="display: none;"><input type="file" id="import-theme-file" accept=".json" style="display: none;">
         </header>
-        
         <div class="tabs-container">
-            <!-- 1. ARQUIVOS -->
-            <details open>
-                <summary>1. Arquivos e Imagens</summary>
+            <details open><summary>1. Arquivos e Imagens</summary>
                 <div class="section-content">
                     <label>Formato de Saída</label>
                     <select id="layout-selector">
-                        <option value="ratio-16-9">Wide (16:9)</option>
-                        <option value="ratio-4-3">Clássico (4:3)</option>
-                        <option value="ratio-1-1">Quadrado (1:1)</option>
-                        <option value="ratio-4-5">Portrait (4:5)</option>
-                        <option value="ratio-9-16">Stories (9:16)</option>
+                        <option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option>
                     </select>
+                    <div class="asset-group"><label>Logo do Portal</label><input type="file" id="edit-logo" accept="image/*"></div>
                     <div class="asset-group">
-                        <label>Logo do Portal</label>
-                        <input type="file" id="edit-logo" accept="image/*">
-                    </div>
-                    <div class="asset-group">
-                        <label>Foto Principal</label>
-                        <input type="file" id="edit-main-img" accept="image/*">
+                        <label>Foto Principal</label><input type="file" id="edit-main-img" accept="image/*">
                         <div class="row">
                             <div><label>Zoom</label><input type="range" id="edit-img-zoom" min="1" max="3" step="0.01"></div>
                             <div><label>Posição Y</label><input type="range" id="edit-img-y" min="-100" max="100" step="1"></div>
                         </div>
                     </div>
-                    <div class="asset-group">
-                        <label>Thumbs Mini Notícias</label>
-                        <div class="row-thumbs">
-                            <input type="file" id="edit-thumb-0" class="file-mini">
-                            <input type="file" id="edit-thumb-1" class="file-mini">
-                            <input type="file" id="edit-thumb-2" class="file-mini">
-                        </div>
-                    </div>
+                    <div class="asset-group"><label>Thumbs Mini Notícias</label><div class="row-thumbs"><input type="file" id="edit-thumb-0" class="file-mini"><input type="file" id="edit-thumb-1" class="file-mini"><input type="file" id="edit-thumb-2" class="file-mini"></div></div>
                 </div>
             </details>
-
-            <!-- 2. REDAÇÃO -->
-            <details>
-                <summary>2. Redação e Conteúdo</summary>
+            <details><summary>2. Redação e Conteúdo</summary>
                 <div class="section-content">
                     <label>Badge Topo</label><input type="text" id="edit-badge-text">
                     <label>Categoria</label><input type="text" id="edit-main-cat">
@@ -78,47 +48,30 @@
                     <label>URL Rodapé</label><input type="text" id="edit-site-url">
                     <div class="mini-news-inputs">
                         <h4 class="sub-label">Textos Mini Notícias</h4>
-                        <div class="mini-edit-box">
-                            <label>Item 1</label>
-                            <textarea id="edit-title-0" rows="1"></textarea>
-                            <textarea id="edit-resumo-0" rows="2"></textarea>
-                        </div>
-                        <div class="mini-edit-box">
-                            <label>Item 2</label>
-                            <textarea id="edit-title-1" rows="1"></textarea>
-                            <textarea id="edit-resumo-1" rows="2"></textarea>
-                        </div>
-                        <div class="mini-edit-box">
-                            <label>Item 3</label>
-                            <textarea id="edit-title-2" rows="1"></textarea>
-                            <textarea id="edit-resumo-2" rows="2"></textarea>
-                        </div>
+                        <div class="mini-edit-box"><label>Item 1</label><textarea id="edit-title-0" rows="1"></textarea><textarea id="edit-resumo-0" rows="2"></textarea></div>
+                        <div class="mini-edit-box"><label>Item 2</label><textarea id="edit-title-1" rows="1"></textarea><textarea id="edit-resumo-1" rows="2"></textarea></div>
+                        <div class="mini-edit-box"><label>Item 3</label><textarea id="edit-title-2" rows="1"></textarea><textarea id="edit-resumo-2" rows="2"></textarea></div>
                     </div>
                 </div>
             </details>
-
-            <!-- 3. ESPAÇAMENTO -->
-            <details>
-                <summary>3. Ajustes de Espaçamento</summary>
+            <details><summary>3. Ajustes de Espaçamento</summary>
                 <div class="section-content">
                     <div class="row">
                         <div><label>Padding V (%)</label><input type="range" id="edit-padding-y" min="0" max="15" step="0.5"></div>
                         <div><label>Padding H (%)</label><input type="range" id="edit-padding-x" min="0" max="15" step="0.5"></div>
                     </div>
                     <div class="row">
-                        <div><label>Gap Principal (px)</label><input type="range" id="edit-gap-card" min="0" max="100" step="1"></div>
-                        <div><label>Margem Inferior (%)</label><input type="range" id="edit-footer-m" min="0.5" max="10" step="0.1"></div>
+                        <div><label>Gap Card (px)</label><input type="range" id="edit-gap-card" min="0" max="100" step="1"></div>
+                        <div><label>Respiro Mini-Rodapé (px)</label><input type="range" id="edit-mini-footer-gap" min="0" max="50" step="1"></div>
                     </div>
                     <div class="row">
                         <div><label>Gap Mini (px)</label><input type="range" id="edit-mini-gap" min="0" max="40" step="1"></div>
                         <div><label>Padding Mini (px)</label><input type="range" id="edit-mini-padding" min="0" max="40" step="1"></div>
                     </div>
+                    <div class="row"><div><label>Margem Inferior (%)</label><input type="range" id="edit-footer-m" min="0.5" max="10" step="0.1"></div></div>
                 </div>
             </details>
-
-            <!-- 4. ESTILO -->
-            <details>
-                <summary>4. Cores e Tipografia</summary>
+            <details><summary>4. Cores e Tipografia</summary>
                 <div class="section-content">
                     <div class="color-grid">
                         <div class="color-control"><label>Fundo</label><input type="color" id="bg-card-color"></div>
@@ -135,26 +88,14 @@
                             <div style="max-width: 80px;"><label>Cor</label><input type="color" id="edit-font-color"></div>
                         </div>
                     </div>
-                    <label style="margin-top: 15px;">Formato (Atalho)</label>
-                    <select id="layout-selector-bottom">
-                        <option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option>
-                    </select>
+                    <label style="margin-top: 15px;">Formato (Atalho)</label><select id="layout-selector-bottom"><option value="ratio-16-9">Wide (16:9)</option><option value="ratio-4-3">Clássico (4:3)</option><option value="ratio-1-1">Quadrado (1:1)</option><option value="ratio-4-5">Portrait (4:5)</option><option value="ratio-9-16">Stories (9:16)</option></select>
                 </div>
             </details>
         </div>
         <button id="btn-export-png" class="btn-primary">Baixar PNG Alta Resolução</button>
     </aside>
-
-    <main class="preview-container">
-        <div id="snapshot-stage">
-            <header class="card-header"><img src="" id="logo-img" class="logo"><div class="live-badge">ÚLTIMAS NOTÍCIAS</div></header>
-            <div class="card-body"></div>
-            <footer class="card-footer"><div class="accent-bar"></div><span id="site-url-text"></span></footer>
-        </div>
-    </main>
-
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <main class="preview-container"><div id="snapshot-stage"><header class="card-header"><img src="" id="logo-img" class="logo"><div class="live-badge">ÚLTIMAS NOTÍCIAS</div></header><div class="card-body"></div><footer class="card-footer"><div class="accent-bar"></div><span id="site-url-text"></span></footer></div></main>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="js/state.js"></script><script src="js/image-utils.js"></script><script src="js/renderer.js"></script><script src="js/persistence.js"></script><script src="js/ui-controller.js"></script><script src="app.js"></script>
 </body>
 </html>

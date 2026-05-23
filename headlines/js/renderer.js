@@ -4,35 +4,35 @@ const DEFAULT_TYPOGRAPHY = {
         cat: { size: 11, color: "#b3adad" }, date: { size: 9, color: "#ffffff" },
         title: { size: 28, color: "#111111" }, sub: { size: 14, color: "#111111" },
         body: { size: 13, color: "#555555" }, mini_t: { size: 16, color: "#111111" }, mini_d: { size: 13, color: "#555555" },
-        padding_y: 2.5, padding_x: 3, gap_card: 25, footer_m: 1.5, mini_gap: 12, mini_padding: 15
+        padding_y: 2.5, padding_x: 3, gap_card: 25, footer_m: 1.5, mini_gap: 12, mini_padding: 15, mini_footer_gap: 10
     },
     "ratio-4-3": {
         badge: { size: 11, color: "#ffffff" }, url: { size: 10, color: "#111111" },
         cat: { size: 12, color: "#b3adad" }, date: { size: 10, color: "#ffffff" },
         title: { size: 30, color: "#111111" }, sub: { size: 16, color: "#111111" },
         body: { size: 14, color: "#555555" }, mini_t: { size: 17, color: "#111111" }, mini_d: { size: 13, color: "#555555" },
-        padding_y: 5, padding_x: 6, gap_card: 30, footer_m: 1.5, mini_gap: 15, mini_padding: 18
+        padding_y: 5, padding_x: 6, gap_card: 30, footer_m: 1.5, mini_gap: 15, mini_padding: 18, mini_footer_gap: 10
     },
     "ratio-1-1": {
         badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
         cat: { size: 14, color: "#b3adad" }, date: { size: 12, color: "#ffffff" },
         title: { size: 36, color: "#111111" }, sub: { size: 18, color: "#111111" },
         body: { size: 15, color: "#555555" }, mini_t: { size: 18, color: "#111111" }, mini_d: { size: 14, color: "#555555" },
-        padding_y: 3, padding_x: 5, gap_card: 25, footer_m: 4, mini_gap: 20, mini_padding: 25
+        padding_y: 3, padding_x: 5, gap_card: 25, footer_m: 4, mini_gap: 20, mini_padding: 25, mini_footer_gap: 10
     },
     "ratio-4-5": {
         badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
         cat: { size: 14, color: "#b3adad" }, date: { size: 12, color: "#ffffff" },
         title: { size: 36, color: "#111111" }, sub: { size: 18, color: "#111111" },
         body: { size: 15, color: "#555555" }, mini_t: { size: 18, color: "#111111" }, mini_d: { size: 14, color: "#555555" },
-        padding_y: 2, padding_x: 5, gap_card: 20, footer_m: 1.5, mini_gap: 15, mini_padding: 15
+        padding_y: 2, padding_x: 5, gap_card: 20, footer_m: 1.5, mini_gap: 15, mini_padding: 15, mini_footer_gap: 5
     },
     "ratio-9-16": {
         badge: { size: 14, color: "#ffffff" }, url: { size: 12, color: "#111111" },
         cat: { size: 16, color: "#b3adad" }, date: { size: 14, color: "#ffffff" },
         title: { size: 42, color: "#111111" }, sub: { size: 20, color: "#111111" },
         body: { size: 17, color: "#555555" }, mini_t: { size: 20, color: "#111111" }, mini_d: { size: 16, color: "#555555" },
-        padding_y: 4, padding_x: 6, gap_card: 10, footer_m: 2.5, mini_gap: 8, mini_padding: 12
+        padding_y: 4, padding_x: 6, gap_card: 10, footer_m: 2.5, mini_gap: 8, mini_padding: 12, mini_footer_gap: 10
     }
 };
 
@@ -41,11 +41,25 @@ function render() {
     const principal = state.noticiaPrincipal;
     const layout = state.config.layout || 'ratio-16-9';
     const cardBody = document.querySelector('.card-body');
+    
     const imageHTML = `<div class="main-image-container"><div class="img-anchor-wrapper"><img src="${principal.imagem_url}"><div class="timestamp">${principal.data}</div></div></div>`;
     const textBaseHTML = `<span class="category-tag">${principal.categoria}</span><h1>${principal.titulo}</h1><p class="subtitle">${principal.subtitulo}</p>`;
     
     if (layout === 'ratio-4-5') {
-        cardBody.innerHTML = `<div class="layout-4-5-wrapper"><div class="top-text-section">${textBaseHTML}</div><div class="section-divider"></div><div class="middle-split-section">${imageHTML}<div class="split-body-column"><p class="body-text">${principal.corpo_texto}</p></div></div><div class="section-divider"></div><div class="mini-news-vertical-list" id="mini-news-container"></div></div>`;
+        // ORDEM DE PRODUÇÃO: Texto -> Divisor -> Split (Imagem/Texto) -> Divisor -> Mini News
+        cardBody.innerHTML = `
+            <div class="layout-4-5-wrapper">
+                <div class="top-text-section">${textBaseHTML}</div>
+                <div class="section-divider"></div>
+                <div class="middle-split-section">
+                    ${imageHTML}
+                    <div class="split-body-column">
+                        <p class="body-text">${principal.corpo_texto}</p>
+                    </div>
+                </div>
+                <div class="section-divider"></div>
+                <div class="mini-news-vertical-list" id="mini-news-container"></div>
+            </div>`;
     } 
     else if (layout === 'ratio-1-1' || layout === 'ratio-4-3') {
         cardBody.innerHTML = `<div class="top-section">${imageHTML}<div class="news-text">${textBaseHTML}<p class="body-text">${principal.corpo_texto}</p></div></div><div class="mid-separator"></div><div class="mini-news-grid" id="mini-news-container"></div>`;
@@ -69,7 +83,6 @@ function updateColors() {
     const bgColor = state.config.bg_color || "#ffffff";
     const hColor = state.config.header_color || "#f5f5f5";
     const accentColor = state.config.accent_color || "#b3adad";
-    
     const getContrastYIQ = (hex) => {
         hex = hex.replace("#", "");
         const r = parseInt(hex.substr(0,2),16);
@@ -78,7 +91,6 @@ function updateColors() {
         const yiq = ((r*299)+(g*587)+(b*114))/1000;
         return (yiq >= 128) ? '#111111' : '#ffffff';
     };
-
     const mainText = getContrastYIQ(bgColor);
     const root = document.documentElement;
     root.style.setProperty('--bg-card', bgColor);
@@ -109,4 +121,5 @@ function applyTypographyToCSS() {
     root.style.setProperty('--layout-footer-m', `${settings.footer_m}%`);
     root.style.setProperty('--mini-grid-gap', `${settings.mini_gap}px`);
     root.style.setProperty('--mini-grid-padding', `${settings.mini_padding}px`);
+    root.style.setProperty('--mini-footer-gap', `${settings.mini_footer_gap}px`);
 }
