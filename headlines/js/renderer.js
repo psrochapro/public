@@ -4,35 +4,35 @@ const DEFAULT_TYPOGRAPHY = {
         cat: { size: 11, color: "#b3adad" }, date: { size: 9, color: "#ffffff" },
         title: { size: 28, color: "#111111" }, sub: { size: 14, color: "#111111" },
         body: { size: 13, color: "#555555" }, mini_t: { size: 16, color: "#111111" }, mini_d: { size: 13, color: "#555555" },
-        padding_y: 2.5, padding_x: 3, gap_card: 25, mini_gap: 12, mini_padding: 15
+        padding_y: 2.5, padding_x: 3, gap_card: 25, footer_m: 1.5, mini_gap: 12, mini_padding: 15
     },
     "ratio-4-3": {
         badge: { size: 11, color: "#ffffff" }, url: { size: 10, color: "#111111" },
         cat: { size: 12, color: "#b3adad" }, date: { size: 10, color: "#ffffff" },
         title: { size: 30, color: "#111111" }, sub: { size: 16, color: "#111111" },
         body: { size: 14, color: "#555555" }, mini_t: { size: 17, color: "#111111" }, mini_d: { size: 13, color: "#555555" },
-        padding_y: 5, padding_x: 6, gap_card: 30, mini_gap: 15, mini_padding: 18
+        padding_y: 5, padding_x: 6, gap_card: 30, footer_m: 1.5, mini_gap: 15, mini_padding: 18
     },
     "ratio-1-1": {
         badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
         cat: { size: 14, color: "#b3adad" }, date: { size: 12, color: "#ffffff" },
         title: { size: 36, color: "#111111" }, sub: { size: 18, color: "#111111" },
         body: { size: 15, color: "#555555" }, mini_t: { size: 18, color: "#111111" }, mini_d: { size: 14, color: "#555555" },
-        padding_y: 3, padding_x: 5, gap_card: 25, mini_gap: 20, mini_padding: 25
+        padding_y: 3, padding_x: 5, gap_card: 25, footer_m: 4, mini_gap: 20, mini_padding: 25
     },
     "ratio-4-5": {
         badge: { size: 12, color: "#ffffff" }, url: { size: 11, color: "#111111" },
         cat: { size: 14, color: "#b3adad" }, date: { size: 12, color: "#ffffff" },
         title: { size: 36, color: "#111111" }, sub: { size: 18, color: "#111111" },
         body: { size: 15, color: "#555555" }, mini_t: { size: 18, color: "#111111" }, mini_d: { size: 14, color: "#555555" },
-        padding_y: 2, padding_x: 5, gap_card: 20, mini_gap: 15, mini_padding: 15
+        padding_y: 2, padding_x: 5, gap_card: 20, footer_m: 1.5, mini_gap: 15, mini_padding: 15
     },
     "ratio-9-16": {
         badge: { size: 14, color: "#ffffff" }, url: { size: 12, color: "#111111" },
         cat: { size: 16, color: "#b3adad" }, date: { size: 14, color: "#ffffff" },
         title: { size: 42, color: "#111111" }, sub: { size: 20, color: "#111111" },
         body: { size: 17, color: "#555555" }, mini_t: { size: 20, color: "#111111" }, mini_d: { size: 16, color: "#555555" },
-        padding_y: 4, padding_x: 6, gap_card: 10, mini_gap: 8, mini_padding: 12
+        padding_y: 4, padding_x: 6, gap_card: 10, footer_m: 2.5, mini_gap: 8, mini_padding: 12
     }
 };
 
@@ -94,6 +94,7 @@ function applyTypographyToCSS() {
     const layout = state.config.layout || "ratio-16-9";
     const settings = state.layoutSettings[layout];
     const root = document.documentElement;
+
     Object.keys(settings).forEach(key => {
         if (typeof settings[key] === 'object' && settings[key].size) {
             const cssKey = key.replace('_', '-'); 
@@ -101,9 +102,11 @@ function applyTypographyToCSS() {
             root.style.setProperty(`--clr-${cssKey}`, settings[key].color);
         }
     });
+
     root.style.setProperty('--layout-padding-y', `${settings.padding_y}%`);
     root.style.setProperty('--layout-padding-x', `${settings.padding_x}%`);
     root.style.setProperty('--layout-gap', `${settings.gap_card}px`);
+    root.style.setProperty('--layout-footer-m', `${settings.footer_m}%`);
     root.style.setProperty('--mini-grid-gap', `${settings.mini_gap}px`);
     root.style.setProperty('--mini-grid-padding', `${settings.mini_padding}px`);
 }

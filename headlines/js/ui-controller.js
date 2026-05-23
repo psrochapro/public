@@ -69,6 +69,7 @@ function setupSidebarInputs() {
     safeListener('edit-padding-y', 'oninput', updateSpacing('padding_y'));
     safeListener('edit-padding-x', 'oninput', updateSpacing('padding_x'));
     safeListener('edit-gap-card', 'oninput', updateSpacing('gap_card'));
+    safeListener('edit-footer-m', 'oninput', updateSpacing('footer_m'));
     safeListener('edit-mini-gap', 'oninput', updateSpacing('mini_gap'));
     safeListener('edit-mini-padding', 'oninput', updateSpacing('mini_padding'));
 
@@ -125,6 +126,7 @@ function syncSidebarWithState() {
     setVal('edit-padding-y', s.padding_y);
     setVal('edit-padding-x', s.padding_x);
     setVal('edit-gap-card', s.gap_card);
+    setVal('edit-footer-m', s.footer_m);
     setVal('edit-mini-gap', s.mini_gap);
     setVal('edit-mini-padding', s.mini_padding);
     setVal('edit-badge-text', state.config.badge_text || "");
