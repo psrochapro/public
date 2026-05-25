@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerador BPMN Simples</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; line-height: 1.6; background-color: #f4f4f9; }
+        .container { max-width: 600px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .task-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        input[type="text"] { flex-grow: 1; }
+        button { padding: 8px 15px; cursor: pointer; border-radius: 4px; border: none; }
+        .btn-add { background-color: #28a745; color: white; }
+        .btn-generate { background-color: #007bff; color: white; width: 100%; margin-top: 20px; font-size: 16px; }
+        .btn-remove { background-color: #dc3545; color: white; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Gerador de Fluxo Camunda</h2>
+    
+    <label>Nome do Processo:</label><br>
+    <input type="text" id="processName" placeholder="Ex: Processo de Compras" style="width: 96%; margin-bottom: 20px;">
+
+    <div id="tasksContainer">
+        <label>Tarefas (em ordem):</label>
+        <div class="task-row">
+            <input type="text" class="task-input" placeholder="Nome da tarefa">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        </div>
+    </div>
+
+    <button class="btn-add" onclick="addTask()">+ Adicionar Tarefa</button>
+    <button class="btn-generate" onclick="generateBPMN()">Gerar e Baixar .bpmn</button>
+</div>
+
+<script>
+    function addTask() {
+        const container = document.getElementById('tasksContainer');
+        const div = document.createElement('div');
+        div.className = 'task-row';
+        div.innerHTML = `
+            <input type="text" class="task-input" placeholder="Nome da tarefa">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function generateBPMN() {
+        const processName = document.getElementById('processName').value || "processo_gerado";
+        const processId = processName.replace(/\s+/g, '_').toLowerCase();
+        const taskInputs = document.querySelectorAll('.task-input');
+        const tasks = Array.from(taskInputs).map(input => input.value).filter(t => t.trim() !== "");
+
+        if (tasks.length === 0) {
+            alert("Adicione pelo menos uma tarefa!");
+            return;
+        }
+
+        // Configurações de layout
+        let currentX = 150;
+        const yBase = 100;
+        const taskWidth = 100;
+        const taskHeight = 80;
+        const spacing = 100;
+
+        // IDs fixos para Start e End
+        const startId = "StartEvent_1";
+        const endId = "EndEvent_1";
+
+        // Gerar Elementos e Conexões
+        let elementsXml = `<bpmn:startEvent id="${startId}" name="Início">
+            <bpmn:outgoing>Flow_start</bpmn:outgoing>
+        </bpmn:startEvent>`;
+
+        let diXml = `<bpmndi:BPMNShape id="_BPMNShape_${startId}" bpmnElement="${startId}">
+            <dc:Bounds x="${currentX}" y="${yBase + 22}" width="36" height="36" />
+        </bpmndi:BPMNShape>`;
+
+        let lastId = startId;
+        let lastFlowId = "Flow_start";
+
+        tasks.forEach((taskName, index) => {
+            const taskId = `Activity_Task_${index}`;
+            const nextFlowId = `Flow_${index}`;
+            currentX += (index === 0) ? 80 : (taskWidth + spacing);
+
+            // XML do Processo
+            elementsXml += `
+            <bpmn:sequenceFlow id="${lastFlowId}" sourceRef="${lastId}" targetRef="${taskId}" />
+            <bpmn:userTask id="${taskId}" name="${taskName}">
+                <bpmn:incoming>${lastFlowId}</bpmn:incoming>
+                <bpmn:outgoing>${nextFlowId}</bpmn:outgoing>
+            </bpmn:userTask>`;
+
+            // XML do Diagrama (Visual)
+            diXml += `
+            <bpmndi:BPMNShape id="${taskId}_di" bpmnElement="${taskId}">
+                <dc:Bounds x="${currentX}" y="${yBase}" width="${taskWidth}" height="${taskHeight}" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="${lastFlowId}_di" bpmnElement="${lastFlowId}">
+                <di:waypoint x="${(index === 0) ? 186 : (currentX - spacing)}" y="${yBase + 40}" />
+                <di:waypoint x="${currentX}" y="${yBase + 40}" />
+            </bpmndi:BPMNEdge>`;
+
+            lastId = taskId;
+            lastFlowId = nextFlowId;
+        });
+
+        // Adicionar Fim
+        currentX += (taskWidth + spacing);
+        elementsXml += `
+        <bpmn:sequenceFlow id="${lastFlowId}" sourceRef="${lastId}" targetRef="${endId}" />
+        <bpmn:endEvent id="${endId}" name="Fim">
+            <bpmn:incoming>${lastFlowId}</bpmn:incoming>
+        </bpmn:endEvent>`;
+
+        diXml += `
+        <bpmndi:BPMNShape id="${endId}_di" bpmnElement="${endId}">
+            <dc:Bounds x="${currentX}" y="${yBase + 22}" width="36" height="36" />
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNEdge id="${lastFlowId}_di" bpmnElement="${lastFlowId}">
+            <di:waypoint x="${currentX - spacing}" y="${yBase + 40}" />
+            <di:waypoint x="${currentX}" y="${yBase + 40}" />
+        </bpmndi:BPMNEdge>`;
+
+        // Template Final do XML
+        const fullXml = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:process id="${processId}" name="${processName}" isExecutable="true">
+    ${elementsXml}
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="${processId}">
+      ${diXml}
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`;
+
+        download(processId + ".bpmn", fullXml);
+    }
+
+    function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+</script>
+
+</body>
+</html>
