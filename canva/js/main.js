@@ -6,7 +6,7 @@ export const state = {
     cards: [],
     categories: [],
     filters: { search: "", category: "all" },
-    sidebarCardSearch: "", // Novo: filtro para a lista na sidebar
+    sidebarCardSearch: "",
     settings: {
         collectionName: "Canvas de Processos",
         cardWidth: 300, cardHeight: 420, imgSize: 160,
@@ -20,12 +20,10 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
-    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Viewport Filtros
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
@@ -36,17 +34,14 @@ async function init() {
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     });
 
-    // Sidebar Filtro de Cards
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Settings
     document.getElementById('collection-name').addEventListener('input', (e) => {
         state.settings.collectionName = e.target.value;
         ui.updateCollectionTitle(e.target.value);
@@ -57,19 +52,21 @@ async function init() {
         document.getElementById(id).addEventListener('input', handleSettingsChange);
     });
 
-    // Actions
+    // Ações de Coleção (.card)
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
-    document.getElementById('btn-clear').addEventListener('click', clearAll);
+    
+    // Ações de Texto (JSON)
+    document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
+    document.getElementById('import-text').addEventListener('change', (e) => zipService.importTextOnly(e, updateAll));
 
-    // Cancels
+    document.getElementById('btn-clear').addEventListener('click', clearAll);
     document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
     document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
 
     updateAll();
 }
 
-// Handler para o clique no lápis do card na viewport
 function handleQuickEdit(cardId) {
     const card = state.cards.find(c => c.id === cardId);
     ui.switchTab('tab-cards');

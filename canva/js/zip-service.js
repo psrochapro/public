@@ -1,4 +1,5 @@
 export const zipService = {
+    // EXPORTA TUDO (COM IMAGENS)
     async exportCollection(state) {
         const zip = new JSZip();
         const assets = zip.folder("assets");
@@ -15,37 +16,83 @@ export const zipService = {
 
         zip.file("dados.json", JSON.stringify(exportData, null, 2));
         const blob = await zip.generateAsync({type:"blob"});
-        const fileName = (state.settings.collectionName || "colecao-cards").replace(/\s+/g, '-').toLowerCase();
+        const fileName = (state.settings.collectionName || "colecao").replace(/\s+/g, '-').toLowerCase();
         saveAs(blob, `${fileName}.card`);
     },
 
+    // EXPORTA SÓ TEXTOS (JSON PURO)
+    exportTextOnly(state) {
+        // Criamos uma versão dos cards sem a propriedade imagem (binário pesado)
+        const textOnlyCards = state.cards.map(c => {
+            const { imagem, ...textData } = c;
+            return textData;
+        });
+
+        const exportData = {
+            settings: state.settings,
+            categories: state.categories,
+            cards: textOnlyCards
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: "application/json"});
+        const fileName = `textos-${(state.settings.collectionName || "colecao").replace(/\s+/g, '-').toLowerCase()}.json`;
+        saveAs(blob, fileName);
+    },
+
+    // IMPORTA TUDO (ZIP .CARD)
     async importCollection(e, callback) {
         const file = e.target.files[0];
         if(!file) return;
-        
         try {
             const zip = await JSZip.loadAsync(file);
-            const jsonFile = zip.file("dados.json");
-            if(!jsonFile) throw new Error("Arquivo .card inválido.");
-            
-            const json = JSON.parse(await jsonFile.async("string"));
-            
+            const json = JSON.parse(await zip.file("dados.json").async("string"));
             for(let c of json.cards) {
-                const imgFile = zip.file(c.imagem);
-                if(imgFile) {
-                    const imgData = await imgFile.async("base64");
-                    c.imagem = `data:image/png;base64,${imgData}`;
-                }
+                const imgData = await zip.file(c.imagem).async("base64");
+                c.imagem = `data:image/png;base64,${imgData}`;
             }
-
             import('./main.js').then(m => {
                 m.state.cards = json.cards;
                 m.state.categories = json.categories;
                 m.state.settings = json.settings || m.state.settings;
                 callback();
             });
-        } catch (err) {
-            alert("Erro ao importar: " + err.message);
-        }
+        } catch (err) { alert("Erro .card"); }
+    },
+
+    // IMPORTA SÓ TEXTOS (JSON)
+    async importTextOnly(e, callback) {
+        const file = e.target.files[0];
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                const json = JSON.parse(event.target.result);
+                const { state } = await import('./main.js');
+
+                // LÓGICA DE MERGE INTELIGENTE
+                const mergedCards = json.cards.map(importedCard => {
+                    // Tenta achar o card correspondente no projeto atual pelo ID
+                    const existingCard = state.cards.find(c => c.id === importedCard.id);
+                    
+                    return {
+                        ...importedCard,
+                        // Se existir no projeto atual, mantém a imagem dele.
+                        // Se for novo, coloca um placeholder (1px transparente)
+                        imagem: existingCard ? existingCard.imagem : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                    };
+                });
+
+                state.cards = mergedCards;
+                state.categories = json.categories || state.categories;
+                state.settings = json.settings || state.settings;
+                
+                callback();
+                alert("Textos importados com sucesso! Imagens existentes foram preservadas.");
+            } catch (err) {
+                alert("Erro ao ler JSON de texto: " + err.message);
+            }
+        };
+        reader.readAsText(file);
     }
 };
