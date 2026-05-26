@@ -1,4 +1,4 @@
-/* Container do Card - Define a perspectiva para o efeito 3D */
+/* Container do Card */
 .card {
     background-color: transparent;
     height: 350px;
@@ -12,15 +12,13 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Animação mais suave */
     transform-style: preserve-3d;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-radius: 10px;
 }
 
-/* Classe aplicada via JS ao clicar */
+/* CORREÇÃO AQUI: Mudamos de 180px para 180deg */
 .card.is-flipped .card-inner {
-    transform: rotateY(180px);
+    transform: rotateY(180deg);
 }
 
 .card-front, .card-back {
@@ -35,14 +33,15 @@
     justify-content: center;
     padding: 20px;
     box-sizing: border-box;
-    border-radius: 10px;
+    border-radius: 15px; /* Bordas mais arredondadas como na sua imagem */
     background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra mais suave */
 }
 
 /* Estilo da Frente */
 .card-front img {
-    max-width: 80%;
-    max-height: 150px;
+    max-width: 160px; /* Ajuste conforme sua imagem */
+    max-height: 160px;
     margin-bottom: 20px;
     object-fit: contain;
 }
@@ -50,16 +49,18 @@
 .card-front h3 {
     margin: 0;
     color: #333;
+    font-size: 1.1rem;
 }
 
 /* Estilo do Verso */
 .card-back {
-    background-color: #2980b9;
+    background-color: #2c3e50; /* Uma cor escura elegante para o verso */
     color: white;
     transform: rotateY(180deg);
 }
 
 .card-back p {
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
+    text-align: center;
 }

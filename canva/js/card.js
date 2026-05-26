@@ -14,9 +14,9 @@ export function createCard(data) {
         </div>
     `;
 
-    // Lógica de clique para o flip
-    card.addEventListener('click', () => {
-        card.classList.toggle('is-flipped');
+    // Adiciona o evento de clique
+    card.addEventListener('click', function() {
+        this.classList.toggle('is-flipped');
     });
 
     return card;
