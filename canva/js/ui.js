@@ -5,6 +5,17 @@ export const ui = {
         document.getElementById(tabId).classList.add('active');
     },
 
+    applyGlobalStyles(settings) {
+        const root = document.documentElement;
+        root.style.setProperty('--card-w', `${settings.cardWidth}px`);
+        root.style.setProperty('--card-h', `${settings.cardHeight}px`);
+        root.style.setProperty('--card-img-size', `${settings.imgSize}px`);
+    },
+
+    updateCollectionTitle(name) {
+        document.getElementById('view-title').textContent = name || "Visualização da Coleção";
+    },
+
     renderCategories(categories) {
         const select = document.getElementById('card-cat');
         const currentVal = select.value;
@@ -22,18 +33,21 @@ export const ui = {
         const container = document.getElementById('card-container');
         container.innerHTML = '';
         cards.forEach(card => {
-            const cat = categories.find(c => c.id === card.categoriaId) || { bg: '#e2e8f0', text: '#64748b', name: 'Sem Categoria' };
+            const cat = categories.find(c => c.id === card.categoriaId) || { 
+                bg: '#e2e8f0', text: '#64748b', cardBg: '#ffffff', name: 'Sem Categoria' 
+            };
+            
             const el = document.createElement('div');
             el.className = 'card';
             el.innerHTML = `
                 <div class="card-inner">
-                    <div class="card-front">
+                    <div class="card-front" style="background: ${cat.cardBg}">
                         <div style="height:12px; background:${cat.bg}"></div>
                         <span style="padding:18px 24px 0; font-size:11px; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em">${cat.name}</span>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
                         <img src="${card.imagem}">
                     </div>
-                    <div class="card-back">
+                    <div class="card-back" style="background: ${cat.cardBg}">
                         <div class="back-header">
                             <img src="${card.imagem}">
                             <strong>${card.item}</strong>
@@ -54,7 +68,7 @@ export const ui = {
             const item = document.createElement('div');
             item.className = 'manage-item';
             item.innerHTML = `
-                <span style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">${c.item}</span>
+                <span style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">${c.item}</span>
                 <div class="item-actions">
                     <button class="btn-sm edit">Editar</button>
                     <button class="btn-sm delete">X</button>
@@ -101,7 +115,6 @@ export const ui = {
         document.getElementById('edit-card-id').value = "";
         document.getElementById('btn-save-card').textContent = "Salvar Card";
         document.getElementById('btn-cancel-card').classList.add('hidden');
-        document.getElementById('card-img').value = "";
     },
 
     fillCatForm(cat) {
@@ -110,6 +123,7 @@ export const ui = {
         document.getElementById('cat-name').value = cat.name;
         document.getElementById('cat-bg').value = cat.bg;
         document.getElementById('cat-text').value = cat.text;
+        document.getElementById('cat-card-bg').value = cat.cardBg || "#ffffff";
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
         document.getElementById('tab-categories').scrollTo({ top: 0, behavior: 'smooth' });

@@ -4,6 +4,7 @@ export const zipService = {
         const assets = zip.folder("assets");
         
         const exportData = {
+            settings: state.settings,
             categories: state.categories,
             cards: state.cards.map((c, i) => {
                 const name = `img_${i}.png`;
@@ -14,7 +15,8 @@ export const zipService = {
 
         zip.file("dados.json", JSON.stringify(exportData, null, 2));
         const blob = await zip.generateAsync({type:"blob"});
-        saveAs(blob, "colecao-cards.card");
+        const fileName = (state.settings.collectionName || "colecao-cards").replace(/\s+/g, '-').toLowerCase();
+        saveAs(blob, `${fileName}.card`);
     },
 
     async importCollection(e, callback) {
@@ -24,7 +26,7 @@ export const zipService = {
         try {
             const zip = await JSZip.loadAsync(file);
             const jsonFile = zip.file("dados.json");
-            if(!jsonFile) throw new Error("Arquivo .card inválido");
+            if(!jsonFile) throw new Error("Arquivo .card inválido.");
             
             const json = JSON.parse(await jsonFile.async("string"));
             
@@ -39,6 +41,7 @@ export const zipService = {
             import('./main.js').then(m => {
                 m.state.cards = json.cards;
                 m.state.categories = json.categories;
+                m.state.settings = json.settings || m.state.settings;
                 callback();
             });
         } catch (err) {

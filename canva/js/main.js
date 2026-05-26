@@ -4,13 +4,20 @@ import { zipService } from './zip-service.js';
 
 export const state = {
     cards: [],
-    categories: []
+    categories: [],
+    settings: {
+        collectionName: "Minha Coleção",
+        cardWidth: 300,
+        cardHeight: 420,
+        imgSize: 160
+    }
 };
 
 async function init() {
     const saved = storage.load();
     state.cards = saved.cards || [];
     state.categories = saved.categories || [];
+    state.settings = { ...state.settings, ...saved.settings };
 
     // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -21,6 +28,17 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
+    // Global Settings Events
+    document.getElementById('collection-name').addEventListener('input', (e) => {
+        state.settings.collectionName = e.target.value;
+        ui.updateCollectionTitle(e.target.value);
+        storage.save(state);
+    });
+
+    ['global-width', 'global-height', 'global-img-size'].forEach(id => {
+        document.getElementById(id).addEventListener('input', handleSettingsChange);
+    });
+
     // Global Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
@@ -33,13 +51,22 @@ async function init() {
     updateAll();
 }
 
+function handleSettingsChange() {
+    state.settings.cardWidth = document.getElementById('global-width').value;
+    state.settings.cardHeight = document.getElementById('global-height').value;
+    state.settings.imgSize = document.getElementById('global-img-size').value;
+    ui.applyGlobalStyles(state.settings);
+    storage.save(state);
+}
+
 function handleCategorySubmit(e) {
     e.preventDefault();
     const id = document.getElementById('edit-cat-id').value;
     const data = {
         name: document.getElementById('cat-name').value,
         bg: document.getElementById('cat-bg').value,
-        text: document.getElementById('cat-text').value
+        text: document.getElementById('cat-text').value,
+        cardBg: document.getElementById('cat-card-bg').value // NOVO
     };
 
     if (id) {
@@ -59,9 +86,7 @@ async function handleCardSubmit(e) {
     const file = document.getElementById('card-img').files[0];
     
     let imageData = null;
-    if (file) {
-        imageData = await toBase64(file);
-    }
+    if (file) imageData = await toBase64(file);
 
     const data = {
         item: document.getElementById('card-item').value,
@@ -74,7 +99,7 @@ async function handleCardSubmit(e) {
         if (imageData) data.imagem = imageData;
         state.cards[idx] = { ...state.cards[idx], ...data };
     } else {
-        if (!file) return alert("Por favor, selecione uma imagem para o novo card.");
+        if (!file) return alert("Por favor, selecione uma imagem.");
         state.cards.push({ id: Date.now().toString(), imagem: imageData, ...data });
     }
 
@@ -84,21 +109,30 @@ async function handleCardSubmit(e) {
 
 export function updateAll() {
     storage.save(state);
+    
+    // Sincronizar inputs de settings
+    document.getElementById('collection-name').value = state.settings.collectionName;
+    document.getElementById('global-width').value = state.settings.cardWidth;
+    document.getElementById('global-height').value = state.settings.cardHeight;
+    document.getElementById('global-img-size').value = state.settings.imgSize;
+
+    ui.applyGlobalStyles(state.settings);
+    ui.updateCollectionTitle(state.settings.collectionName);
     ui.renderCategories(state.categories);
     ui.renderCards(state.cards, state.categories);
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
-        onDeleteCard: (id) => { if(confirm('Excluir este card permanentemente?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
+        onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 
-            if(state.cards.some(c => c.categoriaId === id)) return alert("Não é possível excluir: existem cards vinculados a esta categoria.");
-            if(confirm('Excluir esta categoria?')) { state.categories = state.categories.filter(c => c.id !== id); updateAll(); } 
+            if(state.cards.some(c => c.categoriaId === id)) return alert("Categoria em uso.");
+            if(confirm('Excluir categoria?')) { state.categories = state.categories.filter(c => c.id !== id); updateAll(); } 
         }
     });
 }
 
 function clearAll() {
-    if(confirm("Deseja apagar TODO o projeto atual? Essa ação não pode ser desfeita.")) {
+    if(confirm("Deseja apagar TODO o projeto atual?")) {
         state.cards = [];
         state.categories = [];
         updateAll();
