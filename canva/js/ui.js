@@ -40,7 +40,6 @@ export const ui = {
         const container = document.getElementById('card-container');
         container.innerHTML = '';
 
-        // Aplicação de filtros
         const filtered = cards.filter(c => {
             const matchSearch = c.item.toLowerCase().includes(filters.search) || 
                                c.descricao.toLowerCase().includes(filters.search);
@@ -80,30 +79,46 @@ export const ui = {
             container.appendChild(el);
         });
 
-        if (filtered.length === 0) container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#94a3b8; padding:50px;">Nenhum card encontrado com esses filtros.</p>';
+        if (filtered.length === 0) container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#94a3b8; padding:50px;">Nenhum card encontrado.</p>';
     },
 
     renderManagementLists(state, actions) {
+        // Gerenciar Cards
         const cardsList = document.getElementById('manage-cards-list');
         cardsList.innerHTML = '';
         state.cards.forEach(c => {
+            const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
             const item = document.createElement('div');
             item.className = 'manage-item';
-            item.innerHTML = `<span style="font-weight:600">${c.item}</span><div class="item-actions">
-                <button class="btn-sm edit">Editar</button><button class="btn-sm delete">X</button>
-            </div>`;
+            item.innerHTML = `
+                <div class="item-main">
+                    <div class="cat-dot" style="background: ${cat.bg}"></div>
+                    <span class="item-name">${c.item}</span>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-sm edit" title="Editar">🖊️</button>
+                    <button class="btn-sm delete" title="Excluir">🗑️</button>
+                </div>`;
             item.querySelector('.edit').onclick = () => actions.onEditCard(c.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCard(c.id);
             cardsList.appendChild(item);
         });
 
+        // Gerenciar Categorias
         const catsList = document.getElementById('manage-cats-list');
         catsList.innerHTML = '';
         state.categories.forEach(cat => {
             const item = document.createElement('div');
             item.className = 'manage-item';
-            item.innerHTML = `<div style="display:flex; align-items:center; gap:8px"><div style="width:12px; height:12px; border-radius:3px; background:${cat.bg}"></div><span>${cat.name}</span></div>
-                <div class="item-actions"><button class="btn-sm edit">Editar</button><button class="btn-sm delete">X</button></div>`;
+            item.innerHTML = `
+                <div class="item-main">
+                    <div class="cat-dot" style="background: ${cat.bg}"></div>
+                    <span class="item-name">${cat.name}</span>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-sm edit" title="Editar">🖊️</button>
+                    <button class="btn-sm delete" title="Excluir">🗑️</button>
+                </div>`;
             item.querySelector('.edit').onclick = () => actions.onEditCat(cat.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCat(cat.id);
             catsList.appendChild(item);
