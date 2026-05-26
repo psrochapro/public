@@ -1,9 +1,9 @@
 export const storage = {
     save(state) {
-        localStorage.setItem('card_studio_v7', JSON.stringify(state));
+        localStorage.setItem('card_studio_v8', JSON.stringify(state));
     },
     load() {
-        const data = localStorage.getItem('card_studio_v7');
+        const data = localStorage.getItem('card_studio_v8');
         return data ? JSON.parse(data) : { 
             cards: [], 
             categories: [], 
@@ -14,7 +14,8 @@ export const storage = {
                 imgSize: 160,
                 fontSizeItem: 18,
                 fontSizeDesc: 16,
-                fontSizeCat: 11
+                fontSizeCat: 11,
+                borderRadius: 24 // Novo padrão
             } 
         };
     }

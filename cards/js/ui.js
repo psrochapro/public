@@ -9,6 +9,7 @@ export const ui = {
         const root = document.documentElement;
         root.style.setProperty('--card-w', `${settings.cardWidth}px`);
         root.style.setProperty('--card-h', `${settings.cardHeight}px`);
+        root.style.setProperty('--card-radius', `${settings.borderRadius}px`);
         root.style.setProperty('--card-img-size', `${settings.imgSize}px`);
         root.style.setProperty('--f-size-item', `${settings.fontSizeItem}px`);
         root.style.setProperty('--f-size-desc', `${settings.fontSizeDesc}px`);
@@ -23,7 +24,7 @@ export const ui = {
         const selects = [document.getElementById('card-cat'), document.getElementById('filter-category')];
         selects.forEach((select, i) => {
             const currentVal = select.value;
-            select.innerHTML = i === 0 ? '<option value="">Categoria...</option>' : '<option value="all">Todas as Categorias</option>';
+            select.innerHTML = i === 0 ? '<option value="">Categoria...</option>' : '<option value="all">Todas Categorias</option>';
             categories.sort((a, b) => a.name.localeCompare(b.name)).forEach(cat => {
                 const opt = document.createElement('option');
                 opt.value = cat.id; opt.textContent = cat.name; select.appendChild(opt);
@@ -70,30 +71,20 @@ export const ui = {
         });
     },
 
-    // TILT ENGINE: Cria o efeito de profundidade ao mover o mouse
     initTilt() {
         const cards = document.querySelectorAll('.js-tilt');
         cards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const xc = rect.width / 2;
-                const yc = rect.height / 2;
-                const dx = x - xc;
-                const dy = y - yc;
-                
-                // Calcula rotação (max 15 graus)
-                const rotateX = (dy / yc) * -10;
-                const rotateY = (dx / xc) * 10;
-                
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const xc = rect.width / 2; const yc = rect.height / 2;
+                const dx = x - xc; const dy = y - yc;
+                const rotateX = (dy / yc) * -10; const rotateY = (dx / xc) * 10;
                 card.style.setProperty('--rx', `${rotateX}deg`);
                 card.style.setProperty('--ry', `${rotateY}deg`);
             });
-
             card.addEventListener('mouseleave', () => {
-                card.style.setProperty('--rx', '0deg');
-                card.style.setProperty('--ry', '0deg');
+                card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg');
             });
         });
     },
@@ -127,7 +118,7 @@ export const ui = {
     },
 
     fillCardForm(card) {
-        document.getElementById('card-form-title').textContent = "✏️ Editando Card";
+        document.getElementById('card-form-title').textContent = "✏️ Editar Card";
         document.getElementById('edit-card-id').value = card.id;
         document.getElementById('card-item').value = card.item;
         document.getElementById('card-desc').value = card.descricao;
@@ -147,7 +138,7 @@ export const ui = {
     },
 
     fillCatForm(cat) {
-        document.getElementById('cat-form-title').textContent = "✏️ Editando Categoria";
+        document.getElementById('cat-form-title').textContent = "✏️ Editar Categoria";
         document.getElementById('edit-cat-id').value = cat.id;
         document.getElementById('cat-name').value = cat.name;
         document.getElementById('cat-bg').value = cat.bg;
@@ -155,7 +146,6 @@ export const ui = {
         document.getElementById('cat-card-bg').value = cat.cardBg || "#ffffff";
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
-        document.getElementById('tab-categories').scrollTo({ top: 0, behavior: 'smooth' });
     },
 
     resetCatForm() {

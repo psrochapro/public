@@ -10,7 +10,8 @@ export const state = {
     settings: {
         collectionName: "Nome da Coleção",
         cardWidth: 300, cardHeight: 420, imgSize: 160,
-        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11
+        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
+        borderRadius: 24
     }
 };
 
@@ -20,14 +21,16 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
+    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
+    // Viewport Listeners
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
-        ui.initTilt(); // Re-vincula o tilt após filtrar
+        ui.initTilt();
     });
 
     document.getElementById('filter-category').addEventListener('change', (e) => {
@@ -36,30 +39,49 @@ async function init() {
         ui.initTilt();
     });
 
+    // Sidebar Listeners
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
-    document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
-    
+    // Global Settings (Sliders)
+    const settingsMap = {
+        'global-width': 'cardWidth',
+        'global-height': 'cardHeight',
+        'global-radius': 'borderRadius',
+        'global-img-size': 'imgSize',
+        'f-size-item': 'fontSizeItem',
+        'f-size-desc': 'fontSizeDesc',
+        'f-size-cat': 'fontSizeCat'
+    };
+
+    Object.keys(settingsMap).forEach(id => {
+        document.getElementById(id).addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            state.settings[settingsMap[id]] = val;
+            ui.applyGlobalStyles(state.settings);
+            storage.save(state);
+        });
+    });
+
     document.getElementById('collection-name').addEventListener('input', (e) => {
         state.settings.collectionName = e.target.value;
         ui.updateCollectionTitle(e.target.value);
         storage.save(state);
     });
 
-    ['global-width', 'global-height', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat'].forEach(id => {
-        document.getElementById(id).addEventListener('input', handleSettingsChange);
-    });
-
+    // Forms
+    document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
+    document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
+    
+    // Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
     document.getElementById('import-text').addEventListener('change', (e) => zipService.importTextOnly(e, updateAll));
-
     document.getElementById('btn-clear').addEventListener('click', clearAll);
+
     document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
     document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
 
@@ -70,17 +92,6 @@ function handleQuickEdit(cardId) {
     const card = state.cards.find(c => c.id === cardId);
     ui.switchTab('tab-cards');
     ui.fillCardForm(card);
-}
-
-function handleSettingsChange() {
-    state.settings.cardWidth = document.getElementById('global-width').value;
-    state.settings.cardHeight = document.getElementById('global-height').value;
-    state.settings.imgSize = document.getElementById('global-img-size').value;
-    state.settings.fontSizeItem = document.getElementById('f-size-item').value;
-    state.settings.fontSizeDesc = document.getElementById('f-size-desc').value;
-    state.settings.fontSizeCat = document.getElementById('f-size-cat').value;
-    ui.applyGlobalStyles(state.settings);
-    storage.save(state);
 }
 
 function handleCategorySubmit(e) {
@@ -139,8 +150,7 @@ const optimizeImage = (file, layout) => {
             img.src = event.target.result;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
+                let width = img.width; let height = img.height;
                 const maxDim = layout === 'photo' ? 1000 : 600;
                 if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
                 else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
@@ -157,19 +167,28 @@ const optimizeImage = (file, layout) => {
 
 export function updateAll() {
     storage.save(state);
+    
+    // Sincroniza sliders e labels
     document.getElementById('collection-name').value = state.settings.collectionName;
-    document.getElementById('global-width').value = state.settings.cardWidth;
-    document.getElementById('global-height').value = state.settings.cardHeight;
-    document.getElementById('global-img-size').value = state.settings.imgSize;
-    document.getElementById('f-size-item').value = state.settings.fontSizeItem;
-    document.getElementById('f-size-desc').value = state.settings.fontSizeDesc;
-    document.getElementById('f-size-cat').value = state.settings.fontSizeCat;
+    
+    const sync = (id, key, labelId) => {
+        document.getElementById(id).value = state.settings[key];
+        document.getElementById(labelId).textContent = state.settings[key];
+    };
+    
+    sync('global-width', 'cardWidth', 'val-width');
+    sync('global-height', 'cardHeight', 'val-height');
+    sync('global-radius', 'borderRadius', 'val-radius');
+    sync('global-img-size', 'imgSize', 'val-img-size');
+    sync('f-size-item', 'fontSizeItem', 'val-f-item');
+    sync('f-size-desc', 'fontSizeDesc', 'val-f-desc');
+    sync('f-size-cat', 'fontSizeCat', 'val-f-cat');
 
     ui.applyGlobalStyles(state.settings);
     ui.updateCollectionTitle(state.settings.collectionName);
     ui.renderCategories(state.categories);
     ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
-    ui.initTilt(); // Inicializa o efeito 3D
+    ui.initTilt();
     renderManagement();
 }
 
