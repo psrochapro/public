@@ -2,70 +2,103 @@ import { storage } from './storage.js';
 import { ui } from './ui.js';
 import { zipService } from './zip-service.js';
 
-// Estado da Aplicação
 export const state = {
     cards: [],
     categories: []
 };
 
 async function init() {
-    // 1. Carregar dados salvos localmente
     const saved = storage.load();
     state.cards = saved.cards || [];
     state.categories = saved.categories || [];
 
-    // 2. Vincular eventos de formulário
-    document.getElementById('form-category').addEventListener('submit', handleAddCategory);
-    document.getElementById('form-card').addEventListener('submit', handleAddCard);
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
+    });
+
+    // Form Events
+    document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
+    document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
+    
+    // Global Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
     document.getElementById('btn-clear').addEventListener('click', clearAll);
 
+    // Cancel buttons
+    document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
+    document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
+
     updateAll();
 }
 
-function handleAddCategory(e) {
+function handleCategorySubmit(e) {
     e.preventDefault();
-    const newCat = {
-        id: Date.now().toString(),
+    const id = document.getElementById('edit-cat-id').value;
+    const data = {
         name: document.getElementById('cat-name').value,
         bg: document.getElementById('cat-bg').value,
         text: document.getElementById('cat-text').value
     };
-    state.categories.push(newCat);
-    e.target.reset();
+
+    if (id) {
+        const idx = state.categories.findIndex(c => c.id === id);
+        state.categories[idx] = { ...state.categories[idx], ...data };
+    } else {
+        state.categories.push({ id: Date.now().toString(), ...data });
+    }
+    
+    ui.resetCatForm();
     updateAll();
 }
 
-async function handleAddCard(e) {
+async function handleCardSubmit(e) {
     e.preventDefault();
+    const id = document.getElementById('edit-card-id').value;
     const file = document.getElementById('card-img').files[0];
-    const base64 = await toBase64(file);
+    
+    let imageData = null;
+    if (file) {
+        imageData = await toBase64(file);
+    }
 
-    const newCard = {
-        id: Date.now().toString(),
+    const data = {
         item: document.getElementById('card-item').value,
         descricao: document.getElementById('card-desc').value,
-        categoriaId: document.getElementById('card-cat').value,
-        imagem: base64
+        categoriaId: document.getElementById('card-cat').value
     };
 
-    state.cards.push(newCard);
-    e.target.reset();
+    if (id) {
+        const idx = state.cards.findIndex(c => c.id === id);
+        if (imageData) data.imagem = imageData; // Só atualiza imagem se subir nova
+        state.cards[idx] = { ...state.cards[idx], ...data };
+    } else {
+        if (!imageData) return alert("Selecione uma imagem para o novo card.");
+        state.cards.push({ id: Date.now().toString(), imagem: imageData, ...data });
+    }
+
+    ui.resetCardForm();
     updateAll();
 }
 
-function updateAll() {
+export function updateAll() {
     storage.save(state);
     ui.renderCategories(state.categories);
-    ui.renderCards(state.cards, state.categories, (id) => {
-        state.cards = state.cards.filter(c => c.id !== id);
-        updateAll();
+    ui.renderCards(state.cards, state.categories);
+    ui.renderManagementLists(state, {
+        onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
+        onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
+        onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
+        onDeleteCat: (id) => { 
+            if(state.cards.some(c => c.categoriaId === id)) return alert("Não é possível excluir: existem cards vinculados a esta categoria.");
+            if(confirm('Excluir categoria?')) { state.categories = state.categories.filter(c => c.id !== id); updateAll(); } 
+        }
     });
 }
 
 function clearAll() {
-    if(confirm("Tem certeza que deseja apagar tudo?")) {
+    if(confirm("Deseja apagar TODO o projeto atual?")) {
         state.cards = [];
         state.categories = [];
         updateAll();

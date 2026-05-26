@@ -1,97 +1,109 @@
 :root {
-    --sidebar-width: 350px;
+    --side-bg: #ffffff;
+    --main-bg: #f3f4f6;
     --primary: #2563eb;
-    --danger: #dc2626;
+    --border: #e5e7eb;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    /* Tamanho Fixo do Card */
+    --card-w: 300px;
+    --card-h: 420px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f8fafc;
-    color: #1e293b;
-    height: 100vh;
-    overflow: hidden;
-}
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--main-bg); color: var(--text-main); height: 100vh; overflow: hidden; }
 
 .app-container { display: flex; height: 100vh; }
 
-/* SIDEBAR */
+/* SIDEBAR REESTRUTURADA */
 .sidebar {
-    width: var(--sidebar-width);
-    background: #ffffff;
-    border-right: 1px solid #e2e8f0;
-    padding: 20px;
-    overflow-y: auto;
+    width: 380px;
+    background: var(--side-bg);
+    border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    z-index: 100;
 }
 
-.admin-section h3 { margin-bottom: 15px; font-size: 0.9rem; text-transform: uppercase; color: #64748b; }
+.sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+.sidebar-header h2 { font-size: 1.2rem; margin-bottom: 15px; }
 
-form { display: flex; flex-direction: column; gap: 10px; }
+.main-actions { display: flex; gap: 8px; }
+.btn-primary { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; flex: 1; }
+.btn-outline { border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; text-align: center; }
 
-input, textarea, select {
-    padding: 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 0.9rem;
+/* TABS */
+.sidebar-tabs { display: flex; background: #f9fafb; border-bottom: 1px solid var(--border); }
+.tab-btn { flex: 1; padding: 12px; border: none; background: none; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: white; }
+
+.tab-pane { display: none; padding: 20px; overflow-y: auto; flex: 1; }
+.tab-pane.active { display: flex; flex-direction: column; }
+
+/* FORMULÁRIOS */
+.admin-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; background: #f9fafb; padding: 15px; border-radius: 8px; }
+.admin-form h3 { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+
+input, textarea, select { padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; width: 100%; }
+textarea { height: 80px; resize: none; }
+
+.color-grid { display: flex; gap: 10px; }
+.color-field { flex: 1; display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; font-weight: 600; }
+.color-field input { height: 35px; padding: 2px; }
+
+.form-buttons { display: flex; gap: 8px; margin-top: 5px; }
+.hidden { display: none; }
+
+/* LISTAS DE GERENCIAMENTO */
+.manage-list-container h4 { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }
+.manage-list { display: flex; flex-direction: column; gap: 8px; }
+.manage-item { 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 10px; background: white; border: 1px solid var(--border); border-radius: 6px;
+    font-size: 0.85rem;
 }
-
-.color-pickers { display: flex; gap: 10px; font-size: 0.8rem; }
-.color-pickers label { flex: 1; display: flex; align-items: center; gap: 5px; }
-
-button {
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: opacity 0.2s;
-}
-
-.btn-primary { background: var(--primary); color: white; width: 100%; }
-.btn-secondary { background: #64748b; color: white; display: inline-block; text-align: center; font-size: 0.9rem; padding: 10px; border-radius: 6px; cursor: pointer; }
-.btn-danger { background: var(--danger); color: white; font-size: 0.8rem; }
-
-.tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-.tag { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; color: white; position: relative; }
+.item-actions { display: flex; gap: 5px; }
+.btn-sm { padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.75rem; }
+.btn-sm:hover { background: #f3f4f6; }
 
 /* VIEWPORT */
 .viewport { flex: 1; padding: 40px; overflow-y: auto; }
-.viewport header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+.viewport-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+.btn-danger { background: #fee2e2; color: #dc2626; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, var(--card-w));
     gap: 30px;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* CARD STYLE (O mesmo de antes, mas dinâmico) */
-.card { height: 380px; perspective: 1000px; cursor: pointer; position: relative; }
+/* CARD FIXO */
+.card { width: var(--card-w); height: var(--card-h); perspective: 1000px; cursor: pointer; }
 .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
 .card.is-flipped .card-inner { transform: rotateY(180deg); }
 
 .card-front, .card-back {
     position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-    border-radius: 12px; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-radius: 12px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
     display: flex; flex-direction: column; overflow: hidden;
 }
 
 .card-ribbon {
     position: relative; width: calc(100% + 10px); left: -10px;
-    padding: 10px 20px; font-weight: bold; margin-top: 20px; z-index: 2;
+    padding: 12px 20px; font-weight: 700; margin-top: 15px; z-index: 2; font-size: 1.1rem;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
 }
-
 .card-ribbon::after {
     content: ''; position: absolute; top: 100%; left: 0;
     border-top: 8px solid rgba(0,0,0,0.3); border-left: 8px solid transparent;
 }
 
-.card-front img { width: 130px; height: 130px; margin: auto; object-fit: contain; }
-.card-back { transform: rotateY(180deg); padding: 20px; background: #fefefe; }
-.back-header { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;}
-.back-header img { width: 30px; height: 30px; }
-.card-delete { position: absolute; top: 5px; right: 5px; z-index: 10; background: rgba(220, 38, 38, 0.1); color: #dc2626; border-radius: 50%; width: 25px; height: 25px; display: none; align-items: center; justify-content: center; font-size: 12px; }
-.card:hover .card-delete { display: flex; }
+.card-front img { width: 150px; height: 150px; margin: auto; object-fit: contain; }
+
+.card-back { transform: rotateY(180deg); background: #fafafa; }
+.back-header { display: flex; align-items: center; gap: 12px; padding: 15px; border-bottom: 1px solid #eee; background: #fff; }
+.back-header img { width: 40px; height: 40px; object-fit: contain; }
+.back-content { padding: 20px; flex: 1; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; color: #4b5563; }

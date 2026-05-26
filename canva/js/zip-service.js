@@ -1,51 +1,36 @@
 export const zipService = {
     async exportCollection(state) {
         const zip = new JSZip();
-        const assetsFolder = zip.folder("assets");
+        const assets = zip.folder("assets");
         
-        // Criamos uma cópia dos dados para o JSON, mas trocamos o Base64 por caminhos de arquivo
         const exportData = {
             categories: state.categories,
-            cards: state.cards.map((card, index) => {
-                const fileName = `img_${index}.png`;
-                // Extrair apenas o dado binário do Base64
-                const base64Data = card.imagem.split(',')[1];
-                assetsFolder.file(fileName, base64Data, {base64: true});
-                
-                return {
-                    ...card,
-                    imagem: `assets/${fileName}`
-                };
+            cards: state.cards.map((c, i) => {
+                const name = `img_${i}.png`;
+                assets.file(name, c.imagem.split(',')[1], {base64: true});
+                return { ...c, imagem: `assets/${name}` };
             })
         };
 
         zip.file("dados.json", JSON.stringify(exportData, null, 2));
-
-        const content = await zip.generateAsync({type: "blob"});
-        saveAs(content, "minha-colecao.card");
+        const blob = await zip.generateAsync({type:"blob"});
+        saveAs(blob, "colecao-cards.card");
     },
 
-    async importCollection(event, callback) {
-        const file = event.target.files[0];
-        if (!file) return;
-
+    async importCollection(e, callback) {
+        const file = e.target.files[0];
+        if(!file) return;
         const zip = await JSZip.loadAsync(file);
-        const jsonData = await zip.file("dados.json").async("string");
-        const parsed = JSON.parse(jsonData);
-
-        // Converter caminhos de imagem de volta para Base64 para uso imediato
-        for (let card of parsed.cards) {
-            const imgFile = zip.file(card.imagem);
-            if (imgFile) {
-                const base64 = await imgFile.async("base64");
-                card.imagem = `data:image/png;base64,${base64}`;
-            }
+        const json = JSON.parse(await zip.file("dados.json").async("string"));
+        
+        for(let c of json.cards) {
+            const imgData = await zip.file(c.imagem).async("base64");
+            c.imagem = `data:image/png;base64,${imgData}`;
         }
 
-        // Atualizar o estado global (este exemplo substitui o existente)
-        import('../js/main.js').then(m => {
-            m.state.cards = parsed.cards;
-            m.state.categories = parsed.categories;
+        import('./main.js').then(m => {
+            m.state.cards = json.cards;
+            m.state.categories = json.categories;
             callback();
         });
     }

@@ -3,69 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Studio Pro</title>
+    <title>Card Studio Pro | Editor</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- Bibliotecas para compressão de arquivos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
 
     <div class="app-container">
-        <!-- Painel Lateral de Controle -->
+        <!-- SIDEBAR REVAMPED -->
         <aside class="sidebar">
-            <h2>Gerenciador</h2>
-            
-            <div class="actions">
-                <button id="btn-export" class="btn-primary">Salvar Coleção (.card)</button>
-                <label for="import-file" class="btn-secondary">Importar Coleção</label>
-                <input type="file" id="import-file" accept=".card" hidden>
+            <header class="sidebar-header">
+                <h2>Card Studio</h2>
+                <div class="main-actions">
+                    <button id="btn-export" class="btn-primary">Exportar .card</button>
+                    <label for="import-file" class="btn-outline">Importar</label>
+                    <input type="file" id="import-file" accept=".card" hidden>
+                </div>
+            </header>
+
+            <!-- TABS NAVIGATION -->
+            <nav class="sidebar-tabs">
+                <button class="tab-btn active" data-tab="tab-cards">Cards</button>
+                <button class="tab-btn" data-tab="tab-categories">Categorias</button>
+            </nav>
+
+            <div class="tab-content">
+                <!-- ABA DE CARDS -->
+                <section id="tab-cards" class="tab-pane active">
+                    <form id="form-card" class="admin-form">
+                        <h3 id="card-form-title">Novo Card</h3>
+                        <input type="hidden" id="edit-card-id">
+                        <input type="text" id="card-item" placeholder="Título do Item" required>
+                        <textarea id="card-desc" placeholder="Descrição detalhada..." required></textarea>
+                        <select id="card-cat" required>
+                            <option value="">Selecione uma categoria</option>
+                        </select>
+                        <div class="file-group">
+                            <label>Imagem do Card</label>
+                            <input type="file" id="card-img" accept="image/*">
+                            <small id="img-help">Se editar e não subir nova, mantém a atual.</small>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" id="btn-save-card">Criar Card</button>
+                            <button type="button" id="btn-cancel-card" class="hidden">Cancelar</button>
+                        </div>
+                    </form>
+                    
+                    <div class="manage-list-container">
+                        <h4>Gerenciar Cards</h4>
+                        <div id="manage-cards-list" class="manage-list"></div>
+                    </div>
+                </section>
+
+                <!-- ABA DE CATEGORIAS -->
+                <section id="tab-categories" class="tab-pane">
+                    <form id="form-category" class="admin-form">
+                        <h3 id="cat-form-title">Nova Categoria</h3>
+                        <input type="hidden" id="edit-cat-id">
+                        <input type="text" id="cat-name" placeholder="Nome (Ex: Participantes)" required>
+                        <div class="color-grid">
+                            <div class="color-field">
+                                <label>Fundo</label>
+                                <input type="color" id="cat-bg" value="#00b4db">
+                            </div>
+                            <div class="color-field">
+                                <label>Texto</label>
+                                <input type="color" id="cat-text" value="#ffffff">
+                            </div>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" id="btn-save-cat">Salvar Categoria</button>
+                            <button type="button" id="btn-cancel-cat" class="hidden">Cancelar</button>
+                        </div>
+                    </form>
+
+                    <div class="manage-list-container">
+                        <h4>Categorias Existentes</h4>
+                        <div id="manage-cats-list" class="manage-list"></div>
+                    </div>
+                </section>
             </div>
-
-            <hr>
-
-            <!-- Cadastro de Categorias -->
-            <section class="admin-section">
-                <h3>Categorias</h3>
-                <form id="form-category">
-                    <input type="text" id="cat-name" placeholder="Nome da Categoria" required>
-                    <div class="color-pickers">
-                        <label>Fundo: <input type="color" id="cat-bg" value="#00b4db"></label>
-                        <label>Texto: <input type="color" id="cat-text" value="#ffffff"></label>
-                    </div>
-                    <button type="submit">Adicionar Categoria</button>
-                </form>
-                <div id="category-list" class="tag-list"></div>
-            </section>
-
-            <hr>
-
-            <!-- Cadastro de Cards -->
-            <section class="admin-section">
-                <h3>Novo Card</h3>
-                <form id="form-card">
-                    <input type="text" id="card-item" placeholder="Título do Item" required>
-                    <textarea id="card-desc" placeholder="Descrição" required></textarea>
-                    <select id="card-cat" required>
-                        <option value="">Selecione a Categoria</option>
-                    </select>
-                    <div class="file-input">
-                        <label for="card-img">Upload de Imagem</label>
-                        <input type="file" id="card-img" accept="image/*" required>
-                    </div>
-                    <button type="submit">Criar Card</button>
-                </form>
-            </section>
         </aside>
 
-        <!-- Área de Visualização -->
+        <!-- VIEWPORT -->
         <main class="viewport">
-            <header>
-                <h1>Minha Coleção</h1>
-                <button id="btn-clear" class="btn-danger">Limpar Tudo</button>
-            </header>
+            <div class="viewport-header">
+                <h1>Visualização da Coleção</h1>
+                <button id="btn-clear" class="btn-danger">Limpar Projeto</button>
+            </div>
             <div id="card-container" class="grid-container">
-                <!-- Cards aparecem aqui -->
+                <!-- Cards renderizados aqui -->
             </div>
         </main>
     </div>
