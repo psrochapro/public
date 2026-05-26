@@ -27,11 +27,13 @@ async function init() {
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        ui.initTilt(); // Re-vincula o tilt após filtrar
     });
 
     document.getElementById('filter-category').addEventListener('change', (e) => {
         state.filters.category = e.target.value;
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        ui.initTilt();
     });
 
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
@@ -140,25 +142,13 @@ const optimizeImage = (file, layout) => {
                 let width = img.width;
                 let height = img.height;
                 const maxDim = layout === 'photo' ? 1000 : 600;
-
-                if (width > height) {
-                    if (width > maxDim) { height *= maxDim / width; width = maxDim; }
-                } else {
-                    if (height > maxDim) { width *= maxDim / height; height = maxDim; }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
+                if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
+                else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
+                canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-
                 const dataUrl = canvas.toDataURL('image/webp', 0.8);
-                if (dataUrl.startsWith('data:image/webp')) {
-                    resolve(dataUrl);
-                } else {
-                    const fallback = layout === 'photo' ? 'image/jpeg' : 'image/png';
-                    resolve(canvas.toDataURL(fallback, 0.8));
-                }
+                resolve(dataUrl.startsWith('data:image/webp') ? dataUrl : canvas.toDataURL(layout === 'photo' ? 'image/jpeg' : 'image/png', 0.8));
             };
         };
         reader.onerror = error => reject(error);
@@ -179,6 +169,7 @@ export function updateAll() {
     ui.updateCollectionTitle(state.settings.collectionName);
     ui.renderCategories(state.categories);
     ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+    ui.initTilt(); // Inicializa o efeito 3D
     renderManagement();
 }
 

@@ -45,15 +45,18 @@ export const ui = {
             const cat = categories.find(c => c.id === card.categoriaId) || { bg: '#cbd5e1', text: '#64748b', cardBg: '#fff', name: 'Sem Cat.' };
             const layoutClass = card.layout === 'photo' ? 'mode-photo' : 'mode-icon';
             const el = document.createElement('div');
-            el.className = 'card';
+            el.className = 'card js-tilt';
             el.innerHTML = `
-                <div class="quick-edit-btn" title="Editar este card">🖊️</div>
+                <div class="quick-edit-btn" title="Editar">🖊️</div>
                 <div class="card-inner">
                     <div class="card-front" style="background: ${cat.cardBg}">
-                        <div style="height:10px; background:${cat.bg}"></div>
-                        <span class="cat-label">${cat.name}</span>
+                        <div class="shine"></div>
+                        <div class="cat-badge-container">
+                            <span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span>
+                        </div>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
                         <div class="img-container ${layoutClass}"><img src="${card.imagem}"></div>
+                        <div class="flip-hint">↺</div>
                     </div>
                     <div class="card-back" style="background: ${cat.cardBg}">
                         <div class="back-header"><img src="${card.imagem}"><strong>${card.item}</strong></div>
@@ -64,6 +67,34 @@ export const ui = {
             el.querySelector('.quick-edit-btn').onclick = (e) => { e.stopPropagation(); onQuickEdit(card.id); };
             el.onclick = () => el.classList.toggle('is-flipped');
             container.appendChild(el);
+        });
+    },
+
+    // TILT ENGINE: Cria o efeito de profundidade ao mover o mouse
+    initTilt() {
+        const cards = document.querySelectorAll('.js-tilt');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+                const dx = x - xc;
+                const dy = y - yc;
+                
+                // Calcula rotação (max 15 graus)
+                const rotateX = (dy / yc) * -10;
+                const rotateY = (dx / xc) * 10;
+                
+                card.style.setProperty('--rx', `${rotateX}deg`);
+                card.style.setProperty('--ry', `${rotateY}deg`);
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--rx', '0deg');
+                card.style.setProperty('--ry', '0deg');
+            });
         });
     },
 
