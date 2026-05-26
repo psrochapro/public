@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente de Entrevistas - Canvas de Processo</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+            --primary-color: #0d6efd;
+            --primary-hover: #0b5ed7;
+            --accent-color: #6c757d;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h1 { font-size: 1.8rem; margin: 0 0 5px 0; color: #333; }
+        h2 { font-size: 1.3rem; margin: 25px 0 15px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], textarea {
+            font-family: inherit;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            background-color: #fff;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 60px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .canvas-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .canvas-card label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #495057;
+        }
+
+        .canvas-card span {
+            display: block;
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-danger { background-color: #dc3545; }
+        .btn-danger:hover { background-color: #bb2d3b; }
+        .btn-secondary { background-color: var(--accent-color); }
+        .btn-secondary:hover { background-color: #5c636a; }
+
+        .actions {
+            margin: 30px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .output-box {
+            background: #212529;
+            color: #f8f9fa;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Assistente de Entrevistas - Canvas de Processo</h1>
+        <small>SEPLAN - Escritório de Processos (EPROC)</small>
+    </header>
+
+    <div class="meta-grid">
+        <div class="form-group">
+            <label for="meta_nome">Nome do Processo</label>
+            <input type="text" id="meta_nome" placeholder="Ex: Gestão de Diárias">
+        </div>
+        <div class="form-group">
+            <label for="meta_macro">Macroprocesso</label>
+            <input type="text" id="meta_macro">
+        </div>
+        <div class="form-group">
+            <label for="meta_area">Área</label>
+            <input type="text" id="meta_area">
+        </div>
+        <div class="form-group">
+            <label for="meta_dono">Dono do Processo e Equipe</label>
+            <input type="text" id="meta_dono">
+        </div>
+    </div>
+
+    <h2>1. Dimensões do Canvas</h2>
+    <div class="canvas-grid">
+        <div class="canvas-card">
+            <label>1. Atores Envolvidos</label>
+            <span>Quem desempenha atividades durante a execução?</span>
+            <textarea id="p1" placeholder="Pessoas, cargos, setores, órgãos..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>2. Principais Entradas</label>
+            <span>Quais os fatos que iniciam o processo?</span>
+            <textarea id="p2" placeholder="Documentos, e-mails, tempo, solicitações..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>3. Principais Saídas</label>
+            <span>Quais resultados gerados no processo?</span>
+            <textarea id="p3" placeholder="Agendamentos, documentos, formulários..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>4. Interessados</label>
+            <span>Quem são os beneficiários do processo?</span>
+            <textarea id="p4" placeholder="A quem se destinam os resultados?"></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>5. Leis e Normas Aplicadas</label>
+            <span>Quais dispositivos disciplinam a execução?</span>
+            <textarea id="p5" placeholder="Leis, decretos, portarias, instruções normativas..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>6. Gestão LGPD</label>
+            <span>Quais os dados pessoais envolvidos?</span>
+            <textarea id="p6" placeholder="Nome, CPF, dados sensíveis coletados..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>7. Recursos Tecnológicos e Sistemas</label>
+            <span>Há integração de sistemas? Possibilidade de aprimoramento?</span>
+            <textarea id="p7" placeholder="Sistemas utilizados, gargalos tecnológicos..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>8. Gestão Documental CPAD</label>
+            <span>Quais os documentos e suas temporalidades de guarda?</span>
+            <textarea id="p8" placeholder="Prazos de guarda e destinação final..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>9. Parâmetros SGPE</label>
+            <span>Define os parâmetros do SGPE:</span>
+            <textarea id="p9" placeholder="Assunto, Classe e Sigilo..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>10. Indicadores de Performance</label>
+            <span>Quais os indicadores quantitativos utilizados?</span>
+            <textarea id="p10" placeholder="Controles utilizados para acompanhar o resultado..."></textarea>
+        </div>
+        <div class="canvas-card">
+            <label>11. Gatilho de Início</label>
+            <span>O que dá início prático ao processo?</span>
+            <textarea id="p11" placeholder="E-mail, Chamado, Formulário, ligação..."></textarea>
+        </div>
+    </div>
+
+    <h2>2. Atividades Detalhadas (Fluxo Sequencial)</h2>
+    <div class="table-container">
+        <table id="fluxoTable">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Nº</th>
+                    <th>Fornecedor</th>
+                    <th>Insumos</th>
+                    <th>Ator (Executor)</th>
+                    <th>Atividades</th>
+                    <th>Saídas</th>
+                    <th>Cliente</th>
+                    <th style="width: 50px;">Ação</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+        <div style="margin-top: 10px;">
+            <button type="button" class="btn" onclick="addLinha()">+ Adicionar Passo</button>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button type="button" class="btn" onclick="gerarResumoMarkdown()">Gerar Resumo Organizado</button>
+        <button type="button" class="btn btn-secondary" onclick="copiarOutput()" id="btnCopiar" style="display:none;">Copiar Código Markdown</button>
+    </div>
+
+    <pre id="output" class="output-box"></pre>
+</div>
+
+<script>
+    let contadorLinhas = 0;
+
+    function addLinha() {
+        contadorLinhas++;
+        const tbody = document.getElementById('tableBody');
+        const tr = document.createElement('tr');
+        tr.id = `linha_${contadorLinhas}`;
+        
+        tr.innerHTML = `
+            <td><strong>${contadorLinhas}</strong></td>
+            <td><input type="text" class="f-forn" style="width:90%"></td>
+            <td><input type="text" class="f-ins" style="width:90%"></td>
+            <td><input type="text" class="f-ator" style="width:90%"></td>
+            <td><input type="text" class="f-ativ" style="width:90%"></td>
+            <td><input type="text" class="f-sai" style="width:90%"></td>
+            <td><input type="text" class="f-cli" style="width:90%"></td>
+            <td><button type="button" class="btn btn-danger" onclick="removerLinha(${contadorLinhas})" style="padding:2px 8px;">X</button></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function removerLinha(id) {
+        const linha = document.getElementById(`linha_${id}`);
+        if (linha) {
+            linha.remove();
+            reordenarNumeros();
+        }
+    }
+
+    function reordenarNumeros() {
+        const linhas = document.querySelectorAll('#tableBody tr');
+        contadorLinhas = 0;
+        linhas.forEach((linha) => {
+            contadorLinhas++;
+            linha.id = `linha_${contadorLinhas}`;
+            linha.querySelector('td strong').innerText = contadorLinhas;
+            const btnDanger = linha.querySelector('.btn-danger');
+            btnDanger.setAttribute('onclick', `removerLinha(${contadorLinhas})`);
+        });
+    }
+
+    function gerarResumoMarkdown() {
+        // Coleta dados cadastrais
+        const nome = document.getElementById('meta_nome').value || 'Não informado';
+        const macro = document.getElementById('meta_macro').value || 'Não informado';
+        const area = document.getElementById('meta_area').value || 'Não informado';
+        const dono = document.getElementById('meta_dono').value || 'Não informado';
+
+        let md = `# RESUMO DA ENTREVISTA DE PROCESSO\n\n`;
+        md += `## IDENTIFICAÇÃO DO PROCESSO\n`;
+        md += `- **Nome do Processo:** ${nome}\n`;
+        md += `- **Macroprocesso:** ${macro}\n`;
+        md += `- **Área:** ${area}\n`;
+        md += `- **Dono do Processo e Equipe:** ${dono}\n\n`;
+
+        md += `## DIMENSÕES DO CANVAS\n`;
+        for (let i = 1; i <= 11; i++) {
+            const labelText = document.querySelector(`#p${i}`).previousElementSibling.previousElementSibling.innerText;
+            const valueText = document.getElementById(`p${i}`).value || 'Não preenchido';
+            md += `### ${labelText}\n${valueText}\n\n`;
+        }
+
+        md += `## FLUXO SEQUENCIAL DAS ATIVIDADES\n\n`;
+        md += `| Nº | Fornecedor | Insumos | Ator (Executor) | Atividades | Saídas | Cliente |\n`;
+        md += `| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n`;
+
+        const linhas = document.querySelectorAll('#tableBody tr');
+        if(linhas.length === 0) {
+            md += `| - | - | - | - | - | - | - |\n`;
+        } else {
+            linhas.forEach((linha) => {
+                const num = linha.querySelector('td strong').innerText;
+                const forn = linha.querySelector('.f-forn').value || '-';
+                const ins = linha.querySelector('.f-ins').value || '-';
+                const ator = linha.querySelector('.f-ator').value || '-';
+                const ativ = linha.querySelector('.f-ativ').value || '-';
+                const sai = linha.querySelector('.f-sai').value || '-';
+                const cli = linha.querySelector('.f-cli').value || '-';
+                md += `| ${num} | ${forn} | ${ins} | ${ator} | ${ativ} | ${sai} | ${cli} |\n`;
+            });
+        }
+
+        const output = document.getElementById('output');
+        output.innerText = md;
+        output.style.display = 'block';
+        document.getElementById('btnCopiar').style.display = 'inline-block';
+        
+        output.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copiarOutput() {
+        const outputText = document.getElementById('output').innerText;
+        navigator.clipboard.writeText(outputText).then(() => {
+            const btn = document.getElementById('btnCopiar');
+            btn.innerText = 'Copiado!';
+            setTimeout(() => { btn.innerText = 'Copiar Código Markdown'; }, 2000);
+        });
+    }
+
+    // Inicia com 3 linhas em branco na tabela para facilitar
+    window.onload = function() {
+        addLinha();
+        addLinha();
+        addLinha();
+    };
+</script>
+
+</body>
+</html>
