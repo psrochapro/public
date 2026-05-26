@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Card Studio Pro | Editor</title>
     
-    <!-- Link para a Fonte Inter do Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,7 +16,6 @@
 <body>
 
     <div class="app-container">
-        <!-- SIDEBAR -->
         <aside class="sidebar">
             <header class="sidebar-header">
                 <input type="text" id="collection-name" class="title-input" placeholder="Nome da Coleção...">
@@ -35,7 +33,6 @@
             </nav>
 
             <div class="tab-content">
-                <!-- ABA DE CARDS -->
                 <section id="tab-cards" class="tab-pane active">
                     <div class="form-sticky">
                         <form id="form-card" class="admin-form">
@@ -64,12 +61,14 @@
                     </div>
                     
                     <div class="manage-list-container">
-                        <h4>Gerenciar Cards</h4>
+                        <div class="manage-header-row">
+                            <h4>Gerenciar Cards</h4>
+                            <input type="text" id="manage-cards-search" class="small-search" placeholder="Filtrar lista...">
+                        </div>
                         <div id="manage-cards-list" class="manage-list"></div>
                     </div>
                 </section>
 
-                <!-- ABA DE CATEGORIAS -->
                 <section id="tab-categories" class="tab-pane">
                     <div class="form-sticky">
                         <form id="form-category" class="admin-form">
@@ -96,33 +95,29 @@
                             </div>
                         </form>
                     </div>
-
                     <div class="manage-list-container">
                         <h4>Categorias Existentes</h4>
                         <div id="manage-cats-list" class="manage-list"></div>
                     </div>
                 </section>
 
-                <!-- ABA DE AJUSTES GLOBAIS -->
                 <section id="tab-config" class="tab-pane">
                     <div class="admin-form">
                         <h3>Dimensões (px)</h3>
                         <div class="config-grid">
-                            <div class="config-field"><label>Largura</label><input type="number" id="global-width" value="300"></div>
-                            <div class="config-field"><label>Altura</label><input type="number" id="global-height" value="420"></div>
-                            <div class="config-field"><label>Tamanho Ícone</label><input type="number" id="global-img-size" value="160"></div>
+                            <div class="config-field"><label>Largura</label><input type="number" id="global-width"></div>
+                            <div class="config-field"><label>Altura</label><input type="number" id="global-height"></div>
+                            <div class="config-field"><label>Tamanho Ícone</label><input type="number" id="global-img-size"></div>
                         </div>
                     </div>
-
                     <div class="admin-form">
                         <h3>Fontes (px)</h3>
                         <div class="config-grid">
-                            <div class="config-field"><label>Título Item</label><input type="number" id="f-size-item" value="18"></div>
-                            <div class="config-field"><label>Descrição</label><input type="number" id="f-size-desc" value="16"></div>
-                            <div class="config-field"><label>Categoria</label><input type="number" id="f-size-cat" value="11"></div>
+                            <div class="config-field"><label>Título Item</label><input type="number" id="f-size-item"></div>
+                            <div class="config-field"><label>Descrição</label><input type="number" id="f-size-desc"></div>
+                            <div class="config-field"><label>Categoria</label><input type="number" id="f-size-cat"></div>
                         </div>
                     </div>
-
                     <div class="danger-zone">
                         <button id="btn-clear" class="btn-danger-minimal">Limpar Todo o Projeto</button>
                     </div>
@@ -130,12 +125,9 @@
             </div>
         </aside>
 
-        <!-- VIEWPORT -->
         <main class="viewport">
             <header class="viewport-header">
-                <div class="header-top">
-                    <h1 id="view-title">Visualização</h1>
-                </div>
+                <div class="header-top"><h1 id="view-title">Visualização</h1></div>
                 <div class="toolbar">
                     <div class="search-box">
                         <input type="text" id="search-input" placeholder="Pesquisar em título ou descrição...">

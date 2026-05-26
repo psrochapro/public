@@ -21,104 +21,78 @@ export const ui = {
 
     renderCategories(categories) {
         const selects = [document.getElementById('card-cat'), document.getElementById('filter-category')];
-        
         selects.forEach((select, i) => {
             const currentVal = select.value;
             select.innerHTML = i === 0 ? '<option value="">Categoria...</option>' : '<option value="all">Todas as Categorias</option>';
-            
             categories.sort((a, b) => a.name.localeCompare(b.name)).forEach(cat => {
                 const opt = document.createElement('option');
-                opt.value = cat.id;
-                opt.textContent = cat.name;
-                select.appendChild(opt);
+                opt.value = cat.id; opt.textContent = cat.name; select.appendChild(opt);
             });
             select.value = currentVal;
         });
     },
 
-    renderCards(cards, categories, filters) {
+    renderCards(cards, categories, filters, onQuickEdit) {
         const container = document.getElementById('card-container');
         container.innerHTML = '';
-
         const filtered = cards.filter(c => {
-            const matchSearch = c.item.toLowerCase().includes(filters.search) || 
-                               c.descricao.toLowerCase().includes(filters.search);
+            const matchSearch = c.item.toLowerCase().includes(filters.search) || c.descricao.toLowerCase().includes(filters.search);
             const matchCat = filters.category === "all" || c.categoriaId === filters.category;
             return matchSearch && matchCat;
         });
 
         filtered.forEach(card => {
-            const cat = categories.find(c => c.id === card.categoriaId) || { 
-                bg: '#e2e8f0', text: '#64748b', cardBg: '#ffffff', name: 'Sem Categoria' 
-            };
-            
+            const cat = categories.find(c => c.id === card.categoriaId) || { bg: '#cbd5e1', text: '#64748b', cardBg: '#fff', name: 'Sem Cat.' };
             const layoutClass = card.layout === 'photo' ? 'mode-photo' : 'mode-icon';
-            
             const el = document.createElement('div');
             el.className = 'card';
             el.innerHTML = `
+                <div class="quick-edit-btn" title="Editar este card">🖊️</div>
                 <div class="card-inner">
                     <div class="card-front" style="background: ${cat.cardBg}">
                         <div style="height:10px; background:${cat.bg}"></div>
                         <span class="cat-label">${cat.name}</span>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
-                        <div class="img-container ${layoutClass}">
-                            <img src="${card.imagem}">
-                        </div>
+                        <div class="img-container ${layoutClass}"><img src="${card.imagem}"></div>
                     </div>
                     <div class="card-back" style="background: ${cat.cardBg}">
-                        <div class="back-header">
-                            <img src="${card.imagem}">
-                            <strong>${card.item}</strong>
-                        </div>
+                        <div class="back-header"><img src="${card.imagem}"><strong>${card.item}</strong></div>
                         <div class="back-content"><p>${card.descricao}</p></div>
                     </div>
                 </div>
             `;
+            // Clique no lápis dispara o edit
+            el.querySelector('.quick-edit-btn').onclick = (e) => { e.stopPropagation(); onQuickEdit(card.id); };
             el.onclick = () => el.classList.toggle('is-flipped');
             container.appendChild(el);
         });
-
-        if (filtered.length === 0) container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#94a3b8; padding:50px;">Nenhum card encontrado.</p>';
     },
 
     renderManagementLists(state, actions) {
-        // Gerenciar Cards
         const cardsList = document.getElementById('manage-cards-list');
         cardsList.innerHTML = '';
-        state.cards.forEach(c => {
+        
+        // Filtra a lista da sidebar com base no campo de busca interno
+        const filteredCards = state.cards.filter(c => c.item.toLowerCase().includes(state.sidebarCardSearch));
+
+        filteredCards.forEach(c => {
             const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
             const item = document.createElement('div');
             item.className = 'manage-item';
-            item.innerHTML = `
-                <div class="item-main">
-                    <div class="cat-dot" style="background: ${cat.bg}"></div>
-                    <span class="item-name">${c.item}</span>
-                </div>
-                <div class="item-actions">
-                    <button class="btn-sm edit" title="Editar">🖊️</button>
-                    <button class="btn-sm delete" title="Excluir">🗑️</button>
-                </div>`;
+            item.innerHTML = `<div class="item-main"><div class="cat-dot" style="background:${cat.bg}"></div><span class="item-name">${c.item}</span></div>
+                <div class="item-actions"><button class="btn-sm edit" title="Editar">🖊️</button><button class="btn-sm delete" title="Excluir">🗑️</button></div>`;
             item.querySelector('.edit').onclick = () => actions.onEditCard(c.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCard(c.id);
             cardsList.appendChild(item);
         });
 
-        // Gerenciar Categorias
         const catsList = document.getElementById('manage-cats-list');
         catsList.innerHTML = '';
         state.categories.forEach(cat => {
             const item = document.createElement('div');
             item.className = 'manage-item';
-            item.innerHTML = `
-                <div class="item-main">
-                    <div class="cat-dot" style="background: ${cat.bg}"></div>
-                    <span class="item-name">${cat.name}</span>
-                </div>
-                <div class="item-actions">
-                    <button class="btn-sm edit" title="Editar">🖊️</button>
-                    <button class="btn-sm delete" title="Excluir">🗑️</button>
-                </div>`;
+            item.innerHTML = `<div class="item-main"><div class="cat-dot" style="background:${cat.bg}"></div><span class="item-name">${cat.name}</span></div>
+                <div class="item-actions"><button class="btn-sm edit" title="Editar">🖊️</button><button class="btn-sm delete" title="Excluir">🗑️</button></div>`;
             item.querySelector('.edit').onclick = () => actions.onEditCat(cat.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCat(cat.id);
             catsList.appendChild(item);
