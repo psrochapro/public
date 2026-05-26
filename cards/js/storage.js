@@ -1,6 +1,5 @@
 export const storage = {
     save(state) {
-        // Versão 6: Suporte a Imagens Otimizadas via Canvas
         localStorage.setItem('card_studio_v6', JSON.stringify(state));
     },
     load() {
@@ -10,12 +9,8 @@ export const storage = {
             categories: [], 
             settings: {
                 collectionName: "Canvas de Processos",
-                cardWidth: 300,
-                cardHeight: 420,
-                imgSize: 160,
-                fontSizeItem: 18,
-                fontSizeDesc: 16,
-                fontSizeCat: 11
+                cardWidth: 300, cardHeight: 420, imgSize: 160,
+                fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11
             } 
         };
     }

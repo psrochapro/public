@@ -20,12 +20,10 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
-    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Viewport Filtros
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
@@ -36,17 +34,14 @@ async function init() {
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     });
 
-    // Sidebar Filtro
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Settings
     document.getElementById('collection-name').addEventListener('input', (e) => {
         state.settings.collectionName = e.target.value;
         ui.updateCollectionTitle(e.target.value);
@@ -57,7 +52,6 @@ async function init() {
         document.getElementById(id).addEventListener('input', handleSettingsChange);
     });
 
-    // Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
@@ -113,10 +107,7 @@ async function handleCardSubmit(e) {
     const layout = document.getElementById('card-layout').value;
     
     let imageData = null;
-    if (file) {
-        // Agora usamos a função de otimização em vez de apenas ler o arquivo
-        imageData = await optimizeImage(file, layout);
-    }
+    if (file) imageData = await optimizeImage(file, layout);
 
     const data = {
         item: document.getElementById('card-item').value,
@@ -137,10 +128,6 @@ async function handleCardSubmit(e) {
     updateAll();
 }
 
-/**
- * MOTOR DE OTIMIZAÇÃO DE IMAGEM
- * Reduz dimensões e comprime o peso do arquivo antes de salvar no banco
- */
 const optimizeImage = (file, layout) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -152,21 +139,12 @@ const optimizeImage = (file, layout) => {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-
-                // Define limites baseados no modo de exibição
                 const maxDim = layout === 'photo' ? 1000 : 600;
 
-                // Cálculo de Proporção (Ratio)
                 if (width > height) {
-                    if (width > maxDim) {
-                        height *= maxDim / width;
-                        width = maxDim;
-                    }
+                    if (width > maxDim) { height *= maxDim / width; width = maxDim; }
                 } else {
-                    if (height > maxDim) {
-                        width *= maxDim / height;
-                        height = maxDim;
-                    }
+                    if (height > maxDim) { width *= maxDim / height; height = maxDim; }
                 }
 
                 canvas.width = width;
@@ -174,13 +152,13 @@ const optimizeImage = (file, layout) => {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
 
-                // Exportação Inteligente
-                // Modo Foto -> JPEG (Mais leve para fotos)
-                // Modo Ícone -> PNG (Preserva transparência)
-                const outputType = layout === 'photo' ? 'image/jpeg' : 'image/png';
-                const quality = 0.8; // 80% de qualidade é o ponto ideal entre nitidez e peso
-                
-                resolve(canvas.toDataURL(outputType, quality));
+                const dataUrl = canvas.toDataURL('image/webp', 0.8);
+                if (dataUrl.startsWith('data:image/webp')) {
+                    resolve(dataUrl);
+                } else {
+                    const fallback = layout === 'photo' ? 'image/jpeg' : 'image/png';
+                    resolve(canvas.toDataURL(fallback, 0.8));
+                }
             };
         };
         reader.onerror = error => reject(error);

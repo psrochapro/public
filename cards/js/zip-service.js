@@ -6,7 +6,7 @@ export const zipService = {
             settings: state.settings,
             categories: state.categories,
             cards: state.cards.map((c, i) => {
-                const name = `img_${i}.png`;
+                const name = `img_${i}.webp`;
                 assets.file(name, c.imagem.split(',')[1], {base64: true});
                 return { ...c, imagem: `assets/${name}` };
             })
@@ -36,7 +36,7 @@ export const zipService = {
             const json = JSON.parse(await zip.file("dados.json").async("string"));
             for(let c of json.cards) {
                 const imgData = await zip.file(c.imagem).async("base64");
-                c.imagem = `data:image/png;base64,${imgData}`;
+                c.imagem = `data:image/webp;base64,${imgData}`;
             }
             import('./main.js').then(m => {
                 m.state.cards = json.cards;
