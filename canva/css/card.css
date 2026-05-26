@@ -1,0 +1,65 @@
+/* Container do Card - Define a perspectiva para o efeito 3D */
+.card {
+    background-color: transparent;
+    height: 350px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+/* O elemento que realmente gira */
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+/* Classe aplicada via JS ao clicar */
+.card.is-flipped .card-inner {
+    transform: rotateY(180px);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background: white;
+}
+
+/* Estilo da Frente */
+.card-front img {
+    max-width: 80%;
+    max-height: 150px;
+    margin-bottom: 20px;
+    object-fit: contain;
+}
+
+.card-front h3 {
+    margin: 0;
+    color: #333;
+}
+
+/* Estilo do Verso */
+.card-back {
+    background-color: #2980b9;
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.card-back p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
