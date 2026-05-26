@@ -3,19 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicionário de Processos</title>
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/card.css">
+    <title>Card Studio Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Bibliotecas para compressão de arquivos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
 
-    <header>
-        <h1>Dicionário de Processos</h1>
-    </header>
+    <div class="app-container">
+        <!-- Painel Lateral de Controle -->
+        <aside class="sidebar">
+            <h2>Gerenciador</h2>
+            
+            <div class="actions">
+                <button id="btn-export" class="btn-primary">Salvar Coleção (.card)</button>
+                <label for="import-file" class="btn-secondary">Importar Coleção</label>
+                <input type="file" id="import-file" accept=".card" hidden>
+            </div>
 
-    <main id="card-container" class="grid-container">
-        <!-- Cards injetados via JS -->
-    </main>
+            <hr>
+
+            <!-- Cadastro de Categorias -->
+            <section class="admin-section">
+                <h3>Categorias</h3>
+                <form id="form-category">
+                    <input type="text" id="cat-name" placeholder="Nome da Categoria" required>
+                    <div class="color-pickers">
+                        <label>Fundo: <input type="color" id="cat-bg" value="#00b4db"></label>
+                        <label>Texto: <input type="color" id="cat-text" value="#ffffff"></label>
+                    </div>
+                    <button type="submit">Adicionar Categoria</button>
+                </form>
+                <div id="category-list" class="tag-list"></div>
+            </section>
+
+            <hr>
+
+            <!-- Cadastro de Cards -->
+            <section class="admin-section">
+                <h3>Novo Card</h3>
+                <form id="form-card">
+                    <input type="text" id="card-item" placeholder="Título do Item" required>
+                    <textarea id="card-desc" placeholder="Descrição" required></textarea>
+                    <select id="card-cat" required>
+                        <option value="">Selecione a Categoria</option>
+                    </select>
+                    <div class="file-input">
+                        <label for="card-img">Upload de Imagem</label>
+                        <input type="file" id="card-img" accept="image/*" required>
+                    </div>
+                    <button type="submit">Criar Card</button>
+                </form>
+            </section>
+        </aside>
+
+        <!-- Área de Visualização -->
+        <main class="viewport">
+            <header>
+                <h1>Minha Coleção</h1>
+                <button id="btn-clear" class="btn-danger">Limpar Tudo</button>
+            </header>
+            <div id="card-container" class="grid-container">
+                <!-- Cards aparecem aqui -->
+            </div>
+        </main>
+    </div>
 
     <script type="module" src="js/main.js"></script>
 </body>
