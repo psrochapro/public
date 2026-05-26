@@ -48,10 +48,10 @@ body { font-family: 'Inter', sans-serif; background: var(--main-bg); color: var(
 .admin-form { display: flex; flex-direction: column; gap: 12px; background: #f1f5f9; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
 .admin-form h3 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
 
-input, textarea, select { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; width: 100%; font-family: inherit; }
+input, textarea, select { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; width: 100%; }
 textarea { height: 80px; resize: none; }
 
-/* Color Picker Restored */
+/* Color Picker */
 input[type="color"] { -webkit-appearance: none; appearance: none; width: 100%; height: 40px; background-color: transparent; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; padding: 4px; }
 input[type="color"]::-webkit-color-swatch { border-radius: 6px; border: 1px solid rgba(0,0,0,0.1); }
 
@@ -94,9 +94,34 @@ input[type="color"]::-webkit-color-swatch { border-radius: 6px; border: 1px soli
 .card-ribbon { position: relative; width: calc(100% + 14px); left: -14px; padding: 12px 24px; font-weight: 800; margin-top: 8px; z-index: 10; font-size: var(--f-size-item); box-shadow: 3px 5px 12px rgba(0,0,0,0.15); }
 .card-ribbon::after { content: ''; position: absolute; top: 100%; left: 0; border-top: 8px solid rgba(0,0,0,0.3); border-left: 8px solid transparent; }
 
-.img-container { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.mode-icon img { width: var(--card-img-size); height: var(--card-img-size); object-fit: contain; }
-.mode-photo img { width: 100%; height: 100%; object-fit: cover; }
+/* IMAGENS - AJUSTE DE RATIO */
+.img-container { 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    overflow: hidden; 
+    /* Força o container a ignorar o tamanho intrínseco da imagem inicial */
+    flex-basis: 0; 
+    min-height: 0; 
+}
+
+.img-container img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Mantém o ratio sem distorcer, cortando o excesso se necessário */
+    object-fit: cover; 
+    /* Garante que o navegador respeite a proporção natural da imagem na memória */
+    object-position: center;
+}
+
+/* No modo ícone, não queremos que ele ocupe 100% da área, mas sim o tamanho definido */
+.mode-icon img { 
+    width: var(--card-img-size); 
+    height: var(--card-img-size); 
+    object-fit: contain; 
+}
 
 .card-back { transform: rotateY(180deg); }
 .back-header { display: flex; align-items: center; gap: 14px; padding: 20px; border-bottom: 1px solid #f1f5f9; background: #fff; }
