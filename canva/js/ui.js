@@ -10,42 +10,62 @@ export const ui = {
         root.style.setProperty('--card-w', `${settings.cardWidth}px`);
         root.style.setProperty('--card-h', `${settings.cardHeight}px`);
         root.style.setProperty('--card-img-size', `${settings.imgSize}px`);
+        root.style.setProperty('--f-size-item', `${settings.fontSizeItem}px`);
+        root.style.setProperty('--f-size-desc', `${settings.fontSizeDesc}px`);
+        root.style.setProperty('--f-size-cat', `${settings.fontSizeCat}px`);
     },
 
     updateCollectionTitle(name) {
-        document.getElementById('view-title').textContent = name || "Visualização da Coleção";
+        document.getElementById('view-title').textContent = name || "Visualização";
     },
 
     renderCategories(categories) {
-        const select = document.getElementById('card-cat');
-        const currentVal = select.value;
-        select.innerHTML = '<option value="">Selecione uma categoria</option>';
-        categories.sort((a, b) => a.name.localeCompare(b.name)).forEach(cat => {
-            const opt = document.createElement('option');
-            opt.value = cat.id;
-            opt.textContent = cat.name;
-            select.appendChild(opt);
+        const selects = [document.getElementById('card-cat'), document.getElementById('filter-category')];
+        
+        selects.forEach((select, i) => {
+            const currentVal = select.value;
+            select.innerHTML = i === 0 ? '<option value="">Categoria...</option>' : '<option value="all">Todas as Categorias</option>';
+            
+            categories.sort((a, b) => a.name.localeCompare(b.name)).forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.name;
+                select.appendChild(opt);
+            });
+            select.value = currentVal;
         });
-        select.value = currentVal;
     },
 
-    renderCards(cards, categories) {
+    renderCards(cards, categories, filters) {
         const container = document.getElementById('card-container');
         container.innerHTML = '';
-        cards.forEach(card => {
+
+        // Aplicação de filtros
+        const filtered = cards.filter(c => {
+            const matchSearch = c.item.toLowerCase().includes(filters.search) || 
+                               c.descricao.toLowerCase().includes(filters.search);
+            const matchCat = filters.category === "all" || c.categoriaId === filters.category;
+            return matchSearch && matchCat;
+        });
+
+        filtered.forEach(card => {
             const cat = categories.find(c => c.id === card.categoriaId) || { 
                 bg: '#e2e8f0', text: '#64748b', cardBg: '#ffffff', name: 'Sem Categoria' 
             };
+            
+            const layoutClass = card.layout === 'photo' ? 'mode-photo' : 'mode-icon';
             
             const el = document.createElement('div');
             el.className = 'card';
             el.innerHTML = `
                 <div class="card-inner">
                     <div class="card-front" style="background: ${cat.cardBg}">
-                        <div style="height:12px; background:${cat.bg}"></div>
-                        <span style="padding:18px 24px 0; font-size:11px; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em">${cat.name}</span>
+                        <div style="height:10px; background:${cat.bg}"></div>
+                        <span class="cat-label">${cat.name}</span>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
-                        <img src="${card.imagem}">
+                        <div class="img-container ${layoutClass}">
+                            <img src="${card.imagem}">
+                        </div>
                     </div>
                     <div class="card-back" style="background: ${cat.cardBg}">
                         <div class="back-header">
@@ -59,6 +79,8 @@ export const ui = {
             el.onclick = () => el.classList.toggle('is-flipped');
             container.appendChild(el);
         });
+
+        if (filtered.length === 0) container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#94a3b8; padding:50px;">Nenhum card encontrado com esses filtros.</p>';
     },
 
     renderManagementLists(state, actions) {
@@ -67,12 +89,9 @@ export const ui = {
         state.cards.forEach(c => {
             const item = document.createElement('div');
             item.className = 'manage-item';
-            item.innerHTML = `
-                <span style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">${c.item}</span>
-                <div class="item-actions">
-                    <button class="btn-sm edit">Editar</button>
-                    <button class="btn-sm delete">X</button>
-                </div>`;
+            item.innerHTML = `<span style="font-weight:600">${c.item}</span><div class="item-actions">
+                <button class="btn-sm edit">Editar</button><button class="btn-sm delete">X</button>
+            </div>`;
             item.querySelector('.edit').onclick = () => actions.onEditCard(c.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCard(c.id);
             cardsList.appendChild(item);
@@ -83,15 +102,8 @@ export const ui = {
         state.categories.forEach(cat => {
             const item = document.createElement('div');
             item.className = 'manage-item';
-            item.innerHTML = `
-                <div style="display:flex; align-items:center; gap:10px">
-                    <div style="width:14px; height:14px; border-radius:4px; background:${cat.bg}; border:1px solid rgba(0,0,0,0.1)"></div>
-                    <span style="font-weight:600">${cat.name}</span>
-                </div>
-                <div class="item-actions">
-                    <button class="btn-sm edit">Editar</button>
-                    <button class="btn-sm delete">X</button>
-                </div>`;
+            item.innerHTML = `<div style="display:flex; align-items:center; gap:8px"><div style="width:12px; height:12px; border-radius:3px; background:${cat.bg}"></div><span>${cat.name}</span></div>
+                <div class="item-actions"><button class="btn-sm edit">Editar</button><button class="btn-sm delete">X</button></div>`;
             item.querySelector('.edit').onclick = () => actions.onEditCat(cat.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCat(cat.id);
             catsList.appendChild(item);
@@ -104,6 +116,7 @@ export const ui = {
         document.getElementById('card-item').value = card.item;
         document.getElementById('card-desc').value = card.descricao;
         document.getElementById('card-cat').value = card.categoriaId;
+        document.getElementById('card-layout').value = card.layout || "icon";
         document.getElementById('btn-save-card').textContent = "Atualizar Card";
         document.getElementById('btn-cancel-card').classList.remove('hidden');
         document.getElementById('tab-cards').scrollTo({ top: 0, behavior: 'smooth' });

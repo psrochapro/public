@@ -5,11 +5,18 @@ import { zipService } from './zip-service.js';
 export const state = {
     cards: [],
     categories: [],
+    filters: {
+        search: "",
+        category: "all"
+    },
     settings: {
         collectionName: "Minha Coleção",
         cardWidth: 300,
         cardHeight: 420,
-        imgSize: 160
+        imgSize: 160,
+        fontSizeItem: 18,
+        fontSizeDesc: 16,
+        fontSizeCat: 11
     }
 };
 
@@ -24,18 +31,29 @@ async function init() {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Form Events
+    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Global Settings Events
+    // Filtros e Busca
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        state.filters.search = e.target.value.toLowerCase();
+        ui.renderCards(state.cards, state.categories, state.filters);
+    });
+
+    document.getElementById('filter-category').addEventListener('change', (e) => {
+        state.filters.category = e.target.value;
+        ui.renderCards(state.cards, state.categories, state.filters);
+    });
+
+    // Settings
     document.getElementById('collection-name').addEventListener('input', (e) => {
         state.settings.collectionName = e.target.value;
         ui.updateCollectionTitle(e.target.value);
         storage.save(state);
     });
 
-    ['global-width', 'global-height', 'global-img-size'].forEach(id => {
+    ['global-width', 'global-height', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat'].forEach(id => {
         document.getElementById(id).addEventListener('input', handleSettingsChange);
     });
 
@@ -44,7 +62,7 @@ async function init() {
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
     document.getElementById('btn-clear').addEventListener('click', clearAll);
 
-    // Cancel buttons
+    // Cancels
     document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
     document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
 
@@ -55,6 +73,10 @@ function handleSettingsChange() {
     state.settings.cardWidth = document.getElementById('global-width').value;
     state.settings.cardHeight = document.getElementById('global-height').value;
     state.settings.imgSize = document.getElementById('global-img-size').value;
+    state.settings.fontSizeItem = document.getElementById('f-size-item').value;
+    state.settings.fontSizeDesc = document.getElementById('f-size-desc').value;
+    state.settings.fontSizeCat = document.getElementById('f-size-cat').value;
+    
     ui.applyGlobalStyles(state.settings);
     storage.save(state);
 }
@@ -66,7 +88,7 @@ function handleCategorySubmit(e) {
         name: document.getElementById('cat-name').value,
         bg: document.getElementById('cat-bg').value,
         text: document.getElementById('cat-text').value,
-        cardBg: document.getElementById('cat-card-bg').value // NOVO
+        cardBg: document.getElementById('cat-card-bg').value
     };
 
     if (id) {
@@ -91,7 +113,8 @@ async function handleCardSubmit(e) {
     const data = {
         item: document.getElementById('card-item').value,
         descricao: document.getElementById('card-desc').value,
-        categoriaId: document.getElementById('card-cat').value
+        categoriaId: document.getElementById('card-cat').value,
+        layout: document.getElementById('card-layout').value // NOVO
     };
 
     if (id) {
@@ -99,7 +122,7 @@ async function handleCardSubmit(e) {
         if (imageData) data.imagem = imageData;
         state.cards[idx] = { ...state.cards[idx], ...data };
     } else {
-        if (!file) return alert("Por favor, selecione uma imagem.");
+        if (!file) return alert("Selecione uma imagem.");
         state.cards.push({ id: Date.now().toString(), imagem: imageData, ...data });
     }
 
@@ -110,16 +133,19 @@ async function handleCardSubmit(e) {
 export function updateAll() {
     storage.save(state);
     
-    // Sincronizar inputs de settings
+    // Sincronizar inputs
     document.getElementById('collection-name').value = state.settings.collectionName;
     document.getElementById('global-width').value = state.settings.cardWidth;
     document.getElementById('global-height').value = state.settings.cardHeight;
     document.getElementById('global-img-size').value = state.settings.imgSize;
+    document.getElementById('f-size-item').value = state.settings.fontSizeItem;
+    document.getElementById('f-size-desc').value = state.settings.fontSizeDesc;
+    document.getElementById('f-size-cat').value = state.settings.fontSizeCat;
 
     ui.applyGlobalStyles(state.settings);
     ui.updateCollectionTitle(state.settings.collectionName);
     ui.renderCategories(state.categories);
-    ui.renderCards(state.cards, state.categories);
+    ui.renderCards(state.cards, state.categories, state.filters);
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
         onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
