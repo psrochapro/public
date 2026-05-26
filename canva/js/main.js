@@ -52,11 +52,8 @@ async function init() {
         document.getElementById(id).addEventListener('input', handleSettingsChange);
     });
 
-    // Ações de Coleção (.card)
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
-    
-    // Ações de Texto (JSON)
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
     document.getElementById('import-text').addEventListener('change', (e) => zipService.importTextOnly(e, updateAll));
 

@@ -61,7 +61,6 @@ export const ui = {
                     </div>
                 </div>
             `;
-            // Clique no lápis dispara o edit
             el.querySelector('.quick-edit-btn').onclick = (e) => { e.stopPropagation(); onQuickEdit(card.id); };
             el.onclick = () => el.classList.toggle('is-flipped');
             container.appendChild(el);
@@ -71,10 +70,7 @@ export const ui = {
     renderManagementLists(state, actions) {
         const cardsList = document.getElementById('manage-cards-list');
         cardsList.innerHTML = '';
-        
-        // Filtra a lista da sidebar com base no campo de busca interno
         const filteredCards = state.cards.filter(c => c.item.toLowerCase().includes(state.sidebarCardSearch));
-
         filteredCards.forEach(c => {
             const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
             const item = document.createElement('div');
