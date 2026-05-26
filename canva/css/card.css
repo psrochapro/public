@@ -1,22 +1,24 @@
-/* Container do Card */
+:root {
+    --color-0: linear-gradient(135deg, #00b4db, #0083b0); /* Ciano */
+    --color-1: linear-gradient(135deg, #f80759, #bc4e9c); /* Rosa */
+    --color-2: linear-gradient(135deg, #834d9b, #d04ed6); /* Roxo */
+    --color-3: linear-gradient(135deg, #ff9966, #ff5e62); /* Laranja */
+}
+
 .card {
-    background-color: transparent;
-    height: 350px;
-    perspective: 1000px;
+    height: 400px;
+    perspective: 1500px;
     cursor: pointer;
 }
 
-/* O elemento que realmente gira */
 .card-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    text-align: center;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Animação mais suave */
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
 }
 
-/* CORREÇÃO AQUI: Mudamos de 180px para 180deg */
 .card.is-flipped .card-inner {
     transform: rotateY(180deg);
 }
@@ -25,42 +27,110 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
-    border-radius: 15px; /* Bordas mais arredondadas como na sua imagem */
-    background: white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra mais suave */
+    overflow: hidden;
 }
 
-/* Estilo da Frente */
+/* Faixa Colorida no Topo */
+.card-top-bar {
+    height: 10px;
+    width: 100%;
+}
+
+/* Categoria na Frente */
+.card-front .category {
+    padding: 25px 25px 5px 25px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+}
+
+/* Estilo da Fita (Ribbon) */
+.ribbon {
+    position: relative;
+    width: calc(100% + 15px);
+    left: -15px;
+    padding: 12px 25px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 10px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.15);
+    z-index: 2;
+}
+
+.ribbon::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border-top: 10px solid rgba(0,0,0,0.3);
+    border-left: 10px solid transparent;
+}
+
+/* Imagem Central */
 .card-front img {
-    max-width: 160px; /* Ajuste conforme sua imagem */
-    max-height: 160px;
-    margin-bottom: 20px;
+    width: 140px;
+    height: 140px;
+    margin: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-front img {
+    transform: scale(1.1);
+}
+
+/* VERSO DO CARD */
+.card-back {
+    transform: rotateY(180deg);
+    padding: 0;
+    background: #fdfdfd;
+}
+
+.back-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: #f4f4f4;
+    border-bottom: 1px solid #eee;
+}
+
+.back-header img {
+    width: 45px;
+    height: 45px;
     object-fit: contain;
 }
 
-.card-front h3 {
+.back-header h4 {
     margin: 0;
+    font-size: 1rem;
     color: #333;
-    font-size: 1.1rem;
+    line-height: 1.2;
 }
 
-/* Estilo do Verso */
-.card-back {
-    background-color: #2c3e50; /* Uma cor escura elegante para o verso */
-    color: white;
-    transform: rotateY(180deg);
+.back-content {
+    padding: 25px;
+    overflow-y: auto;
 }
 
-.card-back p {
+.back-content p {
     font-size: 1rem;
     line-height: 1.6;
-    text-align: center;
+    color: #555;
+    margin: 0;
 }
+
+/* Cores Dinâmicas Baseadas no Index */
+.card-color-0 .card-top-bar, .card-color-0 .ribbon { background: var(--color-0); }
+.card-color-1 .card-top-bar, .card-color-1 .ribbon { background: var(--color-1); }
+.card-color-2 .card-top-bar, .card-color-2 .ribbon { background: var(--color-2); }
+.card-color-3 .card-top-bar, .card-color-3 .ribbon { background: var(--color-3); }

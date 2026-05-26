@@ -1,56 +1,67 @@
 [
   {
     "Item": "Atores Envolvidos",
+    "Categoria": "Participantes",
     "Descricao": "Quem são os participantes (pessoas, cargos, setores, órgãos...) que desempenham atividades durante a execução do processo?",
     "Imagem": "assets/atores.png"
   },
   {
     "Item": "Principais entradas",
+    "Categoria": "Início",
     "Descricao": "Quais os fatos que iniciam o processo? Podem ser materiais (como recebimento de documentos) ou eventos intangíveis (tempo, condição, solicitud).",
     "Imagem": "assets/entradas.png"
   },
   {
     "Item": "Gatilho de Início",
+    "Categoria": "Início",
     "Descricao": "O que dá início ao processo? E-mail, Chamado, Formulário eletrônico, ligação telefônica?",
     "Imagem": "assets/gatilho.png"
   },
   {
     "Item": "Gestão Documental CPAD",
+    "Categoria": "Documentação",
     "Descricao": "Quais os documentos presentes na execução do processo e suas respectivas temporalidades de guarda?",
     "Imagem": "assets/documentos.png"
   },
   {
-    "Item": "Recursos Tecnológicos, Sistemas e Integrações",
+    "Item": "Recursos Tecnológicos",
+    "Categoria": "Sistemas",
     "Descricao": "Há integração de sistemas? Há possibilidade de aprimoramento?",
     "Imagem": "assets/sistemas.png"
   },
   {
     "Item": "Indicadores de Performance",
+    "Categoria": "Gestão",
     "Descricao": "Quais os indicadores (quantitativos) utilizados para apuração do resultado do processo? Quais controles utilizados para acompanhar o processo?",
     "Imagem": "assets/indicadores.png"
   },
   {
     "Item": "Interessados",
+    "Categoria": "Participantes",
     "Descricao": "Quem são os beneficiários do processo, a quem se destinam os resultados gerados?",
     "Imagem": "assets/interessados.png"
   },
   {
     "Item": "Leis e Normas Aplicadas",
-    "Descricao": "Quais leis, decretos, regulamentos, instruções normativas, portarias ou outras disposições normativas relacionadas que disciplinam a execução do processo?",
+    "Categoria": "Regulamentação",
+    "Descricao": "Quais leis, decretos, regulamentos, instruções normativas, portarias ou outras disposições normativas relacionadas?",
     "Imagem": "assets/leis.png"
   },
   {
     "Item": "Gestão LGPD",
+    "Categoria": "Segurança",
     "Descricao": "Ao executar uma instância do processo, quais os dados pessoais envolvidos?",
     "Imagem": "assets/lgpd.png"
   },
   {
     "Item": "Parâmetros SGPE",
+    "Categoria": "Sistemas",
     "Descricao": "Define os parâmetros do Sistema de Gestão de Processos Eletrônicos: Assunto, Classe e Sigilo.",
     "Imagem": "assets/parametros.png"
   },
   {
     "Item": "Principais Saídas",
+    "Categoria": "Finalização",
     "Descricao": "Quais resultados gerados no processo? (agendamento, documentos, formulários).",
     "Imagem": "assets/saidas.png"
   }

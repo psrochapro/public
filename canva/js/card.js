@@ -1,20 +1,34 @@
-export function createCard(data) {
+export function createCard(data, index) {
     const card = document.createElement('div');
-    card.className = 'card';
+    
+    // Define a cor baseada no resto da divisão por 4
+    const colorIndex = index % 4;
+    card.className = `card card-color-${colorIndex}`;
 
     card.innerHTML = `
         <div class="card-inner">
+            <!-- LADO DA FRENTE -->
             <div class="card-front">
+                <div class="card-top-bar"></div>
+                <span class="category">${data.Categoria || 'PROCESSO'}</span>
+                <div class="ribbon">${data.Item}</div>
                 <img src="${data.Imagem}" alt="${data.Item}">
-                <h3>${data.Item}</h3>
             </div>
+            
+            <!-- LADO DE TRÁS -->
             <div class="card-back">
-                <p>${data.Descricao}</p>
+                <div class="back-header">
+                    <img src="${data.Imagem}" alt="ícone reduzido">
+                    <h4>${data.Item}</h4>
+                </div>
+                <div class="back-content">
+                    <p>${data.Descricao}</p>
+                </div>
             </div>
         </div>
     `;
 
-    // Adiciona o evento de clique
+    // Evento de clique para o flip
     card.addEventListener('click', function() {
         this.classList.toggle('is-flipped');
     });
