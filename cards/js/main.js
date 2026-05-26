@@ -8,7 +8,7 @@ export const state = {
     filters: { search: "", category: "all" },
     sidebarCardSearch: "",
     settings: {
-        collectionName: "Canvas de Processos",
+        collectionName: "Nome da Coleção",
         cardWidth: 300, cardHeight: 420, imgSize: 160,
         fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11
     }
