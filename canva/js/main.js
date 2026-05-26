@@ -71,10 +71,10 @@ async function handleCardSubmit(e) {
 
     if (id) {
         const idx = state.cards.findIndex(c => c.id === id);
-        if (imageData) data.imagem = imageData; // Só atualiza imagem se subir nova
+        if (imageData) data.imagem = imageData;
         state.cards[idx] = { ...state.cards[idx], ...data };
     } else {
-        if (!imageData) return alert("Selecione uma imagem para o novo card.");
+        if (!file) return alert("Por favor, selecione uma imagem para o novo card.");
         state.cards.push({ id: Date.now().toString(), imagem: imageData, ...data });
     }
 
@@ -88,17 +88,17 @@ export function updateAll() {
     ui.renderCards(state.cards, state.categories);
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
-        onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
+        onDeleteCard: (id) => { if(confirm('Excluir este card permanentemente?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 
             if(state.cards.some(c => c.categoriaId === id)) return alert("Não é possível excluir: existem cards vinculados a esta categoria.");
-            if(confirm('Excluir categoria?')) { state.categories = state.categories.filter(c => c.id !== id); updateAll(); } 
+            if(confirm('Excluir esta categoria?')) { state.categories = state.categories.filter(c => c.id !== id); updateAll(); } 
         }
     });
 }
 
 function clearAll() {
-    if(confirm("Deseja apagar TODO o projeto atual?")) {
+    if(confirm("Deseja apagar TODO o projeto atual? Essa ação não pode ser desfeita.")) {
         state.cards = [];
         state.categories = [];
         updateAll();

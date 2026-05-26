@@ -20,18 +20,29 @@ export const zipService = {
     async importCollection(e, callback) {
         const file = e.target.files[0];
         if(!file) return;
-        const zip = await JSZip.loadAsync(file);
-        const json = JSON.parse(await zip.file("dados.json").async("string"));
         
-        for(let c of json.cards) {
-            const imgData = await zip.file(c.imagem).async("base64");
-            c.imagem = `data:image/png;base64,${imgData}`;
-        }
+        try {
+            const zip = await JSZip.loadAsync(file);
+            const jsonFile = zip.file("dados.json");
+            if(!jsonFile) throw new Error("Arquivo .card inválido");
+            
+            const json = JSON.parse(await jsonFile.async("string"));
+            
+            for(let c of json.cards) {
+                const imgFile = zip.file(c.imagem);
+                if(imgFile) {
+                    const imgData = await imgFile.async("base64");
+                    c.imagem = `data:image/png;base64,${imgData}`;
+                }
+            }
 
-        import('./main.js').then(m => {
-            m.state.cards = json.cards;
-            m.state.categories = json.categories;
-            callback();
-        });
+            import('./main.js').then(m => {
+                m.state.cards = json.cards;
+                m.state.categories = json.categories;
+                callback();
+            });
+        } catch (err) {
+            alert("Erro ao importar: " + err.message);
+        }
     }
 };

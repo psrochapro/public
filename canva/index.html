@@ -11,7 +11,7 @@
 <body>
 
     <div class="app-container">
-        <!-- SIDEBAR REVAMPED -->
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <header class="sidebar-header">
                 <h2>Card Studio</h2>
@@ -22,7 +22,6 @@
                 </div>
             </header>
 
-            <!-- TABS NAVIGATION -->
             <nav class="sidebar-tabs">
                 <button class="tab-btn active" data-tab="tab-cards">Cards</button>
                 <button class="tab-btn" data-tab="tab-categories">Categorias</button>
@@ -31,52 +30,55 @@
             <div class="tab-content">
                 <!-- ABA DE CARDS -->
                 <section id="tab-cards" class="tab-pane active">
-                    <form id="form-card" class="admin-form">
-                        <h3 id="card-form-title">Novo Card</h3>
-                        <input type="hidden" id="edit-card-id">
-                        <input type="text" id="card-item" placeholder="Título do Item" required>
-                        <textarea id="card-desc" placeholder="Descrição detalhada..." required></textarea>
-                        <select id="card-cat" required>
-                            <option value="">Selecione uma categoria</option>
-                        </select>
-                        <div class="file-group">
-                            <label>Imagem do Card</label>
-                            <input type="file" id="card-img" accept="image/*">
-                            <small id="img-help">Se editar e não subir nova, mantém a atual.</small>
-                        </div>
-                        <div class="form-buttons">
-                            <button type="submit" id="btn-save-card">Criar Card</button>
-                            <button type="button" id="btn-cancel-card" class="hidden">Cancelar</button>
-                        </div>
-                    </form>
+                    <div class="form-sticky">
+                        <form id="form-card" class="admin-form">
+                            <h3 id="card-form-title">Novo Card</h3>
+                            <input type="hidden" id="edit-card-id">
+                            <input type="text" id="card-item" placeholder="Título do Item" required>
+                            <textarea id="card-desc" placeholder="Descrição detalhada..." required></textarea>
+                            <select id="card-cat" required>
+                                <option value="">Selecione uma categoria</option>
+                            </select>
+                            <div class="file-group">
+                                <label>Imagem do Card</label>
+                                <input type="file" id="card-img" accept="image/*">
+                            </div>
+                            <div class="form-buttons">
+                                <button type="submit" id="btn-save-card" class="btn-success">Salvar Card</button>
+                                <button type="button" id="btn-cancel-card" class="btn-ghost hidden">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
                     
                     <div class="manage-list-container">
-                        <h4>Gerenciar Cards</h4>
+                        <h4>Gerenciar Cards Existentes</h4>
                         <div id="manage-cards-list" class="manage-list"></div>
                     </div>
                 </section>
 
                 <!-- ABA DE CATEGORIAS -->
                 <section id="tab-categories" class="tab-pane">
-                    <form id="form-category" class="admin-form">
-                        <h3 id="cat-form-title">Nova Categoria</h3>
-                        <input type="hidden" id="edit-cat-id">
-                        <input type="text" id="cat-name" placeholder="Nome (Ex: Participantes)" required>
-                        <div class="color-grid">
-                            <div class="color-field">
-                                <label>Fundo</label>
-                                <input type="color" id="cat-bg" value="#00b4db">
+                    <div class="form-sticky">
+                        <form id="form-category" class="admin-form">
+                            <h3 id="cat-form-title">Nova Categoria</h3>
+                            <input type="hidden" id="edit-cat-id">
+                            <input type="text" id="cat-name" placeholder="Nome da Categoria" required>
+                            <div class="color-grid">
+                                <div class="color-field">
+                                    <label>Fundo</label>
+                                    <input type="color" id="cat-bg" value="#00b4db">
+                                </div>
+                                <div class="color-field">
+                                    <label>Texto</label>
+                                    <input type="color" id="cat-text" value="#ffffff">
+                                </div>
                             </div>
-                            <div class="color-field">
-                                <label>Texto</label>
-                                <input type="color" id="cat-text" value="#ffffff">
+                            <div class="form-buttons">
+                                <button type="submit" id="btn-save-cat" class="btn-success">Salvar Categoria</button>
+                                <button type="button" id="btn-cancel-cat" class="btn-ghost hidden">Cancelar</button>
                             </div>
-                        </div>
-                        <div class="form-buttons">
-                            <button type="submit" id="btn-save-cat">Salvar Categoria</button>
-                            <button type="button" id="btn-cancel-cat" class="hidden">Cancelar</button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
 
                     <div class="manage-list-container">
                         <h4>Categorias Existentes</h4>
@@ -90,10 +92,10 @@
         <main class="viewport">
             <div class="viewport-header">
                 <h1>Visualização da Coleção</h1>
-                <button id="btn-clear" class="btn-danger">Limpar Projeto</button>
+                <button id="btn-clear" class="btn-danger-ghost">Limpar Projeto</button>
             </div>
             <div id="card-container" class="grid-container">
-                <!-- Cards renderizados aqui -->
+                <!-- Cards renderizados via JS -->
             </div>
         </main>
     </div>
