@@ -9,7 +9,7 @@ export const state = {
     sidebarCardSearch: "",
     settings: {
         collectionName: "Nome da Coleção",
-        cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
+        cardWidth: 280, cardHeight: 300, borderRadius: 0, imgSize: 150,
         fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
         viewportBg: "#f3f6f9",
         titleColor: "#1e293b"
@@ -239,9 +239,9 @@ function clearAll() {
         resetViewFilters();
         state.settings = {
             collectionName: "Nome da Coleção",
-            cardWidth: 280,
-            cardHeight: 400,
-            borderRadius: 20,
+            cardWidth: 200,
+            cardHeight: 300,
+            borderRadius: 0,
             imgSize: 150,
             fontSizeItem: 18,
             fontSizeDesc: 14,
