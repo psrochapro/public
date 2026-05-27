@@ -7,59 +7,60 @@ export const state = {
     categories: [],
     filters: { search: "", category: "all", sort: "manual" },
     sidebarCardSearch: "",
-    settings: {
-        collectionName: "Nome da Coleção",
-        cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
-        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
-        viewBg: "#f3f6f9", viewTitleColor: "#1e293b"
-    }
+    settings: {} // Inicializa vazio para receber do storage/import
 };
 
 async function init() {
+    // 1. Carrega dados salvos ou padrões
     const saved = storage.load();
     state.cards = saved.cards || [];
     state.categories = saved.categories || [];
-    state.settings = { ...state.settings, ...saved.settings };
+    state.settings = saved.settings; // Garante que carrega as dimensões salvas
 
-    // Tabs
+    // 2. Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Toolbar
+    // 3. Toolbar/Filtros
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
-        refreshView();
+        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     });
     document.getElementById('filter-category').addEventListener('change', (e) => {
         state.filters.category = e.target.value;
-        refreshView();
+        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     });
     document.getElementById('sort-select').addEventListener('change', (e) => {
         state.filters.sort = e.target.value;
-        refreshView();
+        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     });
 
-    // Sidebar search
+    // 4. Sidebar Search
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Global Adjustments
-    const map = {
-        'global-width': 'cardWidth', 'global-height': 'cardHeight', 'global-radius': 'borderRadius',
-        'global-img-size': 'imgSize', 'f-size-item': 'fontSizeItem', 'f-size-desc': 'fontSizeDesc', 
-        'f-size-cat': 'fontSizeCat', 'cfg-view-bg': 'viewBg', 'cfg-view-title': 'viewTitleColor'
-    };
-    Object.keys(map).forEach(id => {
-        document.getElementById(id).addEventListener('input', (e) => {
-            const key = map[id];
-            state.settings[key] = id.includes('cfg') ? e.target.value : (parseInt(e.target.value) || 0);
+    // 5. Ajustes Globais (Inputs)
+    const setupInput = (id, key, isColor = false) => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', (e) => {
+            state.settings[key] = isColor ? e.target.value : (parseInt(e.target.value) || 0);
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
         });
-    });
+    };
+
+    setupInput('global-width', 'cardWidth');
+    setupInput('global-height', 'cardHeight');
+    setupInput('global-radius', 'borderRadius');
+    setupInput('global-img-size', 'imgSize');
+    setupInput('f-size-item', 'fontSizeItem');
+    setupInput('f-size-desc', 'fontSizeDesc');
+    setupInput('f-size-cat', 'fontSizeCat');
+    setupInput('cfg-view-bg', 'viewBg', true);
+    setupInput('cfg-view-title', 'viewTitleColor', true);
 
     document.getElementById('collection-name').addEventListener('input', (e) => {
         state.settings.collectionName = e.target.value;
@@ -67,31 +68,72 @@ async function init() {
         storage.save(state);
     });
 
+    // 6. Formulários
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
+    // 7. Botões Principais - CORREÇÃO DA CARGA
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
-    document.getElementById('import-file').addEventListener('change', (e) => {
-        zipService.importCollection(e, () => { updateAll(); e.target.value = ""; });
+    
+    document.getElementById('import-file').addEventListener('change', async (e) => {
+        const data = await zipService.importCollection(e);
+        if (data) {
+            state.cards = data.cards;
+            state.categories = data.categories;
+            state.settings = data.settings;
+            updateAll();
+        }
+        e.target.value = "";
     });
 
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
-    document.getElementById('import-text').addEventListener('change', (e) => {
-        zipService.importTextOnly(e, () => { updateAll(); e.target.value = ""; });
+    
+    document.getElementById('import-text').addEventListener('change', async (e) => {
+        const data = await zipService.importTextOnly(e);
+        if (data) {
+            state.cards = data.cards.map(importedCard => {
+                const existing = state.cards.find(c => c.id === importedCard.id);
+                return { ...importedCard, imagem: existing ? existing.imagem : "" };
+            });
+            state.categories = data.categories || state.categories;
+            state.settings = data.settings || state.settings;
+            updateAll();
+        }
+        e.target.value = "";
     });
 
     document.getElementById('btn-clear').addEventListener('click', clearAll);
     document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
     document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
 
-    // ESSENCIAL: Carregar tudo no boot
+    // Início Forçado
     updateAll();
 }
 
-function refreshView() {
+export function updateAll() {
+    storage.save(state);
+    const s = state.settings;
+
+    // Sincroniza inputs da Sidebar com o Estado (Essencial para as dimensões)
+    document.getElementById('collection-name').value = s.collectionName || "";
+    document.getElementById('global-width').value = s.cardWidth;
+    document.getElementById('global-height').value = s.cardHeight;
+    document.getElementById('global-radius').value = s.borderRadius;
+    document.getElementById('global-img-size').value = s.imgSize;
+    document.getElementById('f-size-item').value = s.fontSizeItem;
+    document.getElementById('f-size-desc').value = s.fontSizeDesc;
+    document.getElementById('f-size-cat').value = s.fontSizeCat;
+    document.getElementById('cfg-view-bg').value = s.viewBg;
+    document.getElementById('cfg-view-title').value = s.viewTitleColor;
+
+    // Aplica estilos visuais e renderiza tudo
+    ui.applyGlobalStyles(s);
+    ui.updateCollectionTitle(s.collectionName);
+    ui.renderCategories(state.categories);
+    ui.renderSummary(state);
     ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     ui.initTilt();
-    ui.renderSummary(state);
+    renderManagement();
 }
 
 function handleQuickEdit(cardId) {
@@ -127,7 +169,7 @@ async function handleCardSubmit(e) {
     if (file) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        imageData = await new Promise(res => {
+        imageData = await new Promise(resolve => {
             reader.onload = (event) => {
                 const img = new Image();
                 img.src = event.target.result;
@@ -137,7 +179,7 @@ async function handleCardSubmit(e) {
                     if (w > h) { if (w > max) { h *= max / w; w = max; } } else { if (h > max) { w *= max / h; h = max; } }
                     canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    res(canvas.toDataURL('image/webp', 0.8));
+                    resolve(canvas.toDataURL('image/webp', 0.8));
                 };
             };
         });
@@ -160,27 +202,6 @@ async function handleCardSubmit(e) {
     updateAll();
 }
 
-export function updateAll() {
-    storage.save(state);
-    const s = state.settings;
-    document.getElementById('collection-name').value = s.collectionName;
-    document.getElementById('global-width').value = s.cardWidth;
-    document.getElementById('global-height').value = s.cardHeight;
-    document.getElementById('global-radius').value = s.borderRadius;
-    document.getElementById('global-img-size').value = s.imgSize;
-    document.getElementById('f-size-item').value = s.fontSizeItem;
-    document.getElementById('f-size-desc').value = s.fontSizeDesc;
-    document.getElementById('f-size-cat').value = s.fontSizeCat;
-    document.getElementById('cfg-view-bg').value = s.viewBg;
-    document.getElementById('cfg-view-title').value = s.viewTitleColor;
-
-    ui.applyGlobalStyles(s);
-    ui.updateCollectionTitle(s.collectionName);
-    ui.renderCategories(state.categories);
-    refreshView();
-    renderManagement();
-}
-
 function renderManagement() {
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
@@ -188,7 +209,7 @@ function renderManagement() {
         onReorderCards: (newIds) => {
             state.cards = newIds.map(id => state.cards.find(c => c.id === id));
             storage.save(state);
-            refreshView();
+            ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
         },
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 

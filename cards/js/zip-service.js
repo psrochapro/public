@@ -7,7 +7,8 @@ export const zipService = {
             categories: state.categories,
             cards: state.cards.map((c, i) => {
                 const name = `img_${i}.webp`;
-                assets.file(name, c.imagem.split(',')[1], {base64: true});
+                const base64Data = c.imagem.includes(',') ? c.imagem.split(',')[1] : c.imagem;
+                assets.file(name, base64Data, {base64: true});
                 return { ...c, imagem: `assets/${name}` };
             })
         };
@@ -15,6 +16,25 @@ export const zipService = {
         const blob = await zip.generateAsync({type:"blob"});
         const fileName = (state.settings.collectionName || "colecao").replace(/\s+/g, '-').toLowerCase();
         saveAs(blob, `${fileName}.card`);
+    },
+
+    async importCollection(e) {
+        const file = e.target.files[0];
+        if(!file) return null;
+        try {
+            const zip = await JSZip.loadAsync(file);
+            const jsonStr = await zip.file("dados.json").async("string");
+            const json = JSON.parse(jsonStr);
+            
+            for(let c of json.cards) {
+                const imgData = await zip.file(c.imagem).async("base64");
+                c.imagem = `data:image/webp;base64,${imgData}`;
+            }
+            return json;
+        } catch (err) { 
+            alert("Erro ao ler arquivo .card"); 
+            return null;
+        }
     },
 
     exportTextOnly(state) {
@@ -28,44 +48,16 @@ export const zipService = {
         saveAs(blob, fileName);
     },
 
-    async importCollection(e, callback) {
+    async importTextOnly(e) {
         const file = e.target.files[0];
-        if(!file) return;
-        try {
-            const zip = await JSZip.loadAsync(file);
-            const json = JSON.parse(await zip.file("dados.json").async("string"));
-            for(let c of json.cards) {
-                const imgData = await zip.file(c.imagem).async("base64");
-                c.imagem = `data:image/webp;base64,${imgData}`;
-            }
-            import('./main.js').then(m => {
-                m.state.cards = json.cards;
-                m.state.categories = json.categories;
-                m.state.settings = json.settings || m.state.settings;
-                callback();
-            });
-        } catch (err) { alert("Erro .card"); }
-    },
-
-    async importTextOnly(e, callback) {
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-            try {
-                const json = JSON.parse(event.target.result);
-                const { state } = await import('./main.js');
-                const mergedCards = json.cards.map(importedCard => {
-                    const existingCard = state.cards.find(c => c.id === importedCard.id);
-                    return { ...importedCard, imagem: existingCard ? existingCard.imagem : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" };
-                });
-                state.cards = mergedCards;
-                state.categories = json.categories || state.categories;
-                state.settings = json.settings || state.settings;
-                callback();
-                alert("Importado!");
-            } catch (err) { alert("Erro JSON"); }
-        };
-        reader.readAsText(file);
+        if(!file) return null;
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try { resolve(JSON.parse(event.target.result)); } 
+                catch (err) { alert("Erro JSON"); resolve(null); }
+            };
+            reader.readAsText(file);
+        });
     }
 };
