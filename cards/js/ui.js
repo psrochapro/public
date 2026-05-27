@@ -188,10 +188,14 @@ export const ui = {
         const totalCards = cards.length;
         const totalCats = categories.length;
 
+        // 1. Calculate counts per category
         const stats = categories.map(cat => {
             const count = cards.filter(c => c.categoriaId === cat.id).length;
             return { ...cat, count };
         }).sort((a, b) => b.count - a.count);
+
+        // 2. Find the highest count to serve as the 100% baseline
+        const maxCount = stats.length > 0 ? Math.max(...stats.map(s => s.count)) : 0;
 
         container.innerHTML = `
             <div class="summary-stats-grid">
@@ -214,7 +218,7 @@ export const ui = {
                                 <strong>${s.count}</strong>
                             </div>
                             <div class="summary-progress-bg">
-                                <div class="summary-progress-bar" style="width: ${(s.count / totalCards * 100) || 0}%; background: ${s.bg}"></div>
+                                <div class="summary-progress-bar" style="width: ${maxCount > 0 ? (s.count / maxCount * 100) : 0}%; background: ${s.bg}"></div>
                             </div>
                         </div>
                     `).join('')}
