@@ -9,9 +9,8 @@ export const state = {
     sidebarCardSearch: "",
     settings: {
         collectionName: "Nome da Coleção",
-        cardWidth: 300, cardHeight: 420, imgSize: 160,
-        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
-        borderRadius: 24
+        cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
+        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11
     }
 };
 
@@ -21,7 +20,6 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
-    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
@@ -39,13 +37,13 @@ async function init() {
         ui.initTilt();
     });
 
-    // Sidebar Listeners
+    // Sidebar Search
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Global Settings (Sliders)
+    // Settings (Numeric Inputs)
     const settingsMap = {
         'global-width': 'cardWidth',
         'global-height': 'cardHeight',
@@ -58,7 +56,7 @@ async function init() {
 
     Object.keys(settingsMap).forEach(id => {
         document.getElementById(id).addEventListener('input', (e) => {
-            const val = parseInt(e.target.value);
+            const val = parseInt(e.target.value) || 0;
             state.settings[settingsMap[id]] = val;
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
@@ -75,7 +73,7 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Actions
+    // Global Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
@@ -90,6 +88,7 @@ async function init() {
 
 function handleQuickEdit(cardId) {
     const card = state.cards.find(c => c.id === cardId);
+    if(!card) return;
     ui.switchTab('tab-cards');
     ui.fillCardForm(card);
 }
@@ -120,7 +119,9 @@ async function handleCardSubmit(e) {
     const layout = document.getElementById('card-layout').value;
     
     let imageData = null;
-    if (file) imageData = await optimizeImage(file, layout);
+    if (file) {
+        imageData = await optimizeImage(file, layout);
+    }
 
     const data = {
         item: document.getElementById('card-item').value,
@@ -168,21 +169,14 @@ const optimizeImage = (file, layout) => {
 export function updateAll() {
     storage.save(state);
     
-    // Sincroniza sliders e labels
     document.getElementById('collection-name').value = state.settings.collectionName;
-    
-    const sync = (id, key, labelId) => {
-        document.getElementById(id).value = state.settings[key];
-        document.getElementById(labelId).textContent = state.settings[key];
-    };
-    
-    sync('global-width', 'cardWidth', 'val-width');
-    sync('global-height', 'cardHeight', 'val-height');
-    sync('global-radius', 'borderRadius', 'val-radius');
-    sync('global-img-size', 'imgSize', 'val-img-size');
-    sync('f-size-item', 'fontSizeItem', 'val-f-item');
-    sync('f-size-desc', 'fontSizeDesc', 'val-f-desc');
-    sync('f-size-cat', 'fontSizeCat', 'val-f-cat');
+    document.getElementById('global-width').value = state.settings.cardWidth;
+    document.getElementById('global-height').value = state.settings.cardHeight;
+    document.getElementById('global-radius').value = state.settings.borderRadius;
+    document.getElementById('global-img-size').value = state.settings.imgSize;
+    document.getElementById('f-size-item').value = state.settings.fontSizeItem;
+    document.getElementById('f-size-desc').value = state.settings.fontSizeDesc;
+    document.getElementById('f-size-cat').value = state.settings.fontSizeCat;
 
     ui.applyGlobalStyles(state.settings);
     ui.updateCollectionTitle(state.settings.collectionName);
