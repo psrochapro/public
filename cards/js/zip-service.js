@@ -55,16 +55,58 @@ export const zipService = {
             try {
                 const json = JSON.parse(event.target.result);
                 const { state } = await import('./main.js');
-                const mergedCards = json.cards.map(importedCard => {
-                    const existingCard = state.cards.find(c => c.id === importedCard.id);
-                    return { ...importedCard, imagem: existingCard ? existingCard.imagem : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" };
-                });
-                state.cards = mergedCards;
-                state.categories = json.categories || state.categories;
-                state.settings = json.settings || state.settings;
+                
+                // 1. Atualizar Configurações (Garantindo que números sejam números)
+                if (json.settings) {
+                    const s = json.settings;
+                    state.settings = {
+                        ...state.settings,
+                        ...s,
+                        cardWidth: parseInt(s.cardWidth) || state.settings.cardWidth,
+                        cardHeight: parseInt(s.cardHeight) || state.settings.cardHeight,
+                        imgSize: parseInt(s.imgSize) || state.settings.imgSize,
+                        fontSizeItem: parseInt(s.fontSizeItem) || state.settings.fontSizeItem,
+                        fontSizeDesc: parseInt(s.fontSizeDesc) || state.settings.fontSizeDesc,
+                        fontSizeCat: parseInt(s.fontSizeCat) || state.settings.fontSizeCat
+                    };
+                }
+
+                // 2. Atualizar Categorias (Merge por ID)
+                if (json.categories) {
+                    json.categories.forEach(importCat => {
+                        const idx = state.categories.findIndex(c => c.id === importCat.id);
+                        if (idx !== -1) state.categories[idx] = importCat;
+                        else state.categories.push(importCat);
+                    });
+                }
+
+                // 3. Atualizar Cards (Smart Merge)
+                if (json.cards) {
+                    json.cards.forEach(importCard => {
+                        const existingIdx = state.cards.findIndex(c => c.id === importCard.id);
+                        
+                        if (existingIdx !== -1) {
+                            // Se o card já existe, atualizamos o texto mas MANTEMOS a imagem atual
+                            state.cards[existingIdx] = {
+                                ...importCard,
+                                imagem: state.cards[existingIdx].imagem // Preserva a imagem do navegador
+                            };
+                        } else {
+                            // Se o card é novo, adicionamos com um placeholder cinza
+                            state.cards.push({
+                                ...importCard,
+                                imagem: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                            });
+                        }
+                    });
+                }
+
                 callback();
-                alert("Importado!");
-            } catch (err) { alert("Erro JSON"); }
+                alert("Importação concluída com sucesso! (Cards novos e textos atualizados)");
+            } catch (err) { 
+                console.error(err);
+                alert("Erro ao processar o arquivo JSON."); 
+            }
         };
         reader.readAsText(file);
     }
