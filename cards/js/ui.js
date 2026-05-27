@@ -21,8 +21,13 @@ export const ui = {
     },
 
     renderSummary(state) {
-        document.getElementById('stat-total-cards').textContent = state.cards.length;
-        document.getElementById('stat-total-cats').textContent = state.categories.length;
+        const cardsEl = document.getElementById('stat-total-cards');
+        const catsEl = document.getElementById('stat-total-cats');
+        if(!cardsEl || !catsEl) return;
+        
+        cardsEl.textContent = state.cards.length;
+        catsEl.textContent = state.categories.length;
+        
         const bars = document.getElementById('category-bars');
         bars.innerHTML = '';
         if(state.categories.length === 0) return bars.innerHTML = '<p style="font-size:0.75rem; color:#94a3b8">Crie categorias primeiro.</p>';
@@ -82,11 +87,9 @@ export const ui = {
                 <div class="quick-edit-btn" title="Editar">🖊️</div>
                 <div class="card-inner">
                     <div class="card-front" style="background: ${cat.cardBg}">
-                        <div class="shine"></div>
                         <div class="cat-badge-container"><span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span></div>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
                         <div class="img-container ${card.layout === 'photo' ? 'mode-photo' : 'mode-icon'}"><img src="${card.imagem}"></div>
-                        <div class="flip-hint">↺</div>
                     </div>
                     <div class="card-back" style="background: ${cat.cardBg}">
                         <div class="back-header"><img src="${card.imagem}"><strong>${card.item}</strong></div>
@@ -116,6 +119,8 @@ export const ui = {
     renderManagementLists(state, actions) {
         const cardsList = document.getElementById('manage-cards-list');
         const catsList = document.getElementById('manage-cats-list');
+        if(!cardsList || !catsList) return;
+
         cardsList.innerHTML = ''; catsList.innerHTML = '';
 
         state.cards.filter(c => c.item.toLowerCase().includes(state.sidebarCardSearch)).forEach(c => {

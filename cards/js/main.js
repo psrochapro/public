@@ -26,38 +26,35 @@ async function init() {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Viewport Listeners
+    // Toolbar
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
         refreshView();
     });
-
     document.getElementById('filter-category').addEventListener('change', (e) => {
         state.filters.category = e.target.value;
         refreshView();
     });
-
     document.getElementById('sort-select').addEventListener('change', (e) => {
         state.filters.sort = e.target.value;
         refreshView();
     });
 
-    // Sidebar Manage Search
+    // Sidebar search
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
     // Global Adjustments
-    const inputMapping = {
+    const map = {
         'global-width': 'cardWidth', 'global-height': 'cardHeight', 'global-radius': 'borderRadius',
         'global-img-size': 'imgSize', 'f-size-item': 'fontSizeItem', 'f-size-desc': 'fontSizeDesc', 
         'f-size-cat': 'fontSizeCat', 'cfg-view-bg': 'viewBg', 'cfg-view-title': 'viewTitleColor'
     };
-    
-    Object.keys(inputMapping).forEach(id => {
+    Object.keys(map).forEach(id => {
         document.getElementById(id).addEventListener('input', (e) => {
-            const key = inputMapping[id];
+            const key = map[id];
             state.settings[key] = id.includes('cfg') ? e.target.value : (parseInt(e.target.value) || 0);
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
@@ -70,11 +67,9 @@ async function init() {
         storage.save(state);
     });
 
-    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Buttons
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => {
         zipService.importCollection(e, () => { updateAll(); e.target.value = ""; });
@@ -89,6 +84,7 @@ async function init() {
     document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
     document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
 
+    // ESSENCIAL: Carregar tudo no boot
     updateAll();
 }
 
@@ -128,7 +124,24 @@ async function handleCardSubmit(e) {
     const file = document.getElementById('card-img').files[0];
     const layout = document.getElementById('card-layout').value;
     let imageData = null;
-    if (file) imageData = await optimizeImage(file, layout);
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        imageData = await new Promise(res => {
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height, max = layout === 'photo' ? 1000 : 600;
+                    if (w > h) { if (w > max) { h *= max / w; w = max; } } else { if (h > max) { w *= max / h; h = max; } }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    res(canvas.toDataURL('image/webp', 0.8));
+                };
+            };
+        });
+    }
     const data = {
         item: document.getElementById('card-item').value,
         descricao: document.getElementById('card-desc').value,
@@ -146,28 +159,6 @@ async function handleCardSubmit(e) {
     ui.resetCardForm();
     updateAll();
 }
-
-export const optimizeImage = (file, layout) => {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width; let height = img.height;
-                const maxDim = layout === 'photo' ? 1000 : 600;
-                if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
-                else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
-                canvas.width = width; canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                resolve(canvas.toDataURL('image/webp', 0.8));
-            };
-        };
-    });
-};
 
 export function updateAll() {
     storage.save(state);
