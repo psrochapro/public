@@ -66,17 +66,49 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Actions
+    // Actions com Reset de Filtros
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
-    document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
-    document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
-    document.getElementById('import-text').addEventListener('change', (e) => zipService.importTextOnly(e, updateAll));
-    document.getElementById('btn-clear').addEventListener('click', clearAll);
+    
+    document.getElementById('import-file').addEventListener('change', (e) => {
+        zipService.importCollection(e, () => {
+            resetViewFilters(); // Reseta filtros ao importar .card
+            updateAll();
+        });
+    });
 
+    document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
+    
+    document.getElementById('import-text').addEventListener('change', (e) => {
+        zipService.importTextOnly(e, () => {
+            resetViewFilters(); // Reseta filtros ao importar Texto
+            updateAll();
+        });
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', clearAll);
     document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
     document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
 
     updateAll();
+}
+
+/**
+ * RESETA FILTROS DE VISUALIZAÇÃO
+ * Garante que ao trocar de projeto, o usuário veja todos os novos cards
+ */
+function resetViewFilters() {
+    state.filters.search = "";
+    state.filters.category = "all";
+    state.sidebarCardSearch = "";
+    
+    // Limpa os campos visuais
+    const searchInput = document.getElementById('search-input');
+    const filterSelect = document.getElementById('filter-category');
+    const sidebarSearch = document.getElementById('manage-cards-search');
+    
+    if (searchInput) searchInput.value = "";
+    if (filterSelect) filterSelect.value = "all";
+    if (sidebarSearch) sidebarSearch.value = "";
 }
 
 function handleQuickEdit(cardId) {
@@ -191,31 +223,16 @@ function renderManagement() {
     });
 }
 
-// CORREÇÃO: Reset total de estado e filtros
 function clearAll() { 
-    if(confirm("Deseja apagar TODO o projeto e restaurar as configurações originais?")) { 
+    if(confirm("Apagar projeto?")) { 
         state.cards = []; 
         state.categories = []; 
-        state.sidebarCardSearch = "";
-        state.filters = { search: "", category: "all" };
-        
-        // Restaura as configurações de fábrica
+        resetViewFilters();
         state.settings = {
             collectionName: "Nome da Coleção",
-            cardWidth: 280,
-            cardHeight: 400,
-            borderRadius: 20,
-            imgSize: 150,
-            fontSizeItem: 18,
-            fontSizeDesc: 14,
-            fontSizeCat: 10
+            cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
+            fontSizeItem: 18, fontSizeDesc: 14, fontSizeCat: 10
         };
-
-        // Limpa campos de texto da UI manualmente
-        document.getElementById('search-input').value = "";
-        document.getElementById('manage-cards-search').value = "";
-        document.getElementById('filter-category').value = "all";
-
         updateAll(); 
     } 
 }
