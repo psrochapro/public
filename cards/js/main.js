@@ -66,13 +66,14 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Actions com Reset de Filtros
+    // Actions com Limpeza de Input
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     
     document.getElementById('import-file').addEventListener('change', (e) => {
         zipService.importCollection(e, () => {
-            resetViewFilters(); // Reseta filtros ao importar .card
+            resetViewFilters();
             updateAll();
+            e.target.value = ""; // CORREÇÃO: Limpa o input para permitir re-importar o mesmo arquivo
         });
     });
 
@@ -80,8 +81,9 @@ async function init() {
     
     document.getElementById('import-text').addEventListener('change', (e) => {
         zipService.importTextOnly(e, () => {
-            resetViewFilters(); // Reseta filtros ao importar Texto
+            resetViewFilters();
             updateAll();
+            e.target.value = ""; // CORREÇÃO: Limpa o input para permitir re-importar o mesmo arquivo
         });
     });
 
@@ -92,20 +94,13 @@ async function init() {
     updateAll();
 }
 
-/**
- * RESETA FILTROS DE VISUALIZAÇÃO
- * Garante que ao trocar de projeto, o usuário veja todos os novos cards
- */
 function resetViewFilters() {
     state.filters.search = "";
     state.filters.category = "all";
     state.sidebarCardSearch = "";
-    
-    // Limpa os campos visuais
     const searchInput = document.getElementById('search-input');
     const filterSelect = document.getElementById('filter-category');
     const sidebarSearch = document.getElementById('manage-cards-search');
-    
     if (searchInput) searchInput.value = "";
     if (filterSelect) filterSelect.value = "all";
     if (sidebarSearch) sidebarSearch.value = "";
@@ -147,14 +142,12 @@ async function handleCardSubmit(e) {
     if (file) {
         imageData = await optimizeImage(file, layout);
     }
-
     const data = {
         item: document.getElementById('card-item').value,
         descricao: document.getElementById('card-desc').value,
         categoriaId: document.getElementById('card-cat').value,
         layout: layout
     };
-
     if (id) {
         const idx = state.cards.findIndex(c => c.id === id);
         if (imageData) data.imagem = imageData;
@@ -202,7 +195,6 @@ export function updateAll() {
     document.getElementById('f-size-item').value = s.fontSizeItem;
     document.getElementById('f-size-desc').value = s.fontSizeDesc;
     document.getElementById('f-size-cat').value = s.fontSizeCat;
-
     ui.applyGlobalStyles(s);
     ui.updateCollectionTitle(s.collectionName);
     ui.renderCategories(state.categories);
@@ -230,8 +222,13 @@ function clearAll() {
         resetViewFilters();
         state.settings = {
             collectionName: "Nome da Coleção",
-            cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
-            fontSizeItem: 18, fontSizeDesc: 14, fontSizeCat: 10
+            cardWidth: 280,
+            cardHeight: 400,
+            borderRadius: 20,
+            imgSize: 150,
+            fontSizeItem: 18,
+            fontSizeDesc: 14,
+            fontSizeCat: 10
         };
         updateAll(); 
     } 
