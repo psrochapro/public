@@ -8,7 +8,7 @@ export const state = {
     filters: { search: "", category: "all", sort: "manual" },
     sidebarCardSearch: "",
     settings: {
-        collectionName: "Nome da Coleção",
+        collectionName: "Nova Coleção",
         cardWidth: 280, cardHeight: 300, borderRadius: 0, imgSize: 150,
         fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
         viewportBg: "#f3f6f9",
@@ -21,6 +21,14 @@ async function init() {
     state.cards = saved.cards || [];
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
+
+    // Proteção contra fechamento acidental (Já que não salva mais no LocalStorage)
+    window.addEventListener('beforeunload', (e) => {
+        if (state.cards.length > 0) {
+            e.preventDefault();
+            e.returnValue = 'As alterações não salvas serão perdidas. Exportou seu arquivo .card?';
+        }
+    });
 
     // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -86,7 +94,7 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // ACTIONS - CORRIGIDO AQUI
+    // ACTIONS
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     
     document.getElementById('import-file').addEventListener('change', (e) => {
@@ -255,7 +263,7 @@ function clearAll() {
         state.categories = []; 
         resetViewFilters();
         state.settings = {
-            collectionName: "Nome da Coleção",
+            collectionName: "Nova Coleção",
             cardWidth: 280, cardHeight: 300, borderRadius: 0, imgSize: 150,
             fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
             viewportBg: "#f3f6f9", titleColor: "#1e293b"
