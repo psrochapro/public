@@ -130,9 +130,14 @@ export const ui = {
         document.getElementById('btn-save-card').textContent = "Atualizar Card";
         document.getElementById('btn-cancel-card').classList.remove('hidden');
         
+        // CORREÇÃO: Foco e Scroll
         const pane = document.getElementById('tab-cards');
+        const firstInput = document.getElementById('card-item');
         const form = document.getElementById('form-card');
-        pane.scrollTo({ top: 0, behavior: 'smooth' });
+
+        pane.scrollTop = 0; // Scroll imediato para o topo da aba
+        firstInput.focus(); // Coloca o cursor no título do card
+        
         form.classList.add('pulse');
         setTimeout(() => form.classList.remove('pulse'), 1000);
     },
@@ -156,9 +161,14 @@ export const ui = {
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
 
+        // CORREÇÃO: Foco e Scroll
         const pane = document.getElementById('tab-categories');
+        const firstInput = document.getElementById('cat-name');
         const form = document.getElementById('form-category');
-        pane.scrollTo({ top: 0, behavior: 'smooth' });
+
+        pane.scrollTop = 0; // Scroll imediato
+        firstInput.focus(); // Foco no nome da categoria
+
         form.classList.add('pulse');
         setTimeout(() => form.classList.remove('pulse'), 1000);
     },
