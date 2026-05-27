@@ -86,11 +86,11 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Actions
+    // ACTIONS - CORRIGIDO AQUI
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     
     document.getElementById('import-file').addEventListener('change', (e) => {
-        zipService.importCollection(e, () => {
+        zipService.importCollection(e, state, () => {
             resetViewFilters();
             updateAll();
             e.target.value = ""; 
@@ -100,7 +100,7 @@ async function init() {
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
     
     document.getElementById('import-text').addEventListener('change', (e) => {
-        zipService.importTextOnly(e, () => {
+        zipService.importTextOnly(e, state, () => {
             resetViewFilters();
             updateAll();
             e.target.value = ""; 
@@ -119,14 +119,11 @@ function resetViewFilters() {
     state.filters.category = "all";
     state.filters.sort = "manual";
     state.sidebarCardSearch = "";
-    const searchInput = document.getElementById('search-input');
-    const filterSelect = document.getElementById('filter-category');
-    const sortSelect = document.getElementById('sort-order');
-    const sidebarSearch = document.getElementById('manage-cards-search');
-    if (searchInput) searchInput.value = "";
-    if (filterSelect) filterSelect.value = "all";
-    if (sortSelect) sortSelect.value = "manual";
-    if (sidebarSearch) sidebarSearch.value = "";
+    const fields = ['search-input', 'filter-category', 'sort-order', 'manage-cards-search'];
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.value = id === 'filter-category' ? 'all' : (id === 'sort-order' ? 'manual' : "");
+    });
 }
 
 function handleQuickEdit(cardId) {
@@ -186,14 +183,11 @@ async function handleCardSubmit(e) {
 function handleMoveCard(id, direction) {
     const idx = state.cards.findIndex(c => c.id === id);
     if (idx === -1) return;
-    
     const newIdx = direction === 'up' ? idx - 1 : idx + 1;
     if (newIdx < 0 || newIdx >= state.cards.length) return;
-
     const temp = state.cards[idx];
     state.cards[idx] = state.cards[newIdx];
     state.cards[newIdx] = temp;
-
     updateAll();
 }
 
@@ -213,8 +207,7 @@ export const optimizeImage = (file, layout) => {
                 canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                const dataUrl = canvas.toDataURL('image/webp', 0.8);
-                resolve(dataUrl.startsWith('data:image/webp') ? dataUrl : canvas.toDataURL(layout === 'photo' ? 'image/jpeg' : 'image/png', 0.8));
+                resolve(canvas.toDataURL('image/webp', 0.8));
             };
         };
         reader.onerror = error => reject(error);
@@ -263,15 +256,9 @@ function clearAll() {
         resetViewFilters();
         state.settings = {
             collectionName: "Nome da Coleção",
-            cardWidth: 200,
-            cardHeight: 300,
-            borderRadius: 0,
-            imgSize: 150,
-            fontSizeItem: 18,
-            fontSizeDesc: 14,
-            fontSizeCat: 10,
-            viewportBg: "#f3f6f9",
-            titleColor: "#1e293b"
+            cardWidth: 280, cardHeight: 300, borderRadius: 0, imgSize: 150,
+            fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
+            viewportBg: "#f3f6f9", titleColor: "#1e293b"
         };
         updateAll(); 
     } 
