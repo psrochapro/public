@@ -30,32 +30,13 @@
             </header>
 
             <nav class="sidebar-tabs">
-                <button class="tab-btn active" data-tab="tab-summary">Resumo</button>
-                <button class="tab-btn" data-tab="tab-cards">Cards</button>
+                <button class="tab-btn active" data-tab="tab-cards">Cards</button>
                 <button class="tab-btn" data-tab="tab-categories">Categorias</button>
                 <button class="tab-btn" data-tab="tab-config">Ajustes</button>
             </nav>
 
             <div class="tab-content">
-                <!-- ABA RESUMO -->
-                <section id="tab-summary" class="tab-pane active">
-                    <div class="summary-stats">
-                        <div class="stat-card blue">
-                            <label>TOTAL DE CARDS</label>
-                            <span id="stat-total-cards">0</span>
-                        </div>
-                        <div class="stat-card green">
-                            <label>CATEGORIAS</label>
-                            <span id="stat-total-cats">0</span>
-                        </div>
-                    </div>
-                    <div class="summary-chart-container">
-                        <h4>Cards por Categoria</h4>
-                        <div id="category-bars-list" class="category-bars-list"></div>
-                    </div>
-                </section>
-
-                <section id="tab-cards" class="tab-pane">
+                <section id="tab-cards" class="tab-pane active">
                     <form id="form-card" class="admin-form">
                         <h3 id="card-form-title">Novo / Editar Card</h3>
                         <input type="hidden" id="edit-card-id">
