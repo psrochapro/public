@@ -10,7 +10,8 @@ export const state = {
     settings: {
         collectionName: "Nome da Coleção",
         cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
-        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11
+        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
+        viewportBg: "#f3f6f9"
     }
 };
 
@@ -54,6 +55,13 @@ async function init() {
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
         });
+    });
+
+    // Novo input de Cor de Fundo do App
+    document.getElementById('global-bg').addEventListener('input', (e) => {
+        state.settings.viewportBg = e.target.value;
+        ui.applyGlobalStyles(state.settings);
+        storage.save(state);
     });
 
     document.getElementById('collection-name').addEventListener('input', (e) => {
@@ -195,6 +203,7 @@ export function updateAll() {
     document.getElementById('f-size-item').value = s.fontSizeItem;
     document.getElementById('f-size-desc').value = s.fontSizeDesc;
     document.getElementById('f-size-cat').value = s.fontSizeCat;
+    document.getElementById('global-bg').value = s.viewportBg || "#f3f6f9";
     ui.applyGlobalStyles(s);
     ui.updateCollectionTitle(s.collectionName);
     ui.renderCategories(state.categories);
@@ -229,7 +238,8 @@ function clearAll() {
             imgSize: 150,
             fontSizeItem: 18,
             fontSizeDesc: 14,
-            fontSizeCat: 10
+            fontSizeCat: 10,
+            viewportBg: "#f3f6f9"
         };
         updateAll(); 
     } 

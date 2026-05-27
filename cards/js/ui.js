@@ -16,6 +16,7 @@ export const ui = {
         r.style.setProperty('--f-size-item', `${settings.fontSizeItem}px`);
         r.style.setProperty('--f-size-desc', `${settings.fontSizeDesc}px`);
         r.style.setProperty('--f-size-cat', `${settings.fontSizeCat}px`);
+        r.style.setProperty('--main-bg', settings.viewportBg || '#f3f6f9');
     },
 
     updateCollectionTitle(name) {
@@ -186,7 +187,6 @@ export const ui = {
         const totalCards = cards.length;
         const totalCats = categories.length;
 
-        // Contagem por categoria
         const stats = categories.map(cat => {
             const count = cards.filter(c => c.categoriaId === cat.id).length;
             return { ...cat, count };
