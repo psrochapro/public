@@ -66,14 +66,14 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Actions com Limpeza de Input
+    // Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     
     document.getElementById('import-file').addEventListener('change', (e) => {
         zipService.importCollection(e, () => {
             resetViewFilters();
             updateAll();
-            e.target.value = ""; // CORREÇÃO: Limpa o input para permitir re-importar o mesmo arquivo
+            e.target.value = ""; 
         });
     });
 
@@ -83,7 +83,7 @@ async function init() {
         zipService.importTextOnly(e, () => {
             resetViewFilters();
             updateAll();
-            e.target.value = ""; // CORREÇÃO: Limpa o input para permitir re-importar o mesmo arquivo
+            e.target.value = ""; 
         });
     });
 
@@ -199,6 +199,7 @@ export function updateAll() {
     ui.updateCollectionTitle(s.collectionName);
     ui.renderCategories(state.categories);
     ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+    ui.renderSummary(state.cards, state.categories);
     ui.initTilt();
     renderManagement();
 }

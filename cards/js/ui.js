@@ -130,13 +130,12 @@ export const ui = {
         document.getElementById('btn-save-card').textContent = "Atualizar Card";
         document.getElementById('btn-cancel-card').classList.remove('hidden');
         
-        // CORREÇÃO: Foco e Scroll
         const pane = document.getElementById('tab-cards');
         const firstInput = document.getElementById('card-item');
         const form = document.getElementById('form-card');
 
-        pane.scrollTop = 0; // Scroll imediato para o topo da aba
-        firstInput.focus(); // Coloca o cursor no título do card
+        pane.scrollTop = 0; 
+        firstInput.focus(); 
         
         form.classList.add('pulse');
         setTimeout(() => form.classList.remove('pulse'), 1000);
@@ -161,13 +160,12 @@ export const ui = {
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
 
-        // CORREÇÃO: Foco e Scroll
         const pane = document.getElementById('tab-categories');
         const firstInput = document.getElementById('cat-name');
         const form = document.getElementById('form-category');
 
-        pane.scrollTop = 0; // Scroll imediato
-        firstInput.focus(); // Foco no nome da categoria
+        pane.scrollTop = 0; 
+        firstInput.focus(); 
 
         form.classList.add('pulse');
         setTimeout(() => form.classList.remove('pulse'), 1000);
@@ -179,5 +177,49 @@ export const ui = {
         document.getElementById('edit-cat-id').value = "";
         document.getElementById('btn-save-cat').textContent = "Salvar Categoria";
         document.getElementById('btn-cancel-cat').classList.add('hidden');
+    },
+
+    renderSummary(cards, categories) {
+        const container = document.getElementById('summary-container');
+        if (!container) return;
+
+        const totalCards = cards.length;
+        const totalCats = categories.length;
+
+        // Contagem por categoria
+        const stats = categories.map(cat => {
+            const count = cards.filter(c => c.categoriaId === cat.id).length;
+            return { ...cat, count };
+        }).sort((a, b) => b.count - a.count);
+
+        container.innerHTML = `
+            <div class="summary-stats-grid">
+                <div class="summary-stat-card blue">
+                    <div class="stat-label">TOTAL DE CARDS</div>
+                    <div class="stat-value">${totalCards}</div>
+                </div>
+                <div class="summary-stat-card green">
+                    <div class="stat-label">CATEGORIAS</div>
+                    <div class="stat-value">${totalCats}</div>
+                </div>
+            </div>
+            <div class="summary-chart-section">
+                <h4>Cards por Categoria</h4>
+                <div class="summary-list">
+                    ${stats.map(s => `
+                        <div class="summary-row">
+                            <div class="summary-row-info">
+                                <span>${s.name}</span>
+                                <strong>${s.count}</strong>
+                            </div>
+                            <div class="summary-progress-bg">
+                                <div class="summary-progress-bar" style="width: ${(s.count / totalCards * 100) || 0}%; background: ${s.bg}"></div>
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${totalCards === 0 ? '<div class="empty-msg">Nenhum card criado ainda.</div>' : ''}
+                </div>
+            </div>
+        `;
     }
 };

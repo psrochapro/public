@@ -30,13 +30,18 @@
             </header>
 
             <nav class="sidebar-tabs">
-                <button class="tab-btn active" data-tab="tab-cards">Cards</button>
+                <button class="tab-btn active" data-tab="tab-summary">Resumo</button>
+                <button class="tab-btn" data-tab="tab-cards">Cards</button>
                 <button class="tab-btn" data-tab="tab-categories">Categorias</button>
                 <button class="tab-btn" data-tab="tab-config">Ajustes</button>
             </nav>
 
             <div class="tab-content">
-                <section id="tab-cards" class="tab-pane active">
+                <section id="tab-summary" class="tab-pane active">
+                    <div id="summary-container"></div>
+                </section>
+
+                <section id="tab-cards" class="tab-pane">
                     <form id="form-card" class="admin-form">
                         <h3 id="card-form-title">Novo / Editar Card</h3>
                         <input type="hidden" id="edit-card-id">
