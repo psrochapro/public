@@ -96,7 +96,12 @@ export const zipService = {
         });
         const exportData = { settings: state.settings, categories: state.categories, cards: textOnlyCards };
         const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: "application/json"});
-        saveAs(blob, `textos-${Date.now()}.json`);
+        
+        const fileName = (state.settings.collectionName || "colecao")
+            .replace(/\s+/g, '-')
+            .toLowerCase();
+
+        saveAs(blob, `textos-${fileName}.json`);
     },
 
     async importTextOnly(e, state, callback) {
