@@ -9,9 +9,9 @@ export const storage = {
             categories: [], 
             settings: {
                 collectionName: "Nome da Coleção",
-                cardWidth: 280,
-                cardHeight: 400,
-                borderRadius: 20,
+                cardWidth: 200,
+                cardHeight: 300,
+                borderRadius: 0,
                 imgSize: 150,
                 fontSizeItem: 18,
                 fontSizeDesc: 14,
