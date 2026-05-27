@@ -5,13 +5,12 @@ import { zipService } from './zip-service.js';
 export const state = {
     cards: [],
     categories: [],
-    filters: { search: "", category: "all", sort: "manual" },
+    filters: { search: "", category: "all" },
     sidebarCardSearch: "",
     settings: {
         collectionName: "Nome da Coleção",
         cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
-        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
-        viewBg: "#f3f6f9", viewTitleColor: "#1e293b"
+        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11
     }
 };
 
@@ -21,42 +20,37 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
-    // Abas
+    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Viewport
+    // Viewport Filters
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
-        refreshAll();
-    });
-    document.getElementById('filter-category').addEventListener('change', (e) => {
-        state.filters.category = e.target.value;
-        refreshAll();
-    });
-    document.getElementById('sort-select').addEventListener('change', (e) => {
-        state.filters.sort = e.target.value;
-        refreshAll();
+        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        ui.initTilt();
     });
 
-    // Sidebar
+    document.getElementById('filter-category').addEventListener('change', (e) => {
+        state.filters.category = e.target.value;
+        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        ui.initTilt();
+    });
+
+    // Sidebar Manage Search
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Ajustes Globais
-    const mapping = {
-        'global-width': 'cardWidth', 'global-height': 'cardHeight', 'global-radius': 'borderRadius',
-        'global-img-size': 'imgSize', 'f-size-item': 'fontSizeItem', 'f-size-desc': 'fontSizeDesc', 
-        'f-size-cat': 'fontSizeCat', 'global-view-bg': 'viewBg', 'global-view-title': 'viewTitleColor'
-    };
+    // Global Adjustments
+    const inputs = ['global-width', 'global-height', 'global-radius', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat'];
+    const keys = ['cardWidth', 'cardHeight', 'borderRadius', 'imgSize', 'fontSizeItem', 'fontSizeDesc', 'fontSizeCat'];
     
-    Object.keys(mapping).forEach(id => {
+    inputs.forEach((id, idx) => {
         document.getElementById(id).addEventListener('input', (e) => {
-            const key = mapping[id];
-            state.settings[key] = id.includes('global-view') ? e.target.value : (parseInt(e.target.value) || 0);
+            state.settings[keys[idx]] = parseInt(e.target.value) || 0;
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
         });
@@ -74,12 +68,23 @@ async function init() {
     
     // Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
+    
     document.getElementById('import-file').addEventListener('change', (e) => {
-        zipService.importCollection(e, () => { updateAll(); e.target.value = ""; });
+        zipService.importCollection(e, () => {
+            resetViewFilters();
+            updateAll();
+            e.target.value = ""; 
+        });
     });
+
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
+    
     document.getElementById('import-text').addEventListener('change', (e) => {
-        zipService.importTextOnly(e, () => { updateAll(); e.target.value = ""; });
+        zipService.importTextOnly(e, () => {
+            resetViewFilters();
+            updateAll();
+            e.target.value = ""; 
+        });
     });
 
     document.getElementById('btn-clear').addEventListener('click', clearAll);
@@ -89,15 +94,24 @@ async function init() {
     updateAll();
 }
 
-function refreshAll() {
-    ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
-    ui.renderSummary(state);
-    ui.initTilt();
+function resetViewFilters() {
+    state.filters.search = "";
+    state.filters.category = "all";
+    state.sidebarCardSearch = "";
+    const searchInput = document.getElementById('search-input');
+    const filterSelect = document.getElementById('filter-category');
+    const sidebarSearch = document.getElementById('manage-cards-search');
+    if (searchInput) searchInput.value = "";
+    if (filterSelect) filterSelect.value = "all";
+    if (sidebarSearch) sidebarSearch.value = "";
 }
 
 function handleQuickEdit(cardId) {
     const card = state.cards.find(c => c.id === cardId);
-    if(card) { ui.switchTab('tab-cards'); ui.fillCardForm(card); }
+    if(card) {
+        ui.switchTab('tab-cards');
+        ui.fillCardForm(card);
+    }
 }
 
 function handleCategorySubmit(e) {
@@ -126,22 +140,7 @@ async function handleCardSubmit(e) {
     const layout = document.getElementById('card-layout').value;
     let imageData = null;
     if (file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        imageData = await new Promise(resolve => {
-            reader.onload = (event) => {
-                const img = new Image();
-                img.src = event.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let w = img.width, h = img.height, max = layout === 'photo' ? 1000 : 600;
-                    if (w > h) { if (w > max) { h *= max / w; w = max; } } else { if (h > max) { w *= max / h; h = max; } }
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    resolve(canvas.toDataURL('image/webp', 0.8));
-                };
-            };
-        });
+        imageData = await optimizeImage(file, layout);
     }
     const data = {
         item: document.getElementById('card-item').value,
@@ -161,6 +160,30 @@ async function handleCardSubmit(e) {
     updateAll();
 }
 
+export const optimizeImage = (file, layout) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width; let height = img.height;
+                const maxDim = layout === 'photo' ? 1000 : 600;
+                if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
+                else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
+                canvas.width = width; canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                const dataUrl = canvas.toDataURL('image/webp', 0.8);
+                resolve(dataUrl.startsWith('data:image/webp') ? dataUrl : canvas.toDataURL(layout === 'photo' ? 'image/jpeg' : 'image/png', 0.8));
+            };
+        };
+        reader.onerror = error => reject(error);
+    });
+};
+
 export function updateAll() {
     storage.save(state);
     const s = state.settings;
@@ -172,13 +195,12 @@ export function updateAll() {
     document.getElementById('f-size-item').value = s.fontSizeItem;
     document.getElementById('f-size-desc').value = s.fontSizeDesc;
     document.getElementById('f-size-cat').value = s.fontSizeCat;
-    document.getElementById('global-view-bg').value = s.viewBg;
-    document.getElementById('global-view-title').value = s.viewTitleColor;
-
     ui.applyGlobalStyles(s);
     ui.updateCollectionTitle(s.collectionName);
     ui.renderCategories(state.categories);
-    refreshAll();
+    ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+    ui.renderSummary(state.cards, state.categories); // ATUALIZA O RESUMO
+    ui.initTilt();
     renderManagement();
 }
 
@@ -186,11 +208,6 @@ function renderManagement() {
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
         onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
-        onReorderCards: (newIds) => {
-            state.cards = newIds.map(id => state.cards.find(c => c.id === id));
-            storage.save(state);
-            refreshAll();
-        },
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 
             if(state.cards.some(c => c.categoriaId === id)) return alert("Categoria em uso.");
@@ -201,8 +218,19 @@ function renderManagement() {
 
 function clearAll() { 
     if(confirm("Apagar projeto?")) { 
-        state.cards = []; state.categories = []; 
-        state.settings = { collectionName: "Nome da Coleção", cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150, fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11, viewBg: "#f3f6f9", viewTitleColor: "#1e293b" };
+        state.cards = []; 
+        state.categories = []; 
+        resetViewFilters();
+        state.settings = {
+            collectionName: "Nome da Coleção",
+            cardWidth: 280,
+            cardHeight: 400,
+            borderRadius: 20,
+            imgSize: 150,
+            fontSizeItem: 18,
+            fontSizeDesc: 14,
+            fontSizeCat: 10
+        };
         updateAll(); 
     } 
 }
