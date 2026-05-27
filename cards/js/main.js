@@ -113,7 +113,6 @@ async function handleCardSubmit(e) {
     const layout = document.getElementById('card-layout').value;
     let imageData = null;
     if (file) {
-        const { optimizeImage } = await import('./main.js'); // Self-ref or move to utils
         imageData = await optimizeImage(file, layout);
     }
 
