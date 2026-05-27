@@ -16,6 +16,40 @@ export const ui = {
         r.style.setProperty('--f-size-item', `${settings.fontSizeItem}px`);
         r.style.setProperty('--f-size-desc', `${settings.fontSizeDesc}px`);
         r.style.setProperty('--f-size-cat', `${settings.fontSizeCat}px`);
+        r.style.setProperty('--view-bg', settings.viewBg);
+        r.style.setProperty('--view-title', settings.viewTitleColor);
+    },
+
+    renderSummary(state) {
+        document.getElementById('stat-total-cards').textContent = state.cards.length;
+        document.getElementById('stat-total-cats').textContent = state.categories.length;
+        
+        const barsContainer = document.getElementById('category-bars');
+        barsContainer.innerHTML = '';
+        
+        if(state.categories.length === 0) {
+            barsContainer.innerHTML = '<p style="font-size:0.8rem; color:#94a3b8">Nenhuma categoria cadastrada.</p>';
+            return;
+        }
+
+        const counts = state.categories.map(cat => ({
+            name: cat.name,
+            color: cat.bg,
+            count: state.cards.filter(c => c.categoriaId === cat.id).length
+        })).sort((a,b) => b.count - a.count);
+
+        const max = Math.max(...counts.map(c => c.count), 1);
+
+        counts.forEach(c => {
+            const perc = (c.count / max) * 100;
+            const row = document.createElement('div');
+            row.className = 'chart-bar-row';
+            row.innerHTML = `
+                <div class="bar-info"><span>${c.name}</span><span>${c.count}</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:${perc}%; background:${c.color}"></div></div>
+            `;
+            barsContainer.appendChild(row);
+        });
     },
 
     updateCollectionTitle(name) {
@@ -39,7 +73,15 @@ export const ui = {
     renderCards(cards, categories, filters, onQuickEdit) {
         const container = document.getElementById('card-container');
         container.innerHTML = '';
-        const filtered = cards.filter(c => {
+        
+        let filtered = [...cards];
+        
+        // Sorting
+        if(filters.sort === 'az') filtered.sort((a,b) => a.item.localeCompare(b.item));
+        else if(filters.sort === 'za') filtered.sort((a,b) => b.item.localeCompare(a.item));
+
+        // Filters
+        filtered = filtered.filter(c => {
             const matchSearch = c.item.toLowerCase().includes(filters.search) || (c.descricao && c.descricao.toLowerCase().includes(filters.search));
             const matchCat = filters.category === "all" || c.categoriaId === filters.category;
             return matchSearch && matchCat;
@@ -47,20 +89,15 @@ export const ui = {
 
         filtered.forEach(card => {
             const cat = categories.find(c => c.id === card.categoriaId) || { bg: '#cbd5e1', text: '#64748b', cardBg: '#fff', name: 'Sem Cat.' };
-            const layoutClass = card.layout === 'photo' ? 'mode-photo' : 'mode-icon';
             const el = document.createElement('div');
             el.className = 'card js-tilt';
             el.innerHTML = `
                 <div class="quick-edit-btn" title="Editar">🖊️</div>
                 <div class="card-inner">
                     <div class="card-front" style="background: ${cat.cardBg}">
-                        <div class="shine"></div>
-                        <div class="cat-badge-container">
-                            <span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span>
-                        </div>
+                        <div class="cat-badge-container"><span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span></div>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
-                        <div class="img-container ${layoutClass}"><img src="${card.imagem}"></div>
-                        <div class="flip-hint">↺</div>
+                        <div class="img-container ${card.layout === 'photo' ? 'mode-photo' : 'mode-icon'}"><img src="${card.imagem}"></div>
                     </div>
                     <div class="card-back" style="background: ${cat.cardBg}">
                         <div class="back-header"><img src="${card.imagem}"><strong>${card.item}</strong></div>
@@ -75,20 +112,16 @@ export const ui = {
     },
 
     initTilt() {
-        const cards = document.querySelectorAll('.js-tilt');
-        cards.forEach(card => {
+        document.querySelectorAll('.js-tilt').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                const xc = rect.width / 2; const yc = rect.height / 2;
-                const dx = x - xc; const dy = y - yc;
-                const rotateX = (dy / yc) * -10; const rotateY = (dx / xc) * 10;
+                const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -10;
+                const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 10;
                 card.style.setProperty('--rx', `${rotateX}deg`);
                 card.style.setProperty('--ry', `${rotateY}deg`);
             });
-            card.addEventListener('mouseleave', () => {
-                card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg');
-            });
+            card.addEventListener('mouseleave', () => { card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); });
         });
     },
 
@@ -96,15 +129,35 @@ export const ui = {
         const cardsList = document.getElementById('manage-cards-list');
         cardsList.innerHTML = '';
         const filteredCards = state.cards.filter(c => c.item.toLowerCase().includes(state.sidebarCardSearch));
-        filteredCards.forEach(c => {
-            const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
+        
+        filteredCards.forEach((c, index) => {
             const item = document.createElement('div');
             item.className = 'manage-item';
+            item.draggable = true;
+            item.dataset.id = c.id;
+            const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
             item.innerHTML = `<div class="item-main"><div class="cat-dot" style="background:${cat.bg}"></div><span class="item-name">${c.item}</span></div>
-                <div class="item-actions"><button class="btn-sm edit" title="Editar">🖊️</button><button class="btn-sm delete" title="Excluir">🗑️</button></div>`;
+                <div class="item-actions"><button class="btn-sm edit">🖊️</button><button class="btn-sm delete">🗑️</button></div>`;
+            
+            // Drag Events
+            item.addEventListener('dragstart', () => item.classList.add('dragging'));
+            item.addEventListener('dragend', () => {
+                item.classList.remove('dragging');
+                const newOrder = [...cardsList.querySelectorAll('.manage-item')].map(el => el.dataset.id);
+                actions.onReorderCards(newOrder);
+            });
+
             item.querySelector('.edit').onclick = () => actions.onEditCard(c.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCard(c.id);
             cardsList.appendChild(item);
+        });
+
+        cardsList.addEventListener('dragover', e => {
+            e.preventDefault();
+            const dragging = document.querySelector('.dragging');
+            const afterElement = getDragAfterElement(cardsList, e.clientY);
+            if (afterElement == null) cardsList.appendChild(dragging);
+            else cardsList.insertBefore(dragging, afterElement);
         });
 
         const catsList = document.getElementById('manage-cats-list');
@@ -113,7 +166,7 @@ export const ui = {
             const item = document.createElement('div');
             item.className = 'manage-item';
             item.innerHTML = `<div class="item-main"><div class="cat-dot" style="background:${cat.bg}"></div><span class="item-name">${cat.name}</span></div>
-                <div class="item-actions"><button class="btn-sm edit" title="Editar">🖊️</button><button class="btn-sm delete" title="Excluir">🗑️</button></div>`;
+                <div class="item-actions"><button class="btn-sm edit">🖊️</button><button class="btn-sm delete">🗑️</button></div>`;
             item.querySelector('.edit').onclick = () => actions.onEditCat(cat.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCat(cat.id);
             catsList.appendChild(item);
@@ -129,17 +182,8 @@ export const ui = {
         document.getElementById('card-layout').value = card.layout || "icon";
         document.getElementById('btn-save-card').textContent = "Atualizar Card";
         document.getElementById('btn-cancel-card').classList.remove('hidden');
-        
-        // CORREÇÃO: Foco e Scroll
-        const pane = document.getElementById('tab-cards');
-        const firstInput = document.getElementById('card-item');
-        const form = document.getElementById('form-card');
-
-        pane.scrollTop = 0; // Scroll imediato para o topo da aba
-        firstInput.focus(); // Coloca o cursor no título do card
-        
-        form.classList.add('pulse');
-        setTimeout(() => form.classList.remove('pulse'), 1000);
+        document.getElementById('tab-cards').scrollTop = 0;
+        document.getElementById('card-item').focus();
     },
 
     resetCardForm() {
@@ -160,17 +204,7 @@ export const ui = {
         document.getElementById('cat-card-bg').value = cat.cardBg || "#ffffff";
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
-
-        // CORREÇÃO: Foco e Scroll
-        const pane = document.getElementById('tab-categories');
-        const firstInput = document.getElementById('cat-name');
-        const form = document.getElementById('form-category');
-
-        pane.scrollTop = 0; // Scroll imediato
-        firstInput.focus(); // Foco no nome da categoria
-
-        form.classList.add('pulse');
-        setTimeout(() => form.classList.remove('pulse'), 1000);
+        document.getElementById('cat-name').focus();
     },
 
     resetCatForm() {
@@ -181,3 +215,13 @@ export const ui = {
         document.getElementById('btn-cancel-cat').classList.add('hidden');
     }
 };
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.manage-item:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+        else return closest;
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}

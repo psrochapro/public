@@ -1,9 +1,9 @@
 export const storage = {
     save(state) {
-        localStorage.setItem('card_studio_v11', JSON.stringify(state));
+        localStorage.setItem('card_studio_v12', JSON.stringify(state));
     },
     load() {
-        const data = localStorage.getItem('card_studio_v11');
+        const data = localStorage.getItem('card_studio_v12');
         return data ? JSON.parse(data) : { 
             cards: [], 
             categories: [], 
@@ -11,11 +11,13 @@ export const storage = {
                 collectionName: "Nome da Coleção",
                 cardWidth: 280,
                 cardHeight: 400,
-                borderRadius: 20,
+                borderRadius: 24,
                 imgSize: 150,
                 fontSizeItem: 18,
-                fontSizeDesc: 14,
-                fontSizeCat: 10
+                fontSizeDesc: 16,
+                fontSizeCat: 11,
+                viewBg: "#f3f6f9",
+                viewTitleColor: "#1e293b"
             } 
         };
     }

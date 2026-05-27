@@ -5,12 +5,13 @@ import { zipService } from './zip-service.js';
 export const state = {
     cards: [],
     categories: [],
-    filters: { search: "", category: "all" },
+    filters: { search: "", category: "all", sort: "manual" },
     sidebarCardSearch: "",
     settings: {
         collectionName: "Nome da Coleção",
         cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
-        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11
+        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
+        viewBg: "#f3f6f9", viewTitleColor: "#1e293b"
     }
 };
 
@@ -20,37 +21,43 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
-    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
+        btn.addEventListener('click', () => {
+            ui.switchTab(btn.dataset.tab);
+            if(btn.dataset.tab === 'tab-summary') ui.renderSummary(state);
+        });
     });
 
-    // Viewport Filters
+    // Viewport Toolbar
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
-        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
-        ui.initTilt();
+        updateCardsView();
     });
 
     document.getElementById('filter-category').addEventListener('change', (e) => {
         state.filters.category = e.target.value;
-        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
-        ui.initTilt();
+        updateCardsView();
     });
 
-    // Sidebar Manage Search
+    document.getElementById('sort-order').addEventListener('change', (e) => {
+        state.filters.sort = e.target.value;
+        updateCardsView();
+    });
+
+    // Sidebar
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Global Adjustments
-    const inputs = ['global-width', 'global-height', 'global-radius', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat'];
-    const keys = ['cardWidth', 'cardHeight', 'borderRadius', 'imgSize', 'fontSizeItem', 'fontSizeDesc', 'fontSizeCat'];
+    // Ajustes Globais
+    const inputs = ['global-width', 'global-height', 'global-radius', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat', 'view-bg-color', 'view-title-color'];
+    const keys = ['cardWidth', 'cardHeight', 'borderRadius', 'imgSize', 'fontSizeItem', 'fontSizeDesc', 'fontSizeCat', 'viewBg', 'viewTitleColor'];
     
     inputs.forEach((id, idx) => {
         document.getElementById(id).addEventListener('input', (e) => {
-            state.settings[keys[idx]] = parseInt(e.target.value) || 0;
+            state.settings[keys[idx]] = e.target.value;
+            if(!id.includes('color')) state.settings[keys[idx]] = parseInt(e.target.value) || 0;
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
         });
@@ -62,29 +69,17 @@ async function init() {
         storage.save(state);
     });
 
-    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Actions com Limpeza de Input
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
-    
     document.getElementById('import-file').addEventListener('change', (e) => {
-        zipService.importCollection(e, () => {
-            resetViewFilters();
-            updateAll();
-            e.target.value = ""; // CORREÇÃO: Limpa o input para permitir re-importar o mesmo arquivo
-        });
+        zipService.importCollection(e, () => { updateAll(); e.target.value = ""; });
     });
 
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
-    
     document.getElementById('import-text').addEventListener('change', (e) => {
-        zipService.importTextOnly(e, () => {
-            resetViewFilters();
-            updateAll();
-            e.target.value = ""; // CORREÇÃO: Limpa o input para permitir re-importar o mesmo arquivo
-        });
+        zipService.importTextOnly(e, () => { updateAll(); e.target.value = ""; });
     });
 
     document.getElementById('btn-clear').addEventListener('click', clearAll);
@@ -94,24 +89,12 @@ async function init() {
     updateAll();
 }
 
-function resetViewFilters() {
-    state.filters.search = "";
-    state.filters.category = "all";
-    state.sidebarCardSearch = "";
-    const searchInput = document.getElementById('search-input');
-    const filterSelect = document.getElementById('filter-category');
-    const sidebarSearch = document.getElementById('manage-cards-search');
-    if (searchInput) searchInput.value = "";
-    if (filterSelect) filterSelect.value = "all";
-    if (sidebarSearch) sidebarSearch.value = "";
-}
-
-function handleQuickEdit(cardId) {
-    const card = state.cards.find(c => c.id === cardId);
-    if(card) {
-        ui.switchTab('tab-cards');
-        ui.fillCardForm(card);
-    }
+function updateCardsView() {
+    ui.renderCards(state.cards, state.categories, state.filters, (id) => {
+        const card = state.cards.find(c => c.id === id);
+        if(card) { ui.switchTab('tab-cards'); ui.fillCardForm(card); }
+    });
+    ui.initTilt();
 }
 
 function handleCategorySubmit(e) {
@@ -139,9 +122,7 @@ async function handleCardSubmit(e) {
     const file = document.getElementById('card-img').files[0];
     const layout = document.getElementById('card-layout').value;
     let imageData = null;
-    if (file) {
-        imageData = await optimizeImage(file, layout);
-    }
+    if (file) imageData = await optimizeImage(file, layout);
     const data = {
         item: document.getElementById('card-item').value,
         descricao: document.getElementById('card-desc').value,
@@ -176,11 +157,9 @@ export const optimizeImage = (file, layout) => {
                 canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                const dataUrl = canvas.toDataURL('image/webp', 0.8);
-                resolve(dataUrl.startsWith('data:image/webp') ? dataUrl : canvas.toDataURL(layout === 'photo' ? 'image/jpeg' : 'image/png', 0.8));
+                resolve(canvas.toDataURL('image/webp', 0.8));
             };
         };
-        reader.onerror = error => reject(error);
     });
 };
 
@@ -195,11 +174,14 @@ export function updateAll() {
     document.getElementById('f-size-item').value = s.fontSizeItem;
     document.getElementById('f-size-desc').value = s.fontSizeDesc;
     document.getElementById('f-size-cat').value = s.fontSizeCat;
+    document.getElementById('view-bg-color').value = s.viewBg;
+    document.getElementById('view-title-color').value = s.viewTitleColor;
+    
     ui.applyGlobalStyles(s);
     ui.updateCollectionTitle(s.collectionName);
     ui.renderCategories(state.categories);
-    ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
-    ui.initTilt();
+    ui.renderSummary(state);
+    updateCardsView();
     renderManagement();
 }
 
@@ -207,6 +189,10 @@ function renderManagement() {
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
         onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
+        onReorderCards: (newOrderIds) => {
+            state.cards = newOrderIds.map(id => state.cards.find(c => c.id === id));
+            updateAll();
+        },
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 
             if(state.cards.some(c => c.categoriaId === id)) return alert("Categoria em uso.");
@@ -217,19 +203,8 @@ function renderManagement() {
 
 function clearAll() { 
     if(confirm("Apagar projeto?")) { 
-        state.cards = []; 
-        state.categories = []; 
-        resetViewFilters();
-        state.settings = {
-            collectionName: "Nome da Coleção",
-            cardWidth: 280,
-            cardHeight: 400,
-            borderRadius: 20,
-            imgSize: 150,
-            fontSizeItem: 18,
-            fontSizeDesc: 14,
-            fontSizeCat: 10
-        };
+        state.cards = []; state.categories = []; 
+        state.settings = { collectionName: "Nome da Coleção", cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150, fontSizeItem: 18, fontSizeDesc: 14, fontSizeCat: 10, viewBg: "#f3f6f9", viewTitleColor: "#1e293b" };
         updateAll(); 
     } 
 }
