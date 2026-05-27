@@ -1,9 +1,9 @@
 export const storage = {
     save(state) {
-        localStorage.setItem('card_studio_v2_core', JSON.stringify(state));
+        localStorage.setItem('card_studio_v2_final', JSON.stringify(state));
     },
     load() {
-        const data = localStorage.getItem('card_studio_v2_core');
+        const data = localStorage.getItem('card_studio_v2_final');
         return data ? JSON.parse(data) : { 
             cards: [], 
             categories: [], 

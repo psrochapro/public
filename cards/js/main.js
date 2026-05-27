@@ -7,60 +7,60 @@ export const state = {
     categories: [],
     filters: { search: "", category: "all", sort: "manual" },
     sidebarCardSearch: "",
-    settings: {} // Inicializa vazio para receber do storage/import
+    settings: {
+        collectionName: "Nome da Coleção",
+        cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150,
+        fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11,
+        viewBg: "#f3f6f9", viewTitleColor: "#1e293b"
+    }
 };
 
 async function init() {
-    // 1. Carrega dados salvos ou padrões
     const saved = storage.load();
     state.cards = saved.cards || [];
     state.categories = saved.categories || [];
-    state.settings = saved.settings; // Garante que carrega as dimensões salvas
+    state.settings = { ...state.settings, ...saved.settings };
 
-    // 2. Tabs
+    // Abas
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // 3. Toolbar/Filtros
+    // Viewport
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
-        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        refreshAll();
     });
     document.getElementById('filter-category').addEventListener('change', (e) => {
         state.filters.category = e.target.value;
-        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        refreshAll();
     });
     document.getElementById('sort-select').addEventListener('change', (e) => {
         state.filters.sort = e.target.value;
-        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        refreshAll();
     });
 
-    // 4. Sidebar Search
+    // Sidebar
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // 5. Ajustes Globais (Inputs)
-    const setupInput = (id, key, isColor = false) => {
-        const el = document.getElementById(id);
-        el.addEventListener('input', (e) => {
-            state.settings[key] = isColor ? e.target.value : (parseInt(e.target.value) || 0);
+    // Ajustes Globais
+    const mapping = {
+        'global-width': 'cardWidth', 'global-height': 'cardHeight', 'global-radius': 'borderRadius',
+        'global-img-size': 'imgSize', 'f-size-item': 'fontSizeItem', 'f-size-desc': 'fontSizeDesc', 
+        'f-size-cat': 'fontSizeCat', 'global-view-bg': 'viewBg', 'global-view-title': 'viewTitleColor'
+    };
+    
+    Object.keys(mapping).forEach(id => {
+        document.getElementById(id).addEventListener('input', (e) => {
+            const key = mapping[id];
+            state.settings[key] = id.includes('global-view') ? e.target.value : (parseInt(e.target.value) || 0);
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
         });
-    };
-
-    setupInput('global-width', 'cardWidth');
-    setupInput('global-height', 'cardHeight');
-    setupInput('global-radius', 'borderRadius');
-    setupInput('global-img-size', 'imgSize');
-    setupInput('f-size-item', 'fontSizeItem');
-    setupInput('f-size-desc', 'fontSizeDesc');
-    setupInput('f-size-cat', 'fontSizeCat');
-    setupInput('cfg-view-bg', 'viewBg', true);
-    setupInput('cfg-view-title', 'viewTitleColor', true);
+    });
 
     document.getElementById('collection-name').addEventListener('input', (e) => {
         state.settings.collectionName = e.target.value;
@@ -68,72 +68,31 @@ async function init() {
         storage.save(state);
     });
 
-    // 6. Formulários
+    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // 7. Botões Principais - CORREÇÃO DA CARGA
+    // Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
-    
-    document.getElementById('import-file').addEventListener('change', async (e) => {
-        const data = await zipService.importCollection(e);
-        if (data) {
-            state.cards = data.cards;
-            state.categories = data.categories;
-            state.settings = data.settings;
-            updateAll();
-        }
-        e.target.value = "";
+    document.getElementById('import-file').addEventListener('change', (e) => {
+        zipService.importCollection(e, () => { updateAll(); e.target.value = ""; });
     });
-
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
-    
-    document.getElementById('import-text').addEventListener('change', async (e) => {
-        const data = await zipService.importTextOnly(e);
-        if (data) {
-            state.cards = data.cards.map(importedCard => {
-                const existing = state.cards.find(c => c.id === importedCard.id);
-                return { ...importedCard, imagem: existing ? existing.imagem : "" };
-            });
-            state.categories = data.categories || state.categories;
-            state.settings = data.settings || state.settings;
-            updateAll();
-        }
-        e.target.value = "";
+    document.getElementById('import-text').addEventListener('change', (e) => {
+        zipService.importTextOnly(e, () => { updateAll(); e.target.value = ""; });
     });
 
     document.getElementById('btn-clear').addEventListener('click', clearAll);
     document.getElementById('btn-cancel-card').onclick = () => ui.resetCardForm();
     document.getElementById('btn-cancel-cat').onclick = () => ui.resetCatForm();
 
-    // Início Forçado
     updateAll();
 }
 
-export function updateAll() {
-    storage.save(state);
-    const s = state.settings;
-
-    // Sincroniza inputs da Sidebar com o Estado (Essencial para as dimensões)
-    document.getElementById('collection-name').value = s.collectionName || "";
-    document.getElementById('global-width').value = s.cardWidth;
-    document.getElementById('global-height').value = s.cardHeight;
-    document.getElementById('global-radius').value = s.borderRadius;
-    document.getElementById('global-img-size').value = s.imgSize;
-    document.getElementById('f-size-item').value = s.fontSizeItem;
-    document.getElementById('f-size-desc').value = s.fontSizeDesc;
-    document.getElementById('f-size-cat').value = s.fontSizeCat;
-    document.getElementById('cfg-view-bg').value = s.viewBg;
-    document.getElementById('cfg-view-title').value = s.viewTitleColor;
-
-    // Aplica estilos visuais e renderiza tudo
-    ui.applyGlobalStyles(s);
-    ui.updateCollectionTitle(s.collectionName);
-    ui.renderCategories(state.categories);
-    ui.renderSummary(state);
+function refreshAll() {
     ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+    ui.renderSummary(state);
     ui.initTilt();
-    renderManagement();
 }
 
 function handleQuickEdit(cardId) {
@@ -202,6 +161,27 @@ async function handleCardSubmit(e) {
     updateAll();
 }
 
+export function updateAll() {
+    storage.save(state);
+    const s = state.settings;
+    document.getElementById('collection-name').value = s.collectionName;
+    document.getElementById('global-width').value = s.cardWidth;
+    document.getElementById('global-height').value = s.cardHeight;
+    document.getElementById('global-radius').value = s.borderRadius;
+    document.getElementById('global-img-size').value = s.imgSize;
+    document.getElementById('f-size-item').value = s.fontSizeItem;
+    document.getElementById('f-size-desc').value = s.fontSizeDesc;
+    document.getElementById('f-size-cat').value = s.fontSizeCat;
+    document.getElementById('global-view-bg').value = s.viewBg;
+    document.getElementById('global-view-title').value = s.viewTitleColor;
+
+    ui.applyGlobalStyles(s);
+    ui.updateCollectionTitle(s.collectionName);
+    ui.renderCategories(state.categories);
+    refreshAll();
+    renderManagement();
+}
+
 function renderManagement() {
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
@@ -209,7 +189,7 @@ function renderManagement() {
         onReorderCards: (newIds) => {
             state.cards = newIds.map(id => state.cards.find(c => c.id === id));
             storage.save(state);
-            ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+            refreshAll();
         },
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 
