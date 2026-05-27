@@ -191,5 +191,33 @@ function renderManagement() {
     });
 }
 
-function clearAll() { if(confirm("Apagar projeto?")) { state.cards = []; state.categories = []; updateAll(); } }
+// CORREÇÃO: Reset total de estado e filtros
+function clearAll() { 
+    if(confirm("Deseja apagar TODO o projeto e restaurar as configurações originais?")) { 
+        state.cards = []; 
+        state.categories = []; 
+        state.sidebarCardSearch = "";
+        state.filters = { search: "", category: "all" };
+        
+        // Restaura as configurações de fábrica
+        state.settings = {
+            collectionName: "Nome da Coleção",
+            cardWidth: 280,
+            cardHeight: 400,
+            borderRadius: 20,
+            imgSize: 150,
+            fontSizeItem: 18,
+            fontSizeDesc: 14,
+            fontSizeCat: 10
+        };
+
+        // Limpa campos de texto da UI manualmente
+        document.getElementById('search-input').value = "";
+        document.getElementById('manage-cards-search').value = "";
+        document.getElementById('filter-category').value = "all";
+
+        updateAll(); 
+    } 
+}
+
 init();
