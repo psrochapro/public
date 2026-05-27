@@ -17,6 +17,7 @@ export const ui = {
         r.style.setProperty('--f-size-desc', `${settings.fontSizeDesc}px`);
         r.style.setProperty('--f-size-cat', `${settings.fontSizeCat}px`);
         r.style.setProperty('--main-bg', settings.viewportBg || '#f3f6f9');
+        r.style.setProperty('--view-title-color', settings.titleColor || '#1e293b');
     },
 
     updateCollectionTitle(name) {
