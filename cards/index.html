@@ -18,8 +18,8 @@
             <header class="sidebar-header">
                 <input type="text" id="collection-name" class="title-input" placeholder="Nome da Coleção...">
                 <div class="main-actions">
-                    <button id="btn-export" class="btn-save-main">Salvar .card</button>
-                    <label for="import-file" class="btn-open-main">Abrir</label>
+                    <button id="btn-export" class="btn-primary-green">Salvar .card</button>
+                    <label for="import-file" class="btn-outline-blue">Abrir</label>
                     <input type="file" id="import-file" accept=".card" hidden>
                 </div>
                 <div class="text-actions">
@@ -37,19 +37,18 @@
             </nav>
 
             <div class="tab-content">
-                <!-- NOVA ABA RESUMO -->
                 <section id="tab-summary" class="tab-pane active">
                     <div class="summary-stats">
-                        <div class="stat-card big">
+                        <div class="stat-card blue-border">
                             <span class="stat-label">Total de Cards</span>
                             <span id="stat-total-cards" class="stat-value">0</span>
                         </div>
-                        <div class="stat-card small">
+                        <div class="stat-card green-border">
                             <span class="stat-label">Categorias</span>
                             <span id="stat-total-cats" class="stat-value">0</span>
                         </div>
                     </div>
-                    <div class="summary-chart-container">
+                    <div class="summary-chart-section">
                         <h4>Cards por Categoria</h4>
                         <div id="category-bars" class="category-bars"></div>
                     </div>
@@ -79,7 +78,7 @@
                     </form>
                     <div class="manage-list-container">
                         <div class="manage-header-row">
-                            <h4>Meus Cards <small>(Arraste para reordenar)</small></h4>
+                            <h4>Meus Cards <small>(Ordene arrastando)</small></h4>
                             <input type="text" id="manage-cards-search" class="small-search" placeholder="Filtrar por nome...">
                         </div>
                         <div id="manage-cards-list" class="manage-list"></div>
@@ -117,10 +116,10 @@
                         </div>
                     </div>
                     <div class="config-section">
-                        <div class="section-title">2. Cores da Visualização</div>
+                        <div class="section-title">2. Cores do Ambiente</div>
                         <div class="config-grid-inputs">
-                            <div class="input-group-num"><label>Fundo Tela</label><input type="color" id="view-bg-color"></div>
-                            <div class="input-group-num"><label>Cor Título</label><input type="color" id="view-title-color"></div>
+                            <div class="input-group-num"><label>Fundo Tela</label><input type="color" id="cfg-view-bg"></div>
+                            <div class="input-group-num"><label>Cor Título</label><input type="color" id="cfg-view-title"></div>
                         </div>
                     </div>
                     <div class="config-section">
@@ -150,10 +149,10 @@
                 <div class="toolbar">
                     <div class="search-box"><input type="text" id="search-input" placeholder="Pesquisar nos cards..."></div>
                     <div class="filter-box">
-                        <select id="sort-order">
+                        <select id="sort-select">
                             <option value="manual">Ordem Manual</option>
-                            <option value="az">Alfabética (A-Z)</option>
-                            <option value="za">Alfabética (Z-A)</option>
+                            <option value="az">A-Z</option>
+                            <option value="za">Z-A</option>
                         </select>
                     </div>
                     <div class="filter-box"><select id="filter-category"><option value="all">Todas Categorias</option></select></div>

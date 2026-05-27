@@ -21,43 +21,44 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
+    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            ui.switchTab(btn.dataset.tab);
-            if(btn.dataset.tab === 'tab-summary') ui.renderSummary(state);
-        });
+        btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Viewport Toolbar
+    // Viewport Listeners
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
-        updateCardsView();
+        refreshView();
     });
 
     document.getElementById('filter-category').addEventListener('change', (e) => {
         state.filters.category = e.target.value;
-        updateCardsView();
+        refreshView();
     });
 
-    document.getElementById('sort-order').addEventListener('change', (e) => {
+    document.getElementById('sort-select').addEventListener('change', (e) => {
         state.filters.sort = e.target.value;
-        updateCardsView();
+        refreshView();
     });
 
-    // Sidebar
+    // Sidebar Manage Search
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Ajustes Globais
-    const inputs = ['global-width', 'global-height', 'global-radius', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat', 'view-bg-color', 'view-title-color'];
-    const keys = ['cardWidth', 'cardHeight', 'borderRadius', 'imgSize', 'fontSizeItem', 'fontSizeDesc', 'fontSizeCat', 'viewBg', 'viewTitleColor'];
+    // Global Adjustments
+    const inputMapping = {
+        'global-width': 'cardWidth', 'global-height': 'cardHeight', 'global-radius': 'borderRadius',
+        'global-img-size': 'imgSize', 'f-size-item': 'fontSizeItem', 'f-size-desc': 'fontSizeDesc', 
+        'f-size-cat': 'fontSizeCat', 'cfg-view-bg': 'viewBg', 'cfg-view-title': 'viewTitleColor'
+    };
     
-    inputs.forEach((id, idx) => {
+    Object.keys(inputMapping).forEach(id => {
         document.getElementById(id).addEventListener('input', (e) => {
-            state.settings[keys[idx]] = e.target.value;
-            if(!id.includes('color')) state.settings[keys[idx]] = parseInt(e.target.value) || 0;
+            const key = inputMapping[id];
+            state.settings[key] = id.includes('cfg') ? e.target.value : (parseInt(e.target.value) || 0);
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
         });
@@ -69,9 +70,11 @@ async function init() {
         storage.save(state);
     });
 
+    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
+    // Buttons
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => {
         zipService.importCollection(e, () => { updateAll(); e.target.value = ""; });
@@ -89,12 +92,15 @@ async function init() {
     updateAll();
 }
 
-function updateCardsView() {
-    ui.renderCards(state.cards, state.categories, state.filters, (id) => {
-        const card = state.cards.find(c => c.id === id);
-        if(card) { ui.switchTab('tab-cards'); ui.fillCardForm(card); }
-    });
+function refreshView() {
+    ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     ui.initTilt();
+    ui.renderSummary(state);
+}
+
+function handleQuickEdit(cardId) {
+    const card = state.cards.find(c => c.id === cardId);
+    if(card) { ui.switchTab('tab-cards'); ui.fillCardForm(card); }
 }
 
 function handleCategorySubmit(e) {
@@ -142,7 +148,7 @@ async function handleCardSubmit(e) {
 }
 
 export const optimizeImage = (file, layout) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (event) => {
@@ -174,14 +180,13 @@ export function updateAll() {
     document.getElementById('f-size-item').value = s.fontSizeItem;
     document.getElementById('f-size-desc').value = s.fontSizeDesc;
     document.getElementById('f-size-cat').value = s.fontSizeCat;
-    document.getElementById('view-bg-color').value = s.viewBg;
-    document.getElementById('view-title-color').value = s.viewTitleColor;
-    
+    document.getElementById('cfg-view-bg').value = s.viewBg;
+    document.getElementById('cfg-view-title').value = s.viewTitleColor;
+
     ui.applyGlobalStyles(s);
     ui.updateCollectionTitle(s.collectionName);
     ui.renderCategories(state.categories);
-    ui.renderSummary(state);
-    updateCardsView();
+    refreshView();
     renderManagement();
 }
 
@@ -189,9 +194,10 @@ function renderManagement() {
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
         onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
-        onReorderCards: (newOrderIds) => {
-            state.cards = newOrderIds.map(id => state.cards.find(c => c.id === id));
-            updateAll();
+        onReorderCards: (newIds) => {
+            state.cards = newIds.map(id => state.cards.find(c => c.id === id));
+            storage.save(state);
+            refreshView();
         },
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 
@@ -204,7 +210,7 @@ function renderManagement() {
 function clearAll() { 
     if(confirm("Apagar projeto?")) { 
         state.cards = []; state.categories = []; 
-        state.settings = { collectionName: "Nome da Coleção", cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150, fontSizeItem: 18, fontSizeDesc: 14, fontSizeCat: 10, viewBg: "#f3f6f9", viewTitleColor: "#1e293b" };
+        state.settings = { collectionName: "Nome da Coleção", cardWidth: 280, cardHeight: 400, borderRadius: 20, imgSize: 150, fontSizeItem: 18, fontSizeDesc: 16, fontSizeCat: 11, viewBg: "#f3f6f9", viewTitleColor: "#1e293b" };
         updateAll(); 
     } 
 }

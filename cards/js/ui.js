@@ -23,32 +23,22 @@ export const ui = {
     renderSummary(state) {
         document.getElementById('stat-total-cards').textContent = state.cards.length;
         document.getElementById('stat-total-cats').textContent = state.categories.length;
+        const bars = document.getElementById('category-bars');
+        bars.innerHTML = '';
+        if(state.categories.length === 0) return bars.innerHTML = '<p style="font-size:0.75rem; color:#94a3b8">Crie categorias primeiro.</p>';
         
-        const barsContainer = document.getElementById('category-bars');
-        barsContainer.innerHTML = '';
-        
-        if(state.categories.length === 0) {
-            barsContainer.innerHTML = '<p style="font-size:0.8rem; color:#94a3b8">Nenhuma categoria cadastrada.</p>';
-            return;
-        }
-
         const counts = state.categories.map(cat => ({
-            name: cat.name,
-            color: cat.bg,
-            count: state.cards.filter(c => c.categoriaId === cat.id).length
+            name: cat.name, color: cat.bg, count: state.cards.filter(c => c.categoriaId === cat.id).length
         })).sort((a,b) => b.count - a.count);
 
         const max = Math.max(...counts.map(c => c.count), 1);
-
         counts.forEach(c => {
             const perc = (c.count / max) * 100;
             const row = document.createElement('div');
-            row.className = 'chart-bar-row';
-            row.innerHTML = `
-                <div class="bar-info"><span>${c.name}</span><span>${c.count}</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:${perc}%; background:${c.color}"></div></div>
-            `;
-            barsContainer.appendChild(row);
+            row.className = 'bar-row';
+            row.innerHTML = `<div class="bar-info"><span>${c.name}</span><span>${c.count}</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:${perc}%; background:${c.color}"></div></div>`;
+            bars.appendChild(row);
         });
     },
 
@@ -75,12 +65,9 @@ export const ui = {
         container.innerHTML = '';
         
         let filtered = [...cards];
-        
-        // Sorting
         if(filters.sort === 'az') filtered.sort((a,b) => a.item.localeCompare(b.item));
         else if(filters.sort === 'za') filtered.sort((a,b) => b.item.localeCompare(a.item));
 
-        // Filters
         filtered = filtered.filter(c => {
             const matchSearch = c.item.toLowerCase().includes(filters.search) || (c.descricao && c.descricao.toLowerCase().includes(filters.search));
             const matchCat = filters.category === "all" || c.categoriaId === filters.category;
@@ -95,9 +82,11 @@ export const ui = {
                 <div class="quick-edit-btn" title="Editar">🖊️</div>
                 <div class="card-inner">
                     <div class="card-front" style="background: ${cat.cardBg}">
+                        <div class="shine"></div>
                         <div class="cat-badge-container"><span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span></div>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
                         <div class="img-container ${card.layout === 'photo' ? 'mode-photo' : 'mode-icon'}"><img src="${card.imagem}"></div>
+                        <div class="flip-hint">↺</div>
                     </div>
                     <div class="card-back" style="background: ${cat.cardBg}">
                         <div class="back-header"><img src="${card.imagem}"><strong>${card.item}</strong></div>
@@ -115,9 +104,8 @@ export const ui = {
         document.querySelectorAll('.js-tilt').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -10;
-                const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 10;
+                const rotateX = ((e.clientY - rect.top - rect.height / 2) / (rect.height / 2)) * -10;
+                const rotateY = ((e.clientX - rect.left - rect.width / 2) / (rect.width / 2)) * 10;
                 card.style.setProperty('--rx', `${rotateX}deg`);
                 card.style.setProperty('--ry', `${rotateY}deg`);
             });
@@ -127,26 +115,23 @@ export const ui = {
 
     renderManagementLists(state, actions) {
         const cardsList = document.getElementById('manage-cards-list');
-        cardsList.innerHTML = '';
-        const filteredCards = state.cards.filter(c => c.item.toLowerCase().includes(state.sidebarCardSearch));
-        
-        filteredCards.forEach((c, index) => {
+        const catsList = document.getElementById('manage-cats-list');
+        cardsList.innerHTML = ''; catsList.innerHTML = '';
+
+        state.cards.filter(c => c.item.toLowerCase().includes(state.sidebarCardSearch)).forEach(c => {
+            const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
             const item = document.createElement('div');
             item.className = 'manage-item';
             item.draggable = true;
             item.dataset.id = c.id;
-            const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
             item.innerHTML = `<div class="item-main"><div class="cat-dot" style="background:${cat.bg}"></div><span class="item-name">${c.item}</span></div>
                 <div class="item-actions"><button class="btn-sm edit">🖊️</button><button class="btn-sm delete">🗑️</button></div>`;
             
-            // Drag Events
             item.addEventListener('dragstart', () => item.classList.add('dragging'));
             item.addEventListener('dragend', () => {
                 item.classList.remove('dragging');
-                const newOrder = [...cardsList.querySelectorAll('.manage-item')].map(el => el.dataset.id);
-                actions.onReorderCards(newOrder);
+                actions.onReorderCards([...cardsList.querySelectorAll('.manage-item')].map(el => el.dataset.id));
             });
-
             item.querySelector('.edit').onclick = () => actions.onEditCard(c.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCard(c.id);
             cardsList.appendChild(item);
@@ -155,13 +140,16 @@ export const ui = {
         cardsList.addEventListener('dragover', e => {
             e.preventDefault();
             const dragging = document.querySelector('.dragging');
-            const afterElement = getDragAfterElement(cardsList, e.clientY);
-            if (afterElement == null) cardsList.appendChild(dragging);
+            const afterElement = [...cardsList.querySelectorAll('.manage-item:not(.dragging)')].reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = e.clientY - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) return { offset, element: child };
+                else return closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+            if (!afterElement) cardsList.appendChild(dragging);
             else cardsList.insertBefore(dragging, afterElement);
         });
 
-        const catsList = document.getElementById('manage-cats-list');
-        catsList.innerHTML = '';
         state.categories.forEach(cat => {
             const item = document.createElement('div');
             item.className = 'manage-item';
@@ -215,13 +203,3 @@ export const ui = {
         document.getElementById('btn-cancel-cat').classList.add('hidden');
     }
 };
-
-function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.manage-item:not(.dragging)')];
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
-        else return closest;
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
