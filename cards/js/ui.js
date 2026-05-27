@@ -21,7 +21,8 @@ export const ui = {
     },
 
     updateCollectionTitle(name) {
-        document.getElementById('view-title').textContent = name || "Visualização";
+        const titleEl = document.getElementById('view-title');
+        if(titleEl) titleEl.textContent = name || "Visualização";
     },
 
     renderCategories(categories) {
@@ -30,7 +31,7 @@ export const ui = {
             if(!select) return;
             const currentVal = select.value;
             select.innerHTML = i === 0 ? '<option value="">Categoria...</option>' : '<option value="all">Todas Categorias</option>';
-            categories.sort((a,b) => a.name.localeCompare(b.name)).forEach(cat => {
+            [...categories].sort((a,b) => a.name.localeCompare(b.name)).forEach(cat => {
                 const opt = document.createElement('option');
                 opt.value = cat.id; opt.textContent = cat.name; select.appendChild(opt);
             });
@@ -40,8 +41,18 @@ export const ui = {
 
     renderCards(cards, categories, filters, onQuickEdit) {
         const container = document.getElementById('card-container');
+        if(!container) return;
         container.innerHTML = '';
-        const filtered = cards.filter(c => {
+
+        let processedCards = [...cards];
+        
+        if (filters.sort === "asc") {
+            processedCards.sort((a, b) => a.item.localeCompare(b.item));
+        } else if (filters.sort === "desc") {
+            processedCards.sort((a, b) => b.item.localeCompare(a.item));
+        }
+
+        const filtered = processedCards.filter(c => {
             const matchSearch = c.item.toLowerCase().includes(filters.search) || (c.descricao && c.descricao.toLowerCase().includes(filters.search));
             const matchCat = filters.category === "all" || c.categoriaId === filters.category;
             return matchSearch && matchCat;
@@ -96,20 +107,41 @@ export const ui = {
 
     renderManagementLists(state, actions) {
         const cardsList = document.getElementById('manage-cards-list');
+        if(!cardsList) return;
         cardsList.innerHTML = '';
+        
         const filteredCards = state.cards.filter(c => c.item.toLowerCase().includes(state.sidebarCardSearch));
-        filteredCards.forEach(c => {
+        
+        filteredCards.forEach((c, idx) => {
             const cat = state.categories.find(cat => cat.id === c.categoriaId) || { bg: '#e2e8f0' };
             const item = document.createElement('div');
             item.className = 'manage-item';
-            item.innerHTML = `<div class="item-main"><div class="cat-dot" style="background:${cat.bg}"></div><span class="item-name">${c.item}</span></div>
-                <div class="item-actions"><button class="btn-sm edit" title="Editar">🖊️</button><button class="btn-sm delete" title="Excluir">🗑️</button></div>`;
+            
+            item.innerHTML = `
+                <div class="item-main">
+                    <div class="cat-dot" style="background:${cat.bg}"></div>
+                    <span class="item-name">${c.item}</span>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-sm move-up" title="Subir">↑</button>
+                    <button class="btn-sm move-down" title="Descer">↓</button>
+                    <button class="btn-sm edit" title="Editar">🖊️</button>
+                    <button class="btn-sm delete" title="Excluir">🗑️</button>
+                </div>`;
+            
+            item.querySelector('.move-up').onclick = () => actions.onMoveCard(c.id, 'up');
+            item.querySelector('.move-down').onclick = () => actions.onMoveCard(c.id, 'down');
             item.querySelector('.edit').onclick = () => actions.onEditCard(c.id);
             item.querySelector('.delete').onclick = () => actions.onDeleteCard(c.id);
+            
+            if (idx === 0) item.querySelector('.move-up').style.opacity = '0.2';
+            if (idx === filteredCards.length - 1) item.querySelector('.move-down').style.opacity = '0.2';
+
             cardsList.appendChild(item);
         });
 
         const catsList = document.getElementById('manage-cats-list');
+        if(!catsList) return;
         catsList.innerHTML = '';
         state.categories.forEach(cat => {
             const item = document.createElement('div');
@@ -136,15 +168,18 @@ export const ui = {
         const firstInput = document.getElementById('card-item');
         const form = document.getElementById('form-card');
 
-        pane.scrollTop = 0; 
-        firstInput.focus(); 
+        if(pane) pane.scrollTop = 0; 
+        if(firstInput) firstInput.focus(); 
         
-        form.classList.add('pulse');
-        setTimeout(() => form.classList.remove('pulse'), 1000);
+        if(form) {
+            form.classList.add('pulse');
+            setTimeout(() => form.classList.remove('pulse'), 1000);
+        }
     },
 
     resetCardForm() {
-        document.getElementById('form-card').reset();
+        const form = document.getElementById('form-card');
+        if(form) form.reset();
         document.getElementById('card-form-title').textContent = "Novo Card";
         document.getElementById('edit-card-id').value = "";
         document.getElementById('btn-save-card').textContent = "Salvar Card";
@@ -166,15 +201,18 @@ export const ui = {
         const firstInput = document.getElementById('cat-name');
         const form = document.getElementById('form-category');
 
-        pane.scrollTop = 0; 
-        firstInput.focus(); 
+        if(pane) pane.scrollTop = 0; 
+        if(firstInput) firstInput.focus(); 
 
-        form.classList.add('pulse');
-        setTimeout(() => form.classList.remove('pulse'), 1000);
+        if(form) {
+            form.classList.add('pulse');
+            setTimeout(() => form.classList.remove('pulse'), 1000);
+        }
     },
 
     resetCatForm() {
-        document.getElementById('form-category').reset();
+        const form = document.getElementById('form-category');
+        if(form) form.reset();
         document.getElementById('cat-form-title').textContent = "Nova Categoria";
         document.getElementById('edit-cat-id').value = "";
         document.getElementById('btn-save-cat').textContent = "Salvar Categoria";

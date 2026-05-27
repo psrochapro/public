@@ -5,7 +5,7 @@ import { zipService } from './zip-service.js';
 export const state = {
     cards: [],
     categories: [],
-    filters: { search: "", category: "all" },
+    filters: { search: "", category: "all", sort: "manual" },
     sidebarCardSearch: "",
     settings: {
         collectionName: "Nome da Coleção",
@@ -36,6 +36,12 @@ async function init() {
 
     document.getElementById('filter-category').addEventListener('change', (e) => {
         state.filters.category = e.target.value;
+        ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
+        ui.initTilt();
+    });
+
+    document.getElementById('sort-order').addEventListener('change', (e) => {
+        state.filters.sort = e.target.value;
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
         ui.initTilt();
     });
@@ -111,12 +117,15 @@ async function init() {
 function resetViewFilters() {
     state.filters.search = "";
     state.filters.category = "all";
+    state.filters.sort = "manual";
     state.sidebarCardSearch = "";
     const searchInput = document.getElementById('search-input');
     const filterSelect = document.getElementById('filter-category');
+    const sortSelect = document.getElementById('sort-order');
     const sidebarSearch = document.getElementById('manage-cards-search');
     if (searchInput) searchInput.value = "";
     if (filterSelect) filterSelect.value = "all";
+    if (sortSelect) sortSelect.value = "manual";
     if (sidebarSearch) sidebarSearch.value = "";
 }
 
@@ -174,6 +183,20 @@ async function handleCardSubmit(e) {
     updateAll();
 }
 
+function handleMoveCard(id, direction) {
+    const idx = state.cards.findIndex(c => c.id === id);
+    if (idx === -1) return;
+    
+    const newIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (newIdx < 0 || newIdx >= state.cards.length) return;
+
+    const temp = state.cards[idx];
+    state.cards[idx] = state.cards[newIdx];
+    state.cards[newIdx] = temp;
+
+    updateAll();
+}
+
 export const optimizeImage = (file, layout) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -224,6 +247,7 @@ function renderManagement() {
     ui.renderManagementLists(state, {
         onEditCard: (id) => ui.fillCardForm(state.cards.find(c => c.id === id)),
         onDeleteCard: (id) => { if(confirm('Excluir card?')) { state.cards = state.cards.filter(c => c.id !== id); updateAll(); } },
+        onMoveCard: (id, dir) => handleMoveCard(id, dir),
         onEditCat: (id) => ui.fillCatForm(state.categories.find(c => c.id === id)),
         onDeleteCat: (id) => { 
             if(state.cards.some(c => c.categoriaId === id)) return alert("Categoria em uso.");
