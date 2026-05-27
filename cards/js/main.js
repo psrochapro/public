@@ -20,11 +20,12 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
+    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Viewport Listeners
+    // Viewport Filters
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
@@ -37,27 +38,19 @@ async function init() {
         ui.initTilt();
     });
 
-    // Sidebar Search
+    // Sidebar Manage Search
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Settings (Numeric Inputs)
-    const settingsMap = {
-        'global-width': 'cardWidth',
-        'global-height': 'cardHeight',
-        'global-radius': 'borderRadius',
-        'global-img-size': 'imgSize',
-        'f-size-item': 'fontSizeItem',
-        'f-size-desc': 'fontSizeDesc',
-        'f-size-cat': 'fontSizeCat'
-    };
-
-    Object.keys(settingsMap).forEach(id => {
+    // Global Adjustments
+    const inputs = ['global-width', 'global-height', 'global-radius', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat'];
+    const keys = ['cardWidth', 'cardHeight', 'borderRadius', 'imgSize', 'fontSizeItem', 'fontSizeDesc', 'fontSizeCat'];
+    
+    inputs.forEach((id, idx) => {
         document.getElementById(id).addEventListener('input', (e) => {
-            const val = parseInt(e.target.value) || 0;
-            state.settings[settingsMap[id]] = val;
+            state.settings[keys[idx]] = parseInt(e.target.value) || 0;
             ui.applyGlobalStyles(state.settings);
             storage.save(state);
         });
@@ -73,7 +66,7 @@ async function init() {
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // Global Actions
+    // Actions
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     document.getElementById('import-file').addEventListener('change', (e) => zipService.importCollection(e, updateAll));
     document.getElementById('btn-export-text').addEventListener('click', () => zipService.exportTextOnly(state));
@@ -88,9 +81,10 @@ async function init() {
 
 function handleQuickEdit(cardId) {
     const card = state.cards.find(c => c.id === cardId);
-    if(!card) return;
-    ui.switchTab('tab-cards');
-    ui.fillCardForm(card);
+    if(card) {
+        ui.switchTab('tab-cards');
+        ui.fillCardForm(card);
+    }
 }
 
 function handleCategorySubmit(e) {
@@ -117,9 +111,9 @@ async function handleCardSubmit(e) {
     const id = document.getElementById('edit-card-id').value;
     const file = document.getElementById('card-img').files[0];
     const layout = document.getElementById('card-layout').value;
-    
     let imageData = null;
     if (file) {
+        const { optimizeImage } = await import('./main.js'); // Self-ref or move to utils
         imageData = await optimizeImage(file, layout);
     }
 
@@ -135,14 +129,14 @@ async function handleCardSubmit(e) {
         if (imageData) data.imagem = imageData;
         state.cards[idx] = { ...state.cards[idx], ...data };
     } else {
-        if (!file) return alert("Selecione uma imagem.");
+        if (!file) return alert("Suba uma imagem.");
         state.cards.push({ id: Date.now().toString(), imagem: imageData, ...data });
     }
     ui.resetCardForm();
     updateAll();
 }
 
-const optimizeImage = (file, layout) => {
+export const optimizeImage = (file, layout) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -168,18 +162,18 @@ const optimizeImage = (file, layout) => {
 
 export function updateAll() {
     storage.save(state);
-    
-    document.getElementById('collection-name').value = state.settings.collectionName;
-    document.getElementById('global-width').value = state.settings.cardWidth;
-    document.getElementById('global-height').value = state.settings.cardHeight;
-    document.getElementById('global-radius').value = state.settings.borderRadius;
-    document.getElementById('global-img-size').value = state.settings.imgSize;
-    document.getElementById('f-size-item').value = state.settings.fontSizeItem;
-    document.getElementById('f-size-desc').value = state.settings.fontSizeDesc;
-    document.getElementById('f-size-cat').value = state.settings.fontSizeCat;
+    const s = state.settings;
+    document.getElementById('collection-name').value = s.collectionName;
+    document.getElementById('global-width').value = s.cardWidth;
+    document.getElementById('global-height').value = s.cardHeight;
+    document.getElementById('global-radius').value = s.borderRadius;
+    document.getElementById('global-img-size').value = s.imgSize;
+    document.getElementById('f-size-item').value = s.fontSizeItem;
+    document.getElementById('f-size-desc').value = s.fontSizeDesc;
+    document.getElementById('f-size-cat').value = s.fontSizeCat;
 
-    ui.applyGlobalStyles(state.settings);
-    ui.updateCollectionTitle(state.settings.collectionName);
+    ui.applyGlobalStyles(s);
+    ui.updateCollectionTitle(s.collectionName);
     ui.renderCategories(state.categories);
     ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
     ui.initTilt();

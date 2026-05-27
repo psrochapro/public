@@ -36,7 +36,6 @@
             </nav>
 
             <div class="tab-content">
-                <!-- ABA CARDS -->
                 <section id="tab-cards" class="tab-pane active">
                     <form id="form-card" class="admin-form">
                         <h3 id="card-form-title">Novo / Editar Card</h3>
@@ -61,17 +60,16 @@
                     </form>
                     <div class="manage-list-container">
                         <div class="manage-header-row">
-                            <h4>Gerenciar Cards</h4>
-                            <input type="text" id="manage-cards-search" class="small-search" placeholder="Filtrar...">
+                            <h4>Meus Cards</h4>
+                            <input type="text" id="manage-cards-search" class="small-search" placeholder="Filtrar por nome...">
                         </div>
                         <div id="manage-cards-list" class="manage-list"></div>
                     </div>
                 </section>
 
-                <!-- ABA CATEGORIAS -->
                 <section id="tab-categories" class="tab-pane">
                     <form id="form-category" class="admin-form">
-                        <h3>Nova Categoria</h3>
+                        <h3 id="cat-form-title">Nova / Editar Categoria</h3>
                         <input type="hidden" id="edit-cat-id">
                         <input type="text" id="cat-name" placeholder="Nome da Categoria" required>
                         <div class="color-grid">
@@ -80,7 +78,7 @@
                             <div class="color-field"><label>Fundo</label><input type="color" id="cat-card-bg"></div>
                         </div>
                         <div class="form-buttons">
-                            <button type="submit" id="btn-save-cat" class="btn-success">Salvar</button>
+                            <button type="submit" id="btn-save-cat" class="btn-success">Salvar Categoria</button>
                             <button type="button" id="btn-cancel-cat" class="btn-ghost hidden">Cancelar</button>
                         </div>
                     </form>
@@ -90,7 +88,6 @@
                     </div>
                 </section>
 
-                <!-- ABA AJUSTES -->
                 <section id="tab-config" class="tab-pane">
                     <div class="config-section">
                         <div class="section-title">1. Geometria (px)</div>
@@ -100,23 +97,20 @@
                             <div class="input-group-num"><label>Bordas</label><input type="number" id="global-radius"></div>
                         </div>
                     </div>
-
                     <div class="config-section">
                         <div class="section-title">2. Elementos (px)</div>
                         <div class="config-grid-inputs">
-                            <div class="input-group-num"><label>Ícone</label><input type="number" id="global-img-size"></div>
+                            <div class="input-group-num"><label>Tam. Ícone</label><input type="number" id="global-img-size"></div>
                         </div>
                     </div>
-
                     <div class="config-section">
                         <div class="section-title">3. Tipografia (px)</div>
                         <div class="config-grid-inputs">
                             <div class="input-group-num"><label>Título</label><input type="number" id="f-size-item"></div>
                             <div class="input-group-num"><label>Descrição</label><input type="number" id="f-size-desc"></div>
-                            <div class="input-group-num"><label>Tag Cat.</label><input type="number" id="f-size-cat"></div>
+                            <div class="input-group-num"><label>Categoria</label><input type="number" id="f-size-cat"></div>
                         </div>
                     </div>
-
                     <div class="danger-zone">
                         <button id="btn-clear" class="btn-danger-minimal">Limpar Todo o Projeto</button>
                     </div>

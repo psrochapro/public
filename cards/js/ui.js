@@ -8,14 +8,14 @@ export const ui = {
     },
 
     applyGlobalStyles(settings) {
-        const root = document.documentElement;
-        root.style.setProperty('--card-w', `${settings.cardWidth}px`);
-        root.style.setProperty('--card-h', `${settings.cardHeight}px`);
-        root.style.setProperty('--card-radius', `${settings.borderRadius}px`);
-        root.style.setProperty('--card-img-size', `${settings.imgSize}px`);
-        root.style.setProperty('--f-size-item', `${settings.fontSizeItem}px`);
-        root.style.setProperty('--f-size-desc', `${settings.fontSizeDesc}px`);
-        root.style.setProperty('--f-size-cat', `${settings.fontSizeCat}px`);
+        const r = document.documentElement;
+        r.style.setProperty('--card-w', `${settings.cardWidth}px`);
+        r.style.setProperty('--card-h', `${settings.cardHeight}px`);
+        r.style.setProperty('--card-radius', `${settings.borderRadius}px`);
+        r.style.setProperty('--card-img-size', `${settings.imgSize}px`);
+        r.style.setProperty('--f-size-item', `${settings.fontSizeItem}px`);
+        r.style.setProperty('--f-size-desc', `${settings.fontSizeDesc}px`);
+        r.style.setProperty('--f-size-cat', `${settings.fontSizeCat}px`);
     },
 
     updateCollectionTitle(name) {
@@ -28,7 +28,7 @@ export const ui = {
             if(!select) return;
             const currentVal = select.value;
             select.innerHTML = i === 0 ? '<option value="">Categoria...</option>' : '<option value="all">Todas Categorias</option>';
-            categories.sort((a, b) => a.name.localeCompare(b.name)).forEach(cat => {
+            categories.sort((a,b) => a.name.localeCompare(b.name)).forEach(cat => {
                 const opt = document.createElement('option');
                 opt.value = cat.id; opt.textContent = cat.name; select.appendChild(opt);
             });
@@ -54,6 +54,7 @@ export const ui = {
                 <div class="quick-edit-btn" title="Editar">🖊️</div>
                 <div class="card-inner">
                     <div class="card-front" style="background: ${cat.cardBg}">
+                        <div class="shine"></div>
                         <div class="cat-badge-container">
                             <span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span>
                         </div>
@@ -67,13 +68,7 @@ export const ui = {
                     </div>
                 </div>
             `;
-            // Listener de edição rápida
-            const editBtn = el.querySelector('.quick-edit-btn');
-            editBtn.onclick = (e) => { 
-                e.stopPropagation(); 
-                onQuickEdit(card.id); 
-            };
-            
+            el.querySelector('.quick-edit-btn').onclick = (e) => { e.stopPropagation(); onQuickEdit(card.id); };
             el.onclick = () => el.classList.toggle('is-flipped');
             container.appendChild(el);
         });
@@ -134,7 +129,12 @@ export const ui = {
         document.getElementById('card-layout').value = card.layout || "icon";
         document.getElementById('btn-save-card').textContent = "Atualizar Card";
         document.getElementById('btn-cancel-card').classList.remove('hidden');
-        document.getElementById('tab-cards').scrollTo({ top: 0, behavior: 'smooth' });
+        
+        const pane = document.getElementById('tab-cards');
+        const form = document.getElementById('form-card');
+        pane.scrollTo({ top: 0, behavior: 'smooth' });
+        form.classList.add('pulse');
+        setTimeout(() => form.classList.remove('pulse'), 1000);
     },
 
     resetCardForm() {
@@ -146,6 +146,7 @@ export const ui = {
     },
 
     fillCatForm(cat) {
+        this.switchTab('tab-categories');
         document.getElementById('cat-form-title').textContent = "✏️ Editar Categoria";
         document.getElementById('edit-cat-id').value = cat.id;
         document.getElementById('cat-name').value = cat.name;
@@ -154,7 +155,12 @@ export const ui = {
         document.getElementById('cat-card-bg').value = cat.cardBg || "#ffffff";
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
-        document.getElementById('tab-categories').scrollTo({ top: 0, behavior: 'smooth' });
+
+        const pane = document.getElementById('tab-categories');
+        const form = document.getElementById('form-category');
+        pane.scrollTo({ top: 0, behavior: 'smooth' });
+        form.classList.add('pulse');
+        setTimeout(() => form.classList.remove('pulse'), 1000);
     },
 
     resetCatForm() {
