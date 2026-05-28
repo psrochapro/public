@@ -81,11 +81,27 @@
                         <h3 id="cat-form-title">Nova / Editar Categoria</h3>
                         <input type="hidden" id="edit-cat-id">
                         <input type="text" id="cat-name" placeholder="Nome da Categoria" required>
+                        
+                        <div class="form-row">
+                            <select id="cat-bg-type">
+                                <option value="color">Fundo Sólido</option>
+                                <option value="gradient">Fundo Gradiente</option>
+                                <option value="image">Fundo Imagem</option>
+                            </select>
+                        </div>
+
                         <div class="color-grid">
                             <div class="color-field"><label>Fita</label><input type="color" id="cat-bg"></div>
                             <div class="color-field"><label>Texto</label><input type="color" id="cat-text"></div>
-                            <div class="color-field"><label>Fundo</label><input type="color" id="cat-card-bg"></div>
+                            <div class="color-field"><label>Cor 1</label><input type="color" id="cat-card-bg"></div>
+                            <div class="color-field" id="field-cat-card-bg2"><label>Cor 2</label><input type="color" id="cat-card-bg2"></div>
                         </div>
+
+                        <div class="file-group" id="field-cat-img">
+                            <label>Imagem de Fundo</label>
+                            <input type="file" id="cat-img-file" accept="image/*">
+                        </div>
+
                         <div class="form-buttons">
                             <button type="submit" id="btn-save-cat" class="btn-success">Salvar Categoria</button>
                             <button type="button" id="btn-cancel-cat" class="btn-ghost hidden">Cancelar</button>

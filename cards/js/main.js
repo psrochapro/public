@@ -22,7 +22,6 @@ async function init() {
     state.categories = saved.categories || [];
     state.settings = { ...state.settings, ...saved.settings };
 
-    // Proteção contra fechamento acidental (Já que não salva mais no LocalStorage)
     window.addEventListener('beforeunload', (e) => {
         if (state.cards.length > 0) {
             e.preventDefault();
@@ -30,12 +29,10 @@ async function init() {
         }
     });
 
-    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => ui.switchTab(btn.dataset.tab));
     });
 
-    // Viewport Filters
     document.getElementById('search-input').addEventListener('input', (e) => {
         state.filters.search = e.target.value.toLowerCase();
         ui.renderCards(state.cards, state.categories, state.filters, handleQuickEdit);
@@ -54,13 +51,11 @@ async function init() {
         ui.initTilt();
     });
 
-    // Sidebar Manage Search
     document.getElementById('manage-cards-search').addEventListener('input', (e) => {
         state.sidebarCardSearch = e.target.value.toLowerCase();
         renderManagement();
     });
 
-    // Global Adjustments
     const inputs = ['global-width', 'global-height', 'global-radius', 'global-img-size', 'f-size-item', 'f-size-desc', 'f-size-cat'];
     const keys = ['cardWidth', 'cardHeight', 'borderRadius', 'imgSize', 'fontSizeItem', 'fontSizeDesc', 'fontSizeCat'];
     
@@ -90,11 +85,9 @@ async function init() {
         storage.save(state);
     });
 
-    // Forms
     document.getElementById('form-category').addEventListener('submit', handleCategorySubmit);
     document.getElementById('form-card').addEventListener('submit', handleCardSubmit);
     
-    // ACTIONS
     document.getElementById('btn-export').addEventListener('click', () => zipService.exportCollection(state));
     
     document.getElementById('import-file').addEventListener('change', (e) => {
@@ -142,20 +135,40 @@ function handleQuickEdit(cardId) {
     }
 }
 
-function handleCategorySubmit(e) {
+async function handleCategorySubmit(e) {
     e.preventDefault();
     const id = document.getElementById('edit-cat-id').value;
+    const bgType = document.getElementById('cat-bg-type').value;
+    const imgFile = document.getElementById('cat-img-file').files[0];
+    
+    let bgImageData = null;
+    if (bgType === 'image' && imgFile) {
+        bgImageData = await optimizeImage(imgFile, 'photo');
+    }
+
     const data = {
         name: document.getElementById('cat-name').value,
         bg: document.getElementById('cat-bg').value,
         text: document.getElementById('cat-text').value,
-        cardBg: document.getElementById('cat-card-bg').value
+        cardBg: document.getElementById('cat-card-bg').value,
+        bgType: bgType,
+        cardBg2: document.getElementById('cat-card-bg2').value
     };
+
     if (id) {
         const idx = state.categories.findIndex(c => c.id === id);
-        state.categories[idx] = { ...state.categories[idx], ...data };
+        const existing = state.categories[idx];
+        if (bgImageData) data.catBgImage = bgImageData;
+        else if (bgType === 'image') data.catBgImage = existing.catBgImage;
+        
+        state.categories[idx] = { ...existing, ...data };
     } else {
-        state.categories.push({ id: Date.now().toString(), ...data });
+        if (bgType === 'image' && !bgImageData) return alert("Selecione uma imagem de fundo.");
+        state.categories.push({ 
+            id: Date.now().toString(), 
+            catBgImage: bgImageData,
+            ...data 
+        });
     }
     ui.resetCatForm();
     updateAll();

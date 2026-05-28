@@ -3,22 +3,36 @@ export const zipService = {
         const zip = new JSZip();
         const assets = zip.folder("assets");
         
+        // Exportar Cards
+        const exportedCards = state.cards.map((c, i) => {
+            const mime = c.imagem.split(';')[0].split(':')[1] || 'image/webp';
+            const ext = mime.split('/')[1] || 'webp';
+            const name = `img_${i}.${ext}`;
+            
+            const imgParts = c.imagem.split(',');
+            if (imgParts.length > 1) {
+                assets.file(name, imgParts[1], {base64: true});
+            }
+            return { ...c, imagem: `assets/${name}` };
+        });
+
+        // Exportar Categorias (incluindo imagens de fundo se existirem)
+        const exportedCategories = state.categories.map((cat, i) => {
+            if (cat.bgType === 'image' && cat.catBgImage && cat.catBgImage.startsWith('data:')) {
+                const mime = cat.catBgImage.split(';')[0].split(':')[1] || 'image/webp';
+                const ext = mime.split('/')[1] || 'webp';
+                const name = `cat_bg_${i}.${ext}`;
+                const imgParts = cat.catBgImage.split(',');
+                assets.file(name, imgParts[1], {base64: true});
+                return { ...cat, catBgImage: `assets/${name}` };
+            }
+            return cat;
+        });
+
         const exportData = {
             settings: state.settings,
-            categories: state.categories,
-            cards: state.cards.map((c, i) => {
-                // Tenta descobrir a extensão real da imagem
-                const mime = c.imagem.split(';')[0].split(':')[1] || 'image/webp';
-                const ext = mime.split('/')[1] || 'webp';
-                const name = `img_${i}.${ext}`;
-                
-                const imgParts = c.imagem.split(',');
-                if (imgParts.length > 1) {
-                    assets.file(name, imgParts[1], {base64: true});
-                }
-                
-                return { ...c, imagem: `assets/${name}` };
-            })
+            categories: exportedCategories,
+            cards: exportedCards
         };
 
         zip.file("dados.json", JSON.stringify(exportData, null, 2));
@@ -37,38 +51,46 @@ export const zipService = {
 
         try {
             const zip = await JSZip.loadAsync(file);
-            
-            // Tenta achar o dados.json (em qualquer lugar do zip, caso não esteja na raiz)
             const jsonFile = zip.file(/dados\.json$/i)[0]; 
             if (!jsonFile) throw new Error("Arquivo dados.json não encontrado no pacote.");
 
             const jsonData = await jsonFile.async("string");
             const json = JSON.parse(jsonData);
 
-            // Migração e Limpeza de Dados (O segredo da correção está aqui)
+            // Importar Cards
             const processedCards = [];
-            
             for(let c of (json.cards || [])) {
-                // 1. Garantir que o card tenha um layout
                 if (!c.layout) c.layout = 'icon';
-                
-                // 2. Tentar recuperar a imagem
                 const assetFile = zip.file(c.imagem) || zip.file(c.imagem.replace('assets/', ''));
-                
                 if (assetFile) {
                     const ext = c.imagem.split('.').pop();
                     const base64 = await assetFile.async("base64");
                     c.imagem = `data:image/${ext === 'jpg' ? 'jpeg' : ext};base64,${base64}`;
                 } else {
-                    // Imagem placeholder caso falhe
                     c.imagem = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
                 }
                 processedCards.push(c);
             }
 
-            // Atualiza o estado com garantias de valores padrão
+            // Importar Categorias
+            const processedCats = [];
+            for(let cat of (json.categories || [])) {
+                // Retrocompatibilidade
+                if (!cat.bgType) cat.bgType = 'color';
+                
+                if (cat.bgType === 'image' && cat.catBgImage) {
+                    const assetFile = zip.file(cat.catBgImage) || zip.file(cat.catBgImage.replace('assets/', ''));
+                    if (assetFile) {
+                        const ext = cat.catBgImage.split('.').pop();
+                        const base64 = await assetFile.async("base64");
+                        cat.catBgImage = `data:image/${ext === 'jpg' ? 'jpeg' : ext};base64,${base64}`;
+                    }
+                }
+                processedCats.push(cat);
+            }
+
             state.cards = processedCards;
-            state.categories = json.categories || [];
+            state.categories = processedCats;
             state.settings = {
                 collectionName: json.settings?.collectionName || "Nova Coleção",
                 cardWidth: parseInt(json.settings?.cardWidth) || 280,
@@ -94,7 +116,12 @@ export const zipService = {
             const { imagem, ...textData } = c;
             return textData;
         });
-        const exportData = { settings: state.settings, categories: state.categories, cards: textOnlyCards };
+        // Remove imagens das categorias na exportação de texto
+        const textOnlyCats = state.categories.map(cat => {
+            const { catBgImage, ...textCat } = cat;
+            return textCat;
+        });
+        const exportData = { settings: state.settings, categories: textOnlyCats, cards: textOnlyCards };
         const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: "application/json"});
         
         const fileName = (state.settings.collectionName || "colecao")
@@ -115,7 +142,13 @@ export const zipService = {
                 if (json.categories) {
                     json.categories.forEach(cat => {
                         const i = state.categories.findIndex(c => c.id === cat.id);
-                        if (i !== -1) state.categories[i] = cat; else state.categories.push(cat);
+                        if (i !== -1) {
+                            // Preserva imagem de fundo existente se for apenas importação de texto
+                            const existingImg = state.categories[i].catBgImage;
+                            state.categories[i] = { ...cat, catBgImage: existingImg };
+                        } else {
+                            state.categories.push(cat);
+                        }
                     });
                 }
                 if (json.cards) {

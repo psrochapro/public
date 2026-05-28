@@ -59,14 +59,23 @@ export const ui = {
         });
 
         filtered.forEach(card => {
-            const cat = categories.find(c => c.id === card.categoriaId) || { bg: '#cbd5e1', text: '#64748b', cardBg: '#fff', name: 'Sem Cat.' };
+            const cat = categories.find(c => c.id === card.categoriaId) || { bg: '#cbd5e1', text: '#64748b', cardBg: '#fff', name: 'Sem Cat.', bgType: 'color' };
             const layoutClass = card.layout === 'photo' ? 'mode-photo' : 'mode-icon';
+            
+            // Lógica de fundo da Categoria
+            let cardBgStyle = `background: ${cat.cardBg};`;
+            if (cat.bgType === 'gradient') {
+                cardBgStyle = `background: linear-gradient(135deg, ${cat.cardBg} 0%, ${cat.cardBg2 || cat.cardBg} 100%);`;
+            } else if (cat.bgType === 'image' && cat.catBgImage) {
+                cardBgStyle = `background: url(${cat.catBgImage}) center/cover no-repeat;`;
+            }
+
             const el = document.createElement('div');
             el.className = 'card js-tilt';
             el.innerHTML = `
                 <div class="quick-edit-btn" title="Editar">🖊️</div>
                 <div class="card-inner">
-                    <div class="card-front" style="background: ${cat.cardBg}">
+                    <div class="card-front" style="${cardBgStyle}">
                         <div class="shine"></div>
                         <div class="cat-badge-container">
                             <span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span>
@@ -75,7 +84,7 @@ export const ui = {
                         <div class="img-container ${layoutClass}"><img src="${card.imagem}"></div>
                         <div class="flip-hint">↺</div>
                     </div>
-                    <div class="card-back" style="background: ${cat.cardBg}">
+                    <div class="card-back" style="${cardBgStyle}">
                         <div class="back-header"><img src="${card.imagem}"><strong>${card.item}</strong></div>
                         <div class="back-content"><p>${card.descricao || ''}</p></div>
                     </div>
@@ -194,6 +203,8 @@ export const ui = {
         document.getElementById('cat-bg').value = cat.bg;
         document.getElementById('cat-text').value = cat.text;
         document.getElementById('cat-card-bg').value = cat.cardBg || "#ffffff";
+        document.getElementById('cat-bg-type').value = cat.bgType || "color";
+        document.getElementById('cat-card-bg2').value = cat.cardBg2 || "#ffffff";
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
 
