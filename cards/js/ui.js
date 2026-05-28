@@ -70,6 +70,11 @@ export const ui = {
                 cardBgStyle = `background: url(${cat.catBgImage}) center/cover no-repeat;`;
             }
 
+            // Lógica do Badge (Retrocompatibilidade inclusa)
+            const bText = cat.badgeText || cat.bg;
+            const bBg = cat.badgeBg || cat.bg;
+            const bAlpha = (cat.badgeAlpha !== undefined ? cat.badgeAlpha : 15) / 100;
+            
             const el = document.createElement('div');
             el.className = 'card js-tilt';
             el.innerHTML = `
@@ -78,7 +83,7 @@ export const ui = {
                     <div class="card-front" style="${cardBgStyle}">
                         <div class="shine"></div>
                         <div class="cat-badge-container">
-                            <span class="cat-badge" style="background: ${cat.bg}22; color: ${cat.bg}">${cat.name}</span>
+                            <span class="cat-badge" style="background: ${this.hexToRgba(bBg, bAlpha)}; color: ${bText}">${cat.name}</span>
                         </div>
                         <div class="card-ribbon" style="background:${cat.bg}; color:${cat.text}">${card.item}</div>
                         <div class="img-container ${layoutClass}"><img src="${card.imagem}"></div>
@@ -94,6 +99,13 @@ export const ui = {
             el.onclick = () => el.classList.toggle('is-flipped');
             container.appendChild(el);
         });
+    },
+
+    hexToRgba(hex, alpha) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     },
 
     initTilt() {
@@ -205,6 +217,9 @@ export const ui = {
         document.getElementById('cat-card-bg').value = cat.cardBg || "#ffffff";
         document.getElementById('cat-bg-type').value = cat.bgType || "color";
         document.getElementById('cat-card-bg2').value = cat.cardBg2 || "#ffffff";
+        document.getElementById('cat-badge-text').value = cat.badgeText || cat.bg;
+        document.getElementById('cat-badge-bg').value = cat.badgeBg || cat.bg;
+        document.getElementById('cat-badge-alpha').value = cat.badgeAlpha !== undefined ? cat.badgeAlpha : 15;
         document.getElementById('btn-save-cat').textContent = "Atualizar";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
 

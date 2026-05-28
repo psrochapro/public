@@ -152,7 +152,10 @@ async function handleCategorySubmit(e) {
         text: document.getElementById('cat-text').value,
         cardBg: document.getElementById('cat-card-bg').value,
         bgType: bgType,
-        cardBg2: document.getElementById('cat-card-bg2').value
+        cardBg2: document.getElementById('cat-card-bg2').value,
+        badgeText: document.getElementById('cat-badge-text').value,
+        badgeBg: document.getElementById('cat-badge-bg').value,
+        badgeAlpha: document.getElementById('cat-badge-alpha').value
     };
 
     if (id) {
