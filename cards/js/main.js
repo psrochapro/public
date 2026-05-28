@@ -158,11 +158,25 @@ async function handleCategorySubmit(e) {
         badgeAlpha: document.getElementById('cat-badge-alpha').value
     };
 
+    // Limpeza de ativos não utilizados: Se o tipo de fundo não for imagem, 
+    // removemos o dado da imagem explicitamente para economizar espaço no .card
+    if (bgType !== 'image') {
+        data.catBgImage = null;
+    }
+
     if (id) {
         const idx = state.categories.findIndex(c => c.id === id);
         const existing = state.categories[idx];
-        if (bgImageData) data.catBgImage = bgImageData;
-        else if (bgType === 'image') data.catBgImage = existing.catBgImage;
+        
+        // Se mudou para imagem e subiu uma nova
+        if (bgType === 'image') {
+            if (bgImageData) {
+                data.catBgImage = bgImageData;
+            } else {
+                // Se mudou para imagem mas não subiu arquivo agora, tenta manter a que já existia (se houver)
+                data.catBgImage = existing.catBgImage || null;
+            }
+        }
         
         state.categories[idx] = { ...existing, ...data };
     } else {
