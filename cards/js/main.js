@@ -158,8 +158,6 @@ async function handleCategorySubmit(e) {
         badgeAlpha: document.getElementById('cat-badge-alpha').value
     };
 
-    // Limpeza de ativos não utilizados: Se o tipo de fundo não for imagem, 
-    // removemos o dado da imagem explicitamente para economizar espaço no .card
     if (bgType !== 'image') {
         data.catBgImage = null;
     }
@@ -167,27 +165,24 @@ async function handleCategorySubmit(e) {
     if (id) {
         const idx = state.categories.findIndex(c => c.id === id);
         const existing = state.categories[idx];
-        
-        // Se mudou para imagem e subiu uma nova
         if (bgType === 'image') {
-            if (bgImageData) {
-                data.catBgImage = bgImageData;
-            } else {
-                // Se mudou para imagem mas não subiu arquivo agora, tenta manter a que já existia (se houver)
-                data.catBgImage = existing.catBgImage || null;
-            }
+            if (bgImageData) data.catBgImage = bgImageData;
+            else data.catBgImage = existing.catBgImage || null;
         }
-        
         state.categories[idx] = { ...existing, ...data };
     } else {
         if (bgType === 'image' && !bgImageData) return alert("Selecione uma imagem de fundo.");
-        state.categories.push({ 
+        const newCat = { 
             id: Date.now().toString(), 
             catBgImage: bgImageData,
             ...data 
-        });
+        };
+        state.categories.push(newCat);
+        // Após criar uma nova categoria, carregar ela para edição imediata
+        ui.fillCatForm(newCat);
     }
-    ui.resetCatForm();
+    
+    // IMPORTANTE: Removido ui.resetCatForm() para manter a categoria carregada após salvar
     updateAll();
 }
 

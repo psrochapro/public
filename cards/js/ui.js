@@ -62,7 +62,6 @@ export const ui = {
             const cat = categories.find(c => c.id === card.categoriaId) || { bg: '#cbd5e1', text: '#64748b', cardBg: '#fff', name: 'Sem Cat.', bgType: 'color' };
             const layoutClass = card.layout === 'photo' ? 'mode-photo' : 'mode-icon';
             
-            // Lógica de fundo da Categoria
             let cardBgStyle = `background: ${cat.cardBg};`;
             if (cat.bgType === 'gradient') {
                 cardBgStyle = `background: linear-gradient(135deg, ${cat.cardBg} 0%, ${cat.cardBg2 || cat.cardBg} 100%);`;
@@ -70,7 +69,6 @@ export const ui = {
                 cardBgStyle = `background: url(${cat.catBgImage}) center/cover no-repeat;`;
             }
 
-            // Lógica do Badge (Retrocompatibilidade inclusa)
             const bText = cat.badgeText || cat.bg;
             const bBg = cat.badgeBg || cat.bg;
             const bAlpha = (cat.badgeAlpha !== undefined ? cat.badgeAlpha : 15) / 100;
@@ -220,7 +218,7 @@ export const ui = {
         document.getElementById('cat-badge-text').value = cat.badgeText || cat.bg;
         document.getElementById('cat-badge-bg').value = cat.badgeBg || cat.bg;
         document.getElementById('cat-badge-alpha').value = cat.badgeAlpha !== undefined ? cat.badgeAlpha : 15;
-        document.getElementById('btn-save-cat').textContent = "Atualizar";
+        document.getElementById('btn-save-cat').textContent = "Atualizar Categoria";
         document.getElementById('btn-cancel-cat').classList.remove('hidden');
 
         const pane = document.getElementById('tab-categories');
@@ -243,6 +241,7 @@ export const ui = {
         document.getElementById('edit-cat-id').value = "";
         document.getElementById('btn-save-cat').textContent = "Salvar Categoria";
         document.getElementById('btn-cancel-cat').classList.add('hidden');
+        document.getElementById('cat-img-file').value = "";
     },
 
     renderSummary(cards, categories) {
