@@ -2,14 +2,48 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Tabela Periódica Vanilla</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Periódica Interativa</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 style="text-align: center; color: #333;">Tabela Periódica Interativa</h1>
-    <div id="periodic-table" class="periodic-table">
-        <!-- Elementos serão inseridos aqui pelo JS -->
+    <header>
+        <h1>Tabela Periódica dos Elementos</h1>
+        <p>Passe o mouse para destacar famílias, clique para detalhes.</p>
+    </header>
+
+    <main class="table-wrapper">
+        <div id="periodic-table" class="periodic-table"></div>
+    </main>
+
+    <!-- Modal para Detalhes -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <span id="close-modal" class="close-button">&times;</span>
+            <div class="modal-header">
+                <div id="modal-el-box" class="element-box">
+                    <span id="modal-number"></span>
+                    <span id="modal-symbol"></span>
+                </div>
+                <div>
+                    <h2 id="modal-name"></h2>
+                    <p id="modal-category"></p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <img id="modal-img" src="" alt="Imagem do elemento">
+                <p id="modal-summary"></p>
+                <hr>
+                <div class="modal-info">
+                    <p><strong>Massa Atômica:</strong> <span id="modal-mass"></span></p>
+                    <p><strong>Ponto de Fusão:</strong> <span id="modal-melt"></span> K</p>
+                    <p><strong>Ponto de Ebulição:</strong> <span id="modal-boil"></span> K</p>
+                </div>
+                <a id="modal-link" href="#" target="_blank">Ver na Wikipedia</a>
+            </div>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
