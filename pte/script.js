@@ -9,8 +9,7 @@ async function init() {
         data.elements.forEach(el => {
             const card = document.createElement('div');
             
-            // 1. Normalizar Categoria para o CSS
-            // Isso resolve o problema do Elemento 119 que vem com um texto longo
+            // Normalização das categorias para cores
             let catClass = 'unknown';
             const cat = el.category.toLowerCase();
             
@@ -32,10 +31,10 @@ async function init() {
             card.innerHTML = `
                 <span class="number">${el.number}</span>
                 <span class="symbol">${el.symbol}</span>
-                <span class="name-small">${el.name.substring(0, 8)}</span>
+                <span class="name-small" title="${el.name}">${el.name}</span>
             `;
 
-            // EVENTO: Destaque de Família (Hover)
+            // Hover: Destaque de Família
             card.addEventListener('mouseenter', () => {
                 table.classList.add('faded');
                 document.querySelectorAll(`.${catClass}`).forEach(item => item.classList.add('highlight'));
@@ -46,13 +45,13 @@ async function init() {
                 document.querySelectorAll('.element').forEach(item => item.classList.remove('highlight'));
             });
 
-            // EVENTO: Detalhes (Click)
+            // Click: Modal
             card.addEventListener('click', () => openModal(el, catClass));
 
             table.appendChild(card);
         });
     } catch (err) {
-        console.error("Erro ao carregar dados:", err);
+        console.error("Erro ao carregar o JSON:", err);
     }
 }
 
@@ -63,12 +62,11 @@ function openModal(el, catClass) {
     document.getElementById('modal-name').innerText = el.name;
     document.getElementById('modal-category').innerText = el.category;
     document.getElementById('modal-summary').innerText = el.summary;
-    document.getElementById('modal-mass').innerText = el.atomic_mass;
-    document.getElementById('modal-melt').innerText = el.melt || 'N/A';
-    document.getElementById('modal-boil').innerText = el.boil || 'N/A';
+    document.getElementById('modal-mass').innerText = el.atomic_mass.toFixed(3);
+    document.getElementById('modal-melt').innerText = el.melt ? el.melt + ' K' : 'N/A';
+    document.getElementById('modal-boil').innerText = el.boil ? el.boil + ' K' : 'N/A';
     document.getElementById('modal-link').href = el.source;
     
-    // Imagem (algumas podem falhar, então usamos um fallback)
     const img = document.getElementById('modal-img');
     img.src = el.image.url;
     img.onerror = () => img.src = 'https://via.placeholder.com/400x200?text=Sem+Imagem';
@@ -76,7 +74,6 @@ function openModal(el, catClass) {
     modal.style.display = 'flex';
 }
 
-// Fechar Modal
 document.getElementById('close-modal').onclick = () => modal.style.display = 'none';
 window.onclick = (e) => { if (e.target == modal) modal.style.display = 'none'; }
 
