@@ -12,5 +12,8 @@ button { padding: 8px 16px; cursor: pointer; border: none; border-radius: 4px; f
 button:hover { opacity: 0.8; }
 .btn-import { background: #4a86e8; }
 .btn-template { background: #6aa84f; }
+.btn-example { background: #8e7cc3; }
 .btn-export { background: #f1c232; color: black; }
 .btn-print { background: #333; }
+
+@media print { .no-print { display: none; } }

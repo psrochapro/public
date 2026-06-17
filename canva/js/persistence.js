@@ -17,9 +17,10 @@ const persistence = {
         });
 
         const flowRows = document.querySelectorAll('#flow-body tr');
-        flowRows.forEach(row => {
+        flowRows.forEach((row, idx) => {
             const cols = row.querySelectorAll('td');
-            content += `#etapa ${cols[0].innerText}\n`;
+            content += `#atividade ${idx + 1}\n`;
+            content += `Etapa: ${cols[0].innerText}\n`;
             content += `Fornecedor: ${cols[1].innerText}\n`;
             content += `Insumos: ${cols[2].innerText}\n`;
             content += `Ator: ${cols[3].innerText}\n`;

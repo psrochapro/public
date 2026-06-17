@@ -14,14 +14,12 @@ const renderer = {
     ],
 
     render(data) {
-        // Cabeçalho
         document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        // Tabela 1
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
         this.config.forEach((item, index) => {
@@ -40,20 +38,21 @@ const renderer = {
                 </tr>`;
         });
 
-        // Tabela 2 (Fluxo)
         const flowBody = document.getElementById('flow-body');
         flowBody.innerHTML = '';
-        if (data.fluxo && data.fluxo.length > 0) {
-            data.fluxo.forEach(etapa => {
+        if (data.fluxo) {
+            data.fluxo.forEach(item => {
+                // Pega o número da etapa de dentro da atividade
+                const numEtapa = item.etapa || '-';
                 flowBody.innerHTML += `
                     <tr>
-                        <td style="text-align:center; font-weight:bold">${etapa.id}</td>
-                        <td>${etapa.fornecedor || ''}</td>
-                        <td>${etapa.insumos || ''}</td>
-                        <td>${etapa.ator || ''}</td>
-                        <td>${etapa.atividades || ''}</td>
-                        <td>${etapa.saídas || etapa.saidas || ''}</td>
-                        <td>${etapa.cliente || ''}</td>
+                        <td style="text-align:center; font-weight:bold">${numEtapa}</td>
+                        <td>${item.fornecedor || ''}</td>
+                        <td>${item.insumos || ''}</td>
+                        <td>${item.ator || ''}</td>
+                        <td>${item.atividades || ''}</td>
+                        <td>${item.saídas || item.saidas || ''}</td>
+                        <td>${item.cliente || ''}</td>
                     </tr>`;
             });
         }

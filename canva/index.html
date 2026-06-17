@@ -12,7 +12,8 @@
     <div class="toolbar no-print">
         <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
         <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar Arquivo</button>
-        <button class="btn-template" onclick="template.download()">Gerar Template</button>
+        <button class="btn-template" onclick="template.downloadTemplate()">Gerar Template</button>
+        <button class="btn-example" onclick="template.downloadExample()">Gerar Exemplo</button>
         <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
         <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
     </div>

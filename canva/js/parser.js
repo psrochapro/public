@@ -3,7 +3,7 @@ const parser = {
         const lines = text.split('\n');
         const data = { fluxo: [] };
         let currentSection = null;
-        let currentEtapa = null;
+        let currentAtividade = null;
 
         lines.forEach(line => {
             const trimmed = line.trim();
@@ -12,20 +12,21 @@ const parser = {
                 const tag = parts[0].substring(1).toLowerCase();
                 const inlineContent = parts.slice(1).join(' ').trim();
 
-                if (tag.startsWith('etapa')) {
-                    currentEtapa = { id: inlineContent || (data.fluxo.length + 1) };
-                    data.fluxo.push(currentEtapa);
-                    currentSection = 'etapa';
+                // Novo mapeamento: #atividade em vez de #etapa
+                if (tag.startsWith('atividade') || tag.startsWith('etapa')) {
+                    currentAtividade = {};
+                    data.fluxo.push(currentAtividade);
+                    currentSection = 'atividade';
                 } else {
                     currentSection = tag;
                     data[currentSection] = inlineContent ? [inlineContent] : [];
-                    currentEtapa = null;
+                    currentAtividade = null;
                 }
-            } else if (currentSection === 'etapa' && trimmed.includes(':')) {
+            } else if (currentSection === 'atividade' && trimmed.includes(':')) {
                 const [key, ...valParts] = trimmed.split(':');
                 const keyClean = key.trim().toLowerCase();
-                currentEtapa[keyClean] = valParts.join(':').trim();
-            } else if (currentSection && currentSection !== 'etapa' && trimmed !== "") {
+                currentAtividade[keyClean] = valParts.join(':').trim();
+            } else if (currentSection && currentSection !== 'atividade' && trimmed !== "") {
                 data[currentSection].push(trimmed);
             }
         });

@@ -1,6 +1,39 @@
 const template = {
-    download() {
-        const content = `#nome Nome do Processo Aqui
+    // Template Vazio para produtividade
+    downloadTemplate() {
+        const content = `#nome 
+#objetivo 
+#macroprocesso 
+#area 
+#dono 
+
+#atores 
+#entradas 
+#saidas 
+#interessados 
+#normas 
+#lgpd 
+#recursos 
+#documentos 
+#sgpe 
+#indicadores 
+#gatilho 
+
+#atividade 1
+Etapa: 
+Fornecedor: 
+Insumos: 
+Ator: 
+Atividades: 
+Saídas: 
+Cliente: 
+`;
+        this.saveFile(content, "template-vazio.txt");
+    },
+
+    // Template com Exemplo para guiar o usuário
+    downloadExample() {
+        const content = `#nome Nome do Processo Exemplo
 #objetivo Transformar recursos financeiros em editais e obter inscritos.
 #macroprocesso Gestão de Editais
 #area Departamento de Pesquisa
@@ -18,7 +51,8 @@ const template = {
 #indicadores Tempo de tramitação, Taxa de erros
 #gatilho Formulário eletrônico
 
-#etapa 1
+#atividade 1
+Etapa: 1
 Fornecedor: Cliente
 Insumos: Solicitação inicial
 Ator: Analista
@@ -26,19 +60,33 @@ Atividades: Revisa os dados e valida a elegibilidade do pedido.
 Saídas: Checklist preenchido
 Cliente: Gerente
 
-#etapa 2
+#atividade 2
+Etapa: 1
 Fornecedor: Analista
 Insumos: Checklist preenchido
+Ator: Analista
+Atividades: Prepara o rascunho do edital técnico.
+Saídas: Minuta do Edital
+Cliente: Gerente
+
+#atividade 3
+Etapa: 2
+Fornecedor: Analista
+Insumos: Minuta do Edital
 Ator: Gerente
 Atividades: Aprova a abertura do edital no sistema.
 Saídas: Edital publicado
 Cliente: Público Geral
 `;
+        this.saveFile(content, "exemplo-preenchido.txt");
+    },
+
+    saveFile(content, filename) {
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = "modelo-levantamento.txt";
+        a.download = filename;
         a.click();
     }
 };
