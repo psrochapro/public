@@ -1,0 +1,135 @@
+:root {
+    --canvas-width: 1200px;
+    --border-color: #000;
+    --header-green: #c5e0b4;
+    --arrow-red: #ed1c24;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.toolbar {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.canvas-container {
+    width: var(--canvas-width);
+    background: white;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+    min-height: 800px;
+}
+
+/* Header */
+.canvas-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.header-left {
+    display: flex;
+    flex: 1;
+}
+
+.header-info {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.header-info h1 {
+    font-size: 1.4rem;
+    text-align: center;
+    border-bottom: 1px solid #000;
+    margin: 0 0 10px 0;
+    padding-bottom: 5px;
+}
+
+.info-fields {
+    font-size: 0.9rem;
+}
+
+.field {
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+.header-right {
+    width: 300px;
+    border: 1px solid var(--border-color);
+    margin-left: 15px;
+    padding: 5px;
+}
+
+/* Process Flow Labels */
+.process-flow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.flow-step {
+    flex: 1;
+    background-color: var(--header-green);
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 15px;
+    margin: 0 10px;
+}
+
+.flow-arrow {
+    color: var(--arrow-red);
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Main Grid Layout */
+.canvas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.col-entradas, .col-saidas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.grid-row-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    min-height: 400px;
+}
+
+.box-lgpd { min-height: 100px; }
+.box-recursos { min-height: 120px; }
+
+.col-processamento {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.box-atividades { flex-grow: 1; min-height: 520px; }
+.box-sgpe { height: 120px; }
+
+.box-indicadores, .box-cpad { min-height: 100px; }
+.box-normas { min-height: 120px; }
