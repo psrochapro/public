@@ -3,90 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Levantamento de Processos</title>
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/style.css">
+    <title>Process Designer Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/modern-layout.css">
+    <link rel="stylesheet" href="css/modern-style.css">
 </head>
 <body>
+    <div class="background-mesh"></div>
 
-    <div class="toolbar no-print">
-        <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
-        <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar Arquivo</button>
-        <button class="btn-template" onclick="template.downloadTemplate()">Gerar Template</button>
-        <button class="btn-example" onclick="template.downloadExample()">Gerar Exemplo</button>
-        <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
-        <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
-    </div>
+    <nav class="glass-toolbar no-print">
+        <div class="logo">Process<span>Flow</span></div>
+        <div class="nav-actions">
+            <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
+            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Importar</button>
+            <button class="btn btn-secondary" onclick="template.downloadTemplate()">Template</button>
+            <button class="btn btn-secondary" onclick="template.downloadExample()">Exemplo</button>
+            <button class="btn btn-accent" onclick="persistence.exportCanvas()">Exportar .CNV</button>
+            <button class="btn btn-dark" onclick="window.print()">PDF</button>
+        </div>
+    </nav>
 
-    <div class="main-container" id="canvasPrint">
-        <!-- Cabeçalho Superior -->
-        <header class="sheet-header">
-            <div class="process-name-bar" id="val-nome">Nome do Processo</div>
-            <div class="header-grid">
-                <table class="meta-table">
-                    <tr>
-                        <td class="label-cell">A</td>
-                        <td class="title-cell">Macroprocesso</td>
-                        <td class="content-cell" id="val-macroprocesso">---</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">B</td>
-                        <td class="title-cell">Área</td>
-                        <td class="content-cell" id="val-area">---</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">C</td>
-                        <td class="title-cell">Dono do Processo e Equipe</td>
-                        <td class="content-cell" id="val-dono">---</td>
-                    </tr>
-                </table>
-                <div class="objective-box">
-                    <div class="objective-title">Objetivo geral do processo</div>
-                    <div class="objective-content" id="val-objetivo">---</div>
-                </div>
+    <main class="main-content" id="canvasPrint">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header glass">
+            <div class="header-main">
+                <h1 id="val-nome">Título do Processo</h1>
+                <div class="objective-tag" id="val-objetivo">Objetivo do processo será exibido aqui.</div>
+            </div>
+            <div class="header-meta">
+                <div class="meta-chip"><span>Macro</span><strong id="val-macroprocesso">---</strong></div>
+                <div class="meta-chip"><span>Área</span><strong id="val-area">---</strong></div>
+                <div class="meta-chip"><span>Dono</span><strong id="val-dono">---</strong></div>
             </div>
         </header>
 
-        <!-- Tabela 1: Levantamento -->
-        <table class="fluid-table">
-            <thead>
-                <tr>
-                    <th style="width: 40px;">N.º</th>
-                    <th style="width: 60px;">Ícone</th>
-                    <th style="width: 180px;">Item</th>
-                    <th>Descrição</th>
-                    <th style="width: 45%;">Respostas</th>
-                </tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-        </table>
+        <!-- Seção 1: Inventário (Cards) -->
+        <section class="section-container">
+            <h2 class="section-title">Levantamento Estruturado</h2>
+            <div class="inventory-grid" id="inventory-container">
+                <!-- Cards inseridos via JS -->
+            </div>
+        </section>
 
-        <!-- Tabela 2: Fluxo de Atividades -->
-        <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
-        <table class="flow-table">
-            <thead>
-                <tr class="icon-row">
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Etapa"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Fornecedor"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Insumos"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/6009/6009030.png" alt="Ator"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Atividades"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Saídas"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Cliente"></th>
-                </tr>
-                <tr class="title-row">
-                    <th style="width: 80px;">Etapa</th>
-                    <th>Fornecedor</th>
-                    <th>Insumos</th>
-                    <th>Ator (Executor)</th>
-                    <th>Atividades</th>
-                    <th>Saídas</th>
-                    <th>Cliente</th>
-                </tr>
-            </thead>
-            <tbody id="flow-body"></tbody>
-        </table>
-    </div>
+        <!-- Seção 2: Fluxo (Timeline) -->
+        <section class="section-container">
+            <h2 class="section-title">Fluxo de Execução</h2>
+            <div class="timeline-container" id="flow-container">
+                <!-- Itens da timeline via JS -->
+            </div>
+        </section>
+    </main>
 
     <script src="js/parser.js"></script>
     <script src="js/renderer.js"></script>
