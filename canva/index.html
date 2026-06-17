@@ -6,6 +6,7 @@
     <title>Gerador de Levantamento de Processos</title>
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/theme.css">
 </head>
 <body>
 
@@ -18,52 +19,42 @@
         <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
     </div>
 
-    <div class="main-container" id="canvasPrint">
-        <!-- Cabeçalho Superior -->
-        <header class="sheet-header">
-            <div class="process-name-bar" id="val-nome">Nome do Processo</div>
-            <div class="header-grid">
-                <table class="meta-table">
-                    <tr>
-                        <td class="label-cell">A</td>
-                        <td class="title-cell">Macroprocesso</td>
-                        <td class="content-cell" id="val-macroprocesso">---</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">B</td>
-                        <td class="title-cell">Área</td>
-                        <td class="content-cell" id="val-area">---</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">C</td>
-                        <td class="title-cell">Dono do Processo e Equipe</td>
-                        <td class="content-cell" id="val-dono">---</td>
-                    </tr>
-                </table>
-                <div class="objective-box">
-                    <div class="objective-title">Objetivo geral do processo</div>
-                    <div class="objective-content" id="val-objetivo">---</div>
-                </div>
+    <div class="glass-container" id="canvasPrint">
+        <!-- Título Isolado -->
+        <div class="process-title-header">
+            <h1 id="val-nome">Nome do Processo</h1>
+        </div>
+
+        <!-- Cabeçalho Linear A, B, C, D -->
+        <header class="meta-linear-grid">
+            <div class="meta-linear-row">
+                <div class="meta-letter-box">A</div>
+                <div class="meta-label-box">Macroprocesso</div>
+                <div class="meta-value-box" id="val-macroprocesso">---</div>
+            </div>
+            <div class="meta-linear-row">
+                <div class="meta-letter-box">B</div>
+                <div class="meta-label-box">Área</div>
+                <div class="meta-value-box" id="val-area">---</div>
+            </div>
+            <div class="meta-linear-row">
+                <div class="meta-letter-box">C</div>
+                <div class="meta-label-box">Dono do Processo e Equipe</div>
+                <div class="meta-value-box" id="val-dono">---</div>
+            </div>
+            <div class="meta-linear-row">
+                <div class="meta-letter-box">D</div>
+                <div class="meta-label-box">Objetivo Geral do Processo</div>
+                <div class="meta-value-box" id="val-objetivo">---</div>
             </div>
         </header>
 
-        <!-- Tabela 1: Levantamento -->
-        <table class="fluid-table">
-            <thead>
-                <tr>
-                    <th style="width: 40px;">N.º</th>
-                    <th style="width: 60px;">Ícone</th>
-                    <th style="width: 180px;">Item</th>
-                    <th>Descrição</th>
-                    <th style="width: 45%;">Respostas</th>
-                </tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-        </table>
+        <!-- Levantamento em Cards -->
+        <div class="survey-card-list" id="survey-container"></div>
 
-        <!-- Tabela 2: Fluxo de Atividades -->
+        <!-- Tabela de Fluxo -->
         <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
-        <table class="flow-table">
+        <table class="flow-table flow-table-refined">
             <thead>
                 <tr class="icon-row">
                     <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Etapa"></th>

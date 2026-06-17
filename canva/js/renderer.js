@@ -14,39 +14,48 @@ const renderer = {
     ],
 
     render(data) {
+        // Render Header
         document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = '';
+        // Render Survey Cards
+        const surveyContainer = document.getElementById('survey-container');
+        surveyContainer.innerHTML = '';
+        
         this.config.forEach((item, index) => {
             let rawData = data[item.id] || data[item.id.replace('saidas', 'saídas')] || [];
             let itemsToRender = [];
             rawData.forEach(line => itemsToRender.push(...line.split(',').map(p => p.trim()).filter(p => p !== "")));
             
             const pillsHtml = itemsToRender.map(txt => `<span class="pill">${txt}</span>`).join('');
-            tbody.innerHTML += `
-                <tr>
-                    <td style="text-align:center; font-weight:bold; color:#666">${index + 1}</td>
-                    <td style="font-size:24px;text-align:center">${item.icon}</td>
-                    <td><div class="item-title">${item.label}</div></td>
-                    <td><div class="item-desc">${item.desc}</div></td>
-                    <td><div class="pill-container">${pillsHtml || '---'}</div></td>
-                </tr>`;
+            
+            surveyContainer.innerHTML += `
+                <div class="survey-card">
+                    <div class="card-info-side">
+                        <div class="card-num">${(index + 1).toString().padStart(2, '0')}</div>
+                        <div class="card-icon-box">${item.icon}</div>
+                        <div class="card-text-content">
+                            <div class="card-item-name">${item.label}</div>
+                            <div class="card-item-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <div class="card-responses-side">
+                        <div class="pill-container">${pillsHtml || '<span style="color:#ccc">---</span>'}</div>
+                    </div>
+                </div>`;
         });
 
+        // Render Flow
         const flowBody = document.getElementById('flow-body');
         flowBody.innerHTML = '';
         if (data.fluxo) {
             data.fluxo.forEach(item => {
-                // Pega o número da etapa de dentro da atividade
-                const numEtapa = item.etapa || '-';
                 flowBody.innerHTML += `
                     <tr>
-                        <td style="text-align:center; font-weight:bold">${numEtapa}</td>
+                        <td style="text-align:center; font-weight:bold">${item.etapa || '-'}</td>
                         <td>${item.fornecedor || ''}</td>
                         <td>${item.insumos || ''}</td>
                         <td>${item.ator || ''}</td>
