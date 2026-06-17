@@ -1,60 +1,16 @@
-/* Estilo dos Pills (Tags) */
-.pill-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
+.icon-row th { background: #f9f9f9; padding: 10px; border: 1px solid var(--border-color); }
+.icon-row img { height: 40px; width: auto; opacity: 0.8; }
 
-.pill {
-    background-color: #d9ead3;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #000;
-    border: 1px solid #b7d7a8;
-    display: inline-block;
-}
+.pill-container { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { background-color: #d9ead3; border-radius: 20px; padding: 4px 12px; font-size: 0.85rem; font-weight: bold; border: 1px solid #b7d7a8; color: #000; }
 
-/* Identidade Visual */
-.item-title {
-    color: var(--primary-green);
-    font-weight: bold;
-    font-size: 0.9rem;
-    margin-bottom: 4px;
-}
+.item-title { color: var(--primary-green); font-weight: bold; margin-bottom: 3px; }
+.item-desc { font-size: 0.75rem; color: #666; line-height: 1.2; }
 
-.item-desc {
-    font-size: 0.75rem;
-    color: #666;
-    line-height: 1.2;
-}
-
-.icon-cell {
-    font-size: 24px;
-    text-align: center;
-}
-
-.row-index {
-    text-align: center;
-    font-weight: bold;
-    color: #666;
-}
-
-.toolbar {
-    margin-bottom: 15px;
-    display: flex;
-    gap: 10px;
-}
-
-button {
-    padding: 8px 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.btn-import { background: #4a86e8; color: white; }
+.toolbar { margin-bottom: 15px; display: flex; gap: 10px; }
+button { padding: 8px 16px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; transition: opacity 0.2s; }
+button:hover { opacity: 0.8; }
+.btn-import { background: #4a86e8; }
+.btn-template { background: #6aa84f; }
 .btn-export { background: #f1c232; color: black; }
-.btn-print { background: #333; color: white; }
+.btn-print { background: #333; }

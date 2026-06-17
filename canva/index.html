@@ -12,15 +12,15 @@
     <div class="toolbar no-print">
         <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
         <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar Arquivo</button>
+        <button class="btn-template" onclick="template.download()">Gerar Template</button>
         <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
         <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
     </div>
 
     <div class="main-container" id="canvasPrint">
-        <!-- Cabeçalho Superior Fluido -->
+        <!-- Cabeçalho Superior -->
         <header class="sheet-header">
             <div class="process-name-bar" id="val-nome">Nome do Processo</div>
-            
             <div class="header-grid">
                 <table class="meta-table">
                     <tr>
@@ -46,7 +46,7 @@
             </div>
         </header>
 
-        <!-- Tabela de Itens Fluida -->
+        <!-- Tabela 1: Levantamento -->
         <table class="fluid-table">
             <thead>
                 <tr>
@@ -57,15 +57,40 @@
                     <th style="width: 45%;">Respostas</th>
                 </tr>
             </thead>
-            <tbody id="table-body">
-                <!-- As linhas serão geradas dinamicamente via JS -->
-            </tbody>
+            <tbody id="table-body"></tbody>
+        </table>
+
+        <!-- Tabela 2: Fluxo de Atividades -->
+        <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
+        <table class="flow-table">
+            <thead>
+                <tr class="icon-row">
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Etapa"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Fornecedor"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Insumos"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/6009/6009030.png" alt="Ator"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Atividades"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Saídas"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Cliente"></th>
+                </tr>
+                <tr class="title-row">
+                    <th style="width: 80px;">Etapa</th>
+                    <th>Fornecedor</th>
+                    <th>Insumos</th>
+                    <th>Ator (Executor)</th>
+                    <th>Atividades</th>
+                    <th>Saídas</th>
+                    <th>Cliente</th>
+                </tr>
+            </thead>
+            <tbody id="flow-body"></tbody>
         </table>
     </div>
 
     <script src="js/parser.js"></script>
     <script src="js/renderer.js"></script>
     <script src="js/persistence.js"></script>
+    <script src="js/template.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

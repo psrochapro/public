@@ -1,39 +1,34 @@
 const parser = {
-    /**
-     * Transforma o texto bruto do arquivo em um objeto de dados.
-     * Suporta tags com conteúdo na mesma linha: #tag Conteúdo
-     * E tags com conteúdo em linhas subsequentes: #tag \n Conteúdo
-     */
     parse(text) {
         const lines = text.split('\n');
-        const data = {};
+        const data = { fluxo: [] };
         let currentSection = null;
+        let currentEtapa = null;
 
         lines.forEach(line => {
             const trimmed = line.trim();
-            
-            // Verifica se a linha é uma definição de TAG (começa com #)
             if (trimmed.startsWith('#')) {
-                const firstSpaceIndex = trimmed.indexOf(' ');
-                
-                if (firstSpaceIndex !== -1) {
-                    // CASO 1: #tag Conteúdo (Conteúdo na mesma linha)
-                    // Pega o nome da tag (entre o # e o primeiro espaço)
-                    currentSection = trimmed.substring(1, firstSpaceIndex).toLowerCase();
-                    // Pega o restante da linha como conteúdo inicial
-                    const content = trimmed.substring(firstSpaceIndex).trim();
-                    data[currentSection] = [content];
+                const parts = trimmed.split(' ');
+                const tag = parts[0].substring(1).toLowerCase();
+                const inlineContent = parts.slice(1).join(' ').trim();
+
+                if (tag.startsWith('etapa')) {
+                    currentEtapa = { id: inlineContent || (data.fluxo.length + 1) };
+                    data.fluxo.push(currentEtapa);
+                    currentSection = 'etapa';
                 } else {
-                    // CASO 2: #tag (Tag sozinha na linha)
-                    currentSection = trimmed.substring(1).toLowerCase();
-                    data[currentSection] = [];
+                    currentSection = tag;
+                    data[currentSection] = inlineContent ? [inlineContent] : [];
+                    currentEtapa = null;
                 }
-            } else if (currentSection && trimmed !== "") {
-                // Adiciona linhas de conteúdo subsequentes à tag ativa
+            } else if (currentSection === 'etapa' && trimmed.includes(':')) {
+                const [key, ...valParts] = trimmed.split(':');
+                const keyClean = key.trim().toLowerCase();
+                currentEtapa[keyClean] = valParts.join(':').trim();
+            } else if (currentSection && currentSection !== 'etapa' && trimmed !== "") {
                 data[currentSection].push(trimmed);
             }
         });
-
         return data;
     }
 };

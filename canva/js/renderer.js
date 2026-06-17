@@ -14,40 +14,48 @@ const renderer = {
     ],
 
     render(data) {
-        // Render Header
-        document.getElementById('val-nome').innerText = (data.nome || ['Nome do Processo']).join(' ');
+        // Cabeçalho
+        document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        // Render Table Body
+        // Tabela 1
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
-
         this.config.forEach((item, index) => {
-            const row = document.createElement('tr');
-            
-            // Tratamento de dados para gerar Pills
-            // Se o dado vier como lista no TXT ou separado por vírgula em uma linha
-            let rawData = data[item.id] || [];
+            let rawData = data[item.id] || data[item.id.replace('saidas', 'saídas')] || [];
             let itemsToRender = [];
+            rawData.forEach(line => itemsToRender.push(...line.split(',').map(p => p.trim()).filter(p => p !== "")));
             
-            rawData.forEach(line => {
-                const parts = line.split(',').map(p => p.trim()).filter(p => p !== "");
-                itemsToRender.push(...parts);
-            });
-
             const pillsHtml = itemsToRender.map(txt => `<span class="pill">${txt}</span>`).join('');
-
-            row.innerHTML = `
-                <td class="row-index">${index + 1}</td>
-                <td class="icon-cell">${item.icon}</td>
-                <td><div class="item-title">${item.label}</div></td>
-                <td><div class="item-desc">${item.desc}</div></td>
-                <td><div class="pill-container">${pillsHtml || '---'}</div></td>
-            `;
-            tbody.appendChild(row);
+            tbody.innerHTML += `
+                <tr>
+                    <td style="text-align:center; font-weight:bold; color:#666">${index + 1}</td>
+                    <td style="font-size:24px;text-align:center">${item.icon}</td>
+                    <td><div class="item-title">${item.label}</div></td>
+                    <td><div class="item-desc">${item.desc}</div></td>
+                    <td><div class="pill-container">${pillsHtml || '---'}</div></td>
+                </tr>`;
         });
+
+        // Tabela 2 (Fluxo)
+        const flowBody = document.getElementById('flow-body');
+        flowBody.innerHTML = '';
+        if (data.fluxo && data.fluxo.length > 0) {
+            data.fluxo.forEach(etapa => {
+                flowBody.innerHTML += `
+                    <tr>
+                        <td style="text-align:center; font-weight:bold">${etapa.id}</td>
+                        <td>${etapa.fornecedor || ''}</td>
+                        <td>${etapa.insumos || ''}</td>
+                        <td>${etapa.ator || ''}</td>
+                        <td>${etapa.atividades || ''}</td>
+                        <td>${etapa.saídas || etapa.saidas || ''}</td>
+                        <td>${etapa.cliente || ''}</td>
+                    </tr>`;
+            });
+        }
     }
 };
