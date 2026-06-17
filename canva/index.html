@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProcessFlow Pro | Compact</title>
+    <title>ProcessFlow Pro | Crystal Table</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,16 +17,16 @@
         <div class="logo">Process<span>Flow</span></div>
         <div class="nav-actions">
             <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
-            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Importar</button>
-            <button class="btn btn-secondary" onclick="template.downloadTemplate()">Template</button>
-            <button class="btn btn-secondary" onclick="template.downloadExample()">Exemplo</button>
-            <button class="btn btn-accent" onclick="persistence.exportCanvas()">Exportar .CNV</button>
-            <button class="btn btn-dark" onclick="window.print()">PDF</button>
+            <button class="btn btn-import" onclick="document.getElementById('fileInput').click()">Importar</button>
+            <button class="btn btn-template" onclick="template.downloadTemplate()">Template</button>
+            <button class="btn btn-example" onclick="template.downloadExample()">Exemplo</button>
+            <button class="btn btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
+            <button class="btn btn-print" onclick="window.print()">Imprimir PDF</button>
         </div>
     </nav>
 
     <main class="main-content" id="canvasPrint">
-        <!-- Dashboard Header Slim -->
+        <!-- Dashboard Header Slim Premium -->
         <header class="dashboard-header glass">
             <div class="header-top">
                 <h1 id="val-nome">Título do Processo</h1>
@@ -39,32 +39,32 @@
             <div class="objective-bar" id="val-objetivo">Objetivo do processo será exibido aqui em uma linha elegante.</div>
         </header>
 
-        <!-- Seção 1: Levantamento Compacto -->
+        <!-- Seção 1: Inventário Compacto -->
         <section class="section-container">
             <div class="section-header">
                 <span class="dot"></span>
                 <h2>Levantamento Estruturado</h2>
             </div>
-            <div class="inventory-grid" id="inventory-container">
-                <!-- Cards compactos via JS -->
-            </div>
+            <div class="inventory-grid" id="inventory-container"></div>
         </section>
 
-        <!-- Seção 2: Fluxo de Tabela Glass -->
+        <!-- Seção 2: Tabela de Atividades Crystal -->
         <section class="section-container">
             <div class="section-header">
                 <span class="dot"></span>
                 <h2>Fluxo de Atividades</h2>
             </div>
-            <div class="flow-glass-table">
-                <div class="flow-thead">
-                    <div class="th-etapa">#</div>
-                    <div class="th-inputs">Fornecedor / Insumos</div>
-                    <div class="th-actor">Ator</div>
-                    <div class="th-activity">Atividades Detalhadas</div>
-                    <div class="th-outputs">Saídas / Cliente</div>
+            <div class="glass-table-container glass">
+                <div class="glass-table-header">
+                    <div class="cell-etapa">#</div>
+                    <div class="cell-col">Fornecedor</div>
+                    <div class="cell-col">Insumos</div>
+                    <div class="cell-col">Ator</div>
+                    <div class="cell-desc">Atividades Detalhadas</div>
+                    <div class="cell-col">Saídas</div>
+                    <div class="cell-col">Cliente</div>
                 </div>
-                <div id="flow-container">
+                <div id="flow-container" class="glass-table-body">
                     <!-- Linhas horizontais via JS -->
                 </div>
             </div>
