@@ -15,19 +15,5 @@ const parser = {
         });
 
         return data;
-    },
-
-    // Parser específico para campos chave-valor (ex: SGPe)
-    parseKeyValue(lines) {
-        const result = {};
-        lines.forEach(line => {
-            const parts = line.split(':');
-            if (parts.length >= 2) {
-                const key = parts[0].trim().toLowerCase();
-                const value = parts.slice(1).join(':').trim();
-                result[key] = value;
-            }
-        });
-        return result;
     }
 };

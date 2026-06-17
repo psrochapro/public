@@ -1,36 +1,27 @@
 const persistence = {
     exportCanvas() {
-        const sections = document.querySelectorAll('.block-content');
+        // Pega os dados atuais renderizados para gerar o arquivo
         let content = "";
-
-        // Nota: Em uma versão real, pegaríamos do estado 'data'. 
-        // Para simplificar, reconstruímos o texto a partir do que está na tela.
-        const tags = [
-            'atores', 'entradas', 'saidas', 'interessados', 'lgpd', 
-            'recursos', 'atividades', 'indicadores', 'documentos', 'normas'
-        ];
-
-        tags.forEach(tag => {
-            const el = document.getElementById(`section-${tag}`);
-            if (el) {
-                content += `#${tag}\n${el.innerText}\n\n`;
-            }
+        const headerTags = ['nome', 'macroprocesso', 'area', 'dono', 'objetivo'];
+        
+        headerTags.forEach(tag => {
+            const val = document.getElementById(`val-${tag}`).innerText;
+            content += `#${tag}\n${val}\n\n`;
         });
 
-        // SGPE Manual reconstruction
-        const sgpeItems = document.querySelectorAll('.sgpe-item');
-        if(sgpeItems.length > 0) {
-            content += "#sgpe\n";
-            sgpeItems.forEach(item => {
-                content += item.innerText.replace('\n', ' ') + "\n";
-            });
-        }
+        renderer.config.forEach(conf => {
+            const container = document.querySelector(`tr:nth-child(${renderer.config.indexOf(conf) + 1}) .pill-container`);
+            const pills = Array.from(container.querySelectorAll('.pill')).map(p => p.innerText);
+            if (pills.length > 0) {
+                content += `#${conf.id}\n${pills.join(', ')}\n\n`;
+            }
+        });
 
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = "diagrama-processo.cnv";
+        a.download = `processo-${new Date().getTime()}.cnv`;
         a.click();
     }
 };

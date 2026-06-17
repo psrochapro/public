@@ -3,183 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise de Processos - Modelo Canvas</title>
+    <title>Gerador de Levantamento de Processos</title>
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div class="toolbar">
+    <div class="toolbar no-print">
         <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
-        <button onclick="document.getElementById('fileInput').click()">Importar (.txt / .cnv)</button>
-        <button onclick="persistence.exportCanvas()">Exportar (.cnv)</button>
+        <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar Arquivo</button>
+        <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
+        <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
     </div>
 
-    <div class="canvas-container" id="canvasPrint">
-        <!-- Header Section -->
-        <header class="canvas-header">
-            <div class="header-left">
-                <div class="logo-placeholder">
-                    <img src="assets/logo_eproc.png" alt="eproc SEPLAN" onerror="this.style.display='none'">
-                    <div class="logo-text">eproc<span>SEPLAN</span></div>
-                </div>
-                <div class="header-info">
-                    <h1>ANÁLISE DE PROCESSOS – MODELO CANVAS</h1>
-                    <div class="info-fields">
-                        <div class="field"><strong>NOME DO PROCESSO:</strong> <span id="val-nome-processo"></span></div>
-                        <div class="field"><strong>Data:</strong> <span id="val-data"></span></div>
-                        <div class="field"><strong>Elaboração:</strong> <span id="val-elaboracao"></span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="header-right">
+    <div class="main-container" id="canvasPrint">
+        <!-- Cabeçalho Superior Fluido -->
+        <header class="sheet-header">
+            <div class="process-name-bar" id="val-nome">Nome do Processo</div>
+            
+            <div class="header-grid">
+                <table class="meta-table">
+                    <tr>
+                        <td class="label-cell">A</td>
+                        <td class="title-cell">Macroprocesso</td>
+                        <td class="content-cell" id="val-macroprocesso">---</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">B</td>
+                        <td class="title-cell">Área</td>
+                        <td class="content-cell" id="val-area">---</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">C</td>
+                        <td class="title-cell">Dono do Processo e Equipe</td>
+                        <td class="content-cell" id="val-dono">---</td>
+                    </tr>
+                </table>
                 <div class="objective-box">
-                    <strong>Objetivo do processo:</strong>
-                    <div id="val-objetivo"></div>
+                    <div class="objective-title">Objetivo geral do processo</div>
+                    <div class="objective-content" id="val-objetivo">---</div>
                 </div>
             </div>
         </header>
 
-        <!-- Process Flow Labels -->
-        <nav class="process-flow">
-            <div class="flow-step">ENTRADAS</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-step">PROCESSAMENTO</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-step">SAÍDAS</div>
-        </nav>
-
-        <!-- Main Canvas Grid -->
-        <main class="canvas-grid">
-            
-            <!-- ENTRADAS COLUMN -->
-            <section class="col-entradas">
-                <div class="grid-row-top">
-                    <div class="block box-atores">
-                        <div class="block-header">
-                            <div class="icon">👥</div>
-                            <div class="title">
-                                <h2>Atores Envolvidos</h2>
-                                <p>Quem são os participantes que desempenham atividades?</p>
-                            </div>
-                        </div>
-                        <div class="block-content" id="section-atores"></div>
-                    </div>
-                    <div class="block box-entradas">
-                        <div class="block-header">
-                            <div class="icon">📥</div>
-                            <div class="title">
-                                <h2>Principais Entradas</h2>
-                                <p>Quais os fatos que iniciam o processo?</p>
-                            </div>
-                        </div>
-                        <div class="block-content" id="section-entradas"></div>
-                    </div>
-                </div>
-                <div class="block box-lgpd">
-                    <div class="block-header">
-                        <div class="icon">🛡️</div>
-                        <div class="title">
-                            <h2>Gestão LGPD</h2>
-                            <p>Ao executar o processo, quais os dados pessoais envolvidos?</p>
-                        </div>
-                    </div>
-                    <div class="block-content" id="section-lgpd"></div>
-                </div>
-                <div class="block box-recursos">
-                    <div class="block-header">
-                        <div class="icon">💻</div>
-                        <div class="title">
-                            <h2>Recursos Tecnológicos, Sistemas e Integrações</h2>
-                            <p>Há integração de sistemas? Há possibilidade de aprimoramento?</p>
-                        </div>
-                    </div>
-                    <div class="block-content" id="section-recursos"></div>
-                </div>
-            </section>
-
-            <!-- PROCESSAMENTO COLUMN -->
-            <section class="col-processamento">
-                <div class="block box-atividades">
-                    <div class="block-header">
-                        <div class="icon">⚙️</div>
-                        <div class="title">
-                            <h2>Principais Atividades</h2>
-                            <p>Quais atividades são desempenhadas para execução deste processo?</p>
-                        </div>
-                    </div>
-                    <div class="block-content" id="section-atividades"></div>
-                </div>
-                <div class="block box-sgpe">
-                    <div class="block-header">
-                        <div class="icon-sgpe">sgpe</div>
-                        <div class="title">
-                            <h2>Parâmetros – SGPE</h2>
-                        </div>
-                    </div>
-                    <div class="block-content sgpe-grid" id="section-sgpe">
-                        <!-- Conteúdo via JS -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- SAÍDAS COLUMN -->
-            <section class="col-saidas">
-                <div class="grid-row-top">
-                    <div class="block box-saidas">
-                        <div class="block-header">
-                            <div class="icon">📤</div>
-                            <div class="title">
-                                <h2>Principais Saídas</h2>
-                                <p>Quais resultados gerados no processo?</p>
-                            </div>
-                        </div>
-                        <div class="block-content" id="section-saidas"></div>
-                    </div>
-                    <div class="block box-interessados">
-                        <div class="block-header">
-                            <div class="icon">👤</div>
-                            <div class="title">
-                                <h2>Interessados</h2>
-                                <p>Quem são os beneficiários do processo?</p>
-                            </div>
-                        </div>
-                        <div class="block-content" id="section-interessados"></div>
-                    </div>
-                </div>
-                <div class="block box-indicadores">
-                    <div class="block-header">
-                        <div class="icon">📊</div>
-                        <div class="title">
-                            <h2>Indicadores de Performance</h2>
-                            <p>Quais os indicadores utilizados para apuração do resultado?</p>
-                        </div>
-                    </div>
-                    <div class="block-content" id="section-indicadores"></div>
-                </div>
-                <div class="block box-cpad">
-                    <div class="block-header">
-                        <div class="icon">📄</div>
-                        <div class="title">
-                            <h2>Gestão Documental – CPAD</h2>
-                            <p>Quais os documentos presentes e suas temporalidades?</p>
-                        </div>
-                    </div>
-                    <div class="block-content" id="section-documentos"></div>
-                </div>
-                <div class="block box-normas">
-                    <div class="block-header">
-                        <div class="icon">⚖️</div>
-                        <div class="title">
-                            <h2>Leis e Normas Aplicadas</h2>
-                            <p>Quais leis, decretos ou instruções normativas disciplinam o processo?</p>
-                        </div>
-                    </div>
-                    <div class="block-content" id="section-normas"></div>
-                </div>
-            </section>
-
-        </main>
+        <!-- Tabela de Itens Fluida -->
+        <table class="fluid-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">N.º</th>
+                    <th style="width: 60px;">Ícone</th>
+                    <th style="width: 180px;">Item</th>
+                    <th>Descrição</th>
+                    <th style="width: 45%;">Respostas</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- As linhas serão geradas dinamicamente via JS -->
+            </tbody>
+        </table>
     </div>
 
     <script src="js/parser.js"></script>

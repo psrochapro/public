@@ -1,69 +1,60 @@
-.block {
-    border: 1px solid var(--border-color);
-    padding: 8px;
+/* Estilo dos Pills (Tags) */
+.pill-container {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
-.block-header {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 8px;
-}
-
-.block-header .icon {
-    font-size: 24px;
-    margin-right: 10px;
-}
-
-.block-header .title h2 {
-    font-size: 0.95rem;
-    margin: 0;
-    text-decoration: underline;
-}
-
-.block-header .title p {
-    font-size: 0.65rem;
-    margin: 2px 0 0 0;
-    color: #444;
-}
-
-.block-content {
+.pill {
+    background-color: #d9ead3;
+    border-radius: 20px;
+    padding: 4px 12px;
     font-size: 0.85rem;
-    line-height: 1.4;
-    white-space: pre-line;
-}
-
-/* Logo Estilo */
-.logo-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80px;
-}
-
-.logo-text {
     font-weight: bold;
-    font-size: 1.2rem;
-    color: #333;
-}
-.logo-text span {
-    display: block;
-    font-size: 0.7rem;
-    border-top: 1px solid #000;
+    color: #000;
+    border: 1px solid #b7d7a8;
+    display: inline-block;
 }
 
-/* SGPE Grid */
-.sgpe-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    gap: 5px;
-    height: 100%;
+/* Identidade Visual */
+.item-title {
+    color: var(--primary-green);
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
 }
 
-.sgpe-item {
-    border-left: 1px solid #000;
-    padding-left: 5px;
+.item-desc {
+    font-size: 0.75rem;
+    color: #666;
+    line-height: 1.2;
 }
 
-.sgpe-item:first-child { border-left: none; }
+.icon-cell {
+    font-size: 24px;
+    text-align: center;
+}
+
+.row-index {
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+}
+
+.toolbar {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 8px 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.btn-import { background: #4a86e8; color: white; }
+.btn-export { background: #f1c232; color: black; }
+.btn-print { background: #333; color: white; }
