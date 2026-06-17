@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Levantamento de Processos</title>
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="toolbar no-print">
+        <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
+        <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar Arquivo</button>
+        <button class="btn-template" onclick="template.downloadTemplate()">Gerar Template</button>
+        <button class="btn-example" onclick="template.downloadExample()">Gerar Exemplo</button>
+        <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
+        <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
+    </div>
+
+    <div class="main-container" id="canvasPrint">
+        <!-- Cabeçalho Superior -->
+        <header class="sheet-header">
+            <div class="process-name-bar" id="val-nome">Nome do Processo</div>
+            <div class="header-grid">
+                <table class="meta-table">
+                    <tr>
+                        <td class="label-cell">A</td>
+                        <td class="title-cell">Macroprocesso</td>
+                        <td class="content-cell" id="val-macroprocesso">---</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">B</td>
+                        <td class="title-cell">Área</td>
+                        <td class="content-cell" id="val-area">---</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">C</td>
+                        <td class="title-cell">Dono do Processo e Equipe</td>
+                        <td class="content-cell" id="val-dono">---</td>
+                    </tr>
+                </table>
+                <div class="objective-box">
+                    <div class="objective-title">Objetivo geral do processo</div>
+                    <div class="objective-content" id="val-objetivo">---</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabela 1: Levantamento -->
+        <table class="fluid-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">N.º</th>
+                    <th style="width: 60px;">Ícone</th>
+                    <th style="width: 180px;">Item</th>
+                    <th>Descrição</th>
+                    <th style="width: 45%;">Respostas</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+
+        <!-- Tabela 2: Fluxo de Atividades -->
+        <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
+        <table class="flow-table">
+            <thead>
+                <tr class="icon-row">
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Etapa"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Fornecedor"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Insumos"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/6009/6009030.png" alt="Ator"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Atividades"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Saídas"></th>
+                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Cliente"></th>
+                </tr>
+                <tr class="title-row">
+                    <th style="width: 80px;">Etapa</th>
+                    <th>Fornecedor</th>
+                    <th>Insumos</th>
+                    <th>Ator (Executor)</th>
+                    <th>Atividades</th>
+                    <th>Saídas</th>
+                    <th>Cliente</th>
+                </tr>
+            </thead>
+            <tbody id="flow-body"></tbody>
+        </table>
+    </div>
+
+    <script src="js/parser.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/persistence.js"></script>
+    <script src="js/template.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
