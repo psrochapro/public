@@ -52,31 +52,33 @@
         <!-- Levantamento em Cards -->
         <div class="survey-card-list" id="survey-container"></div>
 
-        <!-- Tabela de Fluxo -->
+        <!-- Fluxo de Atividades em Cards -->
         <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
-        <table class="flow-table flow-table-refined">
-            <thead>
-                <tr class="icon-row">
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Etapa"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Fornecedor"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Insumos"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/6009/6009030.png" alt="Ator"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="Atividades"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Saídas"></th>
-                    <th><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Cliente"></th>
-                </tr>
-                <tr class="title-row">
-                    <th style="width: 80px;">Etapa</th>
-                    <th>Fornecedor</th>
-                    <th>Insumos</th>
-                    <th>Ator (Executor)</th>
-                    <th>Atividades</th>
-                    <th>Saídas</th>
-                    <th>Cliente</th>
-                </tr>
-            </thead>
-            <tbody id="flow-body"></tbody>
-        </table>
+        
+        <div class="flow-container">
+            <!-- Cabeçalho de Ícones -->
+            <div class="flow-header-icons">
+                <div><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt=""></div>
+                <div><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt=""></div>
+                <div><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt=""></div>
+                <div><img src="https://cdn-icons-png.flaticon.com/512/6009/6009030.png" alt=""></div>
+                <div><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt=""></div>
+                <div><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt=""></div>
+                <div><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt=""></div>
+            </div>
+            <!-- Cabeçalho de Títulos -->
+            <div class="flow-header-labels">
+                <div>Etapa</div>
+                <div>Fornecedor</div>
+                <div>Insumos</div>
+                <div>Ator</div>
+                <div>Atividades</div>
+                <div>Saídas</div>
+                <div>Cliente</div>
+            </div>
+            <!-- Lista de Atividades Injetada pelo JS -->
+            <div id="flow-items-container"></div>
+        </div>
     </div>
 
     <script src="js/parser.js"></script>

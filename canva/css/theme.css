@@ -6,15 +6,15 @@
     --soft-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
     --text-main: #2c3e50;
     --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    /* Grid de Atividades: Etapa | Forn | Insumo | Ator | Atividades | Saídas | Cliente */
+    --flow-grid-template: 60px 130px 130px 130px 1fr 130px 130px;
 }
 
-/* Ajuste de Fundo Geral */
 body {
     background: var(--bg-gradient) !important;
     min-height: 100vh;
 }
 
-/* Container com Glassmorphism */
 .glass-container {
     background: var(--glass-bg);
     backdrop-filter: blur(8px);
@@ -28,7 +28,6 @@ body {
     margin: 20px auto;
 }
 
-/* Título Isolado */
 .process-title-header {
     text-align: center;
     margin-bottom: 25px;
@@ -44,12 +43,11 @@ body {
     letter-spacing: 1px;
 }
 
-/* Cabeçalho Linear A, B, C, D */
 .meta-linear-grid {
     display: flex;
     flex-direction: column;
     gap: 1px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
     overflow: hidden;
@@ -65,20 +63,20 @@ body {
 .meta-letter-box {
     background: var(--primary-elegant);
     color: white;
-    width: 40px;
+    width: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .meta-label-box {
-    width: 220px;
-    padding: 10px 15px;
+    width: 200px;
+    padding: 8px 15px;
     font-weight: 700;
     color: var(--text-main);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     background: #f9f9f9;
     border-right: 1px solid #eee;
     display: flex;
@@ -87,105 +85,138 @@ body {
 
 .meta-value-box {
     flex: 1;
-    padding: 10px 15px;
-    font-size: 0.9rem;
+    padding: 8px 15px;
+    font-size: 0.85rem;
     color: #444;
     display: flex;
     align-items: center;
 }
 
-/* Levantamento em Cards */
+/* Levantamento em Cards Compactos */
 .survey-card-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 30px;
 }
 
 .survey-card {
     display: grid;
-    grid-template-columns: 450px 1fr;
+    grid-template-columns: 400px 1fr;
     background: white;
     border: 1px solid #eee;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
-    transition: box-shadow 0.2s;
-}
-
-.survey-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .card-info-side {
     display: flex;
     align-items: center;
-    padding: 15px;
+    padding: 8px 15px;
     background: #fcfcfc;
     border-right: 1px solid #f0f0f0;
-    gap: 15px;
+    gap: 12px;
 }
 
 .card-num {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 800;
     color: #ddd;
 }
 
 .card-icon-box {
-    font-size: 1.8rem;
-    min-width: 40px;
+    font-size: 1.4rem;
+    min-width: 30px;
     text-align: center;
-}
-
-.card-text-content {
-    display: flex;
-    flex-direction: column;
 }
 
 .card-item-name {
     color: var(--primary-elegant);
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .card-item-desc {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #888;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
 .card-responses-side {
-    padding: 15px;
+    padding: 8px 15px;
     display: flex;
     align-items: center;
 }
 
-/* Suavização da Tabela de Fluxo */
-.flow-table-refined {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    overflow: hidden;
+/* Fluxo em Cards Suaves */
+.flow-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.flow-table-refined thead tr.title-row th {
-    background: var(--primary-elegant) !important;
+.flow-header-labels {
+    display: grid;
+    grid-template-columns: var(--flow-grid-template);
+    padding: 10px 0;
+    background: var(--primary-elegant);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-.flow-table-refined td {
+.flow-header-icons {
+    display: grid;
+    grid-template-columns: var(--flow-grid-template);
+    padding: 5px 0;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.flow-header-icons img {
+    height: 24px;
+    width: auto;
+    opacity: 0.7;
+    margin: 0 auto;
+}
+
+.activity-card {
+    display: grid;
+    grid-template-columns: var(--flow-grid-template);
     background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.1s;
 }
+
+.activity-card:hover {
+    background: #fdfdfd;
+    border-color: var(--secondary-elegant);
+}
+
+.activity-cell {
+    padding: 12px 10px;
+    font-size: 0.8rem;
+    color: #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-right: 1px solid rgba(0,0,0,0.02);
+}
+
+.activity-cell:last-child { border-right: none; }
+.activity-cell.desc-cell { text-align: left; justify-content: flex-start; }
+.step-num { font-weight: 800; color: var(--primary-elegant); font-size: 1rem; }
 
 @media print {
     body { background: white !important; padding: 0; }
-    .glass-container { 
-        box-shadow: none; 
-        border: none; 
-        backdrop-filter: none; 
-        padding: 0;
-    }
-    .survey-card { break-inside: avoid; border: 1px solid #ddd; }
-    .meta-linear-grid { border: 1px solid #ccc; }
+    .glass-container { box-shadow: none; border: none; backdrop-filter: none; padding: 0; }
+    .survey-card, .activity-card { break-inside: avoid; border: 1px solid #eee; margin-bottom: 5px; }
+    .flow-header-labels { background: #333 !important; color: white !important; }
 }

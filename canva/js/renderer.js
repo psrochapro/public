@@ -1,27 +1,27 @@
 const renderer = {
     config: [
-        { id: 'atores', label: 'Atores Envolvidos', icon: '👥', desc: 'Quem são os participantes (pessoas, cargos, setores...) que desempenham atividades?' },
-        { id: 'entradas', label: 'Principais Entradas', icon: '📥', desc: 'Quais os fatos que iniciam o processo? Podem ser materiais ou eventos intangíveis.' },
-        { id: 'saidas', label: 'Principais Saídas', icon: '📤', desc: 'Quais resultados gerados no processo? (agendamento, documentos, formulários).' },
-        { id: 'interessados', label: 'Interessados', icon: '👤', desc: 'Quem são os beneficiários do processo, a quem se destinam os resultados gerados?' },
-        { id: 'normas', label: 'Leis e Normas Aplicadas', icon: '⚖️', desc: 'Quais leis, decretos ou instruções normativas disciplinam a execução do processo?' },
-        { id: 'lgpd', label: 'Gestão LGPD', icon: '🛡️', desc: 'Ao executar uma instância do processo, quais os dados pessoais envolvidos?' },
-        { id: 'recursos', label: 'Recursos Tecnológicos', icon: '💻', desc: 'Há integração de sistemas? Há possibilidade de aprimoramento?' },
-        { id: 'documentos', label: 'Gestão Documental CPAD', icon: '📄', desc: 'Quais os documentos presentes e suas respectivas temporalidades de guarda?' },
-        { id: 'sgpe', label: 'Parâmetros SGPE', icon: '⌨️', desc: 'Define os parâmetros do SGPe: Assunto, Classe e Sigilo.' },
-        { id: 'indicadores', label: 'Indicadores de Performance', icon: '📊', desc: 'Quais os indicadores utilizados para apuração do resultado do processo?' },
-        { id: 'gatilho', label: 'Gatilho de Início', icon: '☝️', desc: 'O que dá início ao processo? E-mail, Chamado, Formulário, etc.' }
+        { id: 'atores', label: 'Atores Envolvidos', icon: '👥', desc: 'Participantes que desempenham atividades.' },
+        { id: 'entradas', label: 'Principais Entradas', icon: '📥', desc: 'Fatos ou materiais que iniciam o processo.' },
+        { id: 'saidas', label: 'Principais Saídas', icon: '📤', desc: 'Resultados gerados (documentos, formulários).' },
+        { id: 'interessados', label: 'Interessados', icon: '👤', desc: 'Beneficiários que recebem os resultados.' },
+        { id: 'normas', label: 'Leis e Normas Aplicadas', icon: '⚖️', desc: 'Leis ou normas que disciplinam a execução.' },
+        { id: 'lgpd', label: 'Gestão LGPD', icon: '🛡️', desc: 'Dados pessoais envolvidos no processo.' },
+        { id: 'recursos', label: 'Recursos Tecnológicos', icon: '💻', desc: 'Sistemas e ferramentas de apoio.' },
+        { id: 'documentos', label: 'Gestão Documental CPAD', icon: '📄', desc: 'Documentos e temporalidade de guarda.' },
+        { id: 'sgpe', label: 'Parâmetros SGPE', icon: '⌨️', desc: 'Assunto, Classe e Sigilo definidos.' },
+        { id: 'indicadores', label: 'Indicadores de Performance', icon: '📊', desc: 'Métricas de resultado do processo.' },
+        { id: 'gatilho', label: 'Gatilho de Início', icon: '☝️', desc: 'Evento exato que dispara o processo.' }
     ],
 
     render(data) {
-        // Render Header
+        // Render Header Linear
         document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        // Render Survey Cards
+        // Render Survey Cards (Compactos)
         const surveyContainer = document.getElementById('survey-container');
         surveyContainer.innerHTML = '';
         
@@ -48,21 +48,21 @@ const renderer = {
                 </div>`;
         });
 
-        // Render Flow
-        const flowBody = document.getElementById('flow-body');
-        flowBody.innerHTML = '';
+        // Render Flow Cards (Grid invisível)
+        const flowItemsContainer = document.getElementById('flow-items-container');
+        flowItemsContainer.innerHTML = '';
         if (data.fluxo) {
             data.fluxo.forEach(item => {
-                flowBody.innerHTML += `
-                    <tr>
-                        <td style="text-align:center; font-weight:bold">${item.etapa || '-'}</td>
-                        <td>${item.fornecedor || ''}</td>
-                        <td>${item.insumos || ''}</td>
-                        <td>${item.ator || ''}</td>
-                        <td>${item.atividades || ''}</td>
-                        <td>${item.saídas || item.saidas || ''}</td>
-                        <td>${item.cliente || ''}</td>
-                    </tr>`;
+                flowItemsContainer.innerHTML += `
+                    <div class="activity-card">
+                        <div class="activity-cell step-num">${item.etapa || '-'}</div>
+                        <div class="activity-cell">${item.fornecedor || ''}</div>
+                        <div class="activity-cell">${item.insumos || ''}</div>
+                        <div class="activity-cell">${item.ator || ''}</div>
+                        <div class="activity-cell desc-cell">${item.atividades || ''}</div>
+                        <div class="activity-cell">${item.saídas || item.saidas || ''}</div>
+                        <div class="activity-cell">${item.cliente || ''}</div>
+                    </div>`;
             });
         }
     }
