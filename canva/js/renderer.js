@@ -1,27 +1,26 @@
 const renderer = {
     config: [
-        { id: 'atores', label: 'Atores Envolvidos', icon: '👥' },
-        { id: 'entradas', label: 'Principais Entradas', icon: '📥' },
-        { id: 'saidas', label: 'Principais Saídas', icon: '📤' },
+        { id: 'atores', label: 'Atores', icon: '👥' },
+        { id: 'entradas', label: 'Entradas', icon: '📥' },
+        { id: 'saidas', label: 'Saídas', icon: '📤' },
         { id: 'interessados', label: 'Interessados', icon: '👤' },
-        { id: 'normas', label: 'Leis e Normas Aplicadas', icon: '⚖️' },
-        { id: 'lgpd', label: 'Gestão LGPD', icon: '🛡️' },
-        { id: 'recursos', label: 'Recursos Tecnológicos', icon: '💻' },
-        { id: 'documentos', label: 'Gestão Documental', icon: '📄' },
-        { id: 'sgpe', label: 'Parâmetros SGPE', icon: '⌨️' },
+        { id: 'normas', label: 'Normas', icon: '⚖️' },
+        { id: 'lgpd', label: 'LGPD', icon: '🛡️' },
+        { id: 'recursos', label: 'Sistemas', icon: '💻' },
+        { id: 'documentos', label: 'Documentos', icon: '📄' },
+        { id: 'sgpe', label: 'SGPE', icon: '⌨️' },
         { id: 'indicadores', label: 'Indicadores', icon: '📊' },
-        { id: 'gatilho', label: 'Gatilho de Início', icon: '☝️' }
+        { id: 'gatilho', label: 'Gatilho', icon: '☝️' }
     ],
 
     render(data) {
-        // Render Header
         document.getElementById('val-nome').innerText = (data.nome || ['Design de Processo']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
 
-        // Render Inventory Cards
+        // Render Inventory Compact
         const invContainer = document.getElementById('inventory-container');
         invContainer.innerHTML = '';
         this.config.forEach(conf => {
@@ -37,42 +36,33 @@ const renderer = {
                     <span class="card-title">${conf.label}</span>
                 </div>
                 <div class="card-pills">
-                    ${items.map(t => `<span class="modern-pill">${t}</span>`).join('') || '<span style="color:#555">Nenhum dado</span>'}
+                    ${items.map(t => `<span class="modern-pill">${t}</span>`).join('') || '<span style="color:#444; font-size:10px">N/A</span>'}
                 </div>
             `;
             invContainer.appendChild(card);
         });
 
-        // Render Timeline Flow
+        // Render Glass Table Flow
         const flowContainer = document.getElementById('flow-container');
         flowContainer.innerHTML = '';
         if (data.fluxo) {
             data.fluxo.forEach(item => {
-                const step = document.createElement('div');
-                step.className = 'timeline-item';
-                step.innerHTML = `
-                    <div class="step-number">${item.etapa || '?'}</div>
-                    <div class="timeline-content glass">
-                        <div class="act-main">
-                            <div class="act-title">Atividade</div>
-                            <div class="act-detail">${item.atividades || '---'}</div>
-                            <div class="act-actor">Executor: ${item.ator || 'N/A'}</div>
-                        </div>
-                        <div class="side-data">
-                            <h4>Insumos</h4>
-                            <p>${item.insumos || '---'}</p>
-                            <h4 style="margin-top:15px">Fornecedor</h4>
-                            <p>${item.fornecedor || '---'}</p>
-                        </div>
-                        <div class="side-data">
-                            <h4>Saídas</h4>
-                            <p>${item.saídas || item.saidas || '---'}</p>
-                            <h4 style="margin-top:15px">Cliente</h4>
-                            <p>${item.cliente || '---'}</p>
-                        </div>
+                const row = document.createElement('div');
+                row.className = 'flow-row glass';
+                row.innerHTML = `
+                    <div class="etapa-badge">${item.etapa || '-'}</div>
+                    <div class="sub-info">
+                        <b>Fornecedor</b> ${item.fornecedor || '-'}
+                        <b style="margin-top:5px">Insumos</b> ${item.insumos || '-'}
+                    </div>
+                    <div class="actor-box">${item.ator || 'N/A'}</div>
+                    <div class="activity-text">${item.atividades || '---'}</div>
+                    <div class="sub-info">
+                        <b>Saídas</b> ${item.saídas || item.saidas || '-'}
+                        <b style="margin-top:5px">Cliente</b> ${item.cliente || '-'}
                     </div>
                 `;
-                flowContainer.appendChild(step);
+                flowContainer.appendChild(row);
             });
         }
     }

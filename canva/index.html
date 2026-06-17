@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Process Designer Pro</title>
+    <title>ProcessFlow Pro | Compact</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/modern-layout.css">
     <link rel="stylesheet" href="css/modern-style.css">
 </head>
@@ -26,32 +26,47 @@
     </nav>
 
     <main class="main-content" id="canvasPrint">
-        <!-- Dashboard Header -->
+        <!-- Dashboard Header Slim -->
         <header class="dashboard-header glass">
-            <div class="header-main">
+            <div class="header-top">
                 <h1 id="val-nome">Título do Processo</h1>
-                <div class="objective-tag" id="val-objetivo">Objetivo do processo será exibido aqui.</div>
+                <div class="header-meta">
+                    <div class="meta-chip"><span>Macro</span><strong id="val-macroprocesso">---</strong></div>
+                    <div class="meta-chip"><span>Área</span><strong id="val-area">---</strong></div>
+                    <div class="meta-chip"><span>Dono</span><strong id="val-dono">---</strong></div>
+                </div>
             </div>
-            <div class="header-meta">
-                <div class="meta-chip"><span>Macro</span><strong id="val-macroprocesso">---</strong></div>
-                <div class="meta-chip"><span>Área</span><strong id="val-area">---</strong></div>
-                <div class="meta-chip"><span>Dono</span><strong id="val-dono">---</strong></div>
-            </div>
+            <div class="objective-bar" id="val-objetivo">Objetivo do processo será exibido aqui em uma linha elegante.</div>
         </header>
 
-        <!-- Seção 1: Inventário (Cards) -->
+        <!-- Seção 1: Levantamento Compacto -->
         <section class="section-container">
-            <h2 class="section-title">Levantamento Estruturado</h2>
+            <div class="section-header">
+                <span class="dot"></span>
+                <h2>Levantamento Estruturado</h2>
+            </div>
             <div class="inventory-grid" id="inventory-container">
-                <!-- Cards inseridos via JS -->
+                <!-- Cards compactos via JS -->
             </div>
         </section>
 
-        <!-- Seção 2: Fluxo (Timeline) -->
+        <!-- Seção 2: Fluxo de Tabela Glass -->
         <section class="section-container">
-            <h2 class="section-title">Fluxo de Execução</h2>
-            <div class="timeline-container" id="flow-container">
-                <!-- Itens da timeline via JS -->
+            <div class="section-header">
+                <span class="dot"></span>
+                <h2>Fluxo de Atividades</h2>
+            </div>
+            <div class="flow-glass-table">
+                <div class="flow-thead">
+                    <div class="th-etapa">#</div>
+                    <div class="th-inputs">Fornecedor / Insumos</div>
+                    <div class="th-actor">Ator</div>
+                    <div class="th-activity">Atividades Detalhadas</div>
+                    <div class="th-outputs">Saídas / Cliente</div>
+                </div>
+                <div id="flow-container">
+                    <!-- Linhas horizontais via JS -->
+                </div>
             </div>
         </section>
     </main>
