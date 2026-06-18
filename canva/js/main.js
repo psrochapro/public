@@ -9,6 +9,10 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
         renderer.render(data);
     };
     reader.readAsText(file);
+
+    // Limpa o valor do input para permitir que o mesmo arquivo seja re-importado
+    // Isso resolve o problema do evento 'change' não disparar para nomes idênticos
+    this.value = '';
 });
 
 // Ao carregar a página, verifica se veio de um link compartilhado (Async)
