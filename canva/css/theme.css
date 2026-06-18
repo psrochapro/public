@@ -1,25 +1,30 @@
 :root {
     --primary-elegant: #1a4d2e;
     --secondary-elegant: #4f6f52;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --soft-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --glass-bg: rgba(255, 255, 255, 0.45); /* Mais transparente */
+    --glass-border: rgba(255, 255, 255, 0.6); /* Borda de reflexo */
+    --soft-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     --text-main: #2c3e50;
-    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    /* Gradiente mais vibrante para destacar o vidro */
+    --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    
     /* Grid de Atividades: Etapa | Forn | Insumo | Ator | Atividades | Saídas | Cliente */
-    --flow-grid-template: 60px 130px 130px 130px 1fr 130px 130px;
+    /* No browser, mantemos um equilíbrio visual */
+    --flow-grid-template: 50px 1.2fr 1.2fr 1.2fr 2.5fr 1.2fr 1.2fr;
 }
 
 body {
     background: var(--bg-gradient) !important;
     min-height: 100vh;
+    color: var(--text-main);
 }
 
+/* Container Principal com Efeito Vidro */
 .glass-container {
     background: var(--glass-bg);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 15px;
+    backdrop-filter: blur(12px); /* Blur intensificado */
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
     border: 1px solid var(--glass-border);
     box-shadow: var(--soft-shadow);
     padding: 30px;
@@ -43,21 +48,22 @@ body {
     letter-spacing: 1px;
 }
 
+/* Cabeçalho A, B, C, D */
 .meta-linear-grid {
     display: flex;
     flex-direction: column;
     gap: 1px;
     margin-bottom: 25px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--glass-border);
 }
 
 .meta-linear-row {
     display: flex;
     align-items: stretch;
-    background: white;
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .meta-letter-box {
@@ -77,8 +83,8 @@ body {
     font-weight: 700;
     color: var(--text-main);
     font-size: 0.8rem;
-    background: #f9f9f9;
-    border-right: 1px solid #eee;
+    background: rgba(255, 255, 255, 0.4);
+    border-right: 1px solid rgba(0,0,0,0.05);
     display: flex;
     align-items: center;
 }
@@ -87,12 +93,12 @@ body {
     flex: 1;
     padding: 8px 15px;
     font-size: 0.85rem;
-    color: #444;
+    color: #333;
     display: flex;
     align-items: center;
 }
 
-/* Levantamento em Cards Compactos */
+/* Cards de Levantamento */
 .survey-card-list {
     display: flex;
     flex-direction: column;
@@ -102,10 +108,10 @@ body {
 
 .survey-card {
     display: grid;
-    grid-template-columns: 400px 1fr;
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 6px;
+    grid-template-columns: 380px 1fr;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
     overflow: hidden;
 }
 
@@ -113,21 +119,26 @@ body {
     display: flex;
     align-items: center;
     padding: 8px 15px;
-    background: #fcfcfc;
-    border-right: 1px solid #f0f0f0;
+    background: rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(0,0,0,0.05);
     gap: 12px;
 }
 
 .card-num {
     font-size: 0.9rem;
     font-weight: 800;
-    color: #ddd;
+    color: rgba(0,0,0,0.2);
 }
 
 .card-icon-box {
     font-size: 1.4rem;
     min-width: 30px;
     text-align: center;
+}
+
+.card-text-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .card-item-name {
@@ -138,7 +149,7 @@ body {
 
 .card-item-desc {
     font-size: 0.7rem;
-    color: #888;
+    color: #666;
     line-height: 1.2;
 }
 
@@ -148,11 +159,11 @@ body {
     align-items: center;
 }
 
-/* Fluxo em Cards Suaves */
+/* Fluxo de Atividades */
 .flow-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .flow-header-labels {
@@ -161,7 +172,7 @@ body {
     padding: 10px 0;
     background: var(--primary-elegant);
     color: white;
-    border-radius: 8px 8px 0 0;
+    border-radius: 10px 10px 0 0;
     text-align: center;
     font-size: 0.75rem;
     font-weight: bold;
@@ -172,51 +183,85 @@ body {
     display: grid;
     grid-template-columns: var(--flow-grid-template);
     padding: 5px 0;
-    background: #f9f9f9;
-    border-bottom: 1px solid #eee;
+    background: rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
     text-align: center;
 }
 
 .flow-header-icons img {
-    height: 24px;
+    height: 22px;
     width: auto;
-    opacity: 0.7;
-    margin: 0 auto;
+    opacity: 0.8;
 }
 
 .activity-card {
     display: grid;
     grid-template-columns: var(--flow-grid-template);
-    background: white;
-    border-radius: 8px;
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    transition: transform 0.1s;
-}
-
-.activity-card:hover {
-    background: #fdfdfd;
-    border-color: var(--secondary-elegant);
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
 }
 
 .activity-cell {
-    padding: 12px 10px;
+    padding: 10px;
     font-size: 0.8rem;
-    color: #444;
+    color: #333;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-right: 1px solid rgba(0,0,0,0.02);
+    border-right: 1px solid rgba(0,0,0,0.03);
 }
 
 .activity-cell:last-child { border-right: none; }
 .activity-cell.desc-cell { text-align: left; justify-content: flex-start; }
-.step-num { font-weight: 800; color: var(--primary-elegant); font-size: 1rem; }
+.step-num { font-weight: 800; color: var(--primary-elegant); }
 
+/* --- REGRAS EXCLUSIVAS PARA PDF / IMPRESSÃO --- */
 @media print {
-    body { background: white !important; padding: 0; }
-    .glass-container { box-shadow: none; border: none; backdrop-filter: none; padding: 0; }
-    .survey-card, .activity-card { break-inside: avoid; border: 1px solid #eee; margin-bottom: 5px; }
-    .flow-header-labels { background: #333 !important; color: white !important; }
+    :root {
+        /* Proporção otimizada para Atividades (35%) */
+        --flow-grid-template: 40px 12% 12% 12% 34% 12% 12% !important;
+    }
+
+    body { 
+        background: white !important; 
+        padding: 0; 
+    }
+
+    .glass-container { 
+        box-shadow: none; 
+        border: none; 
+        backdrop-filter: none; 
+        background: white;
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .survey-card, .activity-card, .meta-linear-grid {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+        margin-bottom: 4px;
+    }
+
+    .card-info-side, .meta-label-box, .flow-header-icons {
+        background: #f9f9f9 !important;
+    }
+
+    .activity-cell {
+        font-size: 8.5pt; /* Fonte compacta para caber mais texto */
+        padding: 6px 4px;
+    }
+
+    .flow-header-labels {
+        background: #1a4d2e !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact; /* Adicionado para compatibilidade */
+    }
+
+    .pill {
+        border: 1px solid #ccc !important;
+        background: #f0f0f0 !important;
+    }
 }

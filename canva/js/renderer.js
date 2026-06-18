@@ -21,7 +21,7 @@ const renderer = {
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        // Render Survey Cards (Compactos)
+        // Render Survey Cards
         const surveyContainer = document.getElementById('survey-container');
         surveyContainer.innerHTML = '';
         
@@ -48,7 +48,7 @@ const renderer = {
                 </div>`;
         });
 
-        // Render Flow Cards (Grid invisível)
+        // Render Flow Cards
         const flowItemsContainer = document.getElementById('flow-items-container');
         flowItemsContainer.innerHTML = '';
         if (data.fluxo) {
