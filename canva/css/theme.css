@@ -157,32 +157,43 @@ body {
     align-items: center;
 }
 
+/* Redução do texto das pílulas */
+.pill {
+    font-size: 0.72rem !important;
+}
+
 .flow-container {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+/* Ajuste: Cabeçalho Claro e Elegante */
 .flow-header-compact {
     display: grid;
     grid-template-columns: var(--flow-grid-template);
-    background: var(--primary-elegant);
-    color: white;
+    background: rgba(255, 255, 255, 0.6); /* Fundo claro */
+    color: var(--primary-elegant); /* Texto verde escuro */
     border-radius: 10px 10px 0 0;
     padding: 12px 0;
     text-align: center;
     align-items: center;
+    border-bottom: 2px solid var(--primary-elegant); /* Borda de destaque */
 }
 
 .header-label {
     font-size: 0.7rem;
-    font-weight: bold;
+    font-weight: 800;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     white-space: nowrap;
+}
+
+.header-label span {
+    font-size: 0.9rem; /* Tamanho do emoji levemente reduzido */
 }
 
 .activity-card {
