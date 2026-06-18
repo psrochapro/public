@@ -1,110 +1,57 @@
 @media print {
-    body { 
-        background: white !important; 
-        padding: 0; 
-        margin: 0;
-    }
+    body { background: white !important; padding: 0; margin: 0; }
     
     .glass-container { 
-        box-shadow: none; 
-        border: none; 
-        backdrop-filter: none; 
-        background: white; 
-        padding: 0; 
-        width: 100% !important;
-        max-width: 100% !important;
+        box-shadow: none; border: none; backdrop-filter: none; background: white; 
+        padding: 0; width: 100% !important; max-width: 100% !important;
     }
 
-    .process-title-header h1 { 
-        font-size: 1.2rem !important; 
-        margin-top: 10mm;
-    }
+    .process-title-header h1 { font-size: 1.2rem !important; margin-top: 5mm; }
 
-    /* Dashboard no PDF com mais "amor" e sem cortes */
     .header-dashboard { 
-        display: grid !important;
-        grid-template-columns: 1fr 130px !important; /* Largura fixa menor para o contador */
-        gap: 8px !important;
-        margin-bottom: 15px;
-        width: 100% !important;
-        box-sizing: border-box;
+        display: grid !important; grid-template-columns: 1fr 130px !important; 
+        gap: 8px !important; margin-bottom: 15px; width: 100% !important;
     }
     
-    .meta-side { gap: 2px !important; }
-    
-    .meta-card-row { 
-        background: white !important; 
-        border: 1px solid #eee !important; 
-    }
+    .meta-card-row { background: white !important; border: 1px solid #eee !important; }
 
-    /* Estilização elegante do contador no PDF */
     .activity-counter-card { 
-        background: #fdfdfd !important; 
-        color: #1a4d2e !important; 
-        border: 2px solid #1a4d2e !important; /* Borda verde sólida */
-        box-shadow: none !important;
-        border-radius: 10px !important;
-        padding: 5px !important;
+        background: #fdfdfd !important; color: #1a4d2e !important; 
+        border: 2px solid #1a4d2e !important; box-shadow: none !important;
+        border-radius: 10px !important; padding: 5px !important;
     }
     
-    .counter-number { 
-        font-size: 2.2rem !important; 
-        font-weight: 900 !important;
-    }
+    .counter-number { font-size: 2.2rem !important; }
 
-    .counter-label {
-        font-size: 0.6rem !important;
-        color: #666 !important;
-    }
-
-    /* Levantamento: Largura segura para evitar cortes */
     .survey-card { 
-        grid-template-columns: 260px 1fr !important; 
-        background: white !important; 
-        border: 1px solid #ddd !important; 
-        break-inside: avoid; 
-        width: 100% !important;
-        box-sizing: border-box;
+        grid-template-columns: 280px 1fr !important; 
+        background: white !important; border: 1px solid #ddd !important; 
+        break-inside: avoid; width: 100% !important; box-sizing: border-box;
     }
 
     .card-item-name { white-space: nowrap !important; }
     
-    .flow-table-styled thead { display: table-header-group; }
+    .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
 
-    .flow-header-row th {
-        background: #f2f2f2 !important;
-        color: #1a4d2e !important;
-        border-bottom: 2px solid #1a4d2e !important;
-        font-size: 7.5pt !important;
-        text-transform: none !important;
-        padding: 8px 2px !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+    .flow-header-row th, .obs-table-styled th {
+        background: #f2f2f2 !important; color: #1a4d2e !important;
+        border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
+        text-transform: none !important; padding: 8px 2px !important;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
 
-    .activity-row-card td {
-        background: white !important;
-        border: 1px solid #eee !important;
-        font-size: 8pt !important;
-        padding: 6px 4px !important;
+    .activity-row-card td, .obs-row td {
+        background: white !important; border: 1px solid #eee !important;
+        font-size: 8pt !important; padding: 6px 4px !important;
     }
 
-    .activity-row-card td.highlight-col {
-        background: #f4f4f4 !important;
-        color: #000 !important;
-    }
+    .activity-row-card td.highlight-col { background: #f4f4f4 !important; color: #000 !important; }
+
+    .obs-row td::before { content: "• "; color: #1a4d2e; font-weight: bold; }
 
     .pill {
-        font-size: 7pt !important;
-        border: 1px solid #ccc !important;
-        background: #f9f9f9 !important;
-        padding: 2px 5px !important;
-    }
-
-    .observacoes-section {
-        background: white !important;
-        border: 1px solid #eee !important;
-        page-break-before: auto;
+        font-size: 7pt !important; border: 1px solid #ccc !important;
+        background: #f9f9f9 !important; padding: 2px 5px !important;
     }
 
     .show-print { display: inline !important; }

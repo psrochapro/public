@@ -14,15 +14,18 @@ const renderer = {
     ],
 
     render(data) {
+        // 1. Cabeçalho e Metadados
         document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
+        // 2. Contador de Atividades
         const totalAtividades = data.fluxo ? data.fluxo.length : 0;
         document.getElementById('val-total-atividades').innerText = totalAtividades;
 
+        // 3. Cards de Levantamento (11 itens)
         const surveyContainer = document.getElementById('survey-container');
         surveyContainer.innerHTML = '';
         
@@ -57,6 +60,7 @@ const renderer = {
                 </div>`;
         });
 
+        // 4. Linhas de Fluxo (SIPOC + Regras)
         const flowItemsContainer = document.getElementById('flow-items-container');
         flowItemsContainer.innerHTML = '';
         if (data.fluxo) {
@@ -78,15 +82,26 @@ const renderer = {
             });
         }
 
-        // AJUSTE: Removida a classe no-print para que as observações apareçam no PDF
+        // 5. Seção de Observações (Estrutura de Tabela para o PDF)
         const obsContainer = document.getElementById('obs-section-container');
         if (data.observacoes && data.observacoes.length > 0) {
-            const obsHtml = data.observacoes.map(o => `<li>${o}</li>`).join('');
+            const obsRowsHtml = data.observacoes.map(o => `
+                <tr class="obs-row">
+                    <td>${o}</td>
+                </tr>
+            `).join('');
+
             obsContainer.innerHTML = `
-                <div class="observacoes-section">
-                    <div class="obs-header">📝 Observações Gerais</div>
-                    <ul class="obs-list">${obsHtml}</ul>
-                </div>
+                <table class="obs-table-styled">
+                    <thead>
+                        <tr>
+                            <th>📝 Observações Gerais</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${obsRowsHtml}
+                    </tbody>
+                </table>
             `;
         } else {
             obsContainer.innerHTML = '';
