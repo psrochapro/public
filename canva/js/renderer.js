@@ -39,9 +39,7 @@ const renderer = {
                 'indicadores': 'background-color: #f3e5f5; border-color: #e1bee7;'
             }[item.id] || '';
 
-            const pillsHtml = itemsToRender.map(txt => 
-                `<span class="pill" style="${semanticStyle}">${txt}</span>`
-            ).join('');
+            const pillsHtml = itemsToRender.map(txt => `<span class="pill" style="${semanticStyle}">${txt}</span>`).join('');
             
             surveyContainer.innerHTML += `
                 <div class="survey-card" data-survey-id="${item.id}">
@@ -80,12 +78,12 @@ const renderer = {
             });
         }
 
-        // Renderizar Observações
+        // AJUSTE: Removida a classe no-print para que as observações apareçam no PDF
         const obsContainer = document.getElementById('obs-section-container');
         if (data.observacoes && data.observacoes.length > 0) {
             const obsHtml = data.observacoes.map(o => `<li>${o}</li>`).join('');
             obsContainer.innerHTML = `
-                <div class="observacoes-section no-print">
+                <div class="observacoes-section">
                     <div class="obs-header">📝 Observações Gerais</div>
                     <ul class="obs-list">${obsHtml}</ul>
                 </div>

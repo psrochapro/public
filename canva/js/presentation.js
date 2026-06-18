@@ -1,7 +1,7 @@
 const presentation = {
     isPresentationMode: false,
-    currentStep: -1, // -1: Título, 0-10: Itens de Levantamento, 11+: Etapas
-    etapasDisponiveis: [],
+    currentStep: -1, 
+    totalRows: 0,
 
     init() {
         document.getElementById('btn-presentation').addEventListener('click', () => this.togglePresentation());
@@ -9,11 +9,10 @@ const presentation = {
         document.getElementById('pres-prev').addEventListener('click', () => this.prev());
         document.getElementById('pres-exit').addEventListener('click', () => this.togglePresentation());
 
-        // Teclado
         window.addEventListener('keydown', (e) => {
             if (!this.isPresentationMode) return;
-            if (e.key === 'ArrowRight') this.next();
-            if (e.key === 'ArrowLeft') this.prev();
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); this.next(); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); this.prev(); }
             if (e.key === 'Escape') this.togglePresentation();
         });
     },
@@ -24,59 +23,56 @@ const presentation = {
         
         if (this.isPresentationMode) {
             this.currentStep = -1;
-            this.mapearEtapas();
+            this.totalRows = document.querySelectorAll('.activity-row-card').length;
             this.updateView();
         } else {
             this.clearFocus();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    },
-
-    mapearEtapas() {
-        const rows = document.querySelectorAll('.activity-row-card');
-        const etapas = new Set();
-        rows.forEach(row => etapas.add(row.getAttribute('data-etapa')));
-        this.etapasDisponiveis = Array.from(etapas).sort((a, b) => a - b);
     },
 
     updateView() {
         this.clearFocus();
         const surveyCards = document.querySelectorAll('.survey-card');
+        const flowRows = document.querySelectorAll('.activity-row-card');
         const presInfo = document.getElementById('pres-info');
 
         if (this.currentStep === -1) {
-            // Foco no Título e Dashboard
-            document.querySelector('.process-title-header').classList.add('pres-focus');
-            document.querySelector('.header-dashboard').classList.add('pres-focus');
-            presInfo.innerText = "Visão Geral";
+            // Título e Dashboard
+            const header = document.querySelector('.process-title-header');
+            const dash = document.querySelector('.header-dashboard');
+            header.classList.add('pres-focus');
+            dash.classList.add('pres-focus');
+            presInfo.innerText = "Introdução";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } 
         else if (this.currentStep >= 0 && this.currentStep <= 10) {
-            // Foco nos 11 itens
+            // Foco nos 11 Itens
             const card = surveyCards[this.currentStep];
             card.classList.add('pres-focus');
             card.classList.add('active-reveal');
-            presInfo.innerText = `Levantamento: ${this.currentStep + 1} de 11`;
+            presInfo.innerText = `Levantamento: ${this.currentStep + 1} / 11`;
             card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } 
         else {
-            // Foco nas Etapas de Atividades
-            const indexEtapa = this.currentStep - 11;
-            if (indexEtapa < this.etapasDisponiveis.length) {
-                const etapaAtual = this.etapasDisponiveis[indexEtapa];
-                const rows = document.querySelectorAll(`.activity-row-card[data-etapa="${etapaAtual}"]`);
-                rows.forEach(r => r.classList.add('active-etapa'));
-                if (rows[0]) rows[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                presInfo.innerText = `Atividades: Etapa ${etapaAtual}`;
+            // Foco nas Atividades (Linha por Linha para evitar erro em etapas repetidas)
+            const rowIndex = this.currentStep - 11;
+            if (rowIndex < flowRows.length) {
+                const row = flowRows[rowIndex];
+                row.classList.add('pres-focus');
+                row.classList.add('active-row');
+                const etapa = row.querySelector('.step-num').innerText;
+                presInfo.innerText = `Atividade ${rowIndex + 1} (Etapa ${etapa})`;
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
-                // Fim
-                this.currentStep = this.etapasDisponiveis.length + 11;
-                presInfo.innerText = "Fim da Apresentação";
+                presInfo.innerText = "Fim do Fluxo";
             }
         }
     },
 
     next() {
-        const totalSteps = 11 + this.etapasDisponiveis.length;
-        if (this.currentStep < totalSteps - 1) {
+        const max = 11 + this.totalRows;
+        if (this.currentStep < max - 1) {
             this.currentStep++;
             this.updateView();
         }
@@ -91,10 +87,9 @@ const presentation = {
 
     clearFocus() {
         document.querySelectorAll('.pres-focus').forEach(el => el.classList.remove('pres-focus'));
-        document.querySelectorAll('.active-etapa').forEach(el => el.classList.remove('active-etapa'));
-        // Não removemos 'active-reveal' para manter as pílulas que já foram mostradas
+        document.querySelectorAll('.active-row').forEach(el => el.classList.remove('active-row'));
+        // active-reveal permanece para manter o que já foi apresentado
     }
 };
 
-// Iniciar quando o DOM carregar
 window.addEventListener('DOMContentLoaded', () => presentation.init());
