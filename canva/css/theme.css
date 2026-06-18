@@ -28,7 +28,6 @@ body {
     margin: 20px auto;
 }
 
-/* Ajuste C: Título reduzido e Bold */
 .process-title-header {
     text-align: center;
     margin-bottom: 25px;
@@ -38,9 +37,9 @@ body {
 
 .process-title-header h1 {
     color: var(--primary-elegant);
-    font-size: 1.5rem; /* Reduzido */
+    font-size: 1.5rem;
     margin: 0;
-    font-weight: 800; /* Extra Bold */
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -101,7 +100,6 @@ body {
     margin-bottom: 30px;
 }
 
-/* Ajuste A: Efeito de movimento no Mouse */
 .survey-card, .activity-card {
     transition: transform 0.2s ease, background 0.2s ease;
 }
@@ -165,7 +163,6 @@ body {
     gap: 8px;
 }
 
-/* Ajuste D: Cabeçalho horizontal e compacto */
 .flow-header-compact {
     display: grid;
     grid-template-columns: var(--flow-grid-template);
@@ -185,6 +182,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 6px;
+    white-space: nowrap; /* Evita quebra interna */
 }
 
 .activity-card {
@@ -210,12 +208,48 @@ body {
 .activity-cell.desc-cell { text-align: left; justify-content: flex-start; }
 .step-num { font-weight: 800; color: var(--primary-elegant); }
 
+/* Classes de utilidade para controle de visibilidade na impressão */
+.show-print { display: none; }
+
 @media print {
     :root {
+        /* Proporção otimizada para Atividades (34%) */
         --flow-grid-template: 40px 12% 12% 12% 34% 12% 12% !important;
     }
+    
     body { background: white !important; padding: 0; }
-    .glass-container { box-shadow: none; border: none; backdrop-filter: none; background: white; padding: 0; }
-    .survey-card, .activity-card { background: white !important; border: 1px solid #ddd !important; break-inside: avoid; transform: none !important; }
-    .flow-header-compact { background: #1a4d2e !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    
+    .glass-container { 
+        box-shadow: none; 
+        border: none; 
+        backdrop-filter: none; 
+        background: white; 
+        padding: 0; 
+    }
+    
+    /* Aumenta espaço para pílulas reduzindo a coluna de info */
+    .survey-card { 
+        grid-template-columns: 220px 1fr !important; 
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid; 
+        transform: none !important; 
+    }
+    
+    .activity-card { 
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid; 
+        transform: none !important; 
+    }
+
+    .flow-header-compact { 
+        background: #1a4d2e !important; 
+        print-color-adjust: exact; 
+        -webkit-print-color-adjust: exact; 
+    }
+
+    /* Controle de abreviação para impressão */
+    .show-print { display: inline !important; }
+    .hide-print { display: none !important; }
 }
