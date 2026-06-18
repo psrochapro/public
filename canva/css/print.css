@@ -21,7 +21,7 @@
         color: #1a4d2e !important;
         border-bottom: 2px solid #1a4d2e !important;
         font-size: 7.5pt !important;
-        text-transform: none !important; /* Remove o Caps Lock no PDF */
+        text-transform: none !important;
         padding: 8px 2px !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -48,6 +48,7 @@
         padding: 2px 5px !important;
     }
 
+    /* CORREÇÃO PDF: Inverte a visibilidade da etapa */
     .show-print { display: inline !important; }
     .hide-print { display: none !important; }
 }

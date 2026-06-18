@@ -175,18 +175,12 @@ body {
 .flow-header-row th {
     background: rgba(255, 255, 255, 0.6);
     color: var(--primary-elegant);
-    font-size: 0.75rem; /* Ajustado */
+    font-size: 0.75rem;
     font-weight: 800;
     padding: 12px 6px;
     border-bottom: 2px solid var(--primary-elegant);
     text-align: center;
-    white-space: nowrap; /* Garante uma única linha */
-    vertical-align: middle;
-}
-
-/* Alinhamento de emoji no cabeçalho */
-.flow-header-row th span, .flow-header-row th {
-    display: table-cell; 
+    white-space: nowrap;
     vertical-align: middle;
 }
 
@@ -201,10 +195,10 @@ body {
     vertical-align: middle;
 }
 
-/* Destaque Coluna Atividade (Tela) */
+/* Destaque Atividade: Cor mais suave (0.02) */
 .activity-row-card td.highlight-col {
-    background: rgba(26, 77, 46, 0.05); /* Fundo verde ultra-sutil */
-    border-left: 2px solid var(--primary-elegant);
+    background: rgba(26, 77, 46, 0.02) !important; 
+    border-left: 3px solid var(--primary-elegant);
     text-align: left;
     font-weight: 500;
 }
@@ -220,4 +214,6 @@ body {
 }
 
 .step-num { font-weight: 800; color: var(--primary-elegant); }
-.show-print { display: none; }
+
+/* CORREÇÃO VISUALIZAÇÃO: Esconde o "E" da impressão na tela */
+.show-print { display: none !important; }
