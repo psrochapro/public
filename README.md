@@ -19,6 +19,8 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **JSON** | Editor de JSON | [Acessar App](https://psrochapro.github.io/public/jsoneditor/) |
 | **Gantt** | Gerador de Gantt | [Acessar App](https://psrochapro.github.io/public/gantt/) |
 | **Cards** | Gerador de Cards | [Acessar App](https://apps-privados.vercel.app/cards/) |
+| **Tabela Periídica** | Tabela Periódica dos Elementos | [Acessar App](https://psrochapro.github.io/public/pte/) |
+| **Canva** | Canva de Processos | [Acessar App](https://psrochapro.github.io/public/canva/)
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.
