@@ -99,6 +99,15 @@ body {
     margin-bottom: 30px;
 }
 
+.survey-card, .activity-row-card {
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.survey-card:hover, .activity-row-card:hover {
+    transform: translateX(8px);
+    background: rgba(255, 255, 255, 0.7) !important;
+}
+
 .survey-card {
     display: grid;
     grid-template-columns: 380px 1fr;
@@ -106,12 +115,6 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 10px;
     overflow: hidden;
-    transition: transform 0.2s ease;
-}
-
-.survey-card:hover {
-    transform: translateX(8px);
-    background: rgba(255, 255, 255, 0.7);
 }
 
 .card-info-side {
@@ -161,34 +164,30 @@ body {
     background: white;
 }
 
-/* --- TABELA DE FLUXO ESTILIZADA --- */
+/* --- TABELA DE FLUXO --- */
 .flow-table-styled {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 8px; /* Cria o espaço entre "cards" */
+    border-spacing: 0 8px;
     margin-top: -8px;
 }
 
 .flow-header-row th {
     background: rgba(255, 255, 255, 0.6);
     color: var(--primary-elegant);
-    font-size: 0.7rem;
+    font-size: 0.75rem; /* Ajustado */
     font-weight: 800;
-    padding: 12px 10px;
-    text-transform: uppercase;
+    padding: 12px 6px;
     border-bottom: 2px solid var(--primary-elegant);
     text-align: center;
+    white-space: nowrap; /* Garante uma única linha */
+    vertical-align: middle;
 }
 
-.flow-header-row th:first-child { border-radius: 10px 0 0 0; }
-.flow-header-row th:last-child { border-radius: 0 10px 0 0; }
-
-.activity-row-card {
-    transition: transform 0.2s ease;
-}
-
-.activity-row-card:hover {
-    transform: translateX(8px);
+/* Alinhamento de emoji no cabeçalho */
+.flow-header-row th span, .flow-header-row th {
+    display: table-cell; 
+    vertical-align: middle;
 }
 
 .activity-row-card td {
@@ -202,7 +201,14 @@ body {
     vertical-align: middle;
 }
 
-/* Bordas arredondadas para simular card */
+/* Destaque Coluna Atividade (Tela) */
+.activity-row-card td.highlight-col {
+    background: rgba(26, 77, 46, 0.05); /* Fundo verde ultra-sutil */
+    border-left: 2px solid var(--primary-elegant);
+    text-align: left;
+    font-weight: 500;
+}
+
 .activity-row-card td:first-child {
     border-left: 1px solid var(--glass-border);
     border-radius: 10px 0 0 10px;
@@ -213,13 +219,5 @@ body {
     border-radius: 0 10px 10px 0;
 }
 
-.activity-row-card td.desc-cell {
-    text-align: left;
-}
-
-.step-num {
-    font-weight: 800;
-    color: var(--primary-elegant);
-}
-
+.step-num { font-weight: 800; color: var(--primary-elegant); }
 .show-print { display: none; }

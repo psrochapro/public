@@ -66,7 +66,7 @@ const renderer = {
                         <td>${item.fornecedor || ''}</td>
                         <td>${item.insumos || ''}</td>
                         <td>${item.ator || ''}</td>
-                        <td class="desc-cell">${item.atividades || ''}</td>
+                        <td class="highlight-col">${item.atividades || ''}</td>
                         <td>${item.saídas || item.saidas || ''}</td>
                         <td>${item.cliente || ''}</td>
                     </tr>`;

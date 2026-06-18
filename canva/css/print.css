@@ -1,46 +1,30 @@
 @media print {
-    body { 
-        background: white !important; 
-        padding: 0; 
-    }
+    body { background: white !important; padding: 0; }
     
     .glass-container { 
-        box-shadow: none; 
-        border: none; 
-        backdrop-filter: none; 
-        background: white; 
-        padding: 0; 
+        box-shadow: none; border: none; backdrop-filter: none; background: white; padding: 0; 
     }
 
-    .process-title-header h1 {
-        font-size: 1.2rem !important;
-    }
+    .process-title-header h1 { font-size: 1.2rem !important; }
     
     .survey-card { 
         grid-template-columns: 250px 1fr !important; 
-        background: white !important; 
-        border: 1px solid #ddd !important; 
-        break-inside: avoid; 
+        background: white !important; border: 1px solid #ddd !important; break-inside: avoid; 
     }
 
     .card-item-name { white-space: nowrap !important; }
     
-    /* REPETIÇÃO DO CABEÇALHO NO PDF */
-    .flow-table-styled thead {
-        display: table-header-group;
-    }
+    .flow-table-styled thead { display: table-header-group; }
 
     .flow-header-row th {
         background: #f2f2f2 !important;
         color: #1a4d2e !important;
         border-bottom: 2px solid #1a4d2e !important;
-        font-size: 7pt !important;
+        font-size: 7.5pt !important;
+        text-transform: none !important; /* Remove o Caps Lock no PDF */
+        padding: 8px 2px !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-    }
-
-    .activity-row-card {
-        page-break-inside: avoid;
     }
 
     .activity-row-card td {
@@ -50,10 +34,18 @@
         padding: 6px 4px !important;
     }
 
+    /* Bullet simbólico para Atividades no PDF */
+    .activity-row-card td.highlight-col::before {
+        content: "• ";
+        color: #1a4d2e;
+        font-weight: bold;
+    }
+
     .pill {
-        font-size: 7.5pt !important;
+        font-size: 7.2pt !important;
         border: 1px solid #ccc !important;
         background: #f9f9f9 !important;
+        padding: 2px 5px !important;
     }
 
     .show-print { display: inline !important; }
