@@ -11,7 +11,7 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     reader.readAsText(file);
 });
 
-// Ao carregar a página, verifica se veio de um link compartilhado
-window.addEventListener('load', () => {
-    share.checkUrl();
+// Ao carregar a página, verifica se veio de um link compartilhado (Async)
+window.addEventListener('load', async () => {
+    await share.checkUrl();
 });
