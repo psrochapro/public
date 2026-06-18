@@ -9,20 +9,33 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/print.css">
     <link rel="stylesheet" href="css/presentation.css">
-    <!-- Adicionado media="screen" para não afetar o PDF -->
     <link rel="stylesheet" href="css/mobile.css" media="screen">
 </head>
 <body>
 
-    <div class="toolbar no-print">
-        <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
-        <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar Arquivo</button>
-        <button class="btn-template" onclick="template.downloadTemplate()">Gerar Template</button>
-        <button class="btn-example" onclick="template.downloadExample()">Gerar Exemplo</button>
-        <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
-        <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
-        <button class="btn-share" onclick="share.generateShareLink()">Gerar Link</button>
-        <button class="btn-presentation" id="btn-presentation">Apresentação</button>
+    <div class="toolbar-wrapper no-print">
+        <div class="toolbar">
+            <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
+            
+            <div class="btn-group">
+                <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar</button>
+                <button class="btn-export" onclick="persistence.exportCanvas()">Exportar</button>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-template" onclick="template.downloadTemplate()">Template</button>
+                <button class="btn-example" onclick="template.downloadExample()">Exemplo</button>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-print" onclick="window.print()">PDF</button>
+                <button class="btn-share" onclick="share.generateShareLink()">🔗 Link</button>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-presentation" id="btn-presentation">Apresentação</button>
+            </div>
+        </div>
     </div>
 
     <div class="glass-container" id="canvasPrint">
