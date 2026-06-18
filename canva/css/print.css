@@ -1,0 +1,67 @@
+/* REGRAS EXCLUSIVAS PARA IMPRESSÃO PDF */
+@media print {
+    :root {
+        /* Proporção otimizada para Atividades (34%) */
+        --flow-grid-template: 40px 12% 12% 12% 34% 12% 12% !important;
+    }
+    
+    body { 
+        background: white !important; 
+        padding: 0; 
+    }
+    
+    .glass-container { 
+        box-shadow: none; 
+        border: none; 
+        backdrop-filter: none; 
+        background: white; 
+        padding: 0; 
+        max-width: 100%;
+    }
+
+    /* Redução do título do processo no PDF */
+    .process-title-header h1 {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Levantamento: Largura ajustada para não quebrar títulos */
+    .survey-card { 
+        grid-template-columns: 250px 1fr !important; /* Aumentado de 220 para 250 */
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid; 
+        transform: none !important; 
+    }
+
+    /* Garante que o nome do item (ex: Principais Entradas) não quebre linha */
+    .card-item-name {
+        white-space: nowrap !important;
+    }
+
+    .card-item-desc {
+        white-space: normal !important; /* Permite que apenas a descrição quebre */
+    }
+    
+    .activity-card { 
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid; 
+        transform: none !important; 
+    }
+
+    .flow-header-compact { 
+        background: #1a4d2e !important; 
+        print-color-adjust: exact; 
+        -webkit-print-color-adjust: exact; 
+    }
+
+    /* Cores das pílulas na impressão */
+    .pill {
+        border: 1px solid #ccc !important;
+        background: #f9f9f9 !important;
+    }
+
+    /* Controle de abreviação (E em vez de Etapa) */
+    .show-print { display: inline !important; }
+    .hide-print { display: none !important; }
+}
