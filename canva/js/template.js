@@ -128,7 +128,7 @@ Saídas: Comprovante de pagamento
 Cliente: Vencedores
 
 #atividade 9
-Etapa: 1
+Etapa: 6
 Fornecedor: Analista
 Insumos: Checklist preenchido
 Ator: Analista
@@ -137,7 +137,7 @@ Saídas: Minuta do Edital
 Cliente: Gerente
 
 #atividade 10
-Etapa: 2
+Etapa: 6
 Fornecedor: Analista
 Insumos: Minuta do Edital
 Ator: Gerente
@@ -146,7 +146,7 @@ Saídas: Edital publicado
 Cliente: Público Geral
 
 #atividade 11
-Etapa: 3
+Etapa: 6
 Fornecedor: Gerente
 Insumos: Edital publicado
 Ator: Analista
@@ -155,7 +155,7 @@ Saídas: Lista de inscritos
 Cliente: Comissão de Avaliação
 
 #atividade 12
-Etapa: 3
+Etapa: 7
 Fornecedor: Analista
 Insumos: Lista de inscritos
 Ator: Comissão de Avaliação
@@ -164,7 +164,7 @@ Saídas: Parecer final
 Cliente: Gerente
 
 #atividade 13
-Etapa: 4
+Etapa: 7
 Fornecedor: Comissão de Avaliação
 Insumos: Parecer final
 Ator: Gerente
@@ -173,7 +173,7 @@ Saídas: Termo de Homologação
 Cliente: Jurídico
 
 #atividade 14
-Etapa: 5
+Etapa: 7
 Fornecedor: Gerente
 Insumos: Termo de Homologação
 Ator: Jurídico
@@ -182,7 +182,7 @@ Saídas: Contratos assinados
 Cliente: Vencedores
 
 #atividade 15
-Etapa: 6
+Etapa: 7
 Fornecedor: Jurídico
 Insumos: Contratos assinados
 Ator: Financeiro
@@ -191,7 +191,7 @@ Saídas: Comprovante de pagamento
 Cliente: Vencedores
 
 #atividade 16
-Etapa: 1
+Etapa: 7
 Fornecedor: Cliente
 Insumos: Solicitação inicial
 Ator: Analista
@@ -200,7 +200,7 @@ Saídas: Checklist preenchido
 Cliente: Gerente
 
 #atividade 17
-Etapa: 1
+Etapa: 7
 Fornecedor: Analista
 Insumos: Checklist preenchido
 Ator: Analista
@@ -209,7 +209,7 @@ Saídas: Minuta do Edital
 Cliente: Gerente
 
 #atividade 18
-Etapa: 2
+Etapa: 8
 Fornecedor: Analista
 Insumos: Minuta do Edital
 Ator: Gerente
@@ -218,7 +218,7 @@ Saídas: Edital publicado
 Cliente: Público Geral
 
 #atividade 19
-Etapa: 3
+Etapa: 8
 Fornecedor: Gerente
 Insumos: Edital publicado
 Ator: Analista
@@ -227,7 +227,7 @@ Saídas: Lista de inscritos
 Cliente: Comissão de Avaliação
 
 #atividade 20
-Etapa: 3
+Etapa: 8
 Fornecedor: Analista
 Insumos: Lista de inscritos
 Ator: Comissão de Avaliação
@@ -236,7 +236,7 @@ Saídas: Parecer final
 Cliente: Gerente
 
 #atividade 21
-Etapa: 4
+Etapa: 8
 Fornecedor: Comissão de Avaliação
 Insumos: Parecer final
 Ator: Gerente
@@ -245,7 +245,7 @@ Saídas: Termo de Homologação
 Cliente: Jurídico
 
 #atividade 22
-Etapa: 5
+Etapa: 8
 Fornecedor: Gerente
 Insumos: Termo de Homologação
 Ator: Jurídico
@@ -254,7 +254,7 @@ Saídas: Contratos assinados
 Cliente: Vencedores
 
 #atividade 23
-Etapa: 6
+Etapa: 9
 Fornecedor: Jurídico
 Insumos: Contratos assinados
 Ator: Financeiro
@@ -263,7 +263,7 @@ Saídas: Comprovante de pagamento
 Cliente: Vencedores
 
 #atividade 24
-Etapa: 1
+Etapa: 9
 Fornecedor: Analista
 Insumos: Checklist preenchido
 Ator: Analista
@@ -272,7 +272,7 @@ Saídas: Minuta do Edital
 Cliente: Gerente
 
 #atividade 25
-Etapa: 2
+Etapa: 9
 Fornecedor: Analista
 Insumos: Minuta do Edital
 Ator: Gerente
@@ -281,7 +281,7 @@ Saídas: Edital publicado
 Cliente: Público Geral
 
 #atividade 26
-Etapa: 3
+Etapa: 9
 Fornecedor: Gerente
 Insumos: Edital publicado
 Ator: Analista
@@ -290,7 +290,7 @@ Saídas: Lista de inscritos
 Cliente: Comissão de Avaliação
 
 #atividade 27
-Etapa: 3
+Etapa: 10
 Fornecedor: Analista
 Insumos: Lista de inscritos
 Ator: Comissão de Avaliação
@@ -299,7 +299,7 @@ Saídas: Parecer final
 Cliente: Gerente
 
 #atividade 28
-Etapa: 4
+Etapa: 10
 Fornecedor: Comissão de Avaliação
 Insumos: Parecer final
 Ator: Gerente
@@ -308,7 +308,7 @@ Saídas: Termo de Homologação
 Cliente: Jurídico
 
 #atividade 29
-Etapa: 5
+Etapa: 10
 Fornecedor: Gerente
 Insumos: Termo de Homologação
 Ator: Jurídico
@@ -317,7 +317,7 @@ Saídas: Contratos assinados
 Cliente: Vencedores
 
 #atividade 30
-Etapa: 6
+Etapa: 10
 Fornecedor: Jurídico
 Insumos: Contratos assinados
 Ator: Financeiro
@@ -326,7 +326,7 @@ Saídas: Comprovante de pagamento
 Cliente: Vencedores
 
 #atividade 31
-Etapa: 6
+Etapa: 10
 Fornecedor: Presidente
 Insumos: Todo o processo
 Ator: Expedição

@@ -1,15 +1,70 @@
 @media print {
-    body { background: white !important; padding: 0; }
+    body { 
+        background: white !important; 
+        padding: 0; 
+        margin: 0;
+    }
     
     .glass-container { 
-        box-shadow: none; border: none; backdrop-filter: none; background: white; padding: 0; 
+        box-shadow: none; 
+        border: none; 
+        backdrop-filter: none; 
+        background: white; 
+        padding: 0; 
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    .process-title-header h1 { font-size: 1.2rem !important; }
+    .process-title-header h1 { 
+        font-size: 1.2rem !important; 
+        margin-top: 10mm;
+    }
+
+    /* Dashboard no PDF com mais "amor" e sem cortes */
+    .header-dashboard { 
+        display: grid !important;
+        grid-template-columns: 1fr 130px !important; /* Largura fixa menor para o contador */
+        gap: 8px !important;
+        margin-bottom: 15px;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
     
+    .meta-side { gap: 2px !important; }
+    
+    .meta-card-row { 
+        background: white !important; 
+        border: 1px solid #eee !important; 
+    }
+
+    /* Estilização elegante do contador no PDF */
+    .activity-counter-card { 
+        background: #fdfdfd !important; 
+        color: #1a4d2e !important; 
+        border: 2px solid #1a4d2e !important; /* Borda verde sólida */
+        box-shadow: none !important;
+        border-radius: 10px !important;
+        padding: 5px !important;
+    }
+    
+    .counter-number { 
+        font-size: 2.2rem !important; 
+        font-weight: 900 !important;
+    }
+
+    .counter-label {
+        font-size: 0.6rem !important;
+        color: #666 !important;
+    }
+
+    /* Levantamento: Largura segura para evitar cortes */
     .survey-card { 
-        grid-template-columns: 280px 1fr !important; 
-        background: white !important; border: 1px solid #ddd !important; break-inside: avoid; 
+        grid-template-columns: 260px 1fr !important; 
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid; 
+        width: 100% !important;
+        box-sizing: border-box;
     }
 
     .card-item-name { white-space: nowrap !important; }
@@ -34,14 +89,13 @@
         padding: 6px 4px !important;
     }
 
-    /* AJUSTE: Destaque cinza suave para Atividades no PDF (sem bullet) */
     .activity-row-card td.highlight-col {
         background: #f4f4f4 !important;
         color: #000 !important;
     }
 
     .pill {
-        font-size: 7.2pt !important;
+        font-size: 7pt !important;
         border: 1px solid #ccc !important;
         background: #f9f9f9 !important;
         padding: 2px 5px !important;

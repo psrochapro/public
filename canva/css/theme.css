@@ -6,6 +6,7 @@
     --soft-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     --text-main: #2c3e50;
     --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    --flow-grid-template: 50px 1.2fr 1.2fr 1.2fr 2.5fr 1.2fr 1.2fr;
 }
 
 body {
@@ -43,6 +44,7 @@ body {
     letter-spacing: 1px;
 }
 
+/* Dashboard Superior */
 .header-dashboard {
     display: grid;
     grid-template-columns: 1fr 180px;
@@ -123,6 +125,7 @@ body {
     opacity: 0.9;
 }
 
+/* Levantamento */
 .survey-card-list {
     display: flex;
     flex-direction: column;
@@ -195,6 +198,7 @@ body {
     background: white;
 }
 
+/* Fluxo */
 .flow-table-styled {
     width: 100%;
     border-collapse: separate;
@@ -289,5 +293,10 @@ body {
 
 .step-num { font-weight: 800; color: var(--primary-elegant); }
 
-/* AJUSTE TELA: Esconde categoricamente o "E" na visualização do browser */
+/* Ajuste de Contraste Botão Apresentação */
+.btn-presentation {
+    background: #e67e22 !important; /* Laranja mais escuro */
+    color: #ffffff !important; /* Texto branco absoluto */
+}
+
 .show-print { display: none !important; }
