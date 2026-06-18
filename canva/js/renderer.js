@@ -74,13 +74,15 @@ const renderer = {
                 flowItemsContainer.innerHTML += `
                     <tr class="activity-row-card" data-etapa="${item.etapa}">
                         <td>
-                            <div class="step-bubble ${stepColorClass}">${item.etapa || '-'}</div>
+                            <div class="step-col-container">
+                                <div class="step-bubble ${stepColorClass}">${item.etapa || '-'}</div>
+                                <div class="activity-tag">${activityId}</div>
+                            </div>
                         </td>
                         <td>${item.fornecedor || ''}</td>
                         <td>${item.insumos || ''}</td>
                         <td class="actor-cell"><span class="actor-badge">${item.ator || ''}</span></td>
                         <td class="highlight-col">
-                            <div class="activity-tag">ID ${activityId}</div>
                             <div class="act-main-text">${item.atividades || ''}</div>
                             ${regraHtml}
                         </td>
