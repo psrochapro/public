@@ -21,16 +21,26 @@ const persistence = {
         flowRows.forEach((row, idx) => {
             const cells = row.querySelectorAll('td');
             if (cells.length >= 7) {
+                const regraEl = cells[4].querySelector('.regra-box');
+                const regraTxt = regraEl ? regraEl.innerText.replace('Lógica:', '').trim() : '';
+
                 content += `#atividade ${idx + 1}\n`;
                 content += `Etapa: ${cells[0].innerText}\n`;
                 content += `Fornecedor: ${cells[1].innerText}\n`;
                 content += `Insumos: ${cells[2].innerText}\n`;
                 content += `Ator: ${cells[3].innerText}\n`;
-                content += `Atividades: ${cells[4].innerText}\n`;
+                content += `Atividades: ${cells[4].querySelector('.act-main-text').innerText}\n`;
+                if (regraTxt) content += `Regra: ${regraTxt}\n`;
                 content += `Saídas: ${cells[5].innerText}\n`;
                 content += `Cliente: ${cells[6].innerText}\n\n`;
             }
         });
+
+        const obsItems = document.querySelectorAll('.obs-list li');
+        if (obsItems.length > 0) {
+            content += `#observacoes\n`;
+            obsItems.forEach(li => content += `${li.innerText}\n`);
+        }
 
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);

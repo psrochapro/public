@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/print.css">
+    <link rel="stylesheet" href="css/presentation.css">
 </head>
 <body>
 
@@ -18,6 +19,7 @@
         <button class="btn-example" onclick="template.downloadExample()">Gerar Exemplo</button>
         <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
         <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
+        <button class="btn-presentation" id="btn-presentation">Apresentação</button>
     </div>
 
     <div class="glass-container" id="canvasPrint">
@@ -25,7 +27,6 @@
             <h1 id="val-nome">Nome do Processo</h1>
         </div>
 
-        <!-- Dashboard Superior -->
         <div class="header-dashboard">
             <div class="meta-side">
                 <div class="meta-card-row">
@@ -50,7 +51,6 @@
                 </div>
             </div>
             
-            <!-- Card do Contador de Atividades -->
             <div class="counter-side">
                 <div class="activity-counter-card">
                     <span class="counter-number" id="val-total-atividades">0</span>
@@ -79,12 +79,24 @@
                 <tbody id="flow-items-container"></tbody>
             </table>
         </div>
+
+        <!-- Nova Seção de Observações -->
+        <div id="obs-section-container"></div>
+    </div>
+
+    <!-- Controles da Apresentação (Invisíveis por padrão) -->
+    <div id="presentation-controls" class="no-print">
+        <button id="pres-prev">⬅ Anterior</button>
+        <span id="pres-info">Modo Apresentação</span>
+        <button id="pres-next">Próximo ➡</button>
+        <button id="pres-exit">Sair</button>
     </div>
 
     <script src="js/parser.js"></script>
     <script src="js/renderer.js"></script>
     <script src="js/persistence.js"></script>
     <script src="js/template.js"></script>
+    <script src="js/presentation.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

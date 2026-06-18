@@ -1,7 +1,7 @@
 const parser = {
     parse(text) {
         const lines = text.split('\n');
-        const data = { fluxo: [] };
+        const data = { fluxo: [], observacoes: [] };
         let currentSection = null;
         let currentAtividade = null;
 
@@ -12,7 +12,6 @@ const parser = {
                 const tag = parts[0].substring(1).toLowerCase();
                 const inlineContent = parts.slice(1).join(' ').trim();
 
-                // Novo mapeamento: #atividade em vez de #etapa
                 if (tag.startsWith('atividade') || tag.startsWith('etapa')) {
                     currentAtividade = {};
                     data.fluxo.push(currentAtividade);
@@ -26,8 +25,12 @@ const parser = {
                 const [key, ...valParts] = trimmed.split(':');
                 const keyClean = key.trim().toLowerCase();
                 currentAtividade[keyClean] = valParts.join(':').trim();
+            } else if (currentSection === 'observacoes' && trimmed !== "") {
+                data.observacoes.push(trimmed);
             } else if (currentSection && currentSection !== 'atividade' && trimmed !== "") {
-                data[currentSection].push(trimmed);
+                if (Array.isArray(data[currentSection])) {
+                    data[currentSection].push(trimmed);
+                }
             }
         });
         return data;

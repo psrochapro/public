@@ -20,7 +20,6 @@ const renderer = {
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        // Atualizar Contador de Atividades
         const totalAtividades = data.fluxo ? data.fluxo.length : 0;
         document.getElementById('val-total-atividades').innerText = totalAtividades;
 
@@ -45,7 +44,7 @@ const renderer = {
             ).join('');
             
             surveyContainer.innerHTML += `
-                <div class="survey-card">
+                <div class="survey-card" data-survey-id="${item.id}">
                     <div class="card-info-side">
                         <div class="card-num">${(index + 1).toString().padStart(2, '0')}</div>
                         <div class="card-icon-box">${item.icon}</div>
@@ -64,17 +63,35 @@ const renderer = {
         flowItemsContainer.innerHTML = '';
         if (data.fluxo) {
             data.fluxo.forEach(item => {
+                const regraHtml = item.regra ? `<div class="regra-box"><strong>Lógica:</strong> ${item.regra}</div>` : '';
                 flowItemsContainer.innerHTML += `
-                    <tr class="activity-row-card">
+                    <tr class="activity-row-card" data-etapa="${item.etapa}">
                         <td class="step-num">${item.etapa || '-'}</td>
                         <td>${item.fornecedor || ''}</td>
                         <td>${item.insumos || ''}</td>
                         <td>${item.ator || ''}</td>
-                        <td class="highlight-col">${item.atividades || ''}</td>
+                        <td class="highlight-col">
+                            <div class="act-main-text">${item.atividades || ''}</div>
+                            ${regraHtml}
+                        </td>
                         <td>${item.saídas || item.saidas || ''}</td>
                         <td>${item.cliente || ''}</td>
                     </tr>`;
             });
+        }
+
+        // Renderizar Observações
+        const obsContainer = document.getElementById('obs-section-container');
+        if (data.observacoes && data.observacoes.length > 0) {
+            const obsHtml = data.observacoes.map(o => `<li>${o}</li>`).join('');
+            obsContainer.innerHTML = `
+                <div class="observacoes-section no-print">
+                    <div class="obs-header">📝 Observações Gerais</div>
+                    <ul class="obs-list">${obsHtml}</ul>
+                </div>
+            `;
+        } else {
+            obsContainer.innerHTML = '';
         }
     }
 };

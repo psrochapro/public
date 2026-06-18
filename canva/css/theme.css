@@ -44,7 +44,6 @@ body {
     letter-spacing: 1px;
 }
 
-/* --- DASHBOARD SUPERIOR --- */
 .header-dashboard {
     display: grid;
     grid-template-columns: 1fr 180px;
@@ -55,7 +54,7 @@ body {
 .meta-side {
     display: flex;
     flex-direction: column;
-    gap: 2px; /* Gap pequeno conforme solicitado */
+    gap: 2px;
 }
 
 .meta-card-row {
@@ -99,7 +98,6 @@ body {
     align-items: center;
 }
 
-/* Card do Contador */
 .activity-counter-card {
     background: var(--primary-elegant);
     color: white;
@@ -126,21 +124,11 @@ body {
     opacity: 0.9;
 }
 
-/* --- LEVANTAMENTO --- */
 .survey-card-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-bottom: 30px;
-}
-
-.survey-card, .activity-row-card {
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.survey-card:hover, .activity-row-card:hover {
-    transform: translateX(8px);
-    background: rgba(255, 255, 255, 0.7) !important;
 }
 
 .survey-card {
@@ -150,6 +138,7 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 10px;
     overflow: hidden;
+    transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .card-info-side {
@@ -199,7 +188,6 @@ body {
     background: white;
 }
 
-/* --- FLUXO --- */
 .flow-table-styled {
     width: 100%;
     border-collapse: separate;
@@ -230,12 +218,58 @@ body {
     vertical-align: middle;
 }
 
-/* Destaque Atividade (0.02) */
 .activity-row-card td.highlight-col {
     background: rgba(26, 77, 46, 0.02) !important; 
     border-left: 3px solid var(--primary-elegant);
     text-align: left;
     font-weight: 500;
+}
+
+/* Estilo para a Regra (Lógica de Negócio) */
+.regra-box {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 0, 0.1);
+    border-left: 3px solid #f1c232;
+    font-size: 0.72rem;
+    color: #555;
+    border-radius: 0 4px 4px 0;
+}
+
+.regra-box strong {
+    color: #856404;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+}
+
+/* Estilo para a Seção de Observações */
+.observacoes-section {
+    margin-top: 40px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+}
+
+.obs-header {
+    font-weight: 800;
+    color: var(--primary-elegant);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.obs-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.obs-list li {
+    font-size: 0.85rem;
+    color: #444;
+    margin-bottom: 8px;
 }
 
 .activity-row-card td:first-child {
@@ -249,6 +283,4 @@ body {
 }
 
 .step-num { font-weight: 800; color: var(--primary-elegant); }
-
-/* CORREÇÃO VISUALIZAÇÃO: Garante que o E não apareça na tela */
 .show-print { display: none !important; }
