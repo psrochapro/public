@@ -25,28 +25,39 @@
             <h1 id="val-nome">Nome do Processo</h1>
         </div>
 
-        <header class="meta-linear-grid">
-            <div class="meta-linear-row">
-                <div class="meta-letter-box">A</div>
-                <div class="meta-label-box">Macroprocesso</div>
-                <div class="meta-value-box" id="val-macroprocesso">---</div>
+        <!-- Dashboard Superior -->
+        <div class="header-dashboard">
+            <div class="meta-side">
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">A</div>
+                    <div class="meta-card-label">Macroprocesso</div>
+                    <div class="meta-card-value" id="val-macroprocesso">---</div>
+                </div>
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">B</div>
+                    <div class="meta-card-label">Área</div>
+                    <div class="meta-card-value" id="val-area">---</div>
+                </div>
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">C</div>
+                    <div class="meta-card-label">Dono do Processo e Equipe</div>
+                    <div class="meta-card-value" id="val-dono">---</div>
+                </div>
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">D</div>
+                    <div class="meta-card-label">Objetivo Geral do Processo</div>
+                    <div class="meta-card-value" id="val-objetivo">---</div>
+                </div>
             </div>
-            <div class="meta-linear-row">
-                <div class="meta-letter-box">B</div>
-                <div class="meta-label-box">Área</div>
-                <div class="meta-value-box" id="val-area">---</div>
+            
+            <!-- Card do Contador de Atividades -->
+            <div class="counter-side">
+                <div class="activity-counter-card">
+                    <span class="counter-number" id="val-total-atividades">0</span>
+                    <span class="counter-label">Atividades</span>
+                </div>
             </div>
-            <div class="meta-linear-row">
-                <div class="meta-letter-box">C</div>
-                <div class="meta-label-box">Dono do Processo e Equipe</div>
-                <div class="meta-value-box" id="val-dono">---</div>
-            </div>
-            <div class="meta-linear-row">
-                <div class="meta-letter-box">D</div>
-                <div class="meta-label-box">Objetivo Geral do Processo</div>
-                <div class="meta-value-box" id="val-objetivo">---</div>
-            </div>
-        </header>
+        </div>
 
         <div class="survey-card-list" id="survey-container"></div>
 

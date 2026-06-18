@@ -6,6 +6,7 @@
     --soft-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     --text-main: #2c3e50;
     --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    --flow-grid-template: 50px 1.2fr 1.2fr 1.2fr 2.5fr 1.2fr 1.2fr;
 }
 
 body {
@@ -43,55 +44,89 @@ body {
     letter-spacing: 1px;
 }
 
-.meta-linear-grid {
+/* --- DASHBOARD SUPERIOR --- */
+.header-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.meta-side {
     display: flex;
     flex-direction: column;
-    gap: 1px;
-    margin-bottom: 25px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--glass-border);
+    gap: 2px; /* Gap pequeno conforme solicitado */
 }
 
-.meta-linear-row {
+.meta-card-row {
     display: flex;
     align-items: stretch;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.meta-letter-box {
+.meta-card-letter {
     background: var(--primary-elegant);
     color: white;
-    width: 35px;
+    width: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 0.85rem;
+    font-weight: 800;
+    font-size: 0.8rem;
 }
 
-.meta-label-box {
-    width: 200px;
-    padding: 8px 15px;
+.meta-card-label {
+    width: 180px;
+    padding: 6px 12px;
     font-weight: 700;
     color: var(--text-main);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     background: rgba(255, 255, 255, 0.4);
     border-right: 1px solid rgba(0,0,0,0.05);
     display: flex;
     align-items: center;
 }
 
-.meta-value-box {
+.meta-card-value {
     flex: 1;
-    padding: 8px 15px;
+    padding: 6px 12px;
     font-size: 0.85rem;
     color: #333;
     display: flex;
     align-items: center;
 }
 
+/* Card do Contador */
+.activity-counter-card {
+    background: var(--primary-elegant);
+    color: white;
+    height: 100%;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--soft-shadow);
+}
+
+.counter-number {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.counter-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+/* --- LEVANTAMENTO --- */
 .survey-card-list {
     display: flex;
     flex-direction: column;
@@ -164,7 +199,7 @@ body {
     background: white;
 }
 
-/* --- TABELA DE FLUXO --- */
+/* --- FLUXO --- */
 .flow-table-styled {
     width: 100%;
     border-collapse: separate;
@@ -195,7 +230,7 @@ body {
     vertical-align: middle;
 }
 
-/* Destaque Atividade: Cor mais suave (0.02) */
+/* Destaque Atividade (0.02) */
 .activity-row-card td.highlight-col {
     background: rgba(26, 77, 46, 0.02) !important; 
     border-left: 3px solid var(--primary-elegant);
@@ -215,5 +250,5 @@ body {
 
 .step-num { font-weight: 800; color: var(--primary-elegant); }
 
-/* CORREÇÃO VISUALIZAÇÃO: Esconde o "E" da impressão na tela */
+/* CORREÇÃO VISUALIZAÇÃO: Garante que o E não apareça na tela */
 .show-print { display: none !important; }

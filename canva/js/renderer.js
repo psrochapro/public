@@ -20,6 +20,10 @@ const renderer = {
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
+        // Atualizar Contador de Atividades
+        const totalAtividades = data.fluxo ? data.fluxo.length : 0;
+        document.getElementById('val-total-atividades').innerText = totalAtividades;
+
         const surveyContainer = document.getElementById('survey-container');
         surveyContainer.innerHTML = '';
         

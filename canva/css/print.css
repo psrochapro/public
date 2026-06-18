@@ -6,11 +6,27 @@
     }
 
     .process-title-header h1 { font-size: 1.2rem !important; }
-    
+
+    /* Ajuste para não vazar títulos longos como Indicadores de Performance */
     .survey-card { 
-        grid-template-columns: 250px 1fr !important; 
+        grid-template-columns: 280px 1fr !important; 
         background: white !important; border: 1px solid #ddd !important; break-inside: avoid; 
     }
+
+    /* Suporte ao Dashboard no PDF */
+    .header-dashboard { 
+        grid-template-columns: 1fr 140px !important; 
+        margin-bottom: 15px;
+    }
+    
+    .meta-card-row { background: white !important; border: 1px solid #eee !important; }
+    .activity-counter-card { 
+        background: #f2f2f2 !important; 
+        color: #1a4d2e !important; 
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+    .counter-number { font-size: 2.5rem !important; }
 
     .card-item-name { white-space: nowrap !important; }
     
@@ -34,7 +50,6 @@
         padding: 6px 4px !important;
     }
 
-    /* Bullet simbólico para Atividades no PDF */
     .activity-row-card td.highlight-col::before {
         content: "• ";
         color: #1a4d2e;
@@ -42,13 +57,12 @@
     }
 
     .pill {
-        font-size: 7.2pt !important;
+        font-size: 7pt !important;
         border: 1px solid #ccc !important;
         background: #f9f9f9 !important;
         padding: 2px 5px !important;
     }
 
-    /* CORREÇÃO PDF: Inverte a visibilidade da etapa */
     .show-print { display: inline !important; }
     .hide-print { display: none !important; }
 }
