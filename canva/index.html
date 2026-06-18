@@ -19,6 +19,7 @@
         <button class="btn-example" onclick="template.downloadExample()">Gerar Exemplo</button>
         <button class="btn-export" onclick="persistence.exportCanvas()">Exportar .CNV</button>
         <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
+        <button class="btn-share" onclick="share.generateShareLink()">Gerar Link</button>
         <button class="btn-presentation" id="btn-presentation">Apresentação</button>
     </div>
 
@@ -80,11 +81,9 @@
             </table>
         </div>
 
-        <!-- Nova Seção de Observações -->
         <div id="obs-section-container"></div>
     </div>
 
-    <!-- Controles da Apresentação (Invisíveis por padrão) -->
     <div id="presentation-controls" class="no-print">
         <button id="pres-prev">⬅ Anterior</button>
         <span id="pres-info">Modo Apresentação</span>
@@ -96,6 +95,7 @@
     <script src="js/renderer.js"></script>
     <script src="js/persistence.js"></script>
     <script src="js/template.js"></script>
+    <script src="js/share.js"></script>
     <script src="js/presentation.js"></script>
     <script src="js/main.js"></script>
 </body>

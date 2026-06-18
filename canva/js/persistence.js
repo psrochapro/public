@@ -1,5 +1,6 @@
 const persistence = {
-    exportCanvas() {
+    // Retorna o conteúdo atual do canvas formatado como string .cnv
+    getContentString() {
         let content = "";
         const headerTags = ['nome', 'macroprocesso', 'area', 'dono', 'objetivo'];
         
@@ -36,12 +37,17 @@ const persistence = {
             }
         });
 
-        const obsItems = document.querySelectorAll('.obs-list li');
+        const obsItems = document.querySelectorAll('.obs-row td');
         if (obsItems.length > 0) {
             content += `#observacoes\n`;
-            obsItems.forEach(li => content += `${li.innerText}\n`);
+            obsItems.forEach(td => content += `${td.innerText}\n`);
         }
 
+        return content;
+    },
+
+    exportCanvas() {
+        const content = this.getContentString();
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');

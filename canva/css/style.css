@@ -15,5 +15,6 @@ button:hover { opacity: 0.8; }
 .btn-example { background: #8e7cc3; }
 .btn-export { background: #f1c232; color: black; }
 .btn-print { background: #333; }
+.btn-share { background: #17a2b8; } /* Estilo azul turquesa para o botão de compartilhar */
 
 @media print { .no-print { display: none; } }
