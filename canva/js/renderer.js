@@ -71,7 +71,7 @@ const renderer = {
                         <td class="step-num">${item.etapa || '-'}</td>
                         <td>${item.fornecedor || ''}</td>
                         <td>${item.insumos || ''}</td>
-                        <td>${item.ator || ''}</td>
+                        <td class="actor-cell"><span class="actor-badge">${item.ator || ''}</span></td>
                         <td class="highlight-col">
                             <div class="act-main-text">${item.atividades || ''}</div>
                             ${regraHtml}
