@@ -64,15 +64,23 @@ const renderer = {
         const flowItemsContainer = document.getElementById('flow-items-container');
         flowItemsContainer.innerHTML = '';
         if (data.fluxo) {
-            data.fluxo.forEach(item => {
+            data.fluxo.forEach((item, index) => {
+                const activityId = (index + 1).toString().padStart(3, '0');
+                const stepValue = parseInt(item.etapa) || 1;
+                const stepColorClass = `step-b${((stepValue - 1) % 5) + 1}`;
+                
                 const regraHtml = item.regra ? `<div class="regra-box"><strong>Lógica:</strong> ${item.regra}</div>` : '';
+                
                 flowItemsContainer.innerHTML += `
                     <tr class="activity-row-card" data-etapa="${item.etapa}">
-                        <td class="step-num">${item.etapa || '-'}</td>
+                        <td>
+                            <div class="step-bubble ${stepColorClass}">${item.etapa || '-'}</div>
+                        </td>
                         <td>${item.fornecedor || ''}</td>
                         <td>${item.insumos || ''}</td>
                         <td class="actor-cell"><span class="actor-badge">${item.ator || ''}</span></td>
                         <td class="highlight-col">
+                            <div class="activity-tag">ID ${activityId}</div>
                             <div class="act-main-text">${item.atividades || ''}</div>
                             ${regraHtml}
                         </td>
