@@ -28,7 +28,6 @@ const renderer = {
             let itemsToRender = [];
             rawData.forEach(line => itemsToRender.push(...line.split(',').map(p => p.trim()).filter(p => p !== "")));
             
-            // Ajuste B: Pílulas com cores semânticas sutis
             const semanticStyle = {
                 'lgpd': 'background-color: #e3f2fd; border-color: #bbdefb;',
                 'normas': 'background-color: #fff3e0; border-color: #ffe0b2;',
@@ -62,15 +61,15 @@ const renderer = {
         if (data.fluxo) {
             data.fluxo.forEach(item => {
                 flowItemsContainer.innerHTML += `
-                    <div class="activity-card">
-                        <div class="activity-cell step-num">${item.etapa || '-'}</div>
-                        <div class="activity-cell">${item.fornecedor || ''}</div>
-                        <div class="activity-cell">${item.insumos || ''}</div>
-                        <div class="activity-cell">${item.ator || ''}</div>
-                        <div class="activity-cell desc-cell">${item.atividades || ''}</div>
-                        <div class="activity-cell">${item.saídas || item.saidas || ''}</div>
-                        <div class="activity-cell">${item.cliente || ''}</div>
-                    </div>`;
+                    <tr class="activity-row-card">
+                        <td class="step-num">${item.etapa || '-'}</td>
+                        <td>${item.fornecedor || ''}</td>
+                        <td>${item.insumos || ''}</td>
+                        <td>${item.ator || ''}</td>
+                        <td class="desc-cell">${item.atividades || ''}</td>
+                        <td>${item.saídas || item.saidas || ''}</td>
+                        <td>${item.cliente || ''}</td>
+                    </tr>`;
             });
         }
     }

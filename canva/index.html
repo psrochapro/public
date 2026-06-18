@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/theme.css">
-    <!-- Novo link para o CSS de impressão -->
     <link rel="stylesheet" href="css/print.css">
 </head>
 <body>
@@ -54,16 +53,22 @@
         <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
         
         <div class="flow-container">
-            <div class="flow-header-compact">
-                <div class="header-label">📋 <span class="hide-print">Etapa</span><span class="show-print">E</span></div>
-                <div class="header-label">👥 Fornecedor</div>
-                <div class="header-label">📥 Insumos</div>
-                <div class="header-label">👤 Ator</div>
-                <div class="header-label">✅ Atividades</div>
-                <div class="header-label">📦 Saídas</div>
-                <div class="header-label">👥 Cliente</div>
-            </div>
-            <div id="flow-items-container"></div>
+            <table class="flow-table-styled">
+                <thead>
+                    <tr class="flow-header-row">
+                        <th style="width: 50px;">📋 <span class="hide-print">ETAPA</span><span class="show-print">E</span></th>
+                        <th style="width: 13%;">👥 FORNECEDOR</th>
+                        <th style="width: 13%;">📥 INSUMOS</th>
+                        <th style="width: 13%;">👤 ATOR</th>
+                        <th>✅ ATIVIDADES</th>
+                        <th style="width: 13%;">📦 SAÍDAS</th>
+                        <th style="width: 13%;">👥 CLIENTE</th>
+                    </tr>
+                </thead>
+                <tbody id="flow-items-container">
+                    <!-- Conteúdo injetado pelo JS -->
+                </tbody>
+            </table>
         </div>
     </div>
 

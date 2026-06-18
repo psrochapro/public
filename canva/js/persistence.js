@@ -8,7 +8,6 @@ const persistence = {
             if (el) content += `#${tag} ${el.innerText}\n\n`;
         });
 
-        // Exporta do Levantamento (Survey Cards)
         const surveyCards = document.querySelectorAll('.survey-card');
         renderer.config.forEach((conf, idx) => {
             const card = surveyCards[idx];
@@ -18,10 +17,9 @@ const persistence = {
             }
         });
 
-        // Exporta do Fluxo (Activity Cards)
-        const activityCards = document.querySelectorAll('.activity-card');
-        activityCards.forEach((card, idx) => {
-            const cells = card.querySelectorAll('.activity-cell');
+        const flowRows = document.querySelectorAll('#flow-items-container tr');
+        flowRows.forEach((row, idx) => {
+            const cells = row.querySelectorAll('td');
             if (cells.length >= 7) {
                 content += `#atividade ${idx + 1}\n`;
                 content += `Etapa: ${cells[0].innerText}\n`;

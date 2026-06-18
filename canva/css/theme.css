@@ -6,7 +6,6 @@
     --soft-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     --text-main: #2c3e50;
     --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-    --flow-grid-template: 50px 1.2fr 1.2fr 1.2fr 2.5fr 1.2fr 1.2fr;
 }
 
 body {
@@ -100,15 +99,6 @@ body {
     margin-bottom: 30px;
 }
 
-.survey-card, .activity-card {
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.survey-card:hover, .activity-card:hover {
-    transform: translateX(8px);
-    background: rgba(255, 255, 255, 0.7);
-}
-
 .survey-card {
     display: grid;
     grid-template-columns: 380px 1fr;
@@ -116,6 +106,12 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 10px;
     overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.survey-card:hover {
+    transform: translateX(8px);
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .card-info-side {
@@ -157,66 +153,73 @@ body {
     align-items: center;
 }
 
-/* Redução do texto das pílulas */
 .pill {
-    font-size: 0.72rem !important;
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: white;
 }
 
-.flow-container {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+/* --- TABELA DE FLUXO ESTILIZADA --- */
+.flow-table-styled {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Cria o espaço entre "cards" */
+    margin-top: -8px;
 }
 
-/* Ajuste: Cabeçalho Claro e Elegante */
-.flow-header-compact {
-    display: grid;
-    grid-template-columns: var(--flow-grid-template);
-    background: rgba(255, 255, 255, 0.6); /* Fundo claro */
-    color: var(--primary-elegant); /* Texto verde escuro */
-    border-radius: 10px 10px 0 0;
-    padding: 12px 0;
-    text-align: center;
-    align-items: center;
-    border-bottom: 2px solid var(--primary-elegant); /* Borda de destaque */
-}
-
-.header-label {
+.flow-header-row th {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--primary-elegant);
     font-size: 0.7rem;
     font-weight: 800;
+    padding: 12px 10px;
     text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    white-space: nowrap;
+    border-bottom: 2px solid var(--primary-elegant);
+    text-align: center;
 }
 
-.header-label span {
-    font-size: 0.9rem; /* Tamanho do emoji levemente reduzido */
+.flow-header-row th:first-child { border-radius: 10px 0 0 0; }
+.flow-header-row th:last-child { border-radius: 0 10px 0 0; }
+
+.activity-row-card {
+    transition: transform 0.2s ease;
 }
 
-.activity-card {
-    display: grid;
-    grid-template-columns: var(--flow-grid-template);
+.activity-row-card:hover {
+    transform: translateX(8px);
+}
+
+.activity-row-card td {
     background: rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
-    border: 1px solid var(--glass-border);
-}
-
-.activity-cell {
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
     padding: 12px 10px;
     font-size: 0.8rem;
     color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-align: center;
-    border-right: 1px solid rgba(0,0,0,0.03);
+    vertical-align: middle;
 }
 
-.activity-cell:last-child { border-right: none; }
-.activity-cell.desc-cell { text-align: left; justify-content: flex-start; }
-.step-num { font-weight: 800; color: var(--primary-elegant); }
+/* Bordas arredondadas para simular card */
+.activity-row-card td:first-child {
+    border-left: 1px solid var(--glass-border);
+    border-radius: 10px 0 0 10px;
+}
+
+.activity-row-card td:last-child {
+    border-right: 1px solid var(--glass-border);
+    border-radius: 0 10px 10px 0;
+}
+
+.activity-row-card td.desc-cell {
+    text-align: left;
+}
+
+.step-num {
+    font-weight: 800;
+    color: var(--primary-elegant);
+}
 
 .show-print { display: none; }
