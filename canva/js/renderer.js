@@ -28,7 +28,18 @@ const renderer = {
             let itemsToRender = [];
             rawData.forEach(line => itemsToRender.push(...line.split(',').map(p => p.trim()).filter(p => p !== "")));
             
-            const pillsHtml = itemsToRender.map(txt => `<span class="pill">${txt}</span>`).join('');
+            // Ajuste B: Pílulas com cores semânticas sutis
+            const semanticStyle = {
+                'lgpd': 'background-color: #e3f2fd; border-color: #bbdefb;',
+                'normas': 'background-color: #fff3e0; border-color: #ffe0b2;',
+                'entradas': 'background-color: #e8f5e9; border-color: #c8e6c9;',
+                'saidas': 'background-color: #fce4ec; border-color: #f8bbd0;',
+                'indicadores': 'background-color: #f3e5f5; border-color: #e1bee7;'
+            }[item.id] || '';
+
+            const pillsHtml = itemsToRender.map(txt => 
+                `<span class="pill" style="${semanticStyle}">${txt}</span>`
+            ).join('');
             
             surveyContainer.innerHTML += `
                 <div class="survey-card">

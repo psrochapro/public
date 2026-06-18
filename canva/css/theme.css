@@ -28,6 +28,7 @@ body {
     margin: 20px auto;
 }
 
+/* Ajuste C: Título reduzido e Bold */
 .process-title-header {
     text-align: center;
     margin-bottom: 25px;
@@ -37,8 +38,9 @@ body {
 
 .process-title-header h1 {
     color: var(--primary-elegant);
-    font-size: 1.8rem;
+    font-size: 1.5rem; /* Reduzido */
     margin: 0;
+    font-weight: 800; /* Extra Bold */
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -92,12 +94,21 @@ body {
     align-items: center;
 }
 
-/* Levantamento em Cards Restaurado */
 .survey-card-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-bottom: 30px;
+}
+
+/* Ajuste A: Efeito de movimento no Mouse */
+.survey-card, .activity-card {
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.survey-card:hover, .activity-card:hover {
+    transform: translateX(8px);
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .survey-card {
@@ -148,40 +159,32 @@ body {
     align-items: center;
 }
 
-/* Fluxo com Cabeçalho Unificado */
 .flow-container {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.flow-header-unified {
+/* Ajuste D: Cabeçalho horizontal e compacto */
+.flow-header-compact {
     display: grid;
     grid-template-columns: var(--flow-grid-template);
     background: var(--primary-elegant);
     color: white;
     border-radius: 10px 10px 0 0;
-    padding: 10px 0;
-}
-
-.header-col-group {
-    display: flex;
-    flex-direction: column;
+    padding: 12px 0;
+    text-align: center;
     align-items: center;
-    justify-content: center;
-    gap: 5px;
 }
 
-.header-col-group img {
-    height: 22px;
-    filter: brightness(0) invert(1); /* Ícone branco */
-    opacity: 0.9;
-}
-
-.header-col-group span {
-    font-size: 0.65rem;
+.header-label {
+    font-size: 0.7rem;
     font-weight: bold;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .activity-card {
@@ -213,6 +216,6 @@ body {
     }
     body { background: white !important; padding: 0; }
     .glass-container { box-shadow: none; border: none; backdrop-filter: none; background: white; padding: 0; }
-    .survey-card, .activity-card { background: white !important; border: 1px solid #ddd !important; break-inside: avoid; }
-    .flow-header-unified { background: #1a4d2e !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .survey-card, .activity-card { background: white !important; border: 1px solid #ddd !important; break-inside: avoid; transform: none !important; }
+    .flow-header-compact { background: #1a4d2e !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
