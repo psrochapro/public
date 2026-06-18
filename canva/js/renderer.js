@@ -14,14 +14,12 @@ const renderer = {
     ],
 
     render(data) {
-        // Render Header Linear
         document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        // Render Survey Cards
         const surveyContainer = document.getElementById('survey-container');
         surveyContainer.innerHTML = '';
         
@@ -30,13 +28,19 @@ const renderer = {
             let itemsToRender = [];
             rawData.forEach(line => itemsToRender.push(...line.split(',').map(p => p.trim()).filter(p => p !== "")));
             
-            const pillsHtml = itemsToRender.map(txt => `<span class="pill">${txt}</span>`).join('');
+            // Cores semânticas sutis por ID
+            const semanticColor = {
+                'lgpd': 'background:#e3f2fd; border-color:#90caf9',
+                'normas': 'background:#fff3e0; border-color:#ffcc80',
+                'sgpe': 'background:#f1f8e9; border-color:#c5e1a5'
+            }[item.id] || '';
+
+            const pillsHtml = itemsToRender.map(txt => `<span class="pill" style="${semanticColor}">${txt}</span>`).join('');
             
             surveyContainer.innerHTML += `
                 <div class="survey-card">
                     <div class="card-info-side">
                         <div class="card-num">${(index + 1).toString().padStart(2, '0')}</div>
-                        <div class="card-icon-box">${item.icon}</div>
                         <div class="card-text-content">
                             <div class="card-item-name">${item.label}</div>
                             <div class="card-item-desc">${item.desc}</div>
@@ -48,7 +52,6 @@ const renderer = {
                 </div>`;
         });
 
-        // Render Flow Cards
         const flowItemsContainer = document.getElementById('flow-items-container');
         flowItemsContainer.innerHTML = '';
         if (data.fluxo) {
@@ -59,7 +62,7 @@ const renderer = {
                         <div class="activity-cell">${item.fornecedor || ''}</div>
                         <div class="activity-cell">${item.insumos || ''}</div>
                         <div class="activity-cell">${item.ator || ''}</div>
-                        <div class="activity-cell desc-cell">${item.atividades || ''}</div>
+                        <div class="activity-cell highlight-col desc-cell">${item.atividades || ''}</div>
                         <div class="activity-cell">${item.saídas || item.saidas || ''}</div>
                         <div class="activity-cell">${item.cliente || ''}</div>
                     </div>`;

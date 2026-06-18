@@ -20,12 +20,10 @@
     </div>
 
     <div class="glass-container" id="canvasPrint">
-        <!-- Título Isolado -->
         <div class="process-title-header">
             <h1 id="val-nome">Nome do Processo</h1>
         </div>
 
-        <!-- Cabeçalho Linear A, B, C, D -->
         <header class="meta-linear-grid">
             <div class="meta-linear-row">
                 <div class="meta-letter-box">A</div>
@@ -39,44 +37,51 @@
             </div>
             <div class="meta-linear-row">
                 <div class="meta-letter-box">C</div>
-                <div class="meta-label-box">Dono do Processo e Equipe</div>
+                <div class="meta-label-box">Dono do Processo</div>
                 <div class="meta-value-box" id="val-dono">---</div>
             </div>
             <div class="meta-linear-row">
                 <div class="meta-letter-box">D</div>
-                <div class="meta-label-box">Objetivo Geral do Processo</div>
+                <div class="meta-label-box">Objetivo Geral</div>
                 <div class="meta-value-box" id="val-objetivo">---</div>
             </div>
         </header>
 
-        <!-- Levantamento em Cards -->
         <div class="survey-card-list" id="survey-container"></div>
 
-        <!-- Fluxo de Atividades em Cards -->
         <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
         
         <div class="flow-container">
-            <!-- Cabeçalho de Ícones -->
-            <div class="flow-header-icons">
-                <div><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt=""></div>
-                <div><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt=""></div>
-                <div><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt=""></div>
-                <div><img src="https://cdn-icons-png.flaticon.com/512/6009/6009030.png" alt=""></div>
-                <div><img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt=""></div>
-                <div><img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt=""></div>
-                <div><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt=""></div>
+            <div class="flow-header-combined">
+                <div class="header-cell-content">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="">
+                    <span>Etapa</span>
+                </div>
+                <div class="header-cell-content">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="">
+                    <span>Fornecedor</span>
+                </div>
+                <div class="header-cell-content">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="">
+                    <span>Insumos</span>
+                </div>
+                <div class="header-cell-content">
+                    <img src="https://cdn-icons-png.flaticon.com/512/6009/6009030.png" alt="">
+                    <span>Ator</span>
+                </div>
+                <div class="header-cell-content">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" alt="">
+                    <span>Atividades</span>
+                </div>
+                <div class="header-cell-content">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="">
+                    <span>Saídas</span>
+                </div>
+                <div class="header-cell-content">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="">
+                    <span>Cliente</span>
+                </div>
             </div>
-            <!-- Cabeçalho de Títulos -->
-            <div class="flow-header-labels">
-                <div>Etapa</div>
-                <div>Fornecedor</div>
-                <div>Insumos</div>
-                <div>Ator</div>
-                <div>Atividades</div>
-                <div>Saídas</div>
-                <div>Cliente</div>
-            </div>
-            <!-- Lista de Atividades Injetada pelo JS -->
             <div id="flow-items-container"></div>
         </div>
     </div>
