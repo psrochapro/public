@@ -1,9 +1,15 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Estilos de Apresentação com Foco em Cápsula Neon Unificada (Especificidade Máxima).
+   FUNÇÃO: Estilos de Apresentação com Cápsula Neon, Cabeçalho Flutuante e Glassmorphism.
 */
 
-/* 1. Esmaecimento Global */
+/* 1. Reset da Tabela para permitir a "Cápsula" */
+body.presentation-mode .flow-table-styled {
+    border-spacing: 0 !important; /* Remove o espaço de 8px do theme.css */
+    border-collapse: separate !important;
+}
+
+/* 2. Esmaecimento Global (Melhorado para não sumir com o Dashboard) */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
@@ -11,11 +17,11 @@
 .presentation-mode .flow-section-header,
 .presentation-mode .obs-table-styled {
     opacity: 0.15;
-    filter: blur(3px) grayscale(0.8);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(2px) grayscale(0.8);
+    transition: all 0.5s ease;
 }
 
-/* 2. Ativação do Foco */
+/* Ativação do Foco */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
@@ -23,82 +29,78 @@
     z-index: 100 !important;
 }
 
-/* 3. Animação Neon Verde Esmeralda (Glow Externo) */
-@keyframes neon-glow-v10 {
-    0% { box-shadow: 15px 0 25px -10px rgba(46, 125, 50, 0.3), -15px 0 25px -10px rgba(46, 125, 50, 0.3); }
-    50% { box-shadow: 25px 0 45px -10px rgba(46, 125, 50, 0.6), -25px 0 45px -10px rgba(46, 125, 50, 0.6); }
-    100% { box-shadow: 15px 0 25px -10px rgba(46, 125, 50, 0.3), -15px 0 25px -10px rgba(46, 125, 50, 0.3); }
+/* 3. Animação Neon Verde Esmeralda */
+@keyframes neon-glow-v11 {
+    0% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
+    50% { box-shadow: 0 0 30px rgba(46, 125, 50, 0.6); }
+    100% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
 }
 
 /* 4. A CÁPSULA: Unificando as linhas do fluxo */
-
-/* Seletor ultra-específico para anular margens e sombras do theme.css */
-body.presentation-mode .glass-container .flow-table-styled tbody tr.activity-row-card.pres-focus {
-    background: rgba(255, 255, 255, 0.6) !important;
+.presentation-mode tr.pres-focus td {
+    background: rgba(255, 255, 255, 0.7) !important;
     backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    
-    /* Remove espaços entre as linhas */
-    margin: 0 !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 5px !important;
-    
-    /* Remove sombras individuais para não poluir o centro da cápsula */
-    box-shadow: none !important;
-    
-    /* Reseta arredondamentos de cada linha */
-    border-radius: 0 !important;
-    
-    /* Moldura lateral contínua */
-    border: none !important;
+    border-radius: 0 !important; /* Reseta o arredondamento do theme.css */
+    border-top: 1px solid rgba(46, 125, 50, 0.1) !important;
+    border-bottom: 1px solid rgba(46, 125, 50, 0.1) !important;
+    border-left: none !important;
+    border-right: none !important;
+    animation: neon-glow-v11 2s infinite ease-in-out;
+}
+
+/* Bordas Laterais da Cápsula (Aplicadas nas células das pontas) */
+.presentation-mode tr.pres-focus td:first-child {
     border-left: 4px solid #2e7d32 !important;
+}
+.presentation-mode tr.pres-focus td:last-child {
     border-right: 4px solid #2e7d32 !important;
-    
-    /* Efeito de destaque lateral */
-    transform: translateX(15px) !important;
-    animation: neon-glow-v10 2.5s infinite ease-in-out;
 }
 
-/* Topo da Cápsula */
-body.presentation-mode .glass-container .flow-table-styled tbody tr.activity-row-card.group-start {
+/* Início da Cápsula (Arredondamento Superior) */
+.presentation-mode tr.group-start td {
     border-top: 4px solid #2e7d32 !important;
-    border-top-left-radius: 15px !important;
-    border-top-right-radius: 15px !important;
-    margin-top: 15px !important;
 }
+.presentation-mode tr.group-start td:first-child { border-top-left-radius: 15px !important; }
+.presentation-mode tr.group-start td:last-child { border-top-right-radius: 15px !important; }
 
-/* Base da Cápsula */
-body.presentation-mode .glass-container .flow-table-styled tbody tr.activity-row-card.group-end {
+/* Fim da Cápsula (Arredondamento Inferior) */
+.presentation-mode tr.group-end td {
     border-bottom: 4px solid #2e7d32 !important;
-    border-bottom-left-radius: 15px !important;
-    border-bottom-right-radius: 15px !important;
-    margin-bottom: 15px !important;
 }
+.presentation-mode tr.group-end td:first-child { border-bottom-left-radius: 15px !important; }
+.presentation-mode tr.group-end td:last-child { border-bottom-right-radius: 15px !important; }
 
-/* 5. Cards de Levantamento (Destaque Individual) */
-body.presentation-mode .survey-card.pres-focus {
+/* 5. Estilo para o Dashboard e Cards (Preservando Design) */
+.presentation-mode .header-dashboard.pres-focus,
+.presentation-mode .process-title-header.pres-focus,
+.presentation-mode .survey-card.pres-focus {
     border: 3px solid #2e7d32 !important;
-    border-radius: 15px !important;
-    animation: neon-glow-v10 2s infinite ease-in-out;
-    background: rgba(255, 255, 255, 0.4) !important;
+    border-radius: 20px !important;
+    animation: neon-glow-v11 2s infinite ease-in-out;
     transform: scale(1.02);
 }
 
-/* 6. Cabeçalho Fixo (Sticky Header) */
+/* 6. Cabeçalho Fixo (Sticky) com Respiro e Estilo Glass */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
-    top: 0;
+    top: 20px; /* DISTÂNCIA DO TOPO (Respiro) */
     z-index: 1001;
     opacity: 1 !important;
     filter: none !important;
 }
 
 .presentation-mode .flow-header-row th {
-    background: rgba(26, 77, 46, 0.95) !important;
+    background: rgba(26, 77, 46, 0.9) !important;
     backdrop-filter: blur(10px);
     color: white !important;
-    border-bottom: 3px solid #2e7d32 !important;
+    padding: 15px 5px !important;
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+
+/* Arredondar pontas do cabeçalho fixo para parecer uma pílula */
+.presentation-mode .flow-header-row th:first-child { border-radius: 15px 0 0 15px !important; }
+.presentation-mode .flow-header-row th:last-child { border-radius: 0 15px 15px 0 !important; }
 
 /* 7. Controles de Apresentação */
 #presentation-controls {
@@ -108,14 +110,14 @@ body.presentation-mode .survey-card.pres-focus {
     left: 50%;
     transform: translateX(-50%);
     background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(15px);
     padding: 12px 25px;
     border-radius: 50px;
     box-shadow: 0 15px 50px rgba(0,0,0,0.3);
     z-index: 9999;
     gap: 15px;
     align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255,255,255,0.4);
 }
 
 body.presentation-mode #presentation-controls {

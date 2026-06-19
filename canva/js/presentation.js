@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: js/presentation.js
-   FUNÇÃO: Navegação agrupada por Etapas com identificação de extremidades de grupo.
+   FUNÇÃO: Navegação agrupada por Etapas com Smart Scroll compensado para cabeçalho flutuante.
 */
 
 const presentation = {
@@ -94,7 +94,8 @@ const presentation = {
     },
 
     smartScroll(element, isFlow = false) {
-        const offset = isFlow ? 130 : 180; 
+        // Compensação aumentada para 160px para acomodar o cabeçalho flutuante que está em top:20px
+        const offset = isFlow ? 160 : 180; 
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({
             top: elementPosition - offset,
