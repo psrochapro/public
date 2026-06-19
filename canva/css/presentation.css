@@ -1,28 +1,28 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Estilos de Apresentação com Cápsula Neon, Cabeçalho Flutuante e Glassmorphism.
-   AJUSTE: Unificação da Moldura Neon e Suavização do Header (Match com Modo Normal).
+   FUNÇÃO: Camada de iluminação e foco para Apresentação.
+   REVISÃO: Clone visual do modo normal com adição de brilho (glow) e esmaecimento.
 */
 
-/* 1. Reset da Tabela para permitir a "Cápsula" */
+/* 1. Compatibilidade Estrutural */
+/* Mantém o border-spacing original do theme.css para que as linhas continuem como cards separados */
 body.presentation-mode .flow-table-styled {
-    border-spacing: 0 !important;
     border-collapse: separate !important;
 }
 
-/* 2. Esmaecimento Global */
+/* 2. Efeito de Esmaecimento (Dimming) */
+/* Aplica o desfoque apenas no que não está em foco */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
 .presentation-mode .activity-row-card,
-.presentation-mode .flow-section-header,
 .presentation-mode .obs-table-styled {
     opacity: 0.15;
-    filter: blur(2px) grayscale(0.8);
-    transition: all 0.5s ease;
+    filter: blur(2px) grayscale(0.7);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Ativação do Foco */
+/* Ativação do Foco: Restaura o visual original do theme.css */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
@@ -30,67 +30,46 @@ body.presentation-mode .flow-table-styled {
     z-index: 100 !important;
 }
 
-/* 3. Animação Neon (Focada na Moldura) */
-@keyframes neon-capsule-glow {
-    0% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.1); }
-    50% { border-color: rgba(46, 125, 50, 1); box-shadow: 0 0 25px rgba(46, 125, 50, 0.4); }
-    100% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.1); }
+/* 3. Animação de Pulso Neon (Esmeralda) */
+@keyframes neon-emerald-glow {
+    0% { box-shadow: 0 4px 15px rgba(26, 77, 46, 0.2), 0 0 0 2px rgba(46, 125, 50, 0.2); }
+    50% { box-shadow: 0 4px 30px rgba(26, 77, 46, 0.4), 0 0 15px 3px rgba(46, 125, 50, 0.6); }
+    100% { box-shadow: 0 4px 15px rgba(26, 77, 46, 0.2), 0 0 0 2px rgba(46, 125, 50, 0.2); }
 }
 
-/* 4. A CÁPSULA: Unificando as linhas do fluxo */
-.presentation-mode tr.pres-focus td {
-    background: rgba(255, 255, 255, 0.85) !important;
-    backdrop-filter: blur(15px) !important;
-    border-radius: 0 !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.03) !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.03) !important;
-    border-left: none !important;
-    border-right: none !important;
-    /* Removido: animação individual por célula para evitar poluição */
+/* 4. Aplicação do Glow nos Componentes em Foco */
+/* O visual (background, border, radius) é herdado do theme.css, apenas adicionamos o brilho */
+
+/* Dashboard em foco */
+.presentation-mode .header-dashboard.pres-focus {
+    animation: neon-emerald-glow 2.5s infinite ease-in-out;
+    border-radius: 20px; /* Mantém o padrão do glass-container */
 }
 
-/* Bordas Laterais da Cápsula (Apenas nas pontas) */
-.presentation-mode tr.pres-focus td:first-child {
-    border-left: 4px solid #2e7d32 !important;
-}
-.presentation-mode tr.pres-focus td:last-child {
-    border-right: 4px solid #2e7d32 !important;
-}
-
-/* Aplicando a Animação apenas nas bordas externas da "Cápsula" */
-.presentation-mode tr.pres-focus.group-start td,
-.presentation-mode tr.pres-focus.group-end td,
-.presentation-mode tr.pres-focus td:first-child,
-.presentation-mode tr.pres-focus td:last-child {
-    animation: neon-capsule-glow 2s infinite ease-in-out;
-}
-
-/* Início da Cápsula (Arredondamento e Borda Superior) */
-.presentation-mode tr.group-start td {
-    border-top: 4px solid #2e7d32 !important;
-}
-.presentation-mode tr.group-start td:first-child { border-top-left-radius: 15px !important; }
-.presentation-mode tr.group-start td:last-child { border-top-right-radius: 15px !important; }
-
-/* Fim da Cápsula (Arredondamento e Borda Inferior) */
-.presentation-mode tr.group-end td {
-    border-bottom: 4px solid #2e7d32 !important;
-}
-.presentation-mode tr.group-end td:first-child { border-bottom-left-radius: 15px !important; }
-.presentation-mode tr.group-end td:last-child { border-bottom-right-radius: 15px !important; }
-
-/* 5. Destaque para Dashboard e Outros Componentes */
-.presentation-mode .header-dashboard.pres-focus,
-.presentation-mode .process-title-header.pres-focus,
+/* Itens 01 a 11 em foco */
 .presentation-mode .survey-card.pres-focus {
-    border: 3px solid #2e7d32 !important;
-    border-radius: 20px !important;
-    animation: neon-capsule-glow 2s infinite ease-in-out;
-    transform: scale(1.02);
-    background: rgba(255, 255, 255, 0.9) !important;
+    animation: neon-emerald-glow 2.5s infinite ease-in-out;
+    border: 1px solid rgba(46, 125, 50, 0.5) !important;
 }
 
-/* 6. Cabeçalho Fixo (Sticky) - AJUSTADO PARA GLASSMORPHISM SUAVE */
+/* Linhas de Atividades (Etapas) em foco */
+/* Como o renderer.js usa a classe pres-focus nas linhas, cada card individual do grupo brilhará */
+.presentation-mode tr.activity-row-card.pres-focus td {
+    animation: neon-emerald-glow 2.5s infinite ease-in-out;
+    border-top: 1px solid rgba(46, 125, 50, 0.3) !important;
+    border-bottom: 1px solid rgba(46, 125, 50, 0.3) !important;
+}
+
+.presentation-mode tr.activity-row-card.pres-focus td:first-child {
+    border-left: 1px solid rgba(46, 125, 50, 0.3) !important;
+}
+
+.presentation-mode tr.activity-row-card.pres-focus td:last-child {
+    border-right: 1px solid rgba(46, 125, 50, 0.3) !important;
+}
+
+/* 5. Cabeçalho Fixo (Sticky) */
+/* Preserva o visual Glassmorphism do modo normal, mas fixa no topo */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
     top: 20px;
@@ -100,26 +79,13 @@ body.presentation-mode .flow-table-styled {
 }
 
 .presentation-mode .flow-header-row th {
-    /* Alterado: De verde sólido para fundo suave do modo normal */
-    background: rgba(255, 255, 255, 0.9) !important; 
-    backdrop-filter: blur(12px);
-    color: #1a4d2e !important; /* Cor primária para contraste */
-    padding: 18px 5px !important;
-    border-bottom: 2px solid #1a4d2e !important;
-    border-top: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--primary-elegant) !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 
-/* Arredondar pontas do cabeçalho fixo (Efeito Pílula) */
-.presentation-mode .flow-header-row th:first-child { border-radius: 15px 0 0 15px !important; }
-.presentation-mode .flow-header-row th:last-child { border-radius: 0 15px 15px 0 !important; }
-
-/* 7. Controles de Apresentação */
+/* 6. Controles de Apresentação */
 #presentation-controls {
     display: none;
     position: fixed;
@@ -144,22 +110,23 @@ body.presentation-mode #presentation-controls {
 #presentation-controls button {
     padding: 10px 22px;
     border-radius: 25px;
-    background: #1a4d2e;
+    background: var(--primary-elegant);
     border: none;
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: opacity 0.2s;
 }
 
 #presentation-controls button:hover {
-    background: #2e7d32;
+    opacity: 0.9;
 }
 
 #pres-info {
     font-weight: 800;
-    color: #1a4d2e;
+    color: var(--primary-elegant);
     min-width: 250px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
 }
