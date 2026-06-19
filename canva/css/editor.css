@@ -1,7 +1,7 @@
 /* 
    ARQUIVO: css/editor.css
    FUNÇÃO: Estilização do painel lateral, Resizer e Syntax Highlighting.
-   VERSÃO: 03 (Esquerda, Resizable e Botão Template)
+   VERSÃO: 04 (Adicionado Estilo para Múltiplos Botões no Header)
 */
 
 #editor-container {
@@ -24,7 +24,6 @@
     transform: translateX(-100%);
 }
 
-/* Alça de Redimensionamento */
 #editor-resizer {
     position: absolute;
     right: 0;
@@ -103,7 +102,12 @@
     font-weight: bold;
 }
 
-/* Novo Botão Inserir Template */
+/* Grupo de Ações do Editor */
+.editor-actions {
+    display: flex;
+    gap: 8px;
+}
+
 .btn-editor-template {
     background: #1a4d2e;
     color: white;
@@ -120,6 +124,24 @@
     background: #143a22;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Botão Secundário (Reordenar) */
+.btn-editor-secondary {
+    background: #f0f0f0;
+    color: #444;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-editor-secondary:hover {
+    background: #e5e5e5;
+    border-color: #bbb;
 }
 
 .editor-wrapper {

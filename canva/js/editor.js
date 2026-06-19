@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: js/editor.js
-   FUNÇÃO: Controle de interface, Redimensionamento e Highlighting.
+   FUNÇÃO: Controle de interface, Redimensionamento, Highlighting e Utilitários de Edição.
 */
 
 const editor = {
@@ -43,14 +43,9 @@ const editor = {
 
         document.addEventListener('mousemove', (e) => {
             if (!this.isResizing) return;
-            
-            // Como o editor está à esquerda (left:0), a largura é a posição X do mouse
             let newWidth = e.clientX;
-            
-            // Limites de segurança
             if (newWidth < 300) newWidth = 300;
             if (newWidth > window.innerWidth * 0.8) newWidth = window.innerWidth * 0.8;
-            
             this.container.style.width = `${newWidth}px`;
         });
 
@@ -67,6 +62,22 @@ const editor = {
         if (currentData) {
             this.setContent(currentData);
         }
+    },
+
+    // Nova Funcionalidade: Reordenar Atividades 1, 2, 3...
+    reorderActivities() {
+        let text = this.input.value;
+        let count = 1;
+
+        // Regex: Busca "#atividade" seguido de espaço(s) e número(s)
+        // O replace usa uma função callback para incrementar o contador a cada achado
+        const newText = text.replace(/(#atividade\s+)(\d+)/g, (match, prefix, oldNumber) => {
+            const replaced = prefix + count;
+            count++;
+            return replaced;
+        });
+
+        this.setContent(newText);
     },
 
     insertTemplate() {

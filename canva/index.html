@@ -19,7 +19,6 @@
             <span class="toggle-icon">❮</span>
         </button>
         
-        <!-- Alça de redimensionamento -->
         <div id="editor-resizer"></div>
 
         <div class="editor-content">
@@ -28,7 +27,10 @@
                     <h3>Editor de Processo</h3>
                     <span class="editor-status">Sync Ativo</span>
                 </div>
-                <button class="btn-editor-template" onclick="editor.insertTemplate()">Inserir Template</button>
+                <div class="editor-actions">
+                    <button class="btn-editor-secondary" onclick="editor.reorderActivities()" title="Renumerar atividades sequencialmente">🔢 Reordenar</button>
+                    <button class="btn-editor-template" onclick="editor.insertTemplate()">Inserir Template</button>
+                </div>
             </div>
             <div class="editor-wrapper">
                 <div id="editor-highlight" aria-hidden="true"></div>
