@@ -1,9 +1,9 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Estilos de Apresentação com Foco Neon e Preservação de Design Original.
+   FUNÇÃO: Estilos de Apresentação com Foco em Cápsula Neon Unificada.
 */
 
-/* 1. Esmaecimento Seletivo (Apenas componentes individuais, não containers) */
+/* 1. Esmaecimento Seletivo (Fundo) */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
@@ -12,7 +12,7 @@
 .presentation-mode .obs-table-styled {
     opacity: 0.15;
     filter: blur(3px) grayscale(0.8);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 2. Destaque do Elemento em Foco (Restaura o design original) */
@@ -23,48 +23,63 @@
     z-index: 100 !important;
 }
 
-/* 3. Animação Neon Verde Esmeralda (Contorno externo) */
-@keyframes neon-glow-v07 {
-    0% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); border-color: rgba(46, 125, 50, 0.3); }
-    50% { box-shadow: 0 0 30px rgba(46, 125, 50, 0.6); border-color: rgba(46, 125, 50, 0.8); }
-    100% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); border-color: rgba(46, 125, 50, 0.3); }
+/* 3. Animação Neon Verde Esmeralda */
+@keyframes neon-glow-v08 {
+    0% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
+    50% { border-color: rgba(46, 125, 50, 1); box-shadow: 0 0 30px rgba(46, 125, 50, 0.5); }
+    100% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
 }
 
-/* Aplicação do Neon sem achatar o Glassmorphism */
-.presentation-mode div.pres-focus, 
-.presentation-mode .survey-card.pres-focus {
-    border: 3px solid #2e7d32 !important;
-    border-radius: 15px !important;
-    animation: neon-glow-v07 2s infinite ease-in-out;
-    background: rgba(255, 255, 255, 0.3) !important; /* Mantém transparência */
-}
-
-/* 4. Lógica de Cápsula Neon para a Tabela */
+/* 4. Estilo de Cápsula para o Fluxo (Tabela) */
 .presentation-mode tr.pres-focus {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    
+    /* Remove espaçamentos e arredondamentos padrão para colar as linhas */
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    
+    /* Bordas Laterais da Cápsula */
     border-left: 3px solid #2e7d32 !important;
     border-right: 3px solid #2e7d32 !important;
-    background: rgba(255, 255, 255, 0.6) !important; /* Brilho de vidro */
-    animation: neon-glow-v07 2s infinite ease-in-out;
+    
+    transform: translateX(10px) !important;
+    animation: neon-glow-v08 2s infinite ease-in-out;
 }
 
-.presentation-mode tr.pres-focus:not(.group-start):not(.group-end) {
-    border-top: none !important;
-    border-bottom: none !important;
-}
-
+/* Início da Cápsula */
 .presentation-mode tr.group-start {
     border-top: 3px solid #2e7d32 !important;
     border-top-left-radius: 15px !important;
     border-top-right-radius: 15px !important;
+    margin-top: 10px !important;
 }
 
+/* Fim da Cápsula */
 .presentation-mode tr.group-end {
     border-bottom: 3px solid #2e7d32 !important;
     border-bottom-left-radius: 15px !important;
     border-bottom-right-radius: 15px !important;
+    margin-bottom: 15px !important;
 }
 
-/* 5. Cabeçalho Fixo (Sticky) */
+/* 5. Estilo para Cards Individuais (Dashboard e Survey) */
+.presentation-mode div.pres-focus, 
+.presentation-mode .survey-card.pres-focus {
+    border: 3px solid #2e7d32 !important;
+    border-radius: 15px !important;
+    animation: neon-glow-v08 2s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: scale(1.02);
+}
+
+.presentation-mode .pres-focus .pill-container {
+    opacity: 1;
+}
+
+/* 6. Cabeçalho Fixo (Sticky) */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
     top: 0;
@@ -80,7 +95,7 @@
     border-bottom: 3px solid #2e7d32 !important;
 }
 
-/* 6. Controles de Apresentação Glass */
+/* 7. Controles de Apresentação */
 #presentation-controls {
     display: none;
     position: fixed;
@@ -110,7 +125,6 @@ body.presentation-mode #presentation-controls {
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s;
 }
 
 #pres-info {
@@ -118,5 +132,4 @@ body.presentation-mode #presentation-controls {
     color: #1a4d2e;
     min-width: 250px;
     text-align: center;
-    font-size: 0.9rem;
 }
