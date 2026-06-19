@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: js/editor.js
-   FUNÇÃO: Controle de interface e lógica de Highlighting em tempo real.
+   FUNÇÃO: Controle de interface, Redimensionamento e Highlighting.
 */
 
 const editor = {
@@ -8,35 +8,77 @@ const editor = {
     input: null,
     highlight: null,
     toggleBtn: null,
+    resizer: null,
+    isResizing: false,
 
     init() {
         this.container = document.getElementById('editor-container');
         this.input = document.getElementById('editor-input');
         this.highlight = document.getElementById('editor-highlight');
         this.toggleBtn = document.getElementById('editor-toggle');
+        this.resizer = document.getElementById('editor-resizer');
 
         if (!this.input) return;
 
-        // Listener para Edição
+        // 1. Listeners de Edição
         this.input.addEventListener('input', () => {
             this.syncAndRender();
         });
 
-        // Sincronizar Scroll
         this.input.addEventListener('scroll', () => {
             this.highlight.scrollTop = this.input.scrollTop;
         });
 
-        // Listener para o Toggle
+        // 2. Toggle Abrir/Fechar
         this.toggleBtn.addEventListener('click', () => {
             this.container.classList.toggle('editor-collapsed');
         });
 
-        // Carregar conteúdo inicial (caso já exista algo renderizado)
+        // 3. Lógica de Redimensionamento (Resize)
+        this.resizer.addEventListener('mousedown', (e) => {
+            this.isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!this.isResizing) return;
+            
+            // Como o editor está à esquerda (left:0), a largura é a posição X do mouse
+            let newWidth = e.clientX;
+            
+            // Limites de segurança
+            if (newWidth < 300) newWidth = 300;
+            if (newWidth > window.innerWidth * 0.8) newWidth = window.innerWidth * 0.8;
+            
+            this.container.style.width = `${newWidth}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (this.isResizing) {
+                this.isResizing = false;
+                document.body.style.cursor = 'default';
+                document.body.style.userSelect = 'auto';
+            }
+        });
+
+        // Carregar conteúdo inicial
         const currentData = persistence.getContentString();
         if (currentData) {
             this.setContent(currentData);
         }
+    },
+
+    insertTemplate() {
+        const templateText = template.getTemplateContent();
+        const currentText = this.input.value.trim();
+
+        if (currentText !== "") {
+            const confirmar = confirm("Isso substituirá o conteúdo atual pelo template. Deseja continuar?");
+            if (!confirmar) return;
+        }
+
+        this.setContent(templateText);
     },
 
     setContent(text) {
@@ -47,37 +89,25 @@ const editor = {
 
     syncAndRender() {
         const text = this.input.value;
-        
-        // 1. Aplicar Syntax Highlighting Visual
         this.updateHighlight(text);
-
-        // 2. Disparar Parser e Renderer original
         try {
             const data = parser.parse(text);
             renderer.render(data);
         } catch (e) {
-            console.warn("Aguardando input válido para renderizar...");
+            console.warn("Aguardando input válido...");
         }
     },
 
     updateHighlight(text) {
-        // Escapar HTML básico para evitar injeção
         let html = text
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
 
-        // Regras de Cores (Regex)
-        // Tags #NomeDoCampo
         html = html.replace(/(#[A-Za-zÀ-ÖØ-öø-ÿ0-9]+)/g, '<span class="hl-tag">$1</span>');
-        
-        // Rótulos como "Ator:", "Insumos:" (Início de linha ou após espaço)
         html = html.replace(/(^|\n)([A-Za-zÀ-ÖØ-öø-ÿ\s]+:)/g, '$1<span class="hl-label">$2</span>');
-        
-        // Regras de Lógica (BPMN)
         html = html.replace(/(Regra:|Lógica:)/gi, '<span class="hl-logic">$1</span>');
 
-        // Adicionar um caractere extra no final para lidar com quebras de linha no scroll
         this.highlight.innerHTML = html + "\n\n";
     }
 };

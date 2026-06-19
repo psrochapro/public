@@ -1,39 +1,54 @@
 /* 
    ARQUIVO: css/editor.css
-   FUNÇÃO: Estilização do painel lateral e Syntax Highlighting.
-   VERSÃO: 02 (Posicionado na Esquerda e Largura Ampliada)
+   FUNÇÃO: Estilização do painel lateral, Resizer e Syntax Highlighting.
+   VERSÃO: 03 (Esquerda, Resizable e Botão Template)
 */
 
 #editor-container {
     position: fixed;
     top: 0;
-    left: 0; /* Alterado de right para left */
+    left: 0;
     height: 100vh;
-    width: 600px; /* Largura aumentada de 400px para 600px */
-    background: rgba(255, 255, 255, 0.95);
+    width: 600px;
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(0,0,0,0.1); /* Alterado de border-left para border-right */
+    border-right: 1px solid rgba(0,0,0,0.1);
     z-index: 9999;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    box-shadow: 10px 0 30px rgba(0,0,0,0.1); /* Sombra invertida para o lado direito */
+    box-shadow: 10px 0 30px rgba(0,0,0,0.1);
 }
 
 #editor-container.editor-collapsed {
-    transform: translateX(-100%); /* Alterado para esconder à esquerda */
+    transform: translateX(-100%);
+}
+
+/* Alça de Redimensionamento */
+#editor-resizer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 10000;
+}
+
+#editor-resizer:hover {
+    background: rgba(26, 77, 46, 0.2);
 }
 
 #editor-toggle {
     position: absolute;
-    right: -40px; /* Alterado de left para right para ficar na borda externa */
+    right: -40px;
     top: 50%;
     transform: translateY(-50%);
     width: 40px;
     height: 80px;
     background: #1a4d2e;
     border: none;
-    border-radius: 0 15px 15px 0; /* Border radius invertido */
+    border-radius: 0 15px 15px 0;
     color: white;
     cursor: pointer;
     display: flex;
@@ -43,7 +58,6 @@
     box-shadow: 4px 0 10px rgba(0,0,0,0.1);
 }
 
-/* Inverte a rotação do ícone quando recolhido */
 .editor-collapsed #editor-toggle .toggle-icon {
     transform: rotate(180deg);
 }
@@ -65,6 +79,12 @@
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
+.header-main-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .editor-header h3 {
     margin: 0;
     font-size: 0.9rem;
@@ -77,9 +97,29 @@
     font-size: 0.65rem;
     background: #e8f5e9;
     color: #2e7d32;
+    width: fit-content;
     padding: 2px 8px;
     border-radius: 10px;
     font-weight: bold;
+}
+
+/* Novo Botão Inserir Template */
+.btn-editor-template {
+    background: #1a4d2e;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-editor-template:hover {
+    background: #143a22;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .editor-wrapper {

@@ -1,6 +1,7 @@
 const template = {
-    downloadTemplate() {
-        const content = `#nome 
+    // Retorna a string pura do template para o editor
+    getTemplateContent() {
+        return `#nome 
 #objetivo 
 #macroprocesso 
 #area 
@@ -31,6 +32,10 @@ Cliente:
 #observacoes
 - 
 `;
+    },
+
+    downloadTemplate() {
+        const content = this.getTemplateContent();
         this.saveFile(content, "template-vazio.txt");
     },
 
