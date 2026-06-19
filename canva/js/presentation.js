@@ -47,12 +47,13 @@ const presentation = {
     },
 
     updateView() {
-        this.clearFocus(); // Limpa tudo antes de aplicar o novo foco
+        this.clearFocus();
         const surveyCards = document.querySelectorAll('.survey-card');
         const presInfo = document.getElementById('pres-info');
+        const flowHeader = document.querySelector('.flow-section-header');
 
         if (this.currentStep === -1) {
-            // Foco: Título e Dashboard (mantendo estilo original)
+            // Foco: Introdução (Título e Dashboard)
             const header = document.querySelector('.process-title-header');
             const dash = document.querySelector('.header-dashboard');
             header.classList.add('pres-focus');
@@ -70,11 +71,14 @@ const presentation = {
             }
         } 
         else {
-            // Foco: Agrupamento por Etapas (Cápsula)
+            // Foco: Fluxo por Etapas
             const stepIdx = this.currentStep - 11;
             const targetEtapa = this.uniqueSteps[stepIdx];
 
             if (targetEtapa) {
+                // Ativa o título da seção de fluxo
+                if (flowHeader) flowHeader.classList.add('pres-section-active');
+
                 const groupRows = document.querySelectorAll(`.activity-row-card[data-etapa="${targetEtapa}"]`);
                 groupRows.forEach((row, idx) => {
                     row.classList.add('pres-focus');
@@ -118,10 +122,11 @@ const presentation = {
     },
 
     clearFocus() {
-        // Remove absolutamente todas as classes de foco e brilho
         document.querySelectorAll('.pres-focus').forEach(el => el.classList.remove('pres-focus'));
         document.querySelectorAll('.group-start').forEach(el => el.classList.remove('group-start'));
         document.querySelectorAll('.group-end').forEach(el => el.classList.remove('group-end'));
+        const flowHeader = document.querySelector('.flow-section-header');
+        if (flowHeader) flowHeader.classList.remove('pres-section-active');
     }
 };
 

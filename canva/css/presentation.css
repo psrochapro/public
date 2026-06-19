@@ -3,45 +3,50 @@
    FUNÇÃO: Estilos de Apresentação com Foco Neon e Preservação de Design Original.
 */
 
-/* 1. Esmaecimento Global (Somente o que NÃO está em foco) */
-.presentation-mode #canvasPrint > * {
+/* 1. Esmaecimento Seletivo (Apenas componentes individuais, não containers) */
+.presentation-mode .process-title-header,
+.presentation-mode .header-dashboard,
+.presentation-mode .survey-card,
+.presentation-mode .activity-row-card,
+.presentation-mode .flow-section-header,
+.presentation-mode .obs-table-styled {
     opacity: 0.15;
-    filter: blur(2px) grayscale(0.8);
+    filter: blur(3px) grayscale(0.8);
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 2. Destaque do Elemento em Foco (Restaura o visual original) */
-.presentation-mode .pres-focus {
+/* 2. Destaque do Elemento em Foco (Restaura o design original) */
+.presentation-mode .pres-focus,
+.presentation-mode .pres-section-active {
     opacity: 1 !important;
     filter: none !important;
-    transform: scale(1.01) !important;
     z-index: 100 !important;
 }
 
-/* 3. Animação Neon Verde Esmeralda */
-@keyframes neon-glow-capsule {
-    0% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
-    50% { border-color: rgba(46, 125, 50, 1); box-shadow: 0 0 25px rgba(46, 125, 50, 0.5); }
-    100% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
+/* 3. Animação Neon Verde Esmeralda (Contorno externo) */
+@keyframes neon-glow-v07 {
+    0% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); border-color: rgba(46, 125, 50, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(46, 125, 50, 0.6); border-color: rgba(46, 125, 50, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); border-color: rgba(46, 125, 50, 0.3); }
 }
 
-/* Aplicação do Neon nos Cards e Títulos */
+/* Aplicação do Neon sem achatar o Glassmorphism */
 .presentation-mode div.pres-focus, 
 .presentation-mode .survey-card.pres-focus {
     border: 3px solid #2e7d32 !important;
     border-radius: 15px !important;
-    animation: neon-glow-capsule 2s infinite ease-in-out;
+    animation: neon-glow-v07 2s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.3) !important; /* Mantém transparência */
 }
 
 /* 4. Lógica de Cápsula Neon para a Tabela */
 .presentation-mode tr.pres-focus {
     border-left: 3px solid #2e7d32 !important;
     border-right: 3px solid #2e7d32 !important;
-    background: rgba(255, 255, 255, 0.8) !important;
-    animation: neon-glow-capsule 2s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.6) !important; /* Brilho de vidro */
+    animation: neon-glow-v07 2s infinite ease-in-out;
 }
 
-/* Remove bordas internas no meio do grupo */
 .presentation-mode tr.pres-focus:not(.group-start):not(.group-end) {
     border-top: none !important;
     border-bottom: none !important;
@@ -64,26 +69,26 @@
     position: sticky;
     top: 0;
     z-index: 1001;
-    opacity: 1 !important; /* Sempre visível */
+    opacity: 1 !important;
     filter: none !important;
 }
 
 .presentation-mode .flow-header-row th {
-    background: rgba(26, 77, 46, 0.9) !important;
+    background: rgba(26, 77, 46, 0.95) !important;
     backdrop-filter: blur(10px);
     color: white !important;
     border-bottom: 3px solid #2e7d32 !important;
 }
 
-/* 6. Controles de Apresentação */
+/* 6. Controles de Apresentação Glass */
 #presentation-controls {
     display: none;
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
     padding: 12px 25px;
     border-radius: 50px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
@@ -113,4 +118,5 @@ body.presentation-mode #presentation-controls {
     color: #1a4d2e;
     min-width: 250px;
     text-align: center;
+    font-size: 0.9rem;
 }
