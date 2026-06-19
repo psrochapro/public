@@ -1,7 +1,7 @@
 /* 
    ARQUIVO: css/print.css
    FUNÇÃO: Otimização exclusiva para PDF e Impressão Técnica.
-   REVISÃO: Correção definitiva de quebra na Etapa e ajuste de fonte no Objetivo.
+   REVISÃO: Redução de altura do cabeçalho (slim) e alinhamento horizontal da Etapa.
 */
 
 @media print {
@@ -25,7 +25,7 @@
         border: none !important; 
         backdrop-filter: none !important; 
         background: white !important; 
-        padding: 0 3mm !important; /* Ajuste fino para evitar corte lateral */
+        padding: 0 4mm !important; 
         width: 100% !important; 
         max-width: 100% !important;
         margin: 0 !important;
@@ -33,7 +33,7 @@
 
     .process-title-header h1 { 
         font-size: 1.1rem !important; 
-        margin-top: 8mm; 
+        margin-top: 5mm; 
         color: #1a4d2e !important;
     }
 
@@ -42,24 +42,11 @@
         display: grid !important; 
         grid-template-columns: 1fr 140px !important; 
         gap: 8px !important; 
-        margin-bottom: 15px; 
+        margin-bottom: 12px; 
         width: 100% !important;
         align-items: stretch !important;
     }
     
-    .meta-side { 
-        display: flex !important; 
-        flex-direction: column !important; 
-        gap: 2px !important; 
-    }
-
-    .meta-card-row { 
-        background: white !important; 
-        border: 1px solid #eee !important; 
-        flex: 1;
-    }
-
-    /* Redução da fonte do Objetivo Geral para evitar blocos densos */
     .meta-card-value {
         font-size: 0.68rem !important; 
         line-height: 1.1 !important;
@@ -70,98 +57,70 @@
         background: #fdfdfd !important; 
         color: #1a4d2e !important; 
         border: 1.5px solid #1a4d2e !important; 
-        border-radius: 8px !important; 
-        height: 100% !important; 
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
+        border-radius: 8px !important;
+        height: 100% !important;
     }
     
-    .counter-number { font-size: 2rem !important; line-height: 1; }
+    .counter-number { font-size: 1.8rem !important; line-height: 1; }
     .counter-label { font-size: 0.55rem !important; }
 
-    /* 2. Levantamento (1 a 11) */
-    .survey-card { 
-        grid-template-columns: 260px 1fr !important; 
-        background: white !important; 
-        border: 1px solid #ddd !important; 
-        break-inside: avoid !important;
-        width: 100% !important; 
-        margin-bottom: 4px !important;
-    }
-
-    .card-item-name { white-space: nowrap !important; font-size: 7.5pt !important; }
-    
-    /* 3. Tabelas e Fluxo */
+    /* 2. Tabelas e Fluxo (Emagrecimento do Cabeçalho) */
     .flow-table-styled, .obs-table-styled {
         width: 100% !important;
         table-layout: auto !important;
         border-spacing: 0 4px !important;
     }
 
-    .flow-table-styled thead, .obs-table-styled thead { 
-        display: table-header-group !important; 
-    }
+    .flow-table-styled thead { display: table-header-group !important; }
 
     .flow-header-row th {
         background: #f2f2f2 !important; 
         color: #1a4d2e !important;
-        border-bottom: 2px solid #1a4d2e !important; 
+        border-bottom: 1px solid #1a4d2e !important; 
         font-size: 7pt !important;
-        padding: 6px 2px !important;
-        text-align: center;
-        vertical-align: middle;
+        padding: 4px 2px !important; /* Padding reduzido para emagrecer a linha */
+        line-height: 1 !important; /* Força altura mínima */
+        vertical-align: middle !important;
     }
 
-    /* CORREÇÃO DEFINITIVA: Impede quebra de linha na Etapa */
+    /* CORREÇÃO DA ETAPA: Força ícone e texto na mesma linha horizontal */
     .flow-header-row th:first-child {
-        min-width: 75px !important; /* Espaço suficiente para Ícone + Palavra */
         white-space: nowrap !important;
-        display: table-cell !important; /* Mantém comportamento de tabela */
+        width: 60px !important; /* Largura fixa mínima */
+        text-align: center !important;
     }
 
-    /* Força o conteúdo interno a ficar em linha caso o navegador suporte flex em th */
-    .flow-header-row th:first-child {
-        overflow: visible !important;
-    }
-
-    .activity-row-card, .obs-row {
-        break-inside: avoid !important;
+    /* Ajuste de tamanho do ícone dentro do cabeçalho de impressão */
+    .flow-header-row th img, 
+    .flow-header-row th span, 
+    .flow-header-row th i {
+        display: inline-block !important;
+        vertical-align: middle !important;
+        margin-right: 2px !important;
+        max-height: 10pt !important; /* Limita altura do ícone */
     }
 
     .activity-row-card td, .obs-row td {
         background: white !important; 
         border: 1px solid #eee !important;
         font-size: 7.5pt !important; 
-        padding: 5px 3px !important;
+        padding: 4px 3px !important;
     }
 
-    .activity-row-card td.highlight-col { 
-        background: #f9f9f9 !important; 
-    }
-
-    .obs-row td::before { 
-        content: "• "; 
-        color: #1a4d2e; 
-        font-weight: bold; 
-    }
+    .activity-row-card, .obs-row { break-inside: avoid !important; }
 
     /* Itens Visuais */
     .pill {
         font-size: 6.5pt !important; 
         border: 1px solid #ccc !important;
-        background: #fdfdfd !important; 
         padding: 1px 3px !important;
-        display: inline-block !important;
-        margin: 1px !important;
     }
 
     .regra-box {
         background: #fffbe6 !important;
-        border-left: 3px solid #f1c232 !important;
+        border-left: 2px solid #f1c232 !important;
         font-size: 7pt !important;
-        padding: 4px !important;
+        padding: 3px !important;
     }
 
     /* UI & Visibilidade */
