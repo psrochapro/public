@@ -1,86 +1,95 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Estilos do Modo Apresentação com foco em legibilidade e acompanhamento visual.
+   FUNÇÃO: Estilos do Modo Apresentação com Efeito Neon e Cabeçalho Fixo.
 */
 
+/* 1. Preservação do Estilo Base */
 body.presentation-mode {
-    background: #f8fafc !important; /* Fundo levemente mais claro para contraste */
+    /* Mantém o fundo original da aplicação (sem sobrescrever com cores sólidas) */
 }
 
-/* O elemento focado ganha destaque visual e elevação */
+/* 2. Animação Neon Pulsante */
+@keyframes neon-pulse-green {
+    0% {
+        box-shadow: 0 0 5px rgba(46, 125, 50, 0.4), 0 0 10px rgba(46, 125, 50, 0.2);
+        border-color: rgba(46, 125, 50, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(46, 125, 50, 0.8), 0 0 40px rgba(46, 125, 50, 0.4);
+        border-color: rgba(67, 160, 71, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(46, 125, 50, 0.4), 0 0 10px rgba(46, 125, 50, 0.2);
+        border-color: rgba(46, 125, 50, 0.8);
+    }
+}
+
+/* 3. O elemento focado ganha o efeito Neon */
 .pres-focus {
     position: relative !important;
-    z-index: 10 !important;
+    z-index: 100 !important;
     transform: scale(1.02) !important;
-    box-shadow: 0 25px 60px rgba(26, 77, 46, 0.15) !important;
-    background: white !important;
-    border: 2px solid var(--primary-elegant) !important;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 3px solid var(--primary-elegant) !important;
+    animation: neon-pulse-green 2s infinite ease-in-out !important;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* Cards de levantamento em espera ficam translúcidos */
-.presentation-mode .survey-card {
-    opacity: 0.3;
-    filter: grayscale(0.8);
+/* 4. Cabeçalho Fixo (Sticky Header) apenas na Apresentação */
+.presentation-mode .flow-table-styled thead {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Acima de tudo para não sumir */
+    display: table-header-group;
+}
+
+.presentation-mode .flow-header-row th {
+    background: rgba(26, 77, 46, 0.95) !important; /* Verde escuro com leve transparência */
+    backdrop-filter: blur(8px);
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border: none !important;
+}
+
+/* 5. Transparência Seletiva para manter o foco */
+.presentation-mode .survey-card, 
+.presentation-mode .activity-row-card {
+    opacity: 0.15;
+    filter: blur(1px) grayscale(0.5);
     transition: all 0.5s ease;
 }
 
-.presentation-mode .survey-card.active-reveal {
+.presentation-mode .active-reveal,
+.presentation-mode .active-row {
     opacity: 1;
-    filter: grayscale(0);
+    filter: none;
 }
 
-/* Acendimento gradual das pílulas no foco */
+/* Pílulas acendem no foco */
 .presentation-mode .survey-card .pill-container {
     opacity: 0.1;
-    transition: opacity 0.6s ease;
 }
-
-.presentation-mode .survey-card.pres-focus .pill-container {
+.presentation-mode .pres-focus .pill-container {
     opacity: 1;
 }
 
-/* Estilo para as Linhas de Fluxo (Tabela) */
-.presentation-mode .activity-row-card {
-    opacity: 0.2;
-    transition: all 0.4s ease;
-}
-
-/* Quando uma etapa inteira é selecionada, as linhas brilham juntas */
-.presentation-mode .activity-row-card.active-row {
-    opacity: 1;
-    border-left: 5px solid var(--primary-elegant) !important;
-    transform: translateX(10px);
-}
-
-/* Ajuste na Toolbar para não atrapalhar o scroll manual se necessário */
-.presentation-mode .toolbar-wrapper {
-    opacity: 0.1;
-    pointer-events: none;
-    transition: opacity 0.3s;
-}
-
-.presentation-mode .toolbar-wrapper:hover {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* Controles de Apresentação */
+/* 6. Controles de Apresentação */
 #presentation-controls {
     display: none;
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 12px 25px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    padding: 10px 20px;
     border-radius: 50px;
-    box-shadow: 0 15px 45px rgba(0,0,0,0.15);
-    z-index: 2000;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+    z-index: 9999;
     gap: 15px;
     align-items: center;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
 body.presentation-mode #presentation-controls {
@@ -88,32 +97,26 @@ body.presentation-mode #presentation-controls {
 }
 
 #presentation-controls button {
-    padding: 10px 20px;
+    padding: 10px 18px;
     border-radius: 25px;
-    background: var(--primary-elegant);
+    background: #1a4d2e;
     border: none;
     color: white;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 0.85rem;
 }
 
-#presentation-controls button:hover { 
-    background: #143a22;
-    transform: translateY(-2px);
-}
-
-#presentation-controls button#pres-exit { 
-    background: #d93025; 
+#presentation-controls button:hover {
+    transform: scale(1.05);
+    background: #2e7d32;
 }
 
 #pres-info {
     font-weight: 800;
     color: #1a4d2e;
-    min-width: 250px;
+    min-width: 280px;
     text-align: center;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }

@@ -1,12 +1,12 @@
 /* 
    ARQUIVO: js/presentation.js
-   FUNÇÃO: Lógica de navegação sequencial agrupada por Etapas.
+   FUNÇÃO: Lógica de navegação sequencial agrupada por Etapas com Smart Scroll compensado.
 */
 
 const presentation = {
     isPresentationMode: false,
     currentStep: -1, 
-    uniqueSteps: [], // Armazena os nomes/números das etapas únicas
+    uniqueSteps: [],
 
     init() {
         document.getElementById('btn-presentation').addEventListener('click', () => this.togglePresentation());
@@ -36,7 +36,6 @@ const presentation = {
         }
     },
 
-    // Identifica todas as etapas únicas presentes no fluxo renderizado
     calculateUniqueSteps() {
         const rows = document.querySelectorAll('.activity-row-card');
         const steps = new Set();
@@ -53,7 +52,6 @@ const presentation = {
         const presInfo = document.getElementById('pres-info');
 
         if (this.currentStep === -1) {
-            // Foco: Título e Dashboard
             const header = document.querySelector('.process-title-header');
             const dash = document.querySelector('.header-dashboard');
             header.classList.add('pres-focus');
@@ -62,7 +60,6 @@ const presentation = {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } 
         else if (this.currentStep >= 0 && this.currentStep <= 10) {
-            // Foco: Os 11 Cards de Levantamento
             const card = surveyCards[this.currentStep];
             if (card) {
                 card.classList.add('pres-focus');
@@ -72,7 +69,6 @@ const presentation = {
             }
         } 
         else {
-            // Foco: Agrupamento por Etapas
             const stepIdx = this.currentStep - 11;
             const targetEtapa = this.uniqueSteps[stepIdx];
 
@@ -85,9 +81,8 @@ const presentation = {
                 
                 presInfo.innerText = `Fluxo: Etapa ${targetEtapa} (${this.uniqueSteps.indexOf(targetEtapa) + 1} de ${this.uniqueSteps.length})`;
                 
-                // Scroll para o topo do grupo de atividades
                 if (groupRows.length > 0) {
-                    this.smartScroll(groupRows[0]);
+                    this.smartScroll(groupRows[0], true); // true indica que é fluxo (precisa compensar cabeçalho)
                 }
             } else {
                 presInfo.innerText = "Fim da Apresentação";
@@ -95,9 +90,10 @@ const presentation = {
         }
     },
 
-    // Função de scroll melhorada para garantir centralização e visibilidade
-    smartScroll(element) {
-        const offset = 150; // Espaço para não ficar colado no topo
+    // Scroll inteligente compensando o cabeçalho fixo na tabela
+    smartScroll(element, isFlow = false) {
+        // Compensação: 80px para cards normais, 120px para o fluxo (para não bater no sticky header)
+        const offset = isFlow ? 120 : 150; 
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({
             top: elementPosition - offset,
