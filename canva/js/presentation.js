@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: js/presentation.js
-   FUNÇÃO: Navegação agrupada por Etapas com limpeza rigorosa de foco anterior.
+   FUNÇÃO: Navegação agrupada por Etapas com identificação de extremidades de grupo.
 */
 
 const presentation = {
@@ -53,7 +53,6 @@ const presentation = {
         const flowHeader = document.querySelector('.flow-section-header');
 
         if (this.currentStep === -1) {
-            // Foco: Introdução (Título e Dashboard)
             const header = document.querySelector('.process-title-header');
             const dash = document.querySelector('.header-dashboard');
             header.classList.add('pres-focus');
@@ -62,7 +61,6 @@ const presentation = {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } 
         else if (this.currentStep >= 0 && this.currentStep <= 10) {
-            // Foco: Itens de Levantamento
             const card = surveyCards[this.currentStep];
             if (card) {
                 card.classList.add('pres-focus');
@@ -71,12 +69,10 @@ const presentation = {
             }
         } 
         else {
-            // Foco: Fluxo por Etapas
             const stepIdx = this.currentStep - 11;
             const targetEtapa = this.uniqueSteps[stepIdx];
 
             if (targetEtapa) {
-                // Ativa o título da seção de fluxo
                 if (flowHeader) flowHeader.classList.add('pres-section-active');
 
                 const groupRows = document.querySelectorAll(`.activity-row-card[data-etapa="${targetEtapa}"]`);
