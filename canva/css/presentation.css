@@ -1,9 +1,9 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Estilos de Apresentação com Foco em Cápsula Neon Unificada.
+   FUNÇÃO: Estilos de Apresentação com Foco em Cápsula Neon Unificada (Especificidade Máxima).
 */
 
-/* 1. Esmaecimento Seletivo (Fundo) */
+/* 1. Esmaecimento Global */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
@@ -15,7 +15,7 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 2. Destaque do Elemento em Foco */
+/* 2. Ativação do Foco */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
@@ -23,59 +23,68 @@
     z-index: 100 !important;
 }
 
-/* 3. Animação Neon Verde Esmeralda (Moldura Externa) */
-@keyframes neon-glow-capsule-v09 {
-    0% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 15px 0 20px -10px rgba(46, 125, 50, 0.2), -15px 0 20px -10px rgba(46, 125, 50, 0.2); }
-    50% { border-color: rgba(46, 125, 50, 1); box-shadow: 20px 0 35px -10px rgba(46, 125, 50, 0.5), -20px 0 35px -10px rgba(46, 125, 50, 0.5); }
-    100% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 15px 0 20px -10px rgba(46, 125, 50, 0.2), -15px 0 20px -10px rgba(46, 125, 50, 0.2); }
+/* 3. Animação Neon Verde Esmeralda (Glow Externo) */
+@keyframes neon-glow-v10 {
+    0% { box-shadow: 15px 0 25px -10px rgba(46, 125, 50, 0.3), -15px 0 25px -10px rgba(46, 125, 50, 0.3); }
+    50% { box-shadow: 25px 0 45px -10px rgba(46, 125, 50, 0.6), -25px 0 45px -10px rgba(46, 125, 50, 0.6); }
+    100% { box-shadow: 15px 0 25px -10px rgba(46, 125, 50, 0.3), -15px 0 25px -10px rgba(46, 125, 50, 0.3); }
 }
 
-/* 4. Lógica de "Colagem" das Linhas (Cápsula) */
-.presentation-mode tr.pres-focus {
-    background: rgba(255, 255, 255, 0.7) !important; /* Vidro mais nítido */
+/* 4. A CÁPSULA: Unificando as linhas do fluxo */
+
+/* Seletor ultra-específico para anular margens e sombras do theme.css */
+body.presentation-mode .glass-container .flow-table-styled tbody tr.activity-row-card.pres-focus {
+    background: rgba(255, 255, 255, 0.6) !important;
     backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
     
-    /* RESET CRÍTICO: Remove espaços e arredondamentos que impedem a cápsula */
-    margin-top: 0 !important;
+    /* Remove espaços entre as linhas */
+    margin: 0 !important;
     margin-bottom: 0 !important;
+    padding-bottom: 5px !important;
+    
+    /* Remove sombras individuais para não poluir o centro da cápsula */
+    box-shadow: none !important;
+    
+    /* Reseta arredondamentos de cada linha */
     border-radius: 0 !important;
+    
+    /* Moldura lateral contínua */
     border: none !important;
+    border-left: 4px solid #2e7d32 !important;
+    border-right: 4px solid #2e7d32 !important;
     
-    /* Moldura lateral da cápsula */
-    border-left: 3px solid #2e7d32 !important;
-    border-right: 3px solid #2e7d32 !important;
-    
-    transform: translateX(15px) !important; /* Desloca para fora do alinhamento */
-    animation: neon-glow-capsule-v09 2s infinite ease-in-out;
+    /* Efeito de destaque lateral */
+    transform: translateX(15px) !important;
+    animation: neon-glow-v10 2.5s infinite ease-in-out;
 }
 
-/* Ajuste do Início da Cápsula */
-.presentation-mode tr.group-start {
-    border-top: 3px solid #2e7d32 !important;
+/* Topo da Cápsula */
+body.presentation-mode .glass-container .flow-table-styled tbody tr.activity-row-card.group-start {
+    border-top: 4px solid #2e7d32 !important;
     border-top-left-radius: 15px !important;
     border-top-right-radius: 15px !important;
-    margin-top: 15px !important; /* Espaço apenas antes do grupo começar */
+    margin-top: 15px !important;
 }
 
-/* Ajuste do Fim da Cápsula */
-.presentation-mode tr.group-end {
-    border-bottom: 3px solid #2e7d32 !important;
+/* Base da Cápsula */
+body.presentation-mode .glass-container .flow-table-styled tbody tr.activity-row-card.group-end {
+    border-bottom: 4px solid #2e7d32 !important;
     border-bottom-left-radius: 15px !important;
     border-bottom-right-radius: 15px !important;
-    margin-bottom: 15px !important; /* Espaço apenas após o grupo terminar */
+    margin-bottom: 15px !important;
 }
 
-/* 5. Destaque para Cards (Dashboard e Survey) */
-.presentation-mode div.pres-focus, 
-.presentation-mode .survey-card.pres-focus {
+/* 5. Cards de Levantamento (Destaque Individual) */
+body.presentation-mode .survey-card.pres-focus {
     border: 3px solid #2e7d32 !important;
     border-radius: 15px !important;
-    animation: neon-glow-capsule-v09 2s infinite ease-in-out;
-    background: rgba(255, 255, 255, 0.5) !important;
-    transform: scale(1.03);
+    animation: neon-glow-v10 2s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.02);
 }
 
-/* 6. Cabeçalho Fixo (Sticky) */
+/* 6. Cabeçalho Fixo (Sticky Header) */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
     top: 0;
@@ -98,11 +107,11 @@
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     padding: 12px 25px;
     border-radius: 50px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
     z-index: 9999;
     gap: 15px;
     align-items: center;

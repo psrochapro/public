@@ -78,8 +78,6 @@ const presentation = {
                 const groupRows = document.querySelectorAll(`.activity-row-card[data-etapa="${targetEtapa}"]`);
                 groupRows.forEach((row, idx) => {
                     row.classList.add('pres-focus');
-                    
-                    // Identifica início e fim do grupo para a cápsula CSS
                     if (idx === 0) row.classList.add('group-start');
                     if (idx === groupRows.length - 1) row.classList.add('group-end');
                 });
