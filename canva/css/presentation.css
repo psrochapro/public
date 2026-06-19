@@ -1,27 +1,30 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Estilos de Apresentação com Glow Perimetral e Fidelidade Glassmorphism.
-   REVISÃO: Aplicação de brilho apenas no contorno externo do conjunto de etapas.
+   FUNÇÃO: Controle de Foco e Isolamento para o Modo Apresentação.
+   ESTILO: 100% Fiel ao Modo Normal, apenas com esmaecimento de elementos fora de foco.
 */
 
-/* 1. Manutenção da Geometria Original */
+/* 1. Alinhamento Estrutural com o theme.css */
 body.presentation-mode .flow-table-styled {
-    border-spacing: 0 8px !important; /* Mantém o espaçamento exato do theme.css */
+    border-spacing: 0 8px !important;
     border-collapse: separate !important;
 }
 
-/* 2. Esmaecimento de Fundo (Contexto) */
+/* 2. Efeito de Esmaecimento (Elementos fora de foco) */
+/* Reduz visibilidade do que não é o foco atual para direcionar o olhar da audiência */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
 .presentation-mode .activity-row-card,
+.presentation-mode .flow-section-header,
 .presentation-mode .obs-table-styled {
     opacity: 0.15;
-    filter: blur(2px) grayscale(0.8);
-    transition: all 0.5s ease;
+    filter: blur(2px) grayscale(0.5);
+    transition: all 0.5s ease-in-out;
 }
 
-/* Foco Ativo: Restaura o Glassmorphism Original */
+/* 3. Restauração Total do Foco */
+/* O item em foco perde o desfoque e volta a ter 100% de opacidade, herdando o estilo do theme.css */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
@@ -29,76 +32,25 @@ body.presentation-mode .flow-table-styled {
     z-index: 100 !important;
 }
 
-/* 3. Definição da Animação de Brilho (Neon Esmeralda) */
-@keyframes neon-glow-perimeter {
-    0% { filter: drop-shadow(0 0 2px rgba(46, 125, 50, 0.2)); }
-    50% { filter: drop-shadow(0 0 10px rgba(46, 125, 50, 0.7)); }
-    100% { filter: drop-shadow(0 0 2px rgba(46, 125, 50, 0.2)); }
-}
-
-/* 4. A CÁPSULA PERIMETRAL (Conjunto de Etapas) */
-
-/* Aplica a animação apenas nas células que formam a borda externa do grupo */
-.presentation-mode tr.pres-focus.group-start td,
-.presentation-mode tr.pres-focus.group-end td,
-.presentation-mode tr.pres-focus td:first-child,
-.presentation-mode tr.pres-focus td:last-child {
-    animation: neon-glow-perimeter 2s infinite ease-in-out;
-}
-
-/* Borda Superior (Apenas na primeira linha do conjunto) */
-.presentation-mode tr.pres-focus.group-start td {
-    border-top: 2px solid #2e7d32 !important;
-}
-
-/* Borda Inferior (Apenas na última linha do conjunto) */
-.presentation-mode tr.pres-focus.group-end td {
-    border-bottom: 2px solid #2e7d32 !important;
-}
-
-/* Bordas Laterais (Em todas as linhas do conjunto em foco) */
-.presentation-mode tr.pres-focus td:first-child {
-    border-left: 2px solid #2e7d32 !important;
-}
-.presentation-mode tr.pres-focus td:last-child {
-    border-right: 2px solid #2e7d32 !important;
-}
-
-/* Limpeza do Centro: Células que não são extremidades não recebem bordas coloridas */
-.presentation-mode tr.pres-focus td {
-    background: var(--glass-bg) !important;
-    backdrop-filter: blur(12px) !important;
-    border-top: 1px solid var(--glass-border) !important;
-    border-bottom: 1px solid var(--glass-border) !important;
-}
-
-/* 5. Dashboard e Cards 1-11 (Glow Individual) */
-.presentation-mode .header-dashboard.pres-focus,
-.presentation-mode .survey-card.pres-focus {
-    border: 2px solid #2e7d32 !important;
-    animation: neon-glow-perimeter 2s infinite ease-in-out;
-    background: var(--glass-bg) !important;
-    backdrop-filter: blur(12px) !important;
-}
-
-/* 6. Cabeçalho Fixo (Sticky) - Idêntico ao Modo Normal */
+/* 4. Cabeçalho Fixo (Sticky) */
+/* Mantido apenas para navegação, com o visual exato do modo normal */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
-    top: 15px;
+    top: 0;
     z-index: 1001;
     opacity: 1 !important;
     filter: none !important;
 }
 
 .presentation-mode .flow-header-row th {
-    background: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
     border-bottom: 2px solid var(--primary-elegant) !important;
     color: var(--primary-elegant) !important;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-/* 7. Controles de Apresentação */
+/* 5. Controles de Apresentação (Interface de Apoio) */
 #presentation-controls {
     display: none;
     position: fixed;
@@ -128,6 +80,11 @@ body.presentation-mode #presentation-controls {
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+#presentation-controls button:hover {
+    opacity: 0.8;
 }
 
 #pres-info {
@@ -136,4 +93,6 @@ body.presentation-mode #presentation-controls {
     min-width: 250px;
     text-align: center;
     font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
