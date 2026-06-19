@@ -170,8 +170,19 @@ body {
     border-spacing: 0 8px;
 }
 
+/* MODIFICAÇÃO: Cabeçalho Fixo (Sticky) no Modo Normal */
+@media screen {
+    .flow-table-styled thead {
+        position: sticky;
+        top: 0; /* Cola no topo da página ou do container */
+        z-index: 100;
+    }
+}
+
 .flow-header-row th, .obs-table-styled th {
-    background: rgba(255, 255, 255, 0.6);
+    /* Ajuste para fundo mais opaco para não haver sobreposição visual no scroll */
+    background: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(8px);
     color: var(--primary-elegant);
     font-size: 0.75rem;
     font-weight: 800;
