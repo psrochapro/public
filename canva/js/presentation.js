@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: js/presentation.js
-   FUNÇÃO: Lógica de navegação sequencial agrupada por Etapas com Smart Scroll compensado.
+   FUNÇÃO: Navegação agrupada por Etapas com identificação de extremidades de grupo.
 */
 
 const presentation = {
@@ -74,15 +74,20 @@ const presentation = {
 
             if (targetEtapa) {
                 const groupRows = document.querySelectorAll(`.activity-row-card[data-etapa="${targetEtapa}"]`);
-                groupRows.forEach(row => {
+                
+                groupRows.forEach((row, idx) => {
                     row.classList.add('pres-focus');
                     row.classList.add('active-row');
+                    
+                    // Identifica início e fim do grupo para a cápsula CSS
+                    if (idx === 0) row.classList.add('group-start');
+                    if (idx === groupRows.length - 1) row.classList.add('group-end');
                 });
                 
                 presInfo.innerText = `Fluxo: Etapa ${targetEtapa} (${this.uniqueSteps.indexOf(targetEtapa) + 1} de ${this.uniqueSteps.length})`;
                 
                 if (groupRows.length > 0) {
-                    this.smartScroll(groupRows[0], true); // true indica que é fluxo (precisa compensar cabeçalho)
+                    this.smartScroll(groupRows[0], true);
                 }
             } else {
                 presInfo.innerText = "Fim da Apresentação";
@@ -90,10 +95,8 @@ const presentation = {
         }
     },
 
-    // Scroll inteligente compensando o cabeçalho fixo na tabela
     smartScroll(element, isFlow = false) {
-        // Compensação: 80px para cards normais, 120px para o fluxo (para não bater no sticky header)
-        const offset = isFlow ? 120 : 150; 
+        const offset = isFlow ? 130 : 150; 
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({
             top: elementPosition - offset,
@@ -119,6 +122,8 @@ const presentation = {
     clearFocus() {
         document.querySelectorAll('.pres-focus').forEach(el => el.classList.remove('pres-focus'));
         document.querySelectorAll('.active-row').forEach(el => el.classList.remove('active-row'));
+        document.querySelectorAll('.group-start').forEach(el => el.classList.remove('group-start'));
+        document.querySelectorAll('.group-end').forEach(el => el.classList.remove('group-end'));
     }
 };
 
