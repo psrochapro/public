@@ -1,106 +1,92 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Estilos Glassmorphism Neon com suporte a cápsula de grupo.
+   FUNÇÃO: Estilos de Apresentação com Foco Neon e Preservação de Design Original.
 */
 
-/* 1. Efeito de Escurecimento do Fundo (mantendo blur) */
-.presentation-mode .survey-card, 
-.presentation-mode .activity-row-card,
-.presentation-mode .process-title-header,
-.presentation-mode .header-dashboard {
+/* 1. Esmaecimento Global (Somente o que NÃO está em foco) */
+.presentation-mode #canvasPrint > * {
     opacity: 0.15;
-    filter: blur(2px) grayscale(0.7);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(2px) grayscale(0.8);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 2. Destaque Glassmorphism Neon */
-.pres-focus {
+/* 2. Destaque do Elemento em Foco (Restaura o visual original) */
+.presentation-mode .pres-focus {
     opacity: 1 !important;
     filter: none !important;
-    background: rgba(255, 255, 255, 0.5) !important;
-    backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    border: 2px solid rgba(46, 125, 50, 0.5) !important;
+    transform: scale(1.01) !important;
     z-index: 100 !important;
 }
 
-/* Animação Neon Suave */
+/* 3. Animação Neon Verde Esmeralda */
 @keyframes neon-glow-capsule {
-    0% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
-    50% { box-shadow: 0 0 25px rgba(46, 125, 50, 0.6); }
-    100% { box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
+    0% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
+    50% { border-color: rgba(46, 125, 50, 1); box-shadow: 0 0 25px rgba(46, 125, 50, 0.5); }
+    100% { border-color: rgba(46, 125, 50, 0.4); box-shadow: 0 0 10px rgba(46, 125, 50, 0.2); }
 }
 
-/* 3. Lógica da Cápsula para o Fluxo (Tabela) */
-.presentation-mode .active-row {
+/* Aplicação do Neon nos Cards e Títulos */
+.presentation-mode div.pres-focus, 
+.presentation-mode .survey-card.pres-focus {
+    border: 3px solid #2e7d32 !important;
+    border-radius: 15px !important;
+    animation: neon-glow-capsule 2s infinite ease-in-out;
+}
+
+/* 4. Lógica de Cápsula Neon para a Tabela */
+.presentation-mode tr.pres-focus {
     border-left: 3px solid #2e7d32 !important;
     border-right: 3px solid #2e7d32 !important;
-    transform: translateX(5px);
-    animation: neon-glow-capsule 2.5s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.8) !important;
+    animation: neon-glow-capsule 2s infinite ease-in-out;
 }
 
-/* Remove sombras internas para parecer um bloco único */
-.presentation-mode .active-row:not(.group-start):not(.group-end) {
-    box-shadow: 15px 0 25px -10px rgba(46, 125, 50, 0.3), -15px 0 25px -10px rgba(46, 125, 50, 0.3);
+/* Remove bordas internas no meio do grupo */
+.presentation-mode tr.pres-focus:not(.group-start):not(.group-end) {
     border-top: none !important;
     border-bottom: none !important;
 }
 
-.presentation-mode .group-start {
+.presentation-mode tr.group-start {
     border-top: 3px solid #2e7d32 !important;
     border-top-left-radius: 15px !important;
     border-top-right-radius: 15px !important;
 }
 
-.presentation-mode .group-end {
+.presentation-mode tr.group-end {
     border-bottom: 3px solid #2e7d32 !important;
     border-bottom-left-radius: 15px !important;
     border-bottom-right-radius: 15px !important;
 }
 
-/* 4. Cabeçalho Fixo (Sticky) com Glassmorphism */
+/* 5. Cabeçalho Fixo (Sticky) */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
     top: 0;
     z-index: 1001;
+    opacity: 1 !important; /* Sempre visível */
+    filter: none !important;
 }
 
 .presentation-mode .flow-header-row th {
-    background: rgba(26, 77, 46, 0.85) !important;
+    background: rgba(26, 77, 46, 0.9) !important;
     backdrop-filter: blur(10px);
     color: white !important;
-    padding: 12px 5px !important;
-    border-bottom: 2px solid #2e7d32 !important;
+    border-bottom: 3px solid #2e7d32 !important;
 }
 
-/* 5. Acendimento das pílulas e cards individuais */
-.presentation-mode .survey-card.pres-focus {
-    transform: scale(1.03);
-    border-radius: 15px !important;
-    animation: neon-glow-capsule 2.5s infinite ease-in-out;
-}
-
-.presentation-mode .active-reveal {
-    opacity: 1;
-    filter: none;
-}
-
-.presentation-mode .pres-focus .pill-container {
-    opacity: 1;
-}
-
-/* 6. Controles Flutuantes Glass */
+/* 6. Controles de Apresentação */
 #presentation-controls {
     display: none;
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
     padding: 12px 25px;
     border-radius: 50px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     z-index: 9999;
     gap: 15px;
     align-items: center;
@@ -122,16 +108,9 @@ body.presentation-mode #presentation-controls {
     transition: all 0.3s;
 }
 
-#presentation-controls button:hover {
-    background: #2e7d32;
-    transform: translateY(-2px);
-}
-
 #pres-info {
     font-weight: 800;
     color: #1a4d2e;
     min-width: 250px;
     text-align: center;
-    font-size: 0.9rem;
-    text-transform: uppercase;
 }

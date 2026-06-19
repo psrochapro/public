@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: js/presentation.js
-   FUNÇÃO: Navegação agrupada por Etapas com identificação de extremidades de grupo.
+   FUNÇÃO: Navegação agrupada por Etapas com limpeza rigorosa de foco anterior.
 */
 
 const presentation = {
@@ -47,11 +47,12 @@ const presentation = {
     },
 
     updateView() {
-        this.clearFocus();
+        this.clearFocus(); // Limpa tudo antes de aplicar o novo foco
         const surveyCards = document.querySelectorAll('.survey-card');
         const presInfo = document.getElementById('pres-info');
 
         if (this.currentStep === -1) {
+            // Foco: Título e Dashboard (mantendo estilo original)
             const header = document.querySelector('.process-title-header');
             const dash = document.querySelector('.header-dashboard');
             header.classList.add('pres-focus');
@@ -60,31 +61,28 @@ const presentation = {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } 
         else if (this.currentStep >= 0 && this.currentStep <= 10) {
+            // Foco: Itens de Levantamento
             const card = surveyCards[this.currentStep];
             if (card) {
                 card.classList.add('pres-focus');
-                card.classList.add('active-reveal');
                 presInfo.innerText = `Levantamento: ${this.currentStep + 1} / 11`;
                 this.smartScroll(card);
             }
         } 
         else {
+            // Foco: Agrupamento por Etapas (Cápsula)
             const stepIdx = this.currentStep - 11;
             const targetEtapa = this.uniqueSteps[stepIdx];
 
             if (targetEtapa) {
                 const groupRows = document.querySelectorAll(`.activity-row-card[data-etapa="${targetEtapa}"]`);
-                
                 groupRows.forEach((row, idx) => {
                     row.classList.add('pres-focus');
-                    row.classList.add('active-row');
-                    
-                    // Identifica início e fim do grupo para a cápsula CSS
                     if (idx === 0) row.classList.add('group-start');
                     if (idx === groupRows.length - 1) row.classList.add('group-end');
                 });
                 
-                presInfo.innerText = `Fluxo: Etapa ${targetEtapa} (${this.uniqueSteps.indexOf(targetEtapa) + 1} de ${this.uniqueSteps.length})`;
+                presInfo.innerText = `Fluxo: Etapa ${targetEtapa}`;
                 
                 if (groupRows.length > 0) {
                     this.smartScroll(groupRows[0], true);
@@ -96,7 +94,7 @@ const presentation = {
     },
 
     smartScroll(element, isFlow = false) {
-        const offset = isFlow ? 130 : 150; 
+        const offset = isFlow ? 130 : 180; 
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({
             top: elementPosition - offset,
@@ -120,8 +118,8 @@ const presentation = {
     },
 
     clearFocus() {
+        // Remove absolutamente todas as classes de foco e brilho
         document.querySelectorAll('.pres-focus').forEach(el => el.classList.remove('pres-focus'));
-        document.querySelectorAll('.active-row').forEach(el => el.classList.remove('active-row'));
         document.querySelectorAll('.group-start').forEach(el => el.classList.remove('group-start'));
         document.querySelectorAll('.group-end').forEach(el => el.classList.remove('group-end'));
     }
