@@ -13,7 +13,8 @@ const parser = {
                 const inlineContent = parts.slice(1).join(' ').trim();
 
                 if (tag.startsWith('atividade') || tag.startsWith('etapa')) {
-                    currentAtividade = {};
+                    // Agora capturamos o inlineContent (o número) e associamos à atividade
+                    currentAtividade = { numero: inlineContent };
                     data.fluxo.push(currentAtividade);
                     currentSection = 'atividade';
                 } else {

@@ -65,7 +65,8 @@ const renderer = {
         flowItemsContainer.innerHTML = '';
         if (data.fluxo) {
             data.fluxo.forEach((item, index) => {
-                const activityId = (index + 1).toString().padStart(3, '0');
+                // ALTERAÇÃO: Prioriza o número capturado no texto, senão usa o sequencial como fallback
+                const activityId = (item.numero || (index + 1)).toString().padStart(3, '0');
                 const stepValue = parseInt(item.etapa) || 1;
                 const stepColorClass = `step-b${((stepValue - 1) % 5) + 1}`;
                 
