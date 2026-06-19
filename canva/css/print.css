@@ -56,4 +56,9 @@
 
     .show-print { display: inline !important; }
     .hide-print { display: none !important; }
+
+    /* Ocultar Editor na Impressão */
+    #editor-container, #editor-toggle {
+        display: none !important;
+    }
 }

@@ -10,8 +10,25 @@
     <link rel="stylesheet" href="css/print.css">
     <link rel="stylesheet" href="css/presentation.css">
     <link rel="stylesheet" href="css/mobile.css" media="screen">
+    <link rel="stylesheet" href="css/editor.css">
 </head>
 <body>
+
+    <div id="editor-container" class="editor-collapsed no-print">
+        <button id="editor-toggle" title="Alternar Editor">
+            <span class="toggle-icon">❯</span>
+        </button>
+        <div class="editor-content">
+            <div class="editor-header">
+                <h3>Editor de Processo</h3>
+                <span class="editor-status">Sync Ativo</span>
+            </div>
+            <div class="editor-wrapper">
+                <div id="editor-highlight" aria-hidden="true"></div>
+                <textarea id="editor-input" spellcheck="false" placeholder="Cole seu processo aqui..."></textarea>
+            </div>
+        </div>
+    </div>
 
     <div class="toolbar-wrapper no-print">
         <div class="toolbar">
@@ -112,6 +129,7 @@
     <script src="js/template.js"></script>
     <script src="js/share.js"></script>
     <script src="js/presentation.js"></script>
+    <script src="js/editor.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

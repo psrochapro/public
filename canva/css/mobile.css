@@ -213,4 +213,9 @@
         padding: 15px;
         margin: 20px 0 10px 0;
     }
+
+    /* 8. Ocultar Editor Lateral no Mobile */
+    #editor-container {
+        display: none !important;
+    }
 }

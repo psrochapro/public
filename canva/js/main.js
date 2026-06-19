@@ -5,8 +5,14 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     const reader = new FileReader();
     reader.onload = function(e) {
         const text = e.target.result;
-        const data = parser.parse(text);
-        renderer.render(data);
+        
+        // Sincroniza com o Editor lateral (ele cuidará de disparar o render)
+        if (typeof editor !== 'undefined') {
+            editor.setContent(text);
+        } else {
+            const data = parser.parse(text);
+            renderer.render(data);
+        }
     };
     reader.readAsText(file);
 
@@ -18,4 +24,9 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 // Ao carregar a página, verifica se veio de um link compartilhado (Async)
 window.addEventListener('load', async () => {
     await share.checkUrl();
+
+    // Inicializa o editor após o link ser processado
+    if (typeof editor !== 'undefined') {
+        editor.init();
+    }
 });
