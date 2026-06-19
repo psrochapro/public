@@ -1,17 +1,16 @@
 /* 
    ARQUIVO: css/presentation.css
    FUNÇÃO: Camada de iluminação e foco para Apresentação.
-   REVISÃO: Clone visual do modo normal com adição de brilho (glow) e esmaecimento.
+   REVISÃO: Moldura Neon Perimetral (sem vazar no centro) e preservação de espaçamento.
 */
 
 /* 1. Compatibilidade Estrutural */
-/* Mantém o border-spacing original do theme.css para que as linhas continuem como cards separados */
+/* Mantém o border-spacing original do theme.css (8px) para garantir os cards separados */
 body.presentation-mode .flow-table-styled {
     border-collapse: separate !important;
 }
 
 /* 2. Efeito de Esmaecimento (Dimming) */
-/* Aplica o desfoque apenas no que não está em foco */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
@@ -22,7 +21,7 @@ body.presentation-mode .flow-table-styled {
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Ativação do Foco: Restaura o visual original do theme.css */
+/* Ativação do Foco */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
@@ -30,46 +29,55 @@ body.presentation-mode .flow-table-styled {
     z-index: 100 !important;
 }
 
-/* 3. Animação de Pulso Neon (Esmeralda) */
-@keyframes neon-emerald-glow {
-    0% { box-shadow: 0 4px 15px rgba(26, 77, 46, 0.2), 0 0 0 2px rgba(46, 125, 50, 0.2); }
-    50% { box-shadow: 0 4px 30px rgba(26, 77, 46, 0.4), 0 0 15px 3px rgba(46, 125, 50, 0.6); }
-    100% { box-shadow: 0 4px 15px rgba(26, 77, 46, 0.2), 0 0 0 2px rgba(46, 125, 50, 0.2); }
+/* 3. Animação de Pulso Neon (Apenas no Perímetro Externo) */
+@keyframes neon-perimeter-glow {
+    0% { border-color: rgba(46, 125, 50, 0.4); filter: drop-shadow(0 0 2px rgba(46, 125, 50, 0.2)); }
+    50% { border-color: rgba(46, 125, 50, 1); filter: drop-shadow(0 0 8px rgba(46, 125, 50, 0.8)); }
+    100% { border-color: rgba(46, 125, 50, 0.4); filter: drop-shadow(0 0 2px rgba(46, 125, 50, 0.2)); }
 }
 
-/* 4. Aplicação do Glow nos Componentes em Foco */
-/* O visual (background, border, radius) é herdado do theme.css, apenas adicionamos o brilho */
+/* 4. A CÁPSULA PERIMETRAL: Aplicação técnica nas bordas externas do grupo */
 
-/* Dashboard em foco */
-.presentation-mode .header-dashboard.pres-focus {
-    animation: neon-emerald-glow 2.5s infinite ease-in-out;
-    border-radius: 20px; /* Mantém o padrão do glass-container */
-}
-
-/* Itens 01 a 11 em foco */
-.presentation-mode .survey-card.pres-focus {
-    animation: neon-emerald-glow 2.5s infinite ease-in-out;
-    border: 1px solid rgba(46, 125, 50, 0.5) !important;
-}
-
-/* Linhas de Atividades (Etapas) em foco */
-/* Como o renderer.js usa a classe pres-focus nas linhas, cada card individual do grupo brilhará */
+/* 4.1 Reset de animações internas (Garante que o centro não brilhe) */
 .presentation-mode tr.activity-row-card.pres-focus td {
-    animation: neon-emerald-glow 2.5s infinite ease-in-out;
-    border-top: 1px solid rgba(46, 125, 50, 0.3) !important;
-    border-bottom: 1px solid rgba(46, 125, 50, 0.3) !important;
+    animation: none !important;
+    border: 1px solid rgba(0,0,0,0.05) !important; /* Borda sutil interna padrão */
 }
 
-.presentation-mode tr.activity-row-card.pres-focus td:first-child {
-    border-left: 1px solid rgba(46, 125, 50, 0.3) !important;
+/* 4.2 Bordas Laterais (Aplicadas em todas as linhas do grupo em foco) */
+.presentation-mode tr.pres-focus td:first-child {
+    border-left: 3px solid #2e7d32 !important;
+}
+.presentation-mode tr.pres-focus td:last-child {
+    border-right: 3px solid #2e7d32 !important;
 }
 
-.presentation-mode tr.activity-row-card.pres-focus td:last-child {
-    border-right: 1px solid rgba(46, 125, 50, 0.3) !important;
+/* 4.3 Borda Superior (Apenas na primeira linha do grupo) */
+.presentation-mode tr.pres-focus.group-start td {
+    border-top: 3px solid #2e7d32 !important;
 }
 
-/* 5. Cabeçalho Fixo (Sticky) */
-/* Preserva o visual Glassmorphism do modo normal, mas fixa no topo */
+/* 4.4 Borda Inferior (Apenas na última linha do grupo) */
+.presentation-mode tr.pres-focus.group-end td {
+    border-bottom: 3px solid #2e7d32 !important;
+}
+
+/* 4.5 Ativação da Animação apenas no Perímetro */
+.presentation-mode tr.pres-focus.group-start td,
+.presentation-mode tr.pres-focus.group-end td,
+.presentation-mode tr.pres-focus td:first-child,
+.presentation-mode tr.pres-focus td:last-child {
+    animation: neon-perimeter-glow 2.5s infinite ease-in-out !important;
+}
+
+/* 5. Destaque para Dashboard e Survey Cards (Componentes Únicos) */
+.presentation-mode .header-dashboard.pres-focus,
+.presentation-mode .survey-card.pres-focus {
+    animation: neon-perimeter-glow 2.5s infinite ease-in-out !important;
+    border: 2px solid #2e7d32 !important;
+}
+
+/* 6. Cabeçalho Fixo (Sticky) */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
     top: 20px;
@@ -79,13 +87,14 @@ body.presentation-mode .flow-table-styled {
 }
 
 .presentation-mode .flow-header-row th {
-    background: rgba(255, 255, 255, 0.85) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
     backdrop-filter: blur(10px);
     border-bottom: 2px solid var(--primary-elegant) !important;
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    color: var(--primary-elegant) !important;
 }
 
-/* 6. Controles de Apresentação */
+/* 7. Controles de Apresentação */
 #presentation-controls {
     display: none;
     position: fixed;
@@ -115,11 +124,6 @@ body.presentation-mode #presentation-controls {
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-#presentation-controls button:hover {
-    opacity: 0.9;
 }
 
 #pres-info {
