@@ -1,64 +1,166 @@
+/* 
+   ARQUIVO: css/print.css
+   FUNÇÃO: Otimização exclusiva para PDF e Impressão Técnica.
+   AJUSTES: Alinhamento de contador, prevenção de quebra de linhas e correção de margens.
+*/
+
 @media print {
-    body { background: white !important; padding: 0; margin: 0; }
+    /* Reset Global de Impressão */
+    * { 
+        box-sizing: border-box !important; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact; 
+    }
+
+    body { 
+        background: white !important; 
+        padding: 0; 
+        margin: 0; 
+        width: 100%;
+    }
     
     .glass-container { 
-        box-shadow: none; border: none; backdrop-filter: none; background: white; 
-        padding: 0; width: 100% !important; max-width: 100% !important;
+        box-shadow: none !important; 
+        border: none !important; 
+        backdrop-filter: none !important; 
+        background: white !important; 
+        padding: 0 5mm !important; /* Respiro nas laterais para não cortar a margem */
+        width: 100% !important; 
+        max-width: 100% !important;
+        margin: 0 !important;
     }
 
-    .process-title-header h1 { font-size: 1.2rem !important; margin-top: 5mm; }
+    .process-title-header h1 { 
+        font-size: 1.2rem !important; 
+        margin-top: 10mm; 
+        color: #1a4d2e !important;
+    }
 
+    /* 1. Correção de Alinhamento do Dashboard */
     .header-dashboard { 
-        display: grid !important; grid-template-columns: 1fr 130px !important; 
-        gap: 8px !important; margin-bottom: 15px; width: 100% !important;
+        display: grid !important; 
+        grid-template-columns: 1fr 140px !important; 
+        gap: 8px !important; 
+        margin-bottom: 20px; 
+        width: 100% !important;
+        align-items: stretch !important; /* Faz o contador ter a mesma altura dos metadados */
     }
     
-    .meta-card-row { background: white !important; border: 1px solid #eee !important; }
+    .meta-side { 
+        display: flex !important; 
+        flex-direction: column !important; 
+        gap: 2px !important; 
+    }
+
+    .meta-card-row { 
+        background: white !important; 
+        border: 1px solid #eee !important; 
+        flex: 1;
+    }
 
     .activity-counter-card { 
-        background: #fdfdfd !important; color: #1a4d2e !important; 
-        border: 2px solid #1a4d2e !important; box-shadow: none !important;
-        border-radius: 10px !important; padding: 5px !important;
+        background: #fdfdfd !important; 
+        color: #1a4d2e !important; 
+        border: 2px solid #1a4d2e !important; 
+        box-shadow: none !important;
+        border-radius: 10px !important; 
+        padding: 5px !important;
+        height: 100% !important; /* Garante que ocupe toda a altura do grid */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     
-    .counter-number { font-size: 2.2rem !important; }
+    .counter-number { font-size: 2.2rem !important; line-height: 1; }
+    .counter-label { font-size: 0.6rem !important; }
 
+    /* 2. Correção de Levantamento (1 a 11) */
     .survey-card { 
         grid-template-columns: 280px 1fr !important; 
-        background: white !important; border: 1px solid #ddd !important; 
-        break-inside: avoid; width: 100% !important; box-sizing: border-box;
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid !important; /* Impede corte entre páginas */
+        page-break-inside: avoid !important;
+        width: 100% !important; 
+        margin-bottom: 5px !important;
     }
 
     .card-item-name { white-space: nowrap !important; }
     
-    .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
+    /* 3. Correção de Tabelas e Fluxo */
+    .flow-table-styled, .obs-table-styled {
+        width: 100% !important;
+        table-layout: auto !important;
+    }
+
+    .flow-table-styled thead, .obs-table-styled thead { 
+        display: table-header-group !important; /* Repete o cabeçalho em cada página nova */
+    }
 
     .flow-header-row th, .obs-table-styled th {
-        background: #f2f2f2 !important; color: #1a4d2e !important;
-        border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
-        text-transform: none !important; padding: 8px 2px !important;
-        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+        background: #f2f2f2 !important; 
+        color: #1a4d2e !important;
+        border-bottom: 2px solid #1a4d2e !important; 
+        font-size: 7.5pt !important;
+        text-transform: none !important; 
+        padding: 8px 4px !important;
+    }
+
+    .activity-row-card, .obs-row {
+        break-inside: avoid !important; /* Impede que uma linha seja cortada ao meio */
+        page-break-inside: avoid !important;
     }
 
     .activity-row-card td, .obs-row td {
-        background: white !important; border: 1px solid #eee !important;
-        font-size: 8pt !important; padding: 6px 4px !important;
+        background: white !important; 
+        border: 1px solid #eee !important;
+        font-size: 8pt !important; 
+        padding: 6px 4px !important;
     }
 
-    .activity-row-card td.highlight-col { background: #f4f4f4 !important; color: #000 !important; }
+    .activity-row-card td.highlight-col { 
+        background: #f9f9f9 !important; 
+        color: #000 !important; 
+    }
 
-    .obs-row td::before { content: "• "; color: #1a4d2e; font-weight: bold; }
+    .obs-row td::before { 
+        content: "• "; 
+        color: #1a4d2e; 
+        font-weight: bold; 
+    }
 
+    /* Elementos Visuais Suaves */
     .pill {
-        font-size: 7pt !important; border: 1px solid #ccc !important;
-        background: #f9f9f9 !important; padding: 2px 5px !important;
+        font-size: 7pt !important; 
+        border: 1px solid #ccc !important;
+        background: #f9f9f9 !important; 
+        padding: 2px 5px !important;
+        display: inline-block !important;
     }
 
-    .show-print { display: inline !important; }
+    .actor-badge {
+        background: #f0f0f0 !important;
+        border: 1px solid #ddd !important;
+        color: #1a4d2e !important;
+    }
+
+    .regra-box {
+        background: #fffbe6 !important;
+        border-left: 3px solid #f1c232 !important;
+        margin-top: 5px !important;
+    }
+
+    /* UI & Visibilidade */
+    .show-print { display: block !important; }
     .hide-print { display: none !important; }
 
-    /* Ocultar Editor na Impressão */
-    #editor-container, #editor-toggle {
+    /* Ocultar Interface de Software na Impressão */
+    #editor-container, 
+    #editor-toggle, 
+    #presentation-controls,
+    .btn-group,
+    .toolbar-bubble {
         display: none !important;
     }
 }
