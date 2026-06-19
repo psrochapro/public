@@ -58,6 +58,48 @@ const editor = {
         });
     },
 
+    insertActivity() {
+        const text = this.input.value;
+        const regex = /#atividade\s+(\d+)/g;
+        let match;
+        let lastNum = 0;
+        let lastMatchIndex = -1;
+
+        // Localiza a última atividade para incrementar o número
+        while ((match = regex.exec(text)) !== null) {
+            lastNum = parseInt(match[1]);
+            lastMatchIndex = match.index;
+        }
+
+        const nextNum = lastNum + 1;
+        const templateStr = `#atividade ${nextNum}\nEtapa: \nFornecedor: \nInsumos: \nAtor: \nAtividades: \nRegra: \nSaídas: \nCliente: \n`;
+
+        let insertPos = text.length;
+        if (lastMatchIndex !== -1) {
+            // Procura o próximo bloco (qualquer tag #) após a atividade atual para inserir antes dele
+            const nextSection = text.indexOf('#', lastMatchIndex + 1);
+            if (nextSection !== -1) {
+                insertPos = nextSection;
+            }
+        }
+
+        // Divide o texto para inserção cirúrgica sem sobrescrever dados adjacentes
+        const textBefore = text.substring(0, insertPos).trimEnd();
+        const textAfter = text.substring(insertPos).trimStart();
+        
+        // Reconstrói o texto garantindo o espaçamento de "uma linha em branco" solicitado
+        const newText = textBefore + 
+                        (textBefore ? "\n\n" : "") + 
+                        templateStr + 
+                        (textAfter ? "\n" : "") + 
+                        textAfter;
+
+        this.setContent(newText);
+        
+        // Scroll e foco para facilitar a edição imediata
+        this.input.focus();
+    },
+
     reorderActivities() {
         let text = this.input.value;
         let count = 1;
