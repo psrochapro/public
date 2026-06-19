@@ -20,7 +20,6 @@ const editor = {
 
         if (!this.input) return;
 
-        // 1. Listeners de Edição
         this.input.addEventListener('input', () => {
             this.syncAndRender();
         });
@@ -29,12 +28,10 @@ const editor = {
             this.highlight.scrollTop = this.input.scrollTop;
         });
 
-        // 2. Toggle Abrir/Fechar
         this.toggleBtn.addEventListener('click', () => {
             this.container.classList.toggle('editor-collapsed');
         });
 
-        // 3. Lógica de Redimensionamento (Resize)
         this.resizer.addEventListener('mousedown', (e) => {
             this.isResizing = true;
             document.body.style.cursor = 'col-resize';
@@ -64,31 +61,24 @@ const editor = {
         }
     },
 
-    // Nova Funcionalidade: Reordenar Atividades 1, 2, 3...
     reorderActivities() {
         let text = this.input.value;
         let count = 1;
-
-        // Regex: Busca "#atividade" seguido de espaço(s) e número(s)
-        // O replace usa uma função callback para incrementar o contador a cada achado
         const newText = text.replace(/(#atividade\s+)(\d+)/g, (match, prefix, oldNumber) => {
             const replaced = prefix + count;
             count++;
             return replaced;
         });
-
         this.setContent(newText);
     },
 
     insertTemplate() {
         const templateText = template.getTemplateContent();
         const currentText = this.input.value.trim();
-
         if (currentText !== "") {
             const confirmar = confirm("Isso substituirá o conteúdo atual pelo template. Deseja continuar?");
             if (!confirmar) return;
         }
-
         this.setContent(templateText);
     },
 
@@ -101,6 +91,10 @@ const editor = {
     syncAndRender() {
         const text = this.input.value;
         this.updateHighlight(text);
+        
+        // AUTO-SAVE: Salva no localStorage a cada mudança
+        persistence.saveToLocal(text);
+
         try {
             const data = parser.parse(text);
             renderer.render(data);

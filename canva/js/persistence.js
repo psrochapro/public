@@ -27,11 +27,9 @@ const persistence = {
         flowRows.forEach((row, idx) => {
             const cells = row.querySelectorAll('td');
             if (cells.length >= 7) {
-                // Limpeza crítica: Remove o prefixo "Lógica:" injetado pelo Renderer
                 const regraEl = cells[4].querySelector('.regra-box');
                 let regraTxt = "";
                 if (regraEl) {
-                    // Pega o texto e remove o prefixo "Lógica:" (case insensitive)
                     regraTxt = regraEl.innerText.replace(/^Lógica:\s*/i, '').trim();
                 }
 
@@ -58,6 +56,17 @@ const persistence = {
         return content.trim();
     },
 
+    // Nova função: Salva rascunho no navegador
+    saveToLocal(content) {
+        if (!content) return;
+        localStorage.setItem('canvas_draft_txt', content);
+    },
+
+    // Nova função: Recupera rascunho do navegador
+    loadFromLocal() {
+        return localStorage.getItem('canvas_draft_txt');
+    },
+
     exportCanvas() {
         const content = this.getContentString();
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
@@ -65,16 +74,14 @@ const persistence = {
         const a = document.createElement('a');
         a.href = url;
         
-        // Obtém o nome do processo para o arquivo, higienizando caracteres especiais
         let nomeProc = document.getElementById('val-nome').innerText
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
             .replace(/\s+/g, '-')
             .toLowerCase();
             
         a.download = `${nomeProc || 'processo'}.txt`;
         a.click();
         
-        // Libera a memória do objeto URL
         setTimeout(() => URL.revokeObjectURL(url), 100);
     }
 };
