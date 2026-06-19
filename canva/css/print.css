@@ -1,7 +1,7 @@
 /* 
    ARQUIVO: css/print.css
    FUNÇÃO: Otimização exclusiva para PDF e Impressão Técnica.
-   REVISÃO: Correção de quebra no cabeçalho e redução de fonte no Objetivo Geral.
+   REVISÃO: Correção definitiva de quebra na Etapa e ajuste de fonte no Objetivo.
 */
 
 @media print {
@@ -17,6 +17,7 @@
         padding: 0; 
         margin: 0; 
         width: 100%;
+        font-size: 8pt;
     }
     
     .glass-container { 
@@ -24,15 +25,15 @@
         border: none !important; 
         backdrop-filter: none !important; 
         background: white !important; 
-        padding: 0 5mm !important; 
+        padding: 0 3mm !important; /* Ajuste fino para evitar corte lateral */
         width: 100% !important; 
         max-width: 100% !important;
         margin: 0 !important;
     }
 
     .process-title-header h1 { 
-        font-size: 1.2rem !important; 
-        margin-top: 10mm; 
+        font-size: 1.1rem !important; 
+        margin-top: 8mm; 
         color: #1a4d2e !important;
     }
 
@@ -41,7 +42,7 @@
         display: grid !important; 
         grid-template-columns: 1fr 140px !important; 
         gap: 8px !important; 
-        margin-bottom: 20px; 
+        margin-bottom: 15px; 
         width: 100% !important;
         align-items: stretch !important;
     }
@@ -58,19 +59,18 @@
         flex: 1;
     }
 
-    /* Redução da fonte do Objetivo Geral e demais metadados */
+    /* Redução da fonte do Objetivo Geral para evitar blocos densos */
     .meta-card-value {
-        font-size: 0.7rem !important; /* Fonte menor para textos longos */
-        line-height: 1.2 !important;
-        padding: 4px 8px !important;
+        font-size: 0.68rem !important; 
+        line-height: 1.1 !important;
+        padding: 3px 8px !important;
     }
 
     .activity-counter-card { 
         background: #fdfdfd !important; 
         color: #1a4d2e !important; 
-        border: 2px solid #1a4d2e !important; 
-        border-radius: 10px !important; 
-        padding: 5px !important;
+        border: 1.5px solid #1a4d2e !important; 
+        border-radius: 8px !important; 
         height: 100% !important; 
         display: flex !important;
         flex-direction: column !important;
@@ -78,44 +78,52 @@
         align-items: center !important;
     }
     
-    .counter-number { font-size: 2.2rem !important; line-height: 1; }
-    .counter-label { font-size: 0.6rem !important; }
+    .counter-number { font-size: 2rem !important; line-height: 1; }
+    .counter-label { font-size: 0.55rem !important; }
 
     /* 2. Levantamento (1 a 11) */
     .survey-card { 
-        grid-template-columns: 280px 1fr !important; 
+        grid-template-columns: 260px 1fr !important; 
         background: white !important; 
         border: 1px solid #ddd !important; 
         break-inside: avoid !important;
         width: 100% !important; 
-        margin-bottom: 5px !important;
+        margin-bottom: 4px !important;
     }
 
-    .card-item-name { white-space: nowrap !important; }
+    .card-item-name { white-space: nowrap !important; font-size: 7.5pt !important; }
     
     /* 3. Tabelas e Fluxo */
     .flow-table-styled, .obs-table-styled {
         width: 100% !important;
         table-layout: auto !important;
+        border-spacing: 0 4px !important;
     }
 
     .flow-table-styled thead, .obs-table-styled thead { 
         display: table-header-group !important; 
     }
 
-    .flow-header-row th, .obs-table-styled th {
+    .flow-header-row th {
         background: #f2f2f2 !important; 
         color: #1a4d2e !important;
         border-bottom: 2px solid #1a4d2e !important; 
-        font-size: 7pt !important; /* Reduzido para evitar acavalamento */
-        text-transform: none !important; 
-        padding: 6px 2px !important; /* Padding lateral mínimo */
-        white-space: nowrap !important; /* Garante que o ícone e o texto fiquem na mesma linha */
+        font-size: 7pt !important;
+        padding: 6px 2px !important;
+        text-align: center;
+        vertical-align: middle;
     }
 
-    /* Ajuste específico para a coluna Etapa não quebrar */
+    /* CORREÇÃO DEFINITIVA: Impede quebra de linha na Etapa */
     .flow-header-row th:first-child {
-        min-width: 50px !important;
+        min-width: 75px !important; /* Espaço suficiente para Ícone + Palavra */
+        white-space: nowrap !important;
+        display: table-cell !important; /* Mantém comportamento de tabela */
+    }
+
+    /* Força o conteúdo interno a ficar em linha caso o navegador suporte flex em th */
+    .flow-header-row th:first-child {
+        overflow: visible !important;
     }
 
     .activity-row-card, .obs-row {
@@ -125,8 +133,8 @@
     .activity-row-card td, .obs-row td {
         background: white !important; 
         border: 1px solid #eee !important;
-        font-size: 8pt !important; 
-        padding: 6px 4px !important;
+        font-size: 7.5pt !important; 
+        padding: 5px 3px !important;
     }
 
     .activity-row-card td.highlight-col { 
@@ -141,17 +149,19 @@
 
     /* Itens Visuais */
     .pill {
-        font-size: 7pt !important; 
+        font-size: 6.5pt !important; 
         border: 1px solid #ccc !important;
-        background: #f9f9f9 !important; 
-        padding: 1px 4px !important;
+        background: #fdfdfd !important; 
+        padding: 1px 3px !important;
         display: inline-block !important;
+        margin: 1px !important;
     }
 
     .regra-box {
         background: #fffbe6 !important;
         border-left: 3px solid #f1c232 !important;
-        font-size: 7.5pt !important;
+        font-size: 7pt !important;
+        padding: 4px !important;
     }
 
     /* UI & Visibilidade */
@@ -162,7 +172,8 @@
     #editor-toggle, 
     #presentation-controls,
     .btn-group,
-    .toolbar-bubble {
+    .toolbar-bubble,
+    .btn-presentation {
         display: none !important;
     }
 }
