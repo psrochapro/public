@@ -1,73 +1,66 @@
 const share = {
-    // Gera o link comprimido e copia para o clipboard
+    // Helper para feedback visual sem alert()
+    showToast(msg) {
+        console.log("Status: " + msg); // Placeholder para um futuro sistema de toast
+    },
+
     async generateShareLink() {
         const rawContent = persistence.getContentString();
         if (!rawContent || rawContent.trim() === "") {
-            alert("Não há dados para compartilhar. Importe um arquivo primeiro.");
+            alert("⚠️ Nada para compartilhar.");
             return;
         }
 
         try {
-            // 1. Comprimir o texto usando GZIP nativo
             const stream = new Blob([rawContent]).stream();
             const compressedStream = stream.pipeThrough(new CompressionStream('gzip'));
-            const chunks = [];
-            const reader = compressedStream.getReader();
+            const response = new Response(compressedStream);
+            const compressedBuffer = await response.arrayBuffer();
             
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
+            const bytes = new Uint8Array(compressedBuffer);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
             }
+            const base64 = btoa(binary);
             
-            const compressedBuffer = await new Blob(chunks).arrayBuffer();
-            
-            // 2. Converter o buffer comprimido para Base64
-            const base64 = btoa(String.fromCharCode(...new Uint8Array(compressedBuffer)));
-            
-            // 3. Montar a URL usando HASH (#) para evitar erro de servidor (URI Too Long)
             const baseUrl = window.location.origin + window.location.pathname;
             const shareUrl = `${baseUrl}#data=${base64}`;
 
-            // 4. Copiar para o clipboard
             await navigator.clipboard.writeText(shareUrl);
-            alert("Link de compartilhamento comprimido e copiado!");
+            alert("🔗 Link de compartilhamento copiado!");
             
         } catch (e) {
             console.error(e);
-            alert("Erro ao gerar link comprimido.");
+            alert("❌ Erro ao gerar link.");
         }
     },
 
-    // Verifica se existe dado na URL (hash) ao carregar a página
     async checkUrl() {
         const hash = window.location.hash;
-        if (!hash.startsWith('#data=')) return;
+        if (!hash.startsWith('#data=')) return null;
 
         const base64 = hash.substring(6);
 
         try {
-            // 1. Converter Base64 para Buffer
             const binaryString = atob(base64);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
             }
 
-            // 2. Descomprimir GZIP
             const stream = new Blob([bytes]).stream();
             const decompressedStream = stream.pipeThrough(new DecompressionStream('gzip'));
             const text = await new Response(decompressedStream).text();
 
-            // 3. Renderizar
-            const data = parser.parse(text);
-            renderer.render(data);
-            
-            // Limpar o hash da URL para ficar limpo
+            // Limpa o hash da URL
             window.history.replaceState({}, document.title, window.location.pathname);
+            
+            return text; // Retorna o texto para ser usado pelo main.js
         } catch (e) {
-            console.error("Erro ao descomprimir dados da URL:", e);
-            alert("O link de compartilhamento é inválido ou está corrompido.");
+            console.error("Erro ao descomprimir dados:", e);
+            alert("❌ O link é inválido ou está corrompido.");
+            return null;
         }
     }
 };

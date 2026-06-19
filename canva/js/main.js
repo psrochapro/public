@@ -6,6 +6,7 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     reader.onload = function(e) {
         const text = e.target.result;
         
+        // Ao importar, o editor.setContent já cuida de salvar no LocalStorage
         if (typeof editor !== 'undefined') {
             editor.setContent(text);
         } else {
@@ -14,29 +15,28 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
         }
     };
     reader.readAsText(file);
-
     this.value = '';
 });
 
-// Ao carregar a página
+// Inicialização Orquestrada
 window.addEventListener('load', async () => {
-    // 1. Verifica se existe dado na URL (Prioridade Máxima)
-    const urlDataPresent = window.location.hash.startsWith('#data=');
-    if (urlDataPresent) {
-        await share.checkUrl();
-    }
-
-    // 2. Inicializa o editor
+    // 1. Inicia os componentes básicos
     if (typeof editor !== 'undefined') {
         editor.init();
+    }
 
-        // 3. Se a URL estava vazia, tenta carregar do LocalStorage
-        if (!urlDataPresent) {
-            const localDraft = persistence.loadFromLocal();
-            if (localDraft && localDraft.trim() !== "") {
-                editor.setContent(localDraft);
-                console.log("Rascunho restaurado do LocalStorage.");
-            }
+    // 2. Tenta carregar dados da URL (Prioridade 1)
+    const urlContent = await share.checkUrl();
+    
+    if (urlContent) {
+        editor.setContent(urlContent);
+        console.log("Dados carregados via Link.");
+    } else {
+        // 3. Se não houver URL, tenta carregar do LocalStorage (Prioridade 2)
+        const localDraft = persistence.loadFromLocal();
+        if (localDraft && localDraft.trim() !== "") {
+            editor.setContent(localDraft);
+            console.log("Rascunho restaurado do navegador.");
         }
     }
 });

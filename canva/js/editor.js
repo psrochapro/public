@@ -20,6 +20,7 @@ const editor = {
 
         if (!this.input) return;
 
+        // 1. Listeners de Edição
         this.input.addEventListener('input', () => {
             this.syncAndRender();
         });
@@ -28,10 +29,12 @@ const editor = {
             this.highlight.scrollTop = this.input.scrollTop;
         });
 
+        // 2. Toggle Abrir/Fechar
         this.toggleBtn.addEventListener('click', () => {
             this.container.classList.toggle('editor-collapsed');
         });
 
+        // 3. Lógica de Redimensionamento
         this.resizer.addEventListener('mousedown', (e) => {
             this.isResizing = true;
             document.body.style.cursor = 'col-resize';
@@ -53,12 +56,6 @@ const editor = {
                 document.body.style.userSelect = 'auto';
             }
         });
-
-        // Carregar conteúdo inicial
-        const currentData = persistence.getContentString();
-        if (currentData) {
-            this.setContent(currentData);
-        }
     },
 
     reorderActivities() {
@@ -92,7 +89,7 @@ const editor = {
         const text = this.input.value;
         this.updateHighlight(text);
         
-        // AUTO-SAVE: Salva no localStorage a cada mudança
+        // AUTO-SAVE: Sempre salva quando o conteúdo muda
         persistence.saveToLocal(text);
 
         try {
