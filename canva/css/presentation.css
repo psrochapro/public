@@ -1,26 +1,27 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Efeito "Emerald Neon Aura" para Apresentação de Alto Impacto.
-   ESTILO: Glassmorphism com foco em iluminação volumétrica.
+   FUNÇÃO: Estilos de Apresentação com Glow Perimetral e Fidelidade Glassmorphism.
+   REVISÃO: Aplicação de brilho apenas no contorno externo do conjunto de etapas.
 */
 
-/* 1. Compatibilidade Estrutural */
+/* 1. Manutenção da Geometria Original */
 body.presentation-mode .flow-table-styled {
+    border-spacing: 0 8px !important; /* Mantém o espaçamento exato do theme.css */
     border-collapse: separate !important;
 }
 
-/* 2. Efeito de Esmaecimento (Fundo) */
+/* 2. Esmaecimento de Fundo (Contexto) */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
 .presentation-mode .activity-row-card,
 .presentation-mode .obs-table-styled {
-    opacity: 0.12;
-    filter: blur(3px) grayscale(0.8);
-    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.15;
+    filter: blur(2px) grayscale(0.8);
+    transition: all 0.5s ease;
 }
 
-/* Ativação do Foco (Onde a mágica acontece) */
+/* Foco Ativo: Restaura o Glassmorphism Original */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
@@ -28,84 +29,91 @@ body.presentation-mode .flow-table-styled {
     z-index: 100 !important;
 }
 
-/* 3. Animação "Emerald Neon Aura" - Camadas de luz profunda */
-@keyframes neon-aura-wow {
-    0% { 
-        box-shadow: 0 4px 15px rgba(26, 77, 46, 0.1), 0 0 0 1px rgba(46, 125, 50, 0.2); 
-    }
-    50% { 
-        box-shadow: 0 0 35px rgba(46, 125, 50, 0.6), 0 0 15px rgba(46, 125, 50, 0.3); 
-        border-color: rgba(46, 125, 50, 0.8) !important;
-    }
-    100% { 
-        box-shadow: 0 4px 15px rgba(26, 77, 46, 0.1), 0 0 0 1px rgba(46, 125, 50, 0.2); 
-    }
+/* 3. Definição da Animação de Brilho (Neon Esmeralda) */
+@keyframes neon-glow-perimeter {
+    0% { filter: drop-shadow(0 0 2px rgba(46, 125, 50, 0.2)); }
+    50% { filter: drop-shadow(0 0 10px rgba(46, 125, 50, 0.7)); }
+    100% { filter: drop-shadow(0 0 2px rgba(46, 125, 50, 0.2)); }
 }
 
-/* 4. Aplicação do Glow no Dashboard e Itens de Levantamento (1 a 11) */
+/* 4. A CÁPSULA PERIMETRAL (Conjunto de Etapas) */
+
+/* Aplica a animação apenas nas células que formam a borda externa do grupo */
+.presentation-mode tr.pres-focus.group-start td,
+.presentation-mode tr.pres-focus.group-end td,
+.presentation-mode tr.pres-focus td:first-child,
+.presentation-mode tr.pres-focus td:last-child {
+    animation: neon-glow-perimeter 2s infinite ease-in-out;
+}
+
+/* Borda Superior (Apenas na primeira linha do conjunto) */
+.presentation-mode tr.pres-focus.group-start td {
+    border-top: 2px solid #2e7d32 !important;
+}
+
+/* Borda Inferior (Apenas na última linha do conjunto) */
+.presentation-mode tr.pres-focus.group-end td {
+    border-bottom: 2px solid #2e7d32 !important;
+}
+
+/* Bordas Laterais (Em todas as linhas do conjunto em foco) */
+.presentation-mode tr.pres-focus td:first-child {
+    border-left: 2px solid #2e7d32 !important;
+}
+.presentation-mode tr.pres-focus td:last-child {
+    border-right: 2px solid #2e7d32 !important;
+}
+
+/* Limpeza do Centro: Células que não são extremidades não recebem bordas coloridas */
+.presentation-mode tr.pres-focus td {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(12px) !important;
+    border-top: 1px solid var(--glass-border) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+}
+
+/* 5. Dashboard e Cards 1-11 (Glow Individual) */
 .presentation-mode .header-dashboard.pres-focus,
 .presentation-mode .survey-card.pres-focus {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-radius: 15px !important;
-    animation: neon-aura-wow 2.5s infinite ease-in-out;
-    transform: scale(1.01);
-    transition: transform 0.4s ease;
+    border: 2px solid #2e7d32 !important;
+    animation: neon-glow-perimeter 2s infinite ease-in-out;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(12px) !important;
 }
 
-/* 5. Aplicação do Glow no Fluxo de Atividades (Etapas) */
-/* Em vez de bordas, cada célula do card em foco emite a aura neon */
-.presentation-mode tr.activity-row-card.pres-focus td {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-top: 1px solid rgba(46, 125, 50, 0.2) !important;
-    border-bottom: 1px solid rgba(46, 125, 50, 0.2) !important;
-    animation: neon-aura-wow 2.5s infinite ease-in-out;
-}
-
-/* Bordas de acabamento para os cards do fluxo */
-.presentation-mode tr.activity-row-card.pres-focus td:first-child {
-    border-left: 2px solid #2e7d32 !important;
-    border-top-left-radius: 12px !important;
-    border-bottom-left-radius: 12px !important;
-}
-
-.presentation-mode tr.activity-row-card.pres-focus td:last-child {
-    border-right: 2px solid #2e7d32 !important;
-    border-top-right-radius: 12px !important;
-    border-bottom-right-radius: 12px !important;
-}
-
-/* 6. Cabeçalho Fixo (Sticky) - Glassmorphism Elegante */
+/* 6. Cabeçalho Fixo (Sticky) - Idêntico ao Modo Normal */
 .presentation-mode .flow-table-styled thead {
     position: sticky;
     top: 15px;
     z-index: 1001;
+    opacity: 1 !important;
+    filter: none !important;
 }
 
 .presentation-mode .flow-header-row th {
-    background: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--primary-elegant) !important;
     color: var(--primary-elegant) !important;
-    padding: 18px 5px !important;
-    border-bottom: 3px solid #2e7d32 !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    font-weight: 900;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 
-/* 7. Painel de Controles */
+/* 7. Controles de Apresentação */
 #presentation-controls {
     display: none;
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    padding: 15px 30px;
-    border-radius: 100px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    padding: 12px 25px;
+    border-radius: 50px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
     z-index: 9999;
-    gap: 20px;
-    border: 1px solid rgba(255,255,255,0.5);
+    gap: 15px;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.4);
 }
 
 body.presentation-mode #presentation-controls {
@@ -113,21 +121,19 @@ body.presentation-mode #presentation-controls {
 }
 
 #presentation-controls button {
-    padding: 12px 25px;
-    border-radius: 50px;
-    background: #1a4d2e;
+    padding: 10px 22px;
+    border-radius: 25px;
+    background: var(--primary-elegant);
     border: none;
     color: white;
-    font-size: 14px;
-    font-weight: 800;
+    font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 #pres-info {
-    font-weight: 900;
-    color: #1a4d2e;
-    min-width: 280px;
+    font-weight: 800;
+    color: var(--primary-elegant);
+    min-width: 250px;
     text-align: center;
-    letter-spacing: 1px;
+    font-size: 0.85rem;
 }
