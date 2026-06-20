@@ -50,7 +50,10 @@ const persistence = {
         const obsItems = document.querySelectorAll('.obs-row td');
         if (obsItems.length > 0) {
             content += `#observacoes\n`;
-            obsItems.forEach(td => content += `- ${td.innerText}\n`);
+            obsItems.forEach(td => {
+                // Removida a inserção automática do hífen para dar controle total ao usuário
+                content += `${td.innerText}\n`;
+            });
         }
 
         return content.trim();
