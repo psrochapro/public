@@ -40,310 +40,303 @@ Cliente:
     },
 
     downloadExample() {
-        const content = `#nome Criação de Editais para Fomento de Pesquisa Aplicada
-#objetivo Transformar recursos financeiros em editais e obter inscritos.
-#macroprocesso Gestão de Editais
-#area Departamento de Pesquisa
-#dono Mariana e Equipe
+        const content = `#nome Processo de Compras e Contratação de Serviços Corporativos
+#objetivo Adquirir bens e contratar serviços de forma transparente, ágil e em conformidade com o orçamento e as normas vigentes.
+#macroprocesso Gestão de Suprimentos e Logística
+#area Departamento de Compras e Contratos
+#dono Diretoria de Operações
 
-#atores Financeiro, Aquisição, Compras, Jurídico, TI
-#entradas Formulário eletrônico, Documentos, Parecer técnico, Memória de cálculo
-#saidas Alvarás emitidos, Aprovações do cliente, Relatórios finais, Certidões
-#interessados Cliente, Presidente, Conselho Fiscal, Órgãos de Controle
-#normas Lei 13.105/2015, Lei 8.069/1990, Norma Interna 04/2026, LGPD
-#lgpd Nome, RG, CPF, Dados bancários, Endereço, E-mail, Telefone, IP
-#recursos ERP, CRM, E-mail, Servidor de Arquivos, Assinatura Digital
-#documentos Alvarás, Documentos de identificação, Contratos, Termos de Adesão
-#sgpe Assunto: 2456 Gestão, Classe: Interno, Sigilo: Público
-#indicadores Tempo de tramitação, Taxa de erros, Volume de inscritos, ROI
-#gatilho Formulário eletrônico, Recebimento de verba, Solicitação Judicial
+#atores Solicitante, Gestor da Área, Compras, Jurídico, Financeiro, Compliance, Almoxarifado
+#entradas Requisição de Compra, Especificação Técnica, Orçamentos de Mercado, Parecer de Compliance, Certidões do Fornecedor
+#saidas Ordem de Compra Emitida, Contrato Assinado, Termo de Recebimento, Comprovante de Pagamento, Relatório de Conformidade
+#interessados Conselho de Administração, Auditoria Interna, Diretoria Executiva, Fornecedores Cadastrados
+#normas Política Interna de Compras 02/2026, Código de Conduta do Fornecedor, LGPD
+#lgpd Nome, CPF, RG, E-mail, Telefone, Dados Bancários, Contrato Social
+#recursos ERP Corporativo, Módulo de Compras, Sistema de Assinatura Eletrônica, GED, Canal de Denúncias
+#documentos Requisição de Compra, Cotação de Preços, Minuta de Contrato, Nota Fiscal, Ordem de Pagamento
+#sgpe Assunto: 1042 Suprimentos, Classe: Interno, Sigilo: Público
+#indicadores Lead Time de Atendimento, Saving de Negociação, Índice de Erros em Notas, SLA de Aprovação
+#gatilho Envio da Requisição de Compra pelo Solicitante, Indisponibilidade de Estoque
 
 #atividade 1
 Etapa: 1
-Fornecedor: Cliente
-Insumos: Solicitação inicial
-Ator: Analista
-Atividades: Revisa os dados e valida a elegibilidade do pedido.
-Regra: Se os dados estiverem incompletos, retornar para o Cliente solicitando ajustes.
-Saídas: Checklist preenchido
-Cliente: Gerente
+Fornecedor: Solicitante
+Insumos: Requisição de Compra e Especificação Técnica
+Ator: Gestor da Área
+Atividades: Avalia a real necessidade da aquisição e verifica a disponibilidade de orçamento setorial.
+Regra: Se o valor exceder o orçamento mensal da área, a requisição é devolvida automaticamente ao Solicitante.
+Saídas: Requisição Pré-Aprovada
+Cliente: Compras
 
 #atividade 2
 Etapa: 1
-Fornecedor: Analista
-Insumos: Checklist preenchido
-Ator: Analista
-Atividades: Prepara o rascunho do edital técnico.
-Saídas: Minuta do Edital
-Cliente: Gerente
+Fornecedor: Gestor da Área
+Insumos: Requisição Pré-Aprovada
+Ator: Compras
+Atividades: Realiza o saneamento da requisição, padronizando a descrição dos itens ou escopo do serviço no ERP.
+Saídas: Requisição Saneada
+Cliente: Compras
 
 #atividade 3
 Etapa: 2
-Fornecedor: Analista
-Insumos: Minuta do Edital
-Ator: Gerente
-Atividades: Aprova a abertura do edital no sistema.
-Regra: Se houver pendência orçamentária, o sistema impede a publicação automática.
-Saídas: Edital publicado
-Cliente: Público Geral
+Fornecedor: Compras
+Insumos: Requisição Saneada
+Ator: Compras
+Atividades: Identifica no banco de dados os fornecedores homologados aptos a atender ao escopo solicitado.
+Saídas: Lista de Fornecedores Elegíveis
+Cliente: Compras
 
 #atividade 4
-Etapa: 3
-Fornecedor: Gerente
-Insumos: Edital publicado
-Ator: Analista
-Atividades: Monitora o período de inscrições e esclarece dúvidas.
-Saídas: Lista de inscritos
-Cliente: Comissão de Avaliação
+Etapa: 2
+Fornecedor: Compras
+Insumos: Lista de Fornecedores Elegíveis
+Ator: Compras
+Atividades: Dispara a solicitação de cotação para o mercado através do portal de compras.
+Saídas: Solicitação de Cotação Enviada
+Cliente: Mercado
 
 #atividade 5
-Etapa: 3
-Fornecedor: Analista
-Insumos: Lista de inscritos
-Ator: Comissão de Avaliação
-Atividades: Analisa o mérito das propostas recebidas.
-Saídas: Parecer final
-Cliente: Gerente
+Etapa: 2
+Fornecedor: Mercado
+Insumos: Solicitação de Cotação Enviada
+Ator: Compras
+Atividades: Centraliza e formaliza o recebimento das propostas e das planilhas de preços preenchidas.
+Saídas: Orçamentos de Mercado Recebidos
+Cliente: Compras
 
 #atividade 6
-Etapa: 4
-Fornecedor: Comissão de Avaliação
-Insumos: Parecer final
-Ator: Gerente
-Atividades: Homologa o resultado final do certame.
-Saídas: Termo de Homologação
-Cliente: Jurídico
+Etapa: 3
+Fornecedor: Compras
+Insumos: Orçamentos de Mercado Recebidos
+Ator: Compras
+Atividades: Consolida as propostas comerciais recebidas em um mapa comparativo de preços e condições.
+Saídas: Mapa Comparativo de Preços
+Cliente: Solicitante
 
 #atividade 7
-Etapa: 5
-Fornecedor: Gerente
-Insumos: Termo de Homologação
-Ator: Jurídico
-Atividades: Redige e formaliza os contratos com os vencedores.
-Saídas: Contratos assinados
-Cliente: Vencedores
+Etapa: 3
+Fornecedor: Solicitante
+Insumos: Mapa Comparativo de Preços
+Ator: Solicitante
+Atividades: Avalia as propostas sob o ponto de vista estritamente técnico e emite o parecer de validação.
+Regra: Caso nenhuma proposta atenda aos requisitos da Especificação Técnica, o processo deve ser reiniciado.
+Saídas: Parecer de Validação Técnica
+Cliente: Compras
 
 #atividade 8
-Etapa: 6
-Fornecedor: Jurídico
-Insumos: Contratos assinados
-Ator: Financeiro
-Atividades: Autoriza o desembolso dos recursos financeiros.
-Saídas: Comprovante de pagamento
-Cliente: Vencedores
+Etapa: 4
+Fornecedor: Compras
+Insumos: Parecer de Validação Técnica
+Ator: Compras
+Atividades: Conduz a rodada de negociação comercial com o fornecedor melhor classificado tecnicamente.
+Saídas: Proposta Comercial Final Negociada
+Cliente: Compliance
 
 #atividade 9
-Etapa: 6
-Fornecedor: Analista
-Insumos: Checklist preenchido
-Ator: Analista
-Atividades: Prepara o rascunho do edital técnico.
-Saídas: Minuta do Edital
-Cliente: Gerente
+Etapa: 4
+Fornecedor: Compras
+Insumos: Proposta Comercial Final Negociada
+Ator: Compliance
+Atividades: Realiza a análise de Background Check do fornecedor selecionado para mitigar riscos de fraude.
+Regra: Fornecedores com apontamentos graves de idoneidade fiscal ou trabalhista são bloqueados no sistema.
+Saídas: Parecer de Compliance Emitido
+Cliente: Compras
 
 #atividade 10
-Etapa: 6
-Fornecedor: Analista
-Insumos: Minuta do Edital
-Ator: Gerente
-Atividades: Aprova a abertura do edital no sistema.
-Saídas: Edital publicado
-Cliente: Público Geral
+Etapa: 5
+Fornecedor: Compliance
+Insumos: Parecer de Compliance Emitido
+Ator: Compras
+Atividades: Solicita ao fornecedor a documentação habilitatória e as certidões de regularidade.
+Saídas: Certidões do Fornecedor Coletadas
+Cliente: Jurídico
 
 #atividade 11
-Etapa: 6
-Fornecedor: Gerente
-Insumos: Edital publicado
-Ator: Analista
-Atividades: Monitora o período de inscrições e esclarece dúvidas.
-Saídas: Lista de inscritos
-Cliente: Comissão de Avaliação
+Etapa: 5
+Fornecedor: Compras
+Insumos: Certidões do Fornecedor Coletadas
+Ator: Jurídico
+Atividades: Elabora a minuta inicial do contrato de prestação de serviços com base no padrão da companhia.
+Saídas: Minuta de Contrato Inicial
+Cliente: Fornecedor
 
 #atividade 12
-Etapa: 7
-Fornecedor: Analista
-Insumos: Lista de inscritos
-Ator: Comissão de Avaliação
-Atividades: Analisa o mérito das propostas recebidas.
-Saídas: Parecer final
-Cliente: Gerente
+Etapa: 5
+Fornecedor: Fornecedor
+Insumos: Minuta de Contrato Inicial
+Ator: Jurídico
+Atividades: Avalia e negocia eventuais ressalvas jurídicas enviadas pelo parceiro comercial.
+Saídas: Minuta de Contrato Consensual
+Cliente: Diretoria Executiva
 
 #atividade 13
-Etapa: 7
-Fornecedor: Comissão de Avaliação
-Insumos: Parecer final
-Ator: Gerente
-Atividades: Homologa o resultado final do certame.
-Saídas: Termo de Homologação
+Etapa: 6
+Fornecedor: Jurídico
+Insumos: Minuta de Contrato Consensual
+Ator: Diretoria Executiva
+Atividades: Delibera e autoriza formalmente a contratação em ata de diretoria.
+Regra: Contratações acima de R$ 500.000,00 exigem a assinatura conjunta do Diretor Presidente.
+Saídas: Ata de Autorização de Contratação
 Cliente: Jurídico
 
 #atividade 14
-Etapa: 7
-Fornecedor: Gerente
-Insumos: Termo de Homologação
+Etapa: 6
+Fornecedor: Diretoria Executiva
+Insumos: Ata de Autorização de Contratação
 Ator: Jurídico
-Atividades: Redige e formaliza os contratos com os vencedores.
-Saídas: Contratos assinados
-Cliente: Vencedores
+Atividades: Disponibiliza o instrumento contratual na plataforma de assinatura eletrônica institucional.
+Saídas: Contrato em Assinatura
+Cliente: Fornecedor
 
 #atividade 15
-Etapa: 7
-Fornecedor: Jurídico
-Insumos: Contratos assinados
-Ator: Financeiro
-Atividades: Autoriza o desembolso dos recursos financeiros.
-Saídas: Comprovante de pagamento
-Cliente: Vencedores
+Etapa: 6
+Fornecedor: Fornecedor
+Insumos: Contrato em Assinatura
+Ator: Fornecedor
+Atividades: Coleta as assinaturas digitais dos representantes legais e testemunhas da contratada.
+Saídas: Contrato Assinado Parcialmente
+Cliente: Diretoria Executiva
 
 #atividade 16
-Etapa: 7
-Fornecedor: Cliente
-Insumos: Solicitação inicial
-Ator: Analista
-Atividades: Revisa os dados e valida a elegibilidade do pedido.
-Saídas: Checklist preenchido
-Cliente: Gerente
+Etapa: 6
+Fornecedor: Fornecedor
+Insumos: Contrato Assinado Parcialmente
+Ator: Diretoria Executiva
+Atividades: Realiza a assinatura digital por parte dos diretores e representantes da empresa tomadora.
+Saídas: Contrato Assinado Integralmente
+Cliente: Compras
 
 #atividade 17
 Etapa: 7
-Fornecedor: Analista
-Insumos: Checklist preenchido
-Ator: Analista
-Atividades: Prepara o rascunho do edital técnico.
-Saídas: Minuta do Edital
-Cliente: Gerente
+Fornecedor: Diretoria Executiva
+Insumos: Contrato Assinado Integralmente
+Ator: Compras
+Atividades: Efetua o registro e cadastro das cláusulas e vigências contratuais no módulo de contratos do ERP.
+Saídas: Contrato Ativo no Sistema
+Cliente: Compras
 
 #atividade 18
-Etapa: 8
-Fornecedor: Analista
-Insumos: Minuta do Edital
-Ator: Gerente
-Atividades: Aprova a abertura do edital no sistema.
-Saídas: Edital publicado
-Cliente: Público Geral
+Etapa: 7
+Fornecedor: Compras
+Insumos: Contrato Ativo no Sistema
+Ator: Compras
+Atividades: Gera e emite a Ordem de Compra/Serviço oficial vinculada ao contrato estabelecido.
+Saídas: Ordem de Compra Emitida
+Cliente: Fornecedor
 
 #atividade 19
-Etapa: 8
-Fornecedor: Gerente
-Insumos: Edital publicado
-Ator: Analista
-Atividades: Monitora o período de inscrições e esclarece dúvidas.
-Saídas: Lista de inscritos
-Cliente: Comissão de Avaliação
+Etapa: 7
+Fornecedor: Fornecedor
+Insumos: Ordem de Compra Emitida
+Ator: Fornecedor
+Atividades: Planeja e executa a entrega física dos materiais ou inicia a mobilização para a prestação do serviço.
+Saídas: Cronograma de Entrega Confirmado
+Cliente: Solicitante
 
 #atividade 20
 Etapa: 8
-Fornecedor: Analista
-Insumos: Lista de inscritos
-Ator: Comissão de Avaliação
-Atividades: Analisa o mérito das propostas recebidas.
-Saídas: Parecer final
-Cliente: Gerente
+Fornecedor: Fornecedor
+Insumos: Cronograma de Entrega Confirmado
+Ator: Almoxarifado
+Atividades: Recebe o material fisicamente nas dependências da empresa e confere com a nota fiscal.
+Saídas: Nota Fiscal Recebida no Portal
+Cliente: Solicitante
 
 #atividade 21
 Etapa: 8
-Fornecedor: Comissão de Avaliação
-Insumos: Parecer final
-Ator: Gerente
-Atividades: Homologa o resultado final do certame.
-Saídas: Termo de Homologação
-Cliente: Jurídico
+Fornecedor: Almoxarifado
+Insumos: Nota Fiscal Recebida no Portal
+Ator: Solicitante
+Atividades: Realiza a conferência técnica da qualidade do material entregue ou do serviço prestado no período.
+Saídas: Laudo de Inspeção Técnica
+Cliente: Gestor da Área
 
 #atividade 22
 Etapa: 8
-Fornecedor: Gerente
-Insumos: Termo de Homologação
-Ator: Jurídico
-Atividades: Redige e formaliza os contratos com os vencedores.
-Saídas: Contratos assinados
-Cliente: Vencedores
+Fornecedor: Solicitante
+Insumos: Laudo de Inspeção Técnica
+Ator: Gestor da Área
+Atividades: Valida e formaliza o aceite definitivo dos entregáveis no sistema para liberação financeira.
+Regra: O aceite não pode ser emitido se houver inconformidades em aberto registradas no laudo.
+Saídas: Termo de Recebimento Emitido
+Cliente: Fornecedor
 
 #atividade 23
 Etapa: 9
-Fornecedor: Jurídico
-Insumos: Contratos assinados
-Ator: Financeiro
-Atividades: Autoriza o desembolso dos recursos financeiros.
-Saídas: Comprovante de pagamento
-Cliente: Vencedores
+Fornecedor: Gestor da Área
+Insumos: Termo de Recebimento Emitido
+Ator: Fornecedor
+Atividades: Emite a Nota Fiscal de fatura de serviços referenciando o Termo de Recebimento aprovado.
+Saídas: Fatura Comercial Emitida
+Cliente: Financeiro
 
 #atividade 24
 Etapa: 9
-Fornecedor: Analista
-Insumos: Checklist preenchido
-Ator: Analista
-Atividades: Prepara o rascunho do edital técnico.
-Saídas: Minuta do Edital
-Cliente: Gerente
+Fornecedor: Fornecedor
+Insumos: Fatura Comercial Emitida
+Ator: Financeiro
+Atividades: Realiza a triagem fiscal da fatura, verificando retenções de impostos e alíquotas aplicadas.
+Saídas: Nota Fiscal Escriturada e Validada
+Cliente: Financeiro
 
 #atividade 25
 Etapa: 9
-Fornecedor: Analista
-Insumos: Minuta do Edital
-Ator: Gerente
-Atividades: Aprova a abertura do edital no sistema.
-Saídas: Edital publicado
-Cliente: Público Geral
+Fornecedor: Financeiro
+Insumos: Nota Fiscal Escriturada e Validada
+Ator: Financeiro
+Atividades: Lança a obrigação financeira no módulo de contas a pagar respeitando o prazo contratual.
+Saídas: Programação de Pagamento Efetuada
+Cliente: Gestor da Área
 
 #atividade 26
 Etapa: 9
-Fornecedor: Gerente
-Insumos: Edital publicado
-Ator: Analista
-Atividades: Monitora o período de inscrições e esclarece dúvidas.
-Saídas: Lista de inscritos
-Cliente: Comissão de Avaliação
+Fornecedor: Financeiro
+Insumos: Programação de Pagamento Efetuada
+Ator: Gestor da Área
+Atividades: Efetua a liberação da alçada de pagamento eletrônico no internet banking corporativo.
+Saídas: Lote de Pagamento Autorizado
+Cliente: Financeiro
 
 #atividade 27
 Etapa: 10
-Fornecedor: Analista
-Insumos: Lista de inscritos
-Ator: Comissão de Avaliação
-Atividades: Analisa o mérito das propostas recebidas.
-Saídas: Parecer final
-Cliente: Gerente
+Fornecedor: Gestor da Área
+Insumos: Lote de Pagamento Autorizado
+Ator: Financeiro
+Atividades: Executa a liquidação bancária da fatura e concilia o débito na conta corrente da empresa.
+Saídas: Comprovante de Pagamento Vinculado
+Cliente: Fornecedor
 
 #atividade 28
 Etapa: 10
-Fornecedor: Comissão de Avaliação
-Insumos: Parecer final
-Ator: Gerente
-Atividades: Homologa o resultado final do certame.
-Saídas: Termo de Homologação
-Cliente: Jurídico
+Fornecedor: Financeiro
+Insumos: Comprovante de Pagamento Vinculado
+Ator: Compras
+Atividades: Consolida todas as interações, notas, contratos e comprovantes na pasta digital do processo (GED).
+Saídas: Pasta Digital de Compra Encerrada
+Cliente: Compliance
 
 #atividade 29
 Etapa: 10
-Fornecedor: Gerente
-Insumos: Termo de Homologação
-Ator: Jurídico
-Atividades: Redige e formaliza os contratos com os vencedores.
-Saídas: Contratos assinados
-Cliente: Vencedores
+Fornecedor: Compras
+Insumos: Pasta Digital de Compra Encerrada
+Ator: Compliance
+Atividades: Avalia a conformidade de ponta a ponta do processo para fins de auditoria socioambiental e de governança.
+Saídas: Relatório de Conformidade de Processo
+Cliente: Controle de Qualidade
 
 #atividade 30
 Etapa: 10
-Fornecedor: Jurídico
-Insumos: Contratos assinados
-Ator: Financeiro
-Atividades: Autoriza o desembolso dos recursos financeiros.
-Saídas: Comprovante de pagamento
-Cliente: Vencedores
-
-#atividade 31
-Etapa: 10
-Fornecedor: Presidente
-Insumos: Todo o processo
-Ator: Expedição
-Atividades: Enviou para expedição.
-Saídas: Comprovante de pagamento
-Cliente: Cliente externo
+Fornecedor: Compliance
+Insumos: Relatório de Conformidade de Processo
+Ator: Controle de Qualidade
+Atividades: Atualiza a matriz de desempenho e o índice de avaliação de fornecedores do mês (IDF).
+Saídas: Painel de Indicadores de Suprimentos Atualizado
+Cliente: Diretoria Executiva
 
 #observacoes
-- Ponto crítico identificado na Etapa 2 devido ao sistema de orçamentos.
-- Necessário verificar a conformidade com a nova norma de 2026.
+Ponto crítico identificado na Etapa
 `;
-        this.saveFile(content, "exemplo-estresse-31-atividades.txt");
+        this.saveFile(content, "exemplo.txt");
     },
 
     saveFile(content, filename) {
