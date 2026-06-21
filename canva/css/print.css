@@ -1,11 +1,11 @@
 /* 
    ARQUIVO: css/print.css
    FUNÇÃO: Configurações exclusivas para Impressão e PDF.
-   VERSÃO: 06 (Ajuste de Margens e Proteção contra Sobreposição)
+   VERSÃO: 08 (Proteção de Margens, Numeração Nativa e Correção de Sobreposição)
 */
 
 @media print {
-    /* Reset Global e Proteção de Margens */
+    /* Reset Global e Proteção de Cores */
     * { 
         box-sizing: border-box !important; 
         -webkit-print-color-adjust: exact !important; 
@@ -17,12 +17,12 @@
         padding: 0; 
         margin: 0; 
         width: 100%; 
-        counter-reset: page; /* Inicializa o contador de páginas */
+        counter-reset: page; /* Inicializa o contador de páginas CSS */
     }
     
     @page {
-        /* Margem inferior aumentada para 25mm para garantir espaço total para o rodapé */
-        margin: 10mm 10mm 25mm 10mm;
+        /* Margem inferior de 30mm reserva espaço físico para o rodapé fixo */
+        margin: 10mm 10mm 30mm 10mm;
     }
 
     .glass-container { 
@@ -42,10 +42,6 @@
         text-align: center;
         width: 100%;
         margin-bottom: 5mm;
-    }
-
-    .print-header-top {
-        padding-bottom: 5px;
     }
 
     .print-app-title {
@@ -70,35 +66,41 @@
         line-height: 1.2;
     }
 
-    /* 2. Rodapé Fixo (Posicionamento Seguro) */
+    /* 2. Rodapé Fixo (Posicionado no limite da margem) */
     .print-footer {
         display: block !important;
         position: fixed;
-        bottom: 0; /* Cola no fundo da margem reservada pelo @page */
+        bottom: -22mm; /* Posiciona o rodapé dentro da área de 30mm reservada pelo @page */
         left: 0;
         width: 100%;
         background: white;
+        height: 20mm;
     }
 
     .print-footer-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 5px 5mm;
-        font-size: 7.5pt !important;
+        padding: 5px 10mm;
+        font-size: 8pt !important;
         color: #666 !important;
-        border-top: 0.5pt solid #eee; /* Linha sutil no rodapé */
+        border-top: 0.5pt solid #eee;
     }
 
-    /* 3. Numeração de Páginas */
-    /* Removemos o "de total" pois CSS puro não calcula o total global de forma confiável */
+    /* 3. Numeração de Páginas Nativas */
     .page-num::after {
         counter-increment: page;
         content: counter(page);
     }
 
-    .page-total {
-        display: none !important; /* Esconde o total indefinido */
+    /* Cores das Pílulas: Preserva o fundo colorido injetado pelo JS */
+    .pill {
+        font-size: 7pt !important; 
+        border: 1px solid #ccc !important;
+        padding: 2px 5px !important;
+        display: inline-block !important;
+        font-weight: bold !important;
+        background-color: transparent; 
     }
 
     /* Dashboard e Metadados */
@@ -108,50 +110,42 @@
         gap: 8px !important; 
         margin-bottom: 15px; 
         width: 100% !important;
-        align-items: stretch !important;
     }
     
-    .meta-card-row { background: white !important; border: 1px solid #eee !important; flex: 1; }
-    
-    .meta-card-value { 
-        font-size: 0.7rem !important;
-        line-height: 1.2 !important;
-        padding: 4px 8px !important;
-    }
+    .meta-card-row { background: white !important; border: 1px solid #eee !important; }
+    .meta-card-value { font-size: 0.7rem !important; padding: 4px 8px !important; }
 
     .activity-counter-card { 
         background: #fdfdfd !important; color: #1a4d2e !important; 
-        border: 2px solid #1a4d2e !important; box-shadow: none !important;
-        border-radius: 10px !important; padding: 5px !important;
-        height: 100% !important;
-        display: flex !important; flex-direction: column !important;
-        justify-content: center !important; align-items: center !important;
+        border: 2px solid #1a4d2e !important; 
+        border-radius: 10px !important; 
+        padding: 5px !important;
     }
     
     .counter-number { font-size: 2.2rem !important; line-height: 1; }
     .counter-label { font-size: 0.6rem !important; }
 
-    /* Levantamento */
+    /* Levantamento (Survey) */
     .survey-card { 
         grid-template-columns: 260px 1fr !important; 
         background: white !important; 
         border: 1px solid #ddd !important; 
         break-inside: avoid !important;
-        width: 100% !important; 
         margin-bottom: 4px !important;
     }
 
     .card-info-side { padding: 4px 10px !important; }
-    .card-item-name { white-space: nowrap !important; font-size: 0.75rem !important; }
+    .card-item-name { font-size: 0.75rem !important; }
     .card-item-desc { font-size: 0.6rem !important; }
     
-    .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
+    /* Tabelas de Fluxo */
+    .flow-table-styled thead { display: table-header-group; }
 
-    .flow-header-row th, .obs-table-styled th {
+    .flow-header-row th {
         background: #f2f2f2 !important; color: #1a4d2e !important;
-        border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
+        border-bottom: 2px solid #1a4d2e !important; 
+        font-size: 7.5pt !important;
         padding: 5px 2px !important;
-        line-height: 1 !important;
     }
 
     .activity-row-card td, .obs-row td {
@@ -159,21 +153,25 @@
         font-size: 8pt !important; padding: 6px 4px !important;
     }
 
-    .activity-row-card, .obs-row { break-inside: avoid !important; }
+    /* Prevenção de quebra de linha de atividade entre páginas */
+    .activity-row-card, .obs-row, .step-header-row { 
+        break-inside: avoid !important; 
+        page-break-inside: avoid !important;
+    }
 
-    .activity-row-card td.highlight-col { background: #f4f4f4 !important; color: #000 !important; }
+    .activity-row-card td.highlight-col { background: #f4f4f4 !important; }
 
-    .obs-row td::before { content: "• "; color: #1a4d2e; font-weight: bold; }
-
-    /* Utilitários de Impressão */
+    /* Exibição condicional */
     .show-print { display: inline !important; }
     .hide-print { display: none !important; }
 
+    /* Ocultar elementos desnecessários na impressão */
     #editor-container, 
     #editor-toggle, 
     #presentation-controls, 
     .toolbar-master-container,
-    .flow-controls {
+    .flow-controls,
+    .btn-step-control {
         display: none !important;
     }
 }
