@@ -42,13 +42,18 @@
 
     .header-dashboard {
         grid-template-columns: 1fr; /* Empilha dados e contador */
-        gap: 10px;
+        gap: 0px; /* Reduzido para controle via margens dos filhos */
         width: 100%;
     }
 
-    /* Respiro para o contador de atividades */
+    /* Ajuste do contador de atividades (Caixa Verde) */
     .counter-card {
-        margin: 15px 0;
+        margin: 8px 0 !important; /* Distância mínima e igual acima/abaixo */
+        padding: 15px 0 !important;  /* Respiro interno solicitado */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .meta-card-row {
@@ -104,7 +109,7 @@
 
     .activity-row-card td {
         text-align: left !important;
-        padding: 10px 15px 10px 40% !important; /* Espaço para o rótulo à esquerda */
+        padding: 10px 15px 10px 30% !important; /* Espaço reduzido para etiqueta */
         border: none !important;
         border-bottom: 1px solid rgba(0,0,0,0.05) !important;
         position: relative;
@@ -118,11 +123,13 @@
     /* Injeção de Rótulos via CSS (:nth-of-type) */
     .activity-row-card td::before {
         position: absolute;
-        left: 15px;
-        width: 35%;
+        left: 0;
+        width: 25%; /* Largura reduzida da etiqueta */
+        padding-right: 10px;
+        text-align: right; /* Alinhado à direita para ficar próximo ao conteúdo */
         font-weight: 800;
         color: #1a4d2e;
-        font-size: 0.6rem;
+        font-size: 0.55rem;
         text-transform: uppercase;
         content: "";
         opacity: 0.8;
@@ -149,6 +156,7 @@
         position: static;
         margin-bottom: 5px;
         width: 100%;
+        text-align: left; /* Título da atividade volta a ser à esquerda por ser bloco */
     }
 
     /* Ajuste da bolha de etapa dentro do card */
@@ -158,6 +166,23 @@
     }
 
     /* 6. Observações Gerais */
+    .obs-table-styled {
+        margin-top: 20px;
+    }
+
+    /* Injeção do título de Observações que some com o thead */
+    .obs-table-styled::before {
+        content: "Observações Gerais";
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-weight: 800;
+        color: #1a4d2e;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
     .obs-table-styled, 
     .obs-table-styled thead, 
     .obs-table-styled tbody, 
