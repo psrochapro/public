@@ -60,20 +60,53 @@ const renderer = {
                 </div>`;
         });
 
-        // 4. Linhas de Fluxo (SIPOC + Regras)
+        // 4. Linhas de Fluxo com Agrupamento por Etapa (Sanfona)
         const flowItemsContainer = document.getElementById('flow-items-container');
         flowItemsContainer.innerHTML = '';
-        if (data.fluxo) {
+        
+        if (data.fluxo && data.fluxo.length > 0) {
+            // Agrupar atividades por etapa internamente
+            const grupos = {};
             data.fluxo.forEach((item, index) => {
-                // ALTERAÇÃO: Prioriza o número capturado no texto, senão usa o sequencial como fallback
-                const activityId = (item.numero || (index + 1)).toString().padStart(3, '0');
-                const stepValue = parseInt(item.etapa) || 1;
-                const stepColorClass = `step-b${((stepValue - 1) % 5) + 1}`;
+                const eNum = item.etapa || "1";
+                if (!grupos[eNum]) grupos[eNum] = [];
+                grupos[eNum].push({ ...item, originalIndex: index });
+            });
+
+            // Renderizar Grupos
+            Object.keys(grupos).sort((a, b) => parseInt(a) - parseInt(b)).forEach(eNum => {
+                const etapaNome = data.mapaEtapas[eNum];
+                const warning = !etapaNome ? `<span class="step-warning">Etapa ${eNum} não declarada no índice</span>` : '';
                 
-                const regraHtml = item.regra ? `<div class="regra-box"><strong>Lógica:</strong> ${item.regra}</div>` : '';
-                
-                flowItemsContainer.innerHTML += `
-                    <tr class="activity-row-card" data-etapa="${item.etapa}">
+                // Inserir Header da Etapa (Sanfona)
+                const headerRow = document.createElement('tr');
+                headerRow.className = 'step-header-row';
+                headerRow.setAttribute('data-target-step', eNum);
+                headerRow.innerHTML = `
+                    <td colspan="7">
+                        <div class="step-header-content">
+                            <span class="step-header-indicator">▼</span>
+                            <div class="step-header-label">
+                                <span>ETAPA ${eNum}</span>
+                                ${etapaNome ? `<span class="step-name-text">: ${etapaNome}</span>` : warning}
+                            </div>
+                        </div>
+                    </td>
+                `;
+                headerRow.onclick = () => this.toggleStep(eNum);
+                flowItemsContainer.appendChild(headerRow);
+
+                // Inserir Atividades do Grupo
+                grupos[eNum].forEach(item => {
+                    const activityId = (item.numero || (item.originalIndex + 1)).toString().padStart(3, '0');
+                    const stepValue = parseInt(item.etapa) || 1;
+                    const stepColorClass = `step-b${((stepValue - 1) % 5) + 1}`;
+                    const regraHtml = item.regra ? `<div class="regra-box"><strong>Lógica:</strong> ${item.regra}</div>` : '';
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'activity-row-card';
+                    row.setAttribute('data-etapa', eNum);
+                    row.innerHTML = `
                         <td>
                             <div class="step-col-container">
                                 <div class="step-bubble ${stepColorClass}">${item.etapa || '-'}</div>
@@ -89,33 +122,34 @@ const renderer = {
                         </td>
                         <td>${item.saídas || item.saidas || ''}</td>
                         <td>${item.cliente || ''}</td>
-                    </tr>`;
+                    `;
+                    flowItemsContainer.appendChild(row);
+                });
             });
         }
 
-        // 5. Seção de Observações (Estrutura de Tabela para o PDF)
+        // 5. Seção de Observações
         const obsContainer = document.getElementById('obs-section-container');
         if (data.observacoes && data.observacoes.length > 0) {
-            const obsRowsHtml = data.observacoes.map(o => `
-                <tr class="obs-row">
-                    <td>${o}</td>
-                </tr>
-            `).join('');
-
+            const obsRowsHtml = data.observacoes.map(o => `<tr class="obs-row"><td>${o}</td></tr>`).join('');
             obsContainer.innerHTML = `
                 <table class="obs-table-styled">
-                    <thead>
-                        <tr>
-                            <th>📝 Observações Gerais</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${obsRowsHtml}
-                    </tbody>
-                </table>
-            `;
+                    <thead><tr><th>📝 Observações Gerais</th></tr></thead>
+                    <tbody>${obsRowsHtml}</tbody>
+                </table>`;
         } else {
             obsContainer.innerHTML = '';
         }
+    },
+
+    toggleStep(stepNum) {
+        const header = document.querySelector(`.step-header-row[data-target-step="${stepNum}"]`);
+        const rows = document.querySelectorAll(`.activity-row-card[data-etapa="${stepNum}"]`);
+        
+        const isCollapsed = header.classList.toggle('collapsed');
+        rows.forEach(row => {
+            if (isCollapsed) row.classList.add('row-hidden');
+            else row.classList.remove('row-hidden');
+        });
     }
 };

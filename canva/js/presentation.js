@@ -1,12 +1,13 @@
 /* 
    ARQUIVO: js/presentation.js
-   FUNÇÃO: Navegação agrupada por Etapas com Smart Scroll compensado para cabeçalho flutuante.
+   FUNÇÃO: Navegação agrupada por Etapas com suporte a nomes e sanfonas.
 */
 
 const presentation = {
     isPresentationMode: false,
     currentStep: -1, 
     uniqueSteps: [],
+    mapaEtapas: {},
 
     init() {
         document.getElementById('btn-presentation').addEventListener('click', () => this.togglePresentation());
@@ -44,6 +45,11 @@ const presentation = {
             steps.add(etapa);
         });
         this.uniqueSteps = Array.from(steps).sort((a, b) => parseInt(a) - parseInt(b));
+        
+        // Captura os nomes das etapas do parser atual
+        const text = document.getElementById('editor-input').value;
+        const data = parser.parse(text);
+        this.mapaEtapas = data.mapaEtapas || {};
     },
 
     updateView() {
@@ -75,6 +81,12 @@ const presentation = {
             if (targetEtapa) {
                 if (flowHeader) flowHeader.classList.add('pres-section-active');
 
+                // Garantir que a sanfona esteja ABERTA para a etapa focada
+                const header = document.querySelector(`.step-header-row[data-target-step="${targetEtapa}"]`);
+                if (header && header.classList.contains('collapsed')) {
+                    renderer.toggleStep(targetEtapa);
+                }
+
                 const groupRows = document.querySelectorAll(`.activity-row-card[data-etapa="${targetEtapa}"]`);
                 groupRows.forEach((row, idx) => {
                     row.classList.add('pres-focus');
@@ -82,7 +94,8 @@ const presentation = {
                     if (idx === groupRows.length - 1) row.classList.add('group-end');
                 });
                 
-                presInfo.innerText = `Fluxo: Etapa ${targetEtapa}`;
+                const nomeEtapa = this.mapaEtapas[targetEtapa] ? `: ${this.mapaEtapas[targetEtapa]}` : "";
+                presInfo.innerText = `Fluxo: Etapa ${targetEtapa}${nomeEtapa}`;
                 
                 if (groupRows.length > 0) {
                     this.smartScroll(groupRows[0], true);
@@ -94,7 +107,6 @@ const presentation = {
     },
 
     smartScroll(element, isFlow = false) {
-        // Compensação aumentada para 160px para acomodar o cabeçalho flutuante que está em top:20px
         const offset = isFlow ? 160 : 180; 
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({

@@ -20,7 +20,6 @@ const editor = {
 
         if (!this.input) return;
 
-        // 1. Listeners de Edição
         this.input.addEventListener('input', () => {
             this.syncAndRender();
         });
@@ -29,12 +28,10 @@ const editor = {
             this.highlight.scrollTop = this.input.scrollTop;
         });
 
-        // 2. Toggle Abrir/Fechar
         this.toggleBtn.addEventListener('click', () => {
             this.container.classList.toggle('editor-collapsed');
         });
 
-        // 3. Lógica de Redimensionamento
         this.resizer.addEventListener('mousedown', (e) => {
             this.isResizing = true;
             document.body.style.cursor = 'col-resize';
@@ -65,7 +62,6 @@ const editor = {
         let lastNum = 0;
         let lastMatchIndex = -1;
 
-        // Localiza a última atividade para incrementar o número
         while ((match = regex.exec(text)) !== null) {
             lastNum = parseInt(match[1]);
             lastMatchIndex = match.index;
@@ -76,18 +72,15 @@ const editor = {
 
         let insertPos = text.length;
         if (lastMatchIndex !== -1) {
-            // Procura o próximo bloco (qualquer tag #) após a atividade atual para inserir antes dele
             const nextSection = text.indexOf('#', lastMatchIndex + 1);
             if (nextSection !== -1) {
                 insertPos = nextSection;
             }
         }
 
-        // Divide o texto para inserção cirúrgica sem sobrescrever dados adjacentes
         const textBefore = text.substring(0, insertPos).trimEnd();
         const textAfter = text.substring(insertPos).trimStart();
         
-        // Reconstrói o texto garantindo o espaçamento de "uma linha em branco" solicitado
         const newText = textBefore + 
                         (textBefore ? "\n\n" : "") + 
                         templateStr + 
@@ -95,8 +88,6 @@ const editor = {
                         textAfter;
 
         this.setContent(newText);
-        
-        // Scroll e foco para facilitar a edição imediata
         this.input.focus();
     },
 
@@ -130,8 +121,6 @@ const editor = {
     syncAndRender() {
         const text = this.input.value;
         this.updateHighlight(text);
-        
-        // AUTO-SAVE: Sempre salva quando o conteúdo muda
         persistence.saveToLocal(text);
 
         try {
@@ -148,9 +137,18 @@ const editor = {
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
 
+        // Tags (#)
         html = html.replace(/(#[A-Za-zÀ-ÖØ-öø-ÿ0-9]+)/g, '<span class="hl-tag">$1</span>');
+        
+        // Rótulos (Labels)
         html = html.replace(/(^|\n)([A-Za-zÀ-ÖØ-öø-ÿ\s]+:)/g, '$1<span class="hl-label">$2</span>');
+        
+        // Lógica de Negócio
         html = html.replace(/(Regra:|Lógica:)/gi, '<span class="hl-logic">$1</span>');
+
+        // NOVAS REGRAS PARA ETAPAS NO EDITOR
+        // Realça "1: Nome da Etapa" se estiver logo após #etapas
+        html = html.replace(/(^|\n)(\d+):/g, '$1<span class="hl-step-num">$2:</span>');
 
         this.highlight.innerHTML = html + "\n\n";
     }
