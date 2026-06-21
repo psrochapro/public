@@ -7,9 +7,6 @@ const template = {
 #area 
 #dono 
 
-#etapas
-1: Nome da Etapa
-
 #atores 
 #entradas 
 #saidas 
@@ -21,6 +18,9 @@ const template = {
 #sgpe 
 #indicadores 
 #gatilho 
+
+#etapas
+1: Nome da Etapa
 
 #atividade 1
 Etapa: 1
@@ -49,18 +49,6 @@ Cliente:
 #area Departamento de Compras e Contratos
 #dono Diretoria de Operações
 
-#etapas
-1: Preparação da Demanda
-2: Cotação e Prospecção de Mercado
-3: Análise e Seleção Técnica
-4: Negociação Comercial e Compliance
-5: Formalização Jurídica e Contratual
-6: Aprovação e Assinatura Eletrônica
-7: Ativação no ERP e Ordem de Compra
-8: Execução, Entrega e Recebimento
-9: Processamento Fiscal e Financeiro
-10: Encerramento e Auditoria de Qualidade
-
 #atores Solicitante, Gestor da Área, Compras, Jurídico, Financeiro, Compliance, Almoxarifado
 #entradas Requisição de Compra, Especificação Técnica, Orçamentos de Mercado, Parecer de Compliance, Certidões do Fornecedor
 #saidas Ordem de Compra Emitida, Contrato Assinado, Termo de Recebimento, Comprovante de Pagamento, Relatório de Conformidade
@@ -72,6 +60,18 @@ Cliente:
 #sgpe Assunto: 1042 Suprimentos, Classe: Interno, Sigilo: Público
 #indicadores Lead Time de Atendimento, Saving de Negociação, Índice de Erros em Notas, SLA de Aprovação
 #gatilho Envio da Requisição de Compra pelo Solicitante, Indisponibilidade de Estoque
+
+#etapas
+1: Preparação da Demanda
+2: Cotação e Prospecção de Mercado
+3: Análise e Seleção Técnica
+4: Negociação Comercial e Compliance
+5: Formalização Jurídica e Contratual
+6: Aprovação e Assinatura Eletrônica
+7: Ativação no ERP e Ordem de Compra
+8: Execução, Entrega e Recebimento
+9: Processamento Fiscal e Financeiro
+10: Encerramento e Auditoria de Qualidade
 
 #atividade 1
 Etapa: 1
