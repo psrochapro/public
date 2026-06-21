@@ -1,52 +1,40 @@
-/* 
-   ARQUIVO: css/print.css
-   FUNÇÃO: Formatação profissional para PDF/Impressão.
-   VERSÃO: 08 (Revisão total de larguras, células e rodapé)
-*/
-
 @media print {
     /* Reset Global e Proteção de Margens */
     * { 
         box-sizing: border-box !important; 
         -webkit-print-color-adjust: exact !important; 
         print-color-adjust: exact !important; 
-        text-shadow: none !important;
-        box-shadow: none !important;
     }
     
-    html, body { 
+    body { 
         background: white !important; 
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        padding: 0; 
+        margin: 0; 
+        width: 100%; 
         counter-reset: page;
-        font-size: 10pt;
     }
     
-    /* Configuração de Página Física A4 */
     @page {
-        margin: 15mm 10mm 20mm 10mm;
-        size: auto;
+        margin: 10mm 10mm 20mm 10mm;
     }
 
     .glass-container { 
+        box-shadow: none !important; 
         border: none !important; 
+        backdrop-filter: none !important; 
         background: white !important; 
-        padding: 0 !important; 
+        padding: 0 5mm 15mm 5mm !important; 
+        width: 100% !important; 
+        max-width: 100% !important; 
         margin: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        display: block !important;
-        /* Respiro para não sobrepor o rodapé fixo */
-        padding-bottom: 10mm !important; 
     }
 
-    /* 1. Cabeçalho: Título Centralizado e Limpo */
+    /* 1. Cabeçalho de Impressão Centralizado */
     .print-header {
         display: block !important;
-        width: 100%;
         text-align: center;
-        margin-bottom: 8mm;
+        width: 100%;
+        margin-bottom: 5mm;
     }
 
     .print-app-title {
@@ -54,18 +42,16 @@
         font-weight: 800;
         color: #1a4d2e !important;
         text-transform: uppercase;
-        letter-spacing: 1px;
     }
 
     .process-title-header h1 { 
-        font-size: 1.4rem !important; 
-        margin: 15px 0 !important; 
+        font-size: 1.2rem !important; 
+        margin-top: 5mm; 
         color: #1a4d2e !important; 
         text-align: center;
-        line-height: 1.2;
     }
 
-    /* 2. Rodapé: Posicionamento fixo elegante */
+    /* 2 e 3. Rodapé fixo: URL à esquerda, Página à direita */
     .print-footer {
         display: block !important;
         position: fixed;
@@ -73,149 +59,108 @@
         left: 0;
         width: 100%;
         background: white;
-        height: 12mm;
-        border-top: 1px solid #ddd;
-        z-index: 9999;
+        padding-top: 5px;
     }
 
     .print-footer-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 0 10mm;
         font-size: 7.5pt !important;
-        color: #555 !important;
-        padding: 2mm 10mm 0 10mm;
+        color: #666 !important;
     }
 
     .page-num::after {
         counter-increment: page;
         content: counter(page);
     }
-    
-    /* Ajuste da numeração para não mostrar o "de" vazio */
-    .print-page-count span:last-child,
-    .page-total,
-    .print-page-count {
-        font-weight: bold;
-    }
-    .print-page-count span:nth-child(2) { display: none; }
 
-    /* 3. Dashboard Executivo */
+    /* 4. Cores das Pílulas: Remove o fundo fixo para preservar as cores do modo tela */
+    .pill {
+        font-size: 7pt !important; 
+        border: 1px solid #ccc !important;
+        padding: 2px 5px !important;
+        display: inline-block !important;
+        font-weight: bold !important;
+        background-color: transparent; /* Permite que a cor injetada pelo JS apareça */
+    }
+
+    /* Restante do Layout Base Preservado */
     .header-dashboard { 
         display: grid !important; 
-        grid-template-columns: 1fr 150px !important; 
-        gap: 12px !important; 
-        margin-bottom: 20px; 
+        grid-template-columns: 1fr 130px !important; 
+        gap: 8px !important; 
+        margin-bottom: 15px; 
+        width: 100% !important;
+        align-items: stretch !important;
     }
     
-    .meta-card-row { background: white !important; border: 1px solid #eee !important; border-radius: 6px; }
-    .meta-card-value { font-size: 0.8rem !important; padding: 6px 10px !important; }
-
-    .activity-counter-card { 
-        border: 2px solid #1a4d2e !important;
-        border-radius: 12px !important; 
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        background: #fdfdfd !important;
-    }
+    .meta-card-row { background: white !important; border: 1px solid #eee !important; flex: 1; }
     
-    .counter-number { font-size: 2.8rem !important; font-weight: 900 !important; line-height: 1; }
-    .counter-label { font-size: 0.7rem !important; font-weight: bold; }
-
-    /* 4. Levantamento (Cards 01 a 11) - Largura Estável */
-    .survey-card { 
-        grid-template-columns: 240px 1fr !important; 
-        border: 1px solid #eee !important; 
-        break-inside: avoid !important;
-        margin-bottom: 5px !important;
-        border-radius: 8px !important;
-        overflow: hidden;
-    }
-
-    .card-info-side { background: #f8faf8 !important; padding: 8px !important; }
-    .card-item-name { font-size: 0.85rem !important; }
-
-    /* 5. Pílulas (Cores Preservadas do Renderer) */
-    .pill {
-        font-size: 7.5pt !important; 
-        border: 1px solid rgba(0,0,0,0.1) !important;
-        padding: 2px 8px !important;
-        margin: 2px !important;
-        display: inline-block !important;
-        font-weight: 700 !important;
-        color: #000 !important;
-        border-radius: 12px !important;
-    }
-
-    /* 6. Tabelas de Fluxo - RESOLUÇÃO DE INVASÃO DE CÉLULAS */
-    .flow-table-styled {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        table-layout: auto !important; /* Permite ajuste flexível para evitar sobreposição */
-        margin-top: 10px;
-    }
-
-    .flow-header-row th {
-        background: #f2f2f2 !important; 
-        color: #1a4d2e !important;
-        border: 1px solid #ddd !important;
-        font-size: 7.5pt !important;
-        padding: 8px 4px !important;
-        text-transform: uppercase;
-    }
-
-    .activity-row-card td {
-        border: 1px solid #eee !important;
-        font-size: 8.5pt !important; 
-        padding: 10px 6px !important;
-        vertical-align: top !important;
-        word-wrap: break-word !important;
-    }
-
-    /* Ajuste específico para o Badge do Ator não invadir outras células */
-    .actor-cell {
-        min-width: 80px !important;
-    }
-
-    .actor-badge {
-        display: block !important;
-        white-space: normal !important; /* Permite que o nome do ator quebre linha */
-        width: 100% !important;
-        background: #f0f4f0 !important;
-        border: 1px solid #d0dec0 !important;
-        padding: 4px !important;
-        text-align: center;
-    }
-
-    .activity-row-card { break-inside: avoid !important; }
-
-    .activity-row-card td.highlight-col { 
-        background: #fafafa !important; 
-        border-left: 4px solid #1a4d2e !important;
-    }
-
-    .regra-box {
-        background: #fffbe6 !important;
-        border-left: 3px solid #f1c232 !important;
-        margin-top: 5px;
+    .meta-card-value { 
+        font-size: 0.7rem !important;
+        line-height: 1.2 !important;
         padding: 4px 8px !important;
     }
 
-    .step-bubble {
-        color: white !important;
-        font-weight: bold !important;
+    .activity-counter-card { 
+        background: #fdfdfd !important; color: #1a4d2e !important; 
+        border: 2px solid #1a4d2e !important; box-shadow: none !important;
+        border-radius: 10px !important; padding: 5px !important;
+        height: 100% !important;
+        display: flex !important; flex-direction: column !important;
+        justify-content: center !important; align-items: center !important;
+    }
+    
+    .counter-number { font-size: 2.2rem !important; line-height: 1; }
+    .counter-label { font-size: 0.6rem !important; }
+
+    .survey-card { 
+        grid-template-columns: 280px 1fr !important; 
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid !important;
+        width: 100% !important; 
+        margin-bottom: 5px !important;
     }
 
-    /* Visibilidade */
-    .show-print { display: inline-block !important; }
+    .card-item-name { white-space: nowrap !important; }
+    
+    .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
+
+    .flow-header-row th, .obs-table-styled th {
+        background: #f2f2f2 !important; color: #1a4d2e !important;
+        border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
+        text-transform: none !important; 
+        padding: 5px 2px !important;
+        line-height: 1 !important;
+        white-space: nowrap !important;
+    }
+
+    .flow-header-row th:first-child {
+        min-width: 65px !important;
+    }
+
+    .activity-row-card td, .obs-row td {
+        background: white !important; border: 1px solid #eee !important;
+        font-size: 8pt !important; padding: 6px 4px !important;
+    }
+
+    .activity-row-card, .obs-row { break-inside: avoid !important; }
+
+    .activity-row-card td.highlight-col { background: #f4f4f4 !important; color: #000 !important; }
+
+    .obs-row td::before { content: "• "; color: #1a4d2e; font-weight: bold; }
+
+    .show-print { display: inline !important; }
     .hide-print { display: none !important; }
 
-    /* Ocultar UI de Software */
-    #editor-container, #editor-toggle, #presentation-controls, 
-    .toolbar-master-container, .flow-controls, #fileInput, 
-    .toolbar-glass-bar, .toolbar-main-title {
+    #editor-container, 
+    #editor-toggle, 
+    #presentation-controls, 
+    .toolbar-bubble,
+    .btn-group {
         display: none !important;
     }
 }
