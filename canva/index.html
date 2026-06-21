@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas de Processo Digital</title>
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/print.css">
+    <link rel="stylesheet" href="css/presentation.css">
+    <link rel="stylesheet" href="css/steps.css">
+    <link rel="stylesheet" href="css/mobile.css" media="screen">
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+
+    <div id="editor-container" class="editor-collapsed no-print">
+        <button id="editor-toggle" title="Alternar Editor">
+            <span class="toggle-icon">❮</span>
+        </button>
+        <div id="editor-resizer"></div>
+        <div class="editor-content">
+            <div class="editor-header">
+                <div class="header-main-info">
+                    <h3>Editor de Processo</h3>
+                    <span class="editor-status">Sync Ativo</span>
+                </div>
+                <div class="editor-actions">
+                    <button class="btn-editor-secondary" onclick="editor.insertActivity()">➕ Atividade</button>
+                    <button class="btn-editor-secondary" onclick="editor.reorderActivities()">🔢 Reordenar</button>
+                    <button class="btn-editor-template" onclick="editor.insertTemplate()">Inserir Template</button>
+                </div>
+            </div>
+            <div class="editor-wrapper">
+                <div id="editor-highlight" aria-hidden="true"></div>
+                <textarea id="editor-input" spellcheck="false" placeholder="Cole seu processo aqui..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR UNIFICADA REPROJETADA -->
+    <div class="toolbar-wrapper no-print">
+        <h1 class="app-main-title">Canvas de Processo Digital</h1>
+        
+        <div class="main-unified-bar">
+            <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
+            
+            <div class="nav-group-box">
+                <span class="nav-group-label">Arquivos</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-import-clr" onclick="document.getElementById('fileInput').click()">Importar</button>
+                    <button class="app-btn btn-export-clr" onclick="persistence.exportCanvas()">Exportar</button>
+                </div>
+            </div>
+
+            <div class="nav-group-box">
+                <span class="nav-group-label">Referências</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-template-clr" onclick="template.downloadTemplate()">Template</button>
+                    <button class="app-btn btn-example-clr" onclick="template.downloadExample()">Exemplo</button>
+                </div>
+            </div>
+
+            <div class="nav-group-box">
+                <span class="nav-group-label">Compartilhamento</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-print-clr" onclick="window.print()">PDF</button>
+                    <button class="app-btn btn-share-clr" onclick="share.generateShareLink()">🔗 Link</button>
+                </div>
+            </div>
+
+            <div class="nav-group-box">
+                <span class="nav-group-label">Apresentação</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-pres-clr" id="btn-presentation">Apresentação</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-container" id="canvasPrint">
+        <div class="process-title-header">
+            <h1 id="val-nome">Nome do Processo</h1>
+        </div>
+
+        <div class="header-dashboard">
+            <div class="meta-side">
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">A</div>
+                    <div class="meta-card-label">Macroprocesso</div>
+                    <div class="meta-card-value" id="val-macroprocesso">---</div>
+                </div>
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">B</div>
+                    <div class="meta-card-label">Área</div>
+                    <div class="meta-card-value" id="val-area">---</div>
+                </div>
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">C</div>
+                    <div class="meta-card-label">Dono do Processo e Equipe</div>
+                    <div class="meta-card-value" id="val-dono">---</div>
+                </div>
+                <div class="meta-card-row">
+                    <div class="meta-card-letter">D</div>
+                    <div class="meta-card-label">Objetivo Geral do Processo</div>
+                    <div class="meta-card-value" id="val-objetivo">---</div>
+                </div>
+            </div>
+            
+            <div class="counter-side">
+                <div class="activity-counter-card">
+                    <span class="counter-number" id="val-total-atividades">0</span>
+                    <span class="counter-label">Atividades</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="survey-card-list" id="survey-container"></div>
+
+        <div class="flow-section-header">
+            <span>DETALHAMENTO DO FLUXO</span>
+            <div class="flow-controls no-print">
+                <button class="btn-step-control" onclick="renderer.toggleAllSteps(true)">📂 Expandir Tudo</button>
+                <button class="btn-step-control" onclick="renderer.toggleAllSteps(false)">📁 Recolher Tudo</button>
+            </div>
+        </div>
+        
+        <div class="flow-container">
+            <table class="flow-table-styled">
+                <thead>
+                    <tr class="flow-header-row">
+                        <th style="width: 45px;">📋 <span class="hide-print">Etapa</span><span class="show-print">E</span></th>
+                        <th style="width: 12%;">👥 Fornecedor</th>
+                        <th style="width: 12%;">📥 Insumos</th>
+                        <th style="width: 12%;">👤 Ator</th>
+                        <th>✅ Atividades</th>
+                        <th style="width: 13%;">📦 Saídas</th>
+                        <th style="width: 12%;">👥 Cliente</th>
+                    </tr>
+                </thead>
+                <tbody id="flow-items-container"></tbody>
+            </table>
+        </div>
+        <div id="obs-section-container"></div>
+    </div>
+
+    <div id="presentation-controls" class="no-print">
+        <button id="pres-prev">⬅ Anterior</button>
+        <span id="pres-info">Modo Apresentação</span>
+        <button id="pres-next">Próximo ➡</button>
+        <button id="pres-exit">Sair</button>
+    </div>
+
+    <script src="js/parser.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/persistence.js"></script>
+    <script src="js/template.js"></script>
+    <script src="js/share.js"></script>
+    <script src="js/presentation.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
