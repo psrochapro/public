@@ -1,93 +1,174 @@
 /* 
    ARQUIVO: css/print.css
-   FUNÇÃO: Estilo de impressão e PDF com paginação X/Y.
+   FUNÇÃO: Impressão Profissional com Cabeçalho/Rodapé fixos e fidelidade visual.
 */
 
 @media print {
+    /* 1. Configurações de Página */
     @page {
-        margin: 20mm 10mm; /* Margem de segurança para evitar sobreposição */
-        size: auto;
+        margin: 20mm 12mm 20mm 12mm;
+        size: A4 portrait;
     }
 
+    /* 2. Forçar Cores e Reset */
     * { 
         box-sizing: border-box !important; 
-        -webkit-print-color-adjust: exact; 
-        print-color-adjust: exact; 
+        -webkit-print-color-adjust: exact !important; 
+        print-color-adjust: exact !important; 
     }
     
     body { 
         background: white !important; 
-        padding: 0;
+        padding: 0; 
         margin: 0; 
-        counter-reset: page; /* Inicializa o contador */
+        width: 100%; 
+        counter-reset: page; /* Inicializa contador de páginas */
     }
     
-    .glass-container { 
-        box-shadow: none !important; border: none !important; backdrop-filter: none !important; 
-        background: white !important; padding: 0 !important; width: 100% !important; margin: 0 !important;
-    }
-
-    /* Cabeçalho Fixo (Aparece em todas as páginas) */
+    /* 3. Containers de PDF Fixos */
     .print-header {
         position: fixed;
-        top: -15mm; /* Posicionado dentro da margem superior do @page */
+        top: -15mm;
         left: 0;
         width: 100%;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 2px;
         display: block;
     }
 
-    .print-header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
+    .print-header-top {
+        text-align: center;
+        padding-bottom: 5px;
     }
 
     .print-app-title {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
         font-weight: 800;
-        font-size: 9pt;
+        font-size: 10pt;
         color: #1a4d2e;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    /* Numeração de Página */
-    .print-page-count {
-        font-size: 9pt;
-        color: #666;
-    }
-
-    .page-num::after {
-        content: counter(page); /* O navegador gerencia o número da página atual */
-    }
-
-    /* Rodapé Fixo (Aparece em todas as páginas) */
     .print-footer {
         position: fixed;
-        bottom: -15mm; /* Posicionado dentro da margem inferior do @page */
+        bottom: -15mm;
         left: 0;
         width: 100%;
-        border-top: 1px solid #ddd;
-        padding-top: 2px;
-        text-align: center;
         display: block;
     }
 
-    .print-footer-url {
-        font-size: 7pt;
-        color: #0056b3;
-        font-family: monospace;
+    .print-footer-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 5px;
+        font-size: 8pt;
+        color: #666;
     }
 
-    /* Ajustes para evitar quebra de elementos no meio da página */
-    .survey-card, .activity-row-card, .obs-row, .header-dashboard {
+    .print-line-divider {
+        height: 1px;
+        background-color: #1a4d2e;
+        width: 100%;
+        opacity: 0.6;
+    }
+
+    /* Paginação Dinâmica */
+    .page-num::after { content: counter(page); }
+    .page-total::after { content: counter(pages); }
+
+    /* 4. Fidelidade do Canvas */
+    .glass-container { 
+        box-shadow: none !important; 
+        border: 1px solid #ddd !important; 
+        background: white !important; 
+        padding: 0 5mm !important; 
+        width: 100% !important; 
+        max-width: 100% !important; 
+        margin: 5mm 0 0 0 !important; /* Respiro em relação ao cabeçalho */
+    }
+
+    .process-title-header h1 { 
+        font-size: 1.3rem !important; 
+        margin: 5mm 0 !important; 
+        color: #1a4d2e !important; 
+    }
+
+    /* Dashboard Profissional */
+    .header-dashboard { 
+        display: grid !important; 
+        grid-template-columns: 1fr 140px !important; 
+        gap: 10px !important; 
+        margin-bottom: 15px; 
+        width: 100% !important;
+        align-items: stretch !important;
+    }
+    
+    .meta-card-row { background: #f9f9f9 !important; border: 1px solid #eee !important; }
+    .meta-card-value { font-size: 0.75rem !important; color: #333 !important; }
+
+    .activity-counter-card { 
+        background: #1a4d2e !important; 
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
+    }
+    
+    .counter-number { font-size: 2.5rem !important; }
+    .counter-label { font-size: 0.65rem !important; }
+
+    /* Levantamento e Pílulas */
+    .survey-card { 
+        grid-template-columns: 300px 1fr !important; 
+        background: white !important; 
+        border: 1px solid #eee !important; 
+        margin-bottom: 5px !important;
         break-inside: avoid;
     }
 
+    .pill {
+        font-size: 7.5pt !important;
+        border: 1px solid rgba(0,0,0,0.1) !important;
+        background: #fdfdfd !important;
+        padding: 2px 6px !important;
+        display: inline-block !important;
+    }
+
+    /* Tabela de Fluxo e Linhas de Grade */
+    .flow-table-styled thead { display: table-header-group; }
+
+    .flow-header-row th {
+        background: #f2f2f2 !important; 
+        color: #1a4d2e !important;
+        border: 1px solid #ddd !important;
+        font-size: 8pt !important;
+        padding: 8px 4px !important;
+    }
+
+    .activity-row-card td {
+        background: white !important; 
+        border: 1px solid #eee !important;
+        font-size: 8.5pt !important; 
+        padding: 10px 6px !important;
+    }
+
+    .activity-row-card td.highlight-col { background: #fcfcfc !important; }
+    .activity-row-card { break-inside: avoid !important; }
+
+    .regra-box {
+        background: #fffdf0 !important;
+        border: 1px solid #f1c232 !important;
+        padding: 5px !important;
+    }
+
     /* Ocultar Elementos de Interface */
-    .no-print, #editor-container, .toolbar-master-container, #presentation-controls, .btn-step-control {
-        display: none !important;
+    .no-print, 
+    #editor-container, 
+    .toolbar-master-container, 
+    #presentation-controls, 
+    .flow-controls,
+    .btn-step-control { 
+        display: none !important; 
     }
 
     .show-print { display: block !important; }
