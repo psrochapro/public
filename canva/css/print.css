@@ -1,90 +1,183 @@
 @media print {
     /* Reset Global e Proteção de Margens */
-    * { box-sizing: border-box !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    * { 
+        box-sizing: border-box !important; 
+        -webkit-print-color-adjust: exact !important; 
+        print-color-adjust: exact !important; 
+    }
     
-    body { background: white !important; padding: 0; margin: 0; width: 100%; }
+    body { 
+        background: white !important; 
+        padding: 0; 
+        margin: 0; 
+        width: 100%; 
+        counter-reset: page;
+    }
     
-    .glass-container { 
-        box-shadow: none !important; border: none !important; backdrop-filter: none !important; background: white !important; 
-        padding: 0 5mm !important; width: 100% !important; max-width: 100% !important; margin: 0 !important;
+    /* Configuração de Página Física */
+    @page {
+        margin: 15mm 10mm 20mm 10mm;
     }
 
-    .process-title-header h1 { font-size: 1.2rem !important; margin-top: 5mm; color: #1a4d2e !important; }
+    .glass-container { 
+        box-shadow: none !important; 
+        border: none !important; 
+        backdrop-filter: none !important; 
+        background: white !important; 
+        padding: 0 !important; 
+        margin: 0 !important;
+        width: 100% !important; 
+        max-width: 100% !important;
+    }
 
-    /* 1. Dashboard: Alinhamento do Contador e Redução do Objetivo */
+    /* 1. Cabeçalho de Impressão: Título Centralizado */
+    .print-header {
+        display: block !important;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10mm;
+    }
+
+    .print-header-top {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .print-app-title {
+        font-size: 14pt !important;
+        font-weight: 800;
+        color: #1a4d2e !important;
+        text-transform: uppercase;
+    }
+
+    .print-line-divider {
+        height: 1px;
+        background: #eee;
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    .process-title-header h1 { 
+        font-size: 1.4rem !important; 
+        margin-top: 0; 
+        color: #1a4d2e !important; 
+        text-align: center;
+    }
+
+    /* 2. Rodapé de Impressão (Posicionamento Fixo) */
+    .print-footer {
+        display: block !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding-top: 5px;
+    }
+
+    .print-footer-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 7pt !important;
+        color: #666 !important;
+        padding: 0 5mm;
+    }
+
+    /* Numeração de Páginas Automática */
+    .page-num::after {
+        counter-increment: page;
+        content: counter(page);
+    }
+    
+    /* Oculta o total (Y) pois navegadores não suportam nativamente sem JS de print */
+    .page-total, .print-page-count span:nth-child(2) {
+        display: none;
+    }
+
+    /* 3. Dashboard e Metadados */
     .header-dashboard { 
         display: grid !important; 
         grid-template-columns: 1fr 130px !important; 
         gap: 8px !important; 
         margin-bottom: 15px; 
         width: 100% !important;
-        align-items: stretch !important; /* Alinha o contador com os metadados */
     }
     
     .meta-card-row { background: white !important; border: 1px solid #eee !important; flex: 1; }
     
     .meta-card-value { 
-        font-size: 0.7rem !important; /* Redução da letra do objetivo e metadados */
+        font-size: 0.7rem !important; 
         line-height: 1.2 !important;
         padding: 4px 8px !important;
     }
 
     .activity-counter-card { 
-        background: #fdfdfd !important; color: #1a4d2e !important; 
-        border: 2px solid #1a4d2e !important; box-shadow: none !important;
-        border-radius: 10px !important; padding: 5px !important;
-        height: 100% !important; /* Força a altura total do grid */
-        display: flex !important; flex-direction: column !important;
-        justify-content: center !important; align-items: center !important;
+        background: #fdfdfd !important; 
+        color: #1a4d2e !important; 
+        border: 2px solid #1a4d2e !important;
+        border-radius: 10px !important; 
+        display: flex !important; 
+        flex-direction: column !important;
+        justify-content: center !important; 
+        align-items: center !important;
     }
     
     .counter-number { font-size: 2.2rem !important; line-height: 1; }
     .counter-label { font-size: 0.6rem !important; }
 
-    /* 2. Levantamento (1 a 11): Mantendo largura e bordas originais */
+    /* 4. Levantamento (Cards 01 a 11) */
     .survey-card { 
         grid-template-columns: 280px 1fr !important; 
         background: white !important; 
         border: 1px solid #ddd !important; 
-        break-inside: avoid !important; /* Evita quebra de página */
+        break-inside: avoid !important;
         width: 100% !important; 
         margin-bottom: 5px !important;
     }
 
-    .card-item-name { white-space: nowrap !important; }
-    
-    /* 3. Tabelas e Fluxo: Correção da Etapa e Altura da Linha */
+    /* 5. RESTAURAÇÃO DAS CORES DAS PÍLULAS */
+    .pill {
+        font-size: 7pt !important; 
+        border: 1px solid rgba(0,0,0,0.1) !important;
+        padding: 2px 6px !important;
+        display: inline-block !important;
+        /* Removemos o fundo cinza fixo para permitir as cores do renderer.js */
+        font-weight: bold !important;
+        color: #000 !important;
+    }
+
+    /* 6. Tabelas e Fluxo */
     .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
 
     .flow-header-row th, .obs-table-styled th {
-        background: #f2f2f2 !important; color: #1a4d2e !important;
-        border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
-        text-transform: none !important; 
-        padding: 5px 2px !important; /* Emagrece a linha do cabeçalho */
+        background: #f2f2f2 !important; 
+        color: #1a4d2e !important;
+        border-bottom: 2px solid #1a4d2e !important; 
+        font-size: 7.5pt !important;
+        padding: 5px 2px !important;
         line-height: 1 !important;
-        white-space: nowrap !important; /* Impede a quebra da coluna Etapa */
     }
 
-    /* Garante que o ícone e o texto da Etapa fiquem alinhados */
-    .flow-header-row th:first-child {
-        min-width: 65px !important;
-    }
+    .flow-header-row th:first-child { min-width: 65px !important; }
 
     .activity-row-card td, .obs-row td {
-        background: white !important; border: 1px solid #eee !important;
-        font-size: 8pt !important; padding: 6px 4px !important;
+        background: white !important; 
+        border: 1px solid #eee !important;
+        font-size: 8pt !important; 
+        padding: 6px 4px !important;
     }
 
     .activity-row-card, .obs-row { break-inside: avoid !important; }
 
-    .activity-row-card td.highlight-col { background: #f4f4f4 !important; color: #000 !important; }
+    .activity-row-card td.highlight-col { background: #f9f9f9 !important; color: #000 !important; }
 
-    .obs-row td::before { content: "• "; color: #1a4d2e; font-weight: bold; }
-
-    .pill {
-        font-size: 7pt !important; border: 1px solid #ccc !important;
-        background: #f9f9f9 !important; padding: 2px 5px !important;
-        display: inline-block !important;
+    /* Estilo para as bolhas de etapa no print */
+    .step-bubble {
+        border: none !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact !important;
     }
 
     .show-print { display: inline !important; }
@@ -95,7 +188,9 @@
     #editor-toggle, 
     #presentation-controls, 
     .toolbar-bubble,
-    .btn-group {
+    .btn-group,
+    .toolbar-master-container,
+    .flow-controls {
         display: none !important;
     }
 }
