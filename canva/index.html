@@ -9,15 +9,26 @@
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/toolbar.css">
     <link rel="stylesheet" href="css/print.css">
-    <link rel="stylesheet" href="css/print-page-numbers.css"> <!-- Novo arquivo adicionado -->
+    <link rel="stylesheet" href="css/print-page-numbers.css">
     <link rel="stylesheet" href="css/presentation.css">
     <link rel="stylesheet" href="css/steps.css">
     <link rel="stylesheet" href="css/mobile.css" media="screen">
     <link rel="stylesheet" href="css/editor.css">
+
+    <!-- Paged.js para numeração incremental real -->
+    <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+    <script>
+        // Configuração para o Paged.js não alterar a tela enquanto você trabalha
+        window.PagedConfig = { auto: false };
+        
+        // Dispara o processamento do Paged.js apenas quando o usuário clica para imprimir
+        window.addEventListener('beforeprint', () => {
+            if (window.Paged) window.Paged.preview();
+        });
+    </script>
 </head>
 <body>
-
-    <!-- Estrutura Profissional de Impressão (PDF) -->
+    <!-- O restante do HTML permanece rigorosamente o mesmo -->
     <div class="print-header show-print">
         <div class="print-header-container">
             <div class="print-header-top">
@@ -59,13 +70,10 @@
         </div>
     </div>
 
-    <!-- TOOLBAR -->
     <div class="toolbar-master-container no-print">
         <h1 class="toolbar-main-title">Canvas de Processo Digital</h1>
-        
         <div class="toolbar-glass-bar">
             <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
-            
             <div class="toolbar-nav-group group-files">
                 <span class="toolbar-group-label">Gerenciamento de Arquivos</span>
                 <div class="toolbar-btn-cluster">
@@ -73,7 +81,6 @@
                     <button class="tlb-btn tlb-btn-export" onclick="persistence.exportCanvas()">Exportar</button>
                 </div>
             </div>
-
             <div class="toolbar-nav-group group-refs">
                 <span class="toolbar-group-label">Referências</span>
                 <div class="toolbar-btn-cluster">
@@ -81,7 +88,6 @@
                     <button class="tlb-btn tlb-btn-example" onclick="template.downloadExample()">Exemplo</button>
                 </div>
             </div>
-
             <div class="toolbar-nav-group group-share">
                 <span class="toolbar-group-label">Compartilhamento</span>
                 <div class="toolbar-btn-cluster">
@@ -89,7 +95,6 @@
                     <button class="tlb-btn tlb-btn-share" onclick="share.generateShareLink()">🔗 Link</button>
                 </div>
             </div>
-
             <div class="toolbar-nav-group group-pres">
                 <span class="toolbar-group-label">Apresentação</span>
                 <div class="toolbar-btn-cluster">
@@ -103,7 +108,6 @@
         <div class="process-title-header">
             <h1 id="val-nome">Nome do Processo</h1>
         </div>
-
         <div class="header-dashboard">
             <div class="meta-side">
                 <div class="meta-card-row">
@@ -127,7 +131,6 @@
                     <div class="meta-card-value" id="val-objetivo">---</div>
                 </div>
             </div>
-            
             <div class="counter-side">
                 <div class="activity-counter-card">
                     <span class="counter-number" id="val-total-atividades">0</span>
@@ -135,9 +138,7 @@
                 </div>
             </div>
         </div>
-
         <div class="survey-card-list" id="survey-container"></div>
-
         <div class="flow-section-header">
             <span>DETALHAMENTO DO FLUXO</span>
             <div class="flow-controls no-print">
@@ -145,7 +146,6 @@
                 <button class="btn-step-control" onclick="renderer.toggleAllSteps(false)">📁 Recolher Tudo</button>
             </div>
         </div>
-        
         <div class="flow-container">
             <table class="flow-table-styled">
                 <thead>
@@ -178,7 +178,6 @@
             if(urlEl) urlEl.innerText = window.location.href.split('#')[0];
         });
     </script>
-
     <script src="js/parser.js"></script>
     <script src="js/renderer.js"></script>
     <script src="js/persistence.js"></script>

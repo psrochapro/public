@@ -1,78 +1,55 @@
-@media print {
-    /* 1. Garante que o rodapé apareça e seja fixado na base de cada página */
-    .print-footer.show-print {
-        display: block !important;
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        background: white !important;
-        z-index: 9999;
-        height: auto !important;
-    }
-
-    /* 2. Linha divisória discreta */
-    .print-footer .print-line-divider {
-        display: block !important;
-        border: none !important;
-        border-top: 0.5pt solid #eee !important;
-        margin: 0 10mm 2mm 10mm !important;
-    }
-
-    /* 3. Container Flexível: URL à esquerda e Página à direita na mesma linha */
-    .print-footer-container {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important; /* Alinha verticalmente no centro */
-        padding: 0 10mm 5mm 10mm !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    /* 4. URL discreta à esquerda */
-    .print-footer-url {
-        display: inline-block !important;
-        font-size: 7pt !important;
-        color: #999 !important;
-        font-family: sans-serif !important;
-        text-decoration: none !important;
-    }
-
-    /* 5. Bloco de numeração à direita */
-    .print-page-count {
-        display: inline-block !important;
-        font-size: 8pt !important;
-        color: #666 !important;
-        white-space: nowrap !important; /* Impede quebra de linha */
-        text-align: right !important;
-    }
-
-    /* 6. O NÚMERO: Deve ser inline para ficar ao lado da palavra 'Página' */
-    .page-num {
-        display: inline !important; /* CORREÇÃO: Não quebra mais linha */
-        margin-left: 2px !important;
-    }
-
-    /* 7. Lógica do Contador */
-    body {
-        counter-reset: page;
-    }
-
-    .page-num::after {
-        counter-increment: page;
-        content: counter(page);
-    }
-
-    /* 8. Ajuste de margem do conteúdo para não encostar no rodapé */
-    .glass-container {
-        padding-bottom: 20mm !important;
+/* 1. PROTEÇÃO DE TELA: Impede que o Paged.js quebre o Editor e a Toolbar */
+@media screen {
+    .pagedjs_pages, .pagedjs_interface {
+        display: none !important;
     }
 }
 
-/* Oculta completamente na tela do navegador */
-@media screen {
-    .print-footer.show-print {
+/* 2. REGRAS DE IMPRESSÃO PROFISSIONAL */
+@media print {
+    /* Esconde o conteúdo original para mostrar apenas a versão paginada do Paged.js */
+    body > *:not(.pagedjs_pages):not(.pagedjs_interface) {
         display: none !important;
     }
+
+    @page {
+        size: A4;
+        margin: 15mm 10mm 20mm 10mm;
+
+        /* Paged.js coloca a numeração real aqui no rodapé direito */
+        @bottom-right {
+            content: "Página " counter(page);
+            font-family: sans-serif;
+            font-size: 8pt;
+            color: #666;
+            padding-bottom: 5mm;
+        }
+
+        /* Opcional: Coloca a URL no rodapé esquerdo */
+        @bottom-left {
+            content: "Canvas de Processo Digital";
+            font-family: sans-serif;
+            font-size: 7pt;
+            color: #999;
+            padding-bottom: 5mm;
+        }
+    }
+
+    /* Estilização dos elementos dentro do Paged.js */
+    .pagedjs_page_content .glass-container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Mantém as quebras de página limpas */
+    .meta-card-row, .survey-card, .activity-row-card {
+        break-inside: avoid !important;
+    }
+}
+
+/* Esconde o rodapé estático do HTML para não duplicar com o do Paged.js */
+.print-footer.show-print {
+    display: none !important;
 }
