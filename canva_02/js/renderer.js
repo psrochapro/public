@@ -1,0 +1,121 @@
+const renderer = {
+    config: [
+        { id: 'atores', label: 'Atores Envolvidos', icon: '👥', desc: 'Participantes que desempenham atividades.' },
+        { id: 'entradas', label: 'Principais Entradas', icon: '📥', desc: 'Fatos ou materiais que iniciam o processo.' },
+        { id: 'saidas', label: 'Principais Saídas', icon: '📤', desc: 'Resultados gerados (documentos, formulários).' },
+        { id: 'interessados', label: 'Interessados', icon: '👤', desc: 'Beneficiários que recebem os resultados.' },
+        { id: 'normas', label: 'Leis e Normas Aplicadas', icon: '⚖️', desc: 'Leis ou normas que disciplinam a execução.' },
+        { id: 'lgpd', label: 'Gestão LGPD', icon: '🛡️', desc: 'Dados pessoais envolvidos no processo.' },
+        { id: 'recursos', label: 'Recursos Tecnológicos', icon: '💻', desc: 'Sistemas e ferramentas de apoio.' },
+        { id: 'documentos', label: 'Gestão Documental CPAD', icon: '📄', desc: 'Documentos e temporalidade de guarda.' },
+        { id: 'sgpe', label: 'Parâmetros SGPE', icon: '⌨️', desc: 'Assunto, Classe e Sigilo definidos.' },
+        { id: 'indicadores', label: 'Indicadores de Performance', icon: '📊', desc: 'Métricas de resultado do processo.' },
+        { id: 'gatilho', label: 'Gatilho de Início', icon: '☝️', desc: 'Evento exato que dispara o processo.' }
+    ],
+
+    render(data) {
+        // 1. Cabeçalho e Metadados
+        document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
+        document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
+        document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
+        document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
+        document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
+
+        // 2. Contador de Atividades
+        const totalAtividades = data.fluxo ? data.fluxo.length : 0;
+        document.getElementById('val-total-atividades').innerText = totalAtividades;
+
+        // 3. Cards de Levantamento (11 itens)
+        const surveyContainer = document.getElementById('survey-container');
+        surveyContainer.innerHTML = '';
+        
+        this.config.forEach((item, index) => {
+            let rawData = data[item.id] || data[item.id.replace('saidas', 'saídas')] || [];
+            let itemsToRender = [];
+            rawData.forEach(line => itemsToRender.push(...line.split(',').map(p => p.trim()).filter(p => p !== "")));
+            
+            const semanticStyle = {
+                'lgpd': 'background-color: #e3f2fd; border-color: #bbdefb;',
+                'normas': 'background-color: #fff3e0; border-color: #ffe0b2;',
+                'entradas': 'background-color: #e8f5e9; border-color: #c8e6c9;',
+                'saidas': 'background-color: #fce4ec; border-color: #f8bbd0;',
+                'indicadores': 'background-color: #f3e5f5; border-color: #e1bee7;'
+            }[item.id] || '';
+
+            const pillsHtml = itemsToRender.map(txt => `<span class="pill" style="${semanticStyle}">${txt}</span>`).join('');
+            
+            surveyContainer.innerHTML += `
+                <div class="survey-card" data-survey-id="${item.id}">
+                    <div class="card-info-side">
+                        <div class="card-num">${(index + 1).toString().padStart(2, '0')}</div>
+                        <div class="card-icon-box">${item.icon}</div>
+                        <div class="card-text-content">
+                            <div class="card-item-name">${item.label}</div>
+                            <div class="card-item-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <div class="card-responses-side">
+                        <div class="pill-container">${pillsHtml || '<span style="color:#ccc">---</span>'}</div>
+                    </div>
+                </div>`;
+        });
+
+        // 4. Linhas de Fluxo (SIPOC + Regras)
+        const flowItemsContainer = document.getElementById('flow-items-container');
+        flowItemsContainer.innerHTML = '';
+        if (data.fluxo) {
+            data.fluxo.forEach((item, index) => {
+                // ALTERAÇÃO: Prioriza o número capturado no texto, senão usa o sequencial como fallback
+                const activityId = (item.numero || (index + 1)).toString().padStart(3, '0');
+                const stepValue = parseInt(item.etapa) || 1;
+                const stepColorClass = `step-b${((stepValue - 1) % 5) + 1}`;
+                
+                const regraHtml = item.regra ? `<div class="regra-box"><strong>Lógica:</strong> ${item.regra}</div>` : '';
+                
+                flowItemsContainer.innerHTML += `
+                    <tr class="activity-row-card" data-etapa="${item.etapa}">
+                        <td>
+                            <div class="step-col-container">
+                                <div class="step-bubble ${stepColorClass}">${item.etapa || '-'}</div>
+                                <div class="activity-tag">${activityId}</div>
+                            </div>
+                        </td>
+                        <td>${item.fornecedor || ''}</td>
+                        <td>${item.insumos || ''}</td>
+                        <td class="actor-cell"><span class="actor-badge">${item.ator || ''}</span></td>
+                        <td class="highlight-col">
+                            <div class="act-main-text">${item.atividades || ''}</div>
+                            ${regraHtml}
+                        </td>
+                        <td>${item.saídas || item.saidas || ''}</td>
+                        <td>${item.cliente || ''}</td>
+                    </tr>`;
+            });
+        }
+
+        // 5. Seção de Observações (Estrutura de Tabela para o PDF)
+        const obsContainer = document.getElementById('obs-section-container');
+        if (data.observacoes && data.observacoes.length > 0) {
+            const obsRowsHtml = data.observacoes.map(o => `
+                <tr class="obs-row">
+                    <td>${o}</td>
+                </tr>
+            `).join('');
+
+            obsContainer.innerHTML = `
+                <table class="obs-table-styled">
+                    <thead>
+                        <tr>
+                            <th>📝 Observações Gerais</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${obsRowsHtml}
+                    </tbody>
+                </table>
+            `;
+        } else {
+            obsContainer.innerHTML = '';
+        }
+    }
+};
