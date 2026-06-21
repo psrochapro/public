@@ -1,3 +1,9 @@
+/* 
+   ARQUIVO: css/print.css
+   FUNÇÃO: Formatação para PDF/Impressão.
+   VERSÃO: 07 (Correção de Vendor Prefix e Ajuste Fino de Rodapé)
+*/
+
 @media print {
     /* Reset Global e Proteção de Margens */
     * { 
@@ -6,42 +12,39 @@
         print-color-adjust: exact !important; 
     }
     
-    body { 
+    html, body { 
         background: white !important; 
-        padding: 0; 
-        margin: 0; 
-        width: 100%; 
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
         counter-reset: page;
     }
     
-    /* Configuração de Página Física */
+    /* Configuração de Página Física - Espaço para o rodapé fixo */
     @page {
-        margin: 15mm 10mm 20mm 10mm;
+        margin: 10mm 10mm 25mm 10mm;
+        size: auto;
     }
 
     .glass-container { 
-        box-shadow: none !important; 
         border: none !important; 
-        backdrop-filter: none !important; 
         background: white !important; 
         padding: 0 !important; 
         margin: 0 !important;
-        width: 100% !important; 
+        width: 100% !important;
         max-width: 100% !important;
+        /* Padding inferior para o conteúdo não bater no rodapé */
+        padding-bottom: 20mm !important; 
+        display: block !important;
     }
 
-    /* 1. Cabeçalho de Impressão: Título Centralizado */
+    /* 1. Cabeçalho: Título Centralizado */
     .print-header {
         display: block !important;
         width: 100%;
         text-align: center;
-        margin-bottom: 10mm;
-    }
-
-    .print-header-top {
-        display: flex;
-        justify-content: center;
-        width: 100%;
+        margin-bottom: 5mm;
+        padding-top: 5mm;
     }
 
     .print-app-title {
@@ -51,146 +54,138 @@
         text-transform: uppercase;
     }
 
-    .print-line-divider {
-        height: 1px;
-        background: #eee;
-        margin: 5px 0;
-        width: 100%;
-    }
-
     .process-title-header h1 { 
-        font-size: 1.4rem !important; 
-        margin-top: 0; 
+        font-size: 1.3rem !important; 
+        margin: 10px 0 !important; 
         color: #1a4d2e !important; 
         text-align: center;
     }
 
-    /* 2. Rodapé de Impressão (Posicionamento Fixo) */
+    /* 2. Rodapé: Posicionamento fixo com margem de segurança */
     .print-footer {
         display: block !important;
         position: fixed;
-        bottom: 0;
+        bottom: 5mm; 
         left: 0;
         width: 100%;
         background: white;
-        padding-top: 5px;
+        height: 10mm;
+        border-top: 1px solid #eee;
+        z-index: 9999;
     }
 
     .print-footer-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 7pt !important;
+        font-size: 8pt !important;
         color: #666 !important;
-        padding: 0 5mm;
+        padding: 2mm 10mm 0 10mm;
     }
 
-    /* Numeração de Páginas Automática */
+    /* Numeração de Páginas */
     .page-num::after {
         counter-increment: page;
         content: counter(page);
     }
     
-    /* Oculta o total (Y) pois navegadores não suportam nativamente sem JS de print */
-    .page-total, .print-page-count span:nth-child(2) {
-        display: none;
+    /* Oculta o "de" e o total por limitação técnica de CSS puro em navegadores */
+    .print-page-count span:last-child,
+    .page-total {
+        display: none !important;
     }
 
-    /* 3. Dashboard e Metadados */
+    /* 3. Dashboard */
     .header-dashboard { 
         display: grid !important; 
-        grid-template-columns: 1fr 130px !important; 
-        gap: 8px !important; 
+        grid-template-columns: 1fr 140px !important; 
+        gap: 10px !important; 
         margin-bottom: 15px; 
-        width: 100% !important;
     }
     
-    .meta-card-row { background: white !important; border: 1px solid #eee !important; flex: 1; }
-    
-    .meta-card-value { 
-        font-size: 0.7rem !important; 
-        line-height: 1.2 !important;
-        padding: 4px 8px !important;
-    }
+    .meta-card-row { background: white !important; border: 1px solid #ddd !important; }
+    .meta-card-value { font-size: 0.75rem !important; padding: 5px 10px !important; }
 
     .activity-counter-card { 
-        background: #fdfdfd !important; 
-        color: #1a4d2e !important; 
         border: 2px solid #1a4d2e !important;
-        border-radius: 10px !important; 
-        display: flex !important; 
+        border-radius: 12px !important; 
+        height: 100% !important;
+        display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important; 
+        justify-content: center !important;
         align-items: center !important;
     }
     
-    .counter-number { font-size: 2.2rem !important; line-height: 1; }
-    .counter-label { font-size: 0.6rem !important; }
+    .counter-number { font-size: 2.5rem !important; font-weight: 900 !important; line-height: 1; }
 
     /* 4. Levantamento (Cards 01 a 11) */
     .survey-card { 
-        grid-template-columns: 280px 1fr !important; 
-        background: white !important; 
+        grid-template-columns: 220px 1fr !important; 
         border: 1px solid #ddd !important; 
         break-inside: avoid !important;
-        width: 100% !important; 
-        margin-bottom: 5px !important;
+        margin-bottom: 4px !important;
+        width: 100% !important;
     }
 
-    /* 5. RESTAURAÇÃO DAS CORES DAS PÍLULAS */
+    /* 5. Cores das Pílulas (Compatibilidade Total) */
     .pill {
-        font-size: 7pt !important; 
+        font-size: 7.5pt !important; 
         border: 1px solid rgba(0,0,0,0.1) !important;
         padding: 2px 6px !important;
+        margin: 1px !important;
         display: inline-block !important;
-        /* Removemos o fundo cinza fixo para permitir as cores do renderer.js */
-        font-weight: bold !important;
+        font-weight: 700 !important;
         color: #000 !important;
+        border-radius: 10px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
-    /* 6. Tabelas e Fluxo */
-    .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
+    /* 6. Tabelas de Fluxo */
+    .flow-table-styled {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+    }
 
-    .flow-header-row th, .obs-table-styled th {
+    .flow-header-row th {
         background: #f2f2f2 !important; 
         color: #1a4d2e !important;
-        border-bottom: 2px solid #1a4d2e !important; 
+        border: 1px solid #ddd !important;
         font-size: 7.5pt !important;
-        padding: 5px 2px !important;
-        line-height: 1 !important;
+        padding: 6px 2px !important;
     }
 
-    .flow-header-row th:first-child { min-width: 65px !important; }
-
-    .activity-row-card td, .obs-row td {
-        background: white !important; 
+    .activity-row-card td {
         border: 1px solid #eee !important;
         font-size: 8pt !important; 
         padding: 6px 4px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
 
-    .activity-row-card, .obs-row { break-inside: avoid !important; }
+    .activity-row-card { break-inside: avoid !important; }
 
-    .activity-row-card td.highlight-col { background: #f9f9f9 !important; color: #000 !important; }
+    .activity-row-card td.highlight-col { 
+        background: #f9f9f9 !important; 
+        border-left: 3px solid #1a4d2e !important;
+    }
 
     /* Estilo para as bolhas de etapa no print */
     .step-bubble {
-        border: none !important;
         color: white !important;
+        font-weight: bold !important;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
-    .show-print { display: inline !important; }
+    /* Visibilidade */
+    .show-print { display: inline-block !important; }
     .hide-print { display: none !important; }
 
-    /* Ocultar Elementos de Software */
-    #editor-container, 
-    #editor-toggle, 
-    #presentation-controls, 
-    .toolbar-bubble,
-    .btn-group,
-    .toolbar-master-container,
-    .flow-controls {
+    /* Ocultar UI de Software */
+    #editor-container, #editor-toggle, #presentation-controls, 
+    .toolbar-master-container, .flow-controls, #fileInput {
         display: none !important;
     }
 }
