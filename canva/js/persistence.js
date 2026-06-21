@@ -12,25 +12,30 @@ const persistence = {
         const headerTags = ['nome', 'objetivo', 'macroprocesso', 'area', 'dono'];
         headerTags.forEach(tag => {
             const el = document.getElementById(`val-${tag}`);
-            if (el && el.innerText !== "---") {
-                content += `#${tag} ${el.innerText}\n`;
+            if (el && el.textContent.trim() !== "---") {
+                // Usamos textContent para ignorar transformações de CSS (uppercase)
+                content += `#${tag} ${el.textContent.trim()}\n`;
             }
         });
         content += "\n";
 
         // 2. Cards de Levantamento (Os 11 itens de survey)
         const surveyCards = document.querySelectorAll('.survey-card');
+        let surveySection = "";
         renderer.config.forEach((conf, idx) => {
             const card = surveyCards[idx];
             if (card) {
-                const pills = Array.from(card.querySelectorAll('.pill')).map(p => p.innerText);
+                const pills = Array.from(card.querySelectorAll('.pill')).map(p => p.textContent.trim());
                 if (pills.length > 0 && pills[0] !== "---") {
-                    content += `#${conf.id} ${pills.join(', ')}\n\n`;
+                    surveySection += `#${conf.id} ${pills.join(', ')}\n`;
                 }
             }
         });
+        if (surveySection) {
+            content += surveySection + "\n";
+        }
 
-        // 3. Dicionário de Etapas (#etapas) - Posicionado após os 11 itens
+        // 3. Dicionário de Etapas (#etapas)
         const stepHeaders = document.querySelectorAll('.step-header-row');
         if (stepHeaders.length > 0) {
             content += "#etapas\n";
@@ -39,7 +44,7 @@ const persistence = {
                 const nameEl = header.querySelector('.step-name-text');
                 if (nameEl) {
                     // Remove o caractere ":" inicial se existir para exportação limpa
-                    const name = nameEl.innerText.replace(/^:\s*/, '').trim();
+                    const name = nameEl.textContent.replace(/^:\s*/, '').trim();
                     content += `${num}: ${name}\n`;
                 }
             });
@@ -55,24 +60,26 @@ const persistence = {
                 const regraEl = cells[4].querySelector('.regra-box');
                 let regraTxt = "";
                 if (regraEl) {
-                    regraTxt = regraEl.innerText.replace(/^Lógica:\s*/i, '').trim();
+                    regraTxt = regraEl.textContent.replace(/^Lógica:\s*/i, '').trim();
                 }
 
-                // Captura o ID da Atividade limpando tags HTML
-                const activityId = row.querySelector('.activity-tag').innerText;
+                // Captura o ID da Atividade e remove preenchimento de zeros (001 -> 1)
+                let activityId = row.querySelector('.activity-tag').textContent.trim();
+                activityId = activityId.replace(/^0+/, ''); 
+
                 const etapaNum = row.getAttribute('data-etapa') || "1";
 
                 content += `#atividade ${activityId}\n`;
                 content += `Etapa: ${etapaNum}\n`;
-                content += `Fornecedor: ${cells[1].innerText}\n`;
-                content += `Insumos: ${cells[2].innerText}\n`;
-                content += `Ator: ${cells[3].innerText}\n`;
-                content += `Atividades: ${cells[4].querySelector('.act-main-text').innerText}\n`;
+                content += `Fornecedor: ${cells[1].textContent.trim()}\n`;
+                content += `Insumos: ${cells[2].textContent.trim()}\n`;
+                content += `Ator: ${cells[3].textContent.trim()}\n`;
+                content += `Atividades: ${cells[4].querySelector('.act-main-text').textContent.trim()}\n`;
                 if (regraTxt && regraTxt !== "" && regraTxt !== "N/A") {
                     content += `Regra: ${regraTxt}\n`;
                 }
-                content += `Saídas: ${cells[5].innerText}\n`;
-                content += `Cliente: ${cells[6].innerText}\n\n`;
+                content += `Saídas: ${cells[5].textContent.trim()}\n`;
+                content += `Cliente: ${cells[6].textContent.trim()}\n\n`;
             }
         });
 
@@ -81,7 +88,7 @@ const persistence = {
         if (obsItems.length > 0) {
             content += `#observacoes\n`;
             obsItems.forEach(td => {
-                content += `${td.innerText}\n`;
+                content += `${td.textContent.trim()}\n`;
             });
         }
 
@@ -106,7 +113,8 @@ const persistence = {
         const a = document.createElement('a');
         a.href = url;
         
-        let nomeProc = document.getElementById('val-nome').innerText
+        // Para o nome do arquivo, mantemos o tratamento de caracteres especiais
+        let nomeProc = document.getElementById('val-nome').textContent
             .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
             .replace(/\s+/g, '-')
             .toLowerCase();
