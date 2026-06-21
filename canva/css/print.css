@@ -1,29 +1,32 @@
 /* 
    ARQUIVO: css/print.css
    FUNÇÃO: Configurações exclusivas para Impressão e PDF.
-   VERSÃO: 10 (Correção Definitiva de Numeração e Proteção de Conteúdo)
+   VERSÃO: 12 (Correção Final: Numeração de Página e Ajuste de Espaçamentos)
 */
 
 @media print {
-    /* Reset Global */
+    /* 1. Configurações de Página e Reset */
     * { 
         box-sizing: border-box !important; 
         -webkit-print-color-adjust: exact !important; 
         print-color-adjust: exact !important; 
     }
     
+    html { 
+        /* Reinicia o contador no HTML para garantir que o incremento ocorra por folha */
+        counter-reset: page; 
+    }
+
     body { 
         background: white !important; 
         margin: 0; 
         padding: 0; 
         width: 100%; 
-        /* Reinicia o contador no body para que o navegador controle o incremento por folha física */
-        counter-reset: page; 
     }
     
     @page {
-        /* Margem de 20mm no rodapé garante que o conteúdo pare antes de chegar no footer fixed */
-        margin: 15mm 10mm 20mm 10mm;
+        /* Margem inferior de 25mm para isolar completamente o rodapé do conteúdo */
+        margin: 10mm 10mm 25mm 10mm;
     }
 
     .glass-container { 
@@ -31,19 +34,19 @@
         border: none !important; 
         backdrop-filter: none !important; 
         background: white !important; 
-        padding: 0 5mm 0 5mm !important; 
+        padding: 0 5mm !important; 
         width: 100% !important; 
         max-width: 100% !important; 
         margin: 0 !important;
         display: block !important;
     }
 
-    /* 1. Cabeçalho de Impressão */
+    /* 2. Cabeçalho (Remoção de espaços inúteis) */
     .print-header {
         display: block !important;
         text-align: center;
         width: 100%;
-        margin-bottom: 5mm;
+        margin-bottom: 2mm; /* Reduzido para evitar o buraco no topo */
     }
 
     .print-app-title {
@@ -55,28 +58,30 @@
 
     .print-line-divider {
         width: 100%;
-        border-bottom: 1.5pt solid #1a4d2e !important;
-        margin: 2px 0 8px 0;
-        opacity: 0.5;
+        border-bottom: 1pt solid #1a4d2e !important;
+        margin: 2px 0 5px 0;
+        opacity: 0.4;
     }
 
     .process-title-header h1 { 
         font-size: 1.4rem !important; 
-        margin-top: 2mm; 
+        margin: 0 0 5mm 0 !important; /* Espaço reduzido abaixo do título */
         color: #1a4d2e !important; 
         text-align: center;
-        margin-bottom: 10mm;
+        line-height: 1.1;
     }
 
-    /* 2. Rodapé Fixo (Posicionado no final da folha) */
+    /* 3. Rodapé Fixo (Posicionamento Preciso e Numeração) */
     .print-footer {
         display: block !important;
         position: fixed;
-        bottom: 0; 
+        bottom: -20mm; /* Fixado dentro da margem reservada pelo @page */
         left: 0;
         width: 100%;
+        height: 15mm;
         background: white !important;
-        height: 12mm;
+        /* Força o incremento do contador a cada página onde o footer é renderizado */
+        counter-increment: page;
         z-index: 9999;
     }
 
@@ -84,70 +89,75 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 2mm 10mm;
+        padding: 2mm 5mm;
         font-size: 8pt !important;
         color: #666 !important;
-        border-top: 0.5pt solid #ccc;
+        border-top: 0.5pt solid #ddd;
     }
 
-    /* 3. Numeração de Páginas Nativas */
-    /* Removido counter-increment manual: o counter(page) é automático no print fixed */
+    /* Exibição da Página */
     .page-num::after {
         content: counter(page);
     }
 
-    /* Dashboard e Metadados */
+    /* Ocultar elementos desnecessários para o PDF */
+    .page-total, .print-page-count::after {
+        display: none !important;
+    }
+
+    /* 4. Dashboard e Metadados */
     .header-dashboard { 
         display: grid !important; 
         grid-template-columns: 1fr 130px !important; 
         gap: 8px !important; 
-        margin-bottom: 15px; 
+        margin-bottom: 10mm; 
+        break-inside: avoid;
     }
     
-    .meta-card-row { border: 1px solid #ddd !important; }
-    .meta-card-value { font-size: 0.75rem !important; padding: 4px 8px !important; }
+    .meta-card-row { border: 1px solid #eee !important; margin-bottom: -1px; }
+    .meta-card-value { font-size: 0.75rem !important; padding: 3px 8px !important; }
 
     .activity-counter-card { 
-        border: 2px solid #1a4d2e !important; 
-        border-radius: 10px !important;
+        background: #fdfdfd !important;
+        border: 2pt solid #1a4d2e !important; 
+        border-radius: 8px !important;
         padding: 5px !important;
     }
     
-    .counter-number { font-size: 2.2rem !important; line-height: 1; }
+    .counter-number { font-size: 2.2rem !important; line-height: 1; color: #1a4d2e !important;}
 
-    /* Levantamento (Survey) */
+    /* 5. Levantamento (Survey) */
     .survey-card { 
         grid-template-columns: 260px 1fr !important; 
         background: white !important; 
         border: 1px solid #ddd !important; 
         break-inside: avoid !important;
-        margin-bottom: 5px !important;
+        margin-bottom: 3px !important;
     }
 
-    .card-info-side { padding: 5px 10px !important; }
+    .card-info-side { padding: 4px 8px !important; }
     .card-item-name { font-size: 0.75rem !important; }
+    .card-item-desc { font-size: 0.6rem !important; }
 
-    /* Tabelas de Fluxo */
-    .flow-table-styled thead { 
-        display: table-header-group !important; 
-    }
+    /* 6. Tabelas de Fluxo */
+    .flow-table-styled thead { display: table-header-group !important; }
 
     .flow-header-row th {
-        background: #f8f8f8 !important; 
+        background: #f4f4f4 !important; 
         color: #1a4d2e !important;
         border-bottom: 2pt solid #1a4d2e !important; 
-        font-size: 8pt !important;
-        padding: 6px 2px !important;
+        font-size: 7.5pt !important;
+        padding: 5px 2px !important;
     }
 
     .activity-row-card td, .obs-row td {
         background: white !important; 
         border: 0.5pt solid #eee !important;
-        font-size: 8.5pt !important; 
-        padding: 8px 5px !important;
+        font-size: 8pt !important; 
+        padding: 6px 4px !important;
     }
 
-    /* PROTEÇÃO DE QUEBRA: Impede que o navegador corte uma linha ao meio */
+    /* Proteção contra cortes de linha */
     .activity-row-card, .obs-row, .step-header-row, .survey-card, .header-dashboard { 
         break-inside: avoid !important; 
         page-break-inside: avoid !important;
@@ -155,11 +165,19 @@
 
     .activity-row-card td.highlight-col { background: #fafafa !important; }
 
-    /* Exibição condicional */
+    /* Estilos de Pílulas no PDF */
+    .pill {
+        font-size: 7pt !important; 
+        border: 1px solid #ccc !important;
+        padding: 1px 4px !important;
+        font-weight: bold !important;
+    }
+
+    /* Utilitários */
     .show-print { display: block !important; }
     .hide-print { display: none !important; }
 
-    /* Ocultar elementos de tela */
+    /* Elementos Ocultos na Impressão */
     #editor-container, 
     #editor-toggle, 
     #presentation-controls, 
