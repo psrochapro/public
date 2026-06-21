@@ -23,7 +23,7 @@
         border: none !important; 
         backdrop-filter: none !important; 
         background: white !important; 
-        padding: 0 5mm 15mm 5mm !important; 
+        padding: 0 5mm 10mm 5mm !important; 
         width: 100% !important; 
         max-width: 100% !important; 
         margin: 0 !important;
@@ -35,7 +35,7 @@
         text-align: center;
         width: 100%;
         margin-bottom: 4mm;
-        border-bottom: 0.5pt solid #1a4d2e !important; /* Linha divisória no lugar da URL */
+        border-bottom: 0.5pt solid #1a4d2e !important;
         padding-bottom: 2mm;
     }
 
@@ -49,18 +49,63 @@
 
     .process-title-header h1 { 
         font-size: 1.2rem !important; 
-        margin: 4mm 0 2mm 0 !important; /* Respiros mínimos estéticos */
+        margin: 4mm 0 2mm 0 !important;
         color: #1a4d2e !important; 
         text-align: center;
         line-height: 1.2;
     }
 
-    /* Ocultar explicitamente qualquer texto de rodapé/url que tenha sobrado no HTML */
+    /* Ocultar Rodapé e URL */
     .print-footer, .print-footer-container, .page-num {
         display: none !important;
     }
 
-    /* 2. Cores das Pílulas */
+    /* 2. Dashboard e Alinhamento das Caixas */
+    .header-dashboard { 
+        display: grid !important; 
+        grid-template-columns: 1fr 130px !important; 
+        gap: 8px !important; 
+        margin-bottom: 15px; 
+        width: 100% !important;
+        align-items: stretch !important; /* Faz a caixa da direita crescer com a da esquerda */
+    }
+    
+    .meta-card-row { 
+        background: white !important; 
+        border: 1px solid #eee !important; 
+        display: flex !important;
+        height: auto !important; /* Permite expansão vertical */
+        min-height: 30px !important;
+    }
+    
+    .meta-card-value { 
+        font-size: 0.7rem !important;
+        line-height: 1.2 !important;
+        padding: 6px 8px !important;
+        height: auto !important;
+        display: block !important; /* Garante que o texto comece do topo */
+        overflow: visible !important;
+        text-align: left !important;
+    }
+
+    .activity-counter-card { 
+        background: #fdfdfd !important; 
+        color: #1a4d2e !important; 
+        border: 2px solid #1a4d2e !important; 
+        box-shadow: none !important;
+        border-radius: 10px !important; 
+        padding: 5px !important;
+        height: 100% !important; /* Ocupa toda a altura do grid */
+        display: flex !important; 
+        flex-direction: column !important;
+        justify-content: center !important; 
+        align-items: center !important;
+    }
+    
+    .counter-number { font-size: 2.2rem !important; line-height: 1; color: #1a4d2e !important; }
+    .counter-label { font-size: 0.6rem !important; color: #1a4d2e !important; font-weight: bold; }
+
+    /* 3. Pílulas e Cards de Atividades */
     .pill {
         font-size: 7pt !important; 
         border: 1px solid #ccc !important;
@@ -69,36 +114,6 @@
         font-weight: bold !important;
         background-color: transparent;
     }
-
-    /* Restante do Layout Base Preservado */
-    .header-dashboard { 
-        display: grid !important; 
-        grid-template-columns: 1fr 130px !important; 
-        gap: 8px !important; 
-        margin-bottom: 15px; 
-        width: 100% !important;
-        align-items: stretch !important;
-    }
-    
-    .meta-card-row { background: white !important; border: 1px solid #eee !important; flex: 1; }
-    
-    .meta-card-value { 
-        font-size: 0.7rem !important;
-        line-height: 1.2 !important;
-        padding: 4px 8px !important;
-    }
-
-    .activity-counter-card { 
-        background: #fdfdfd !important; color: #1a4d2e !important; 
-        border: 2px solid #1a4d2e !important; box-shadow: none !important;
-        border-radius: 10px !important; padding: 5px !important;
-        height: 100% !important;
-        display: flex !important; flex-direction: column !important;
-        justify-content: center !important; align-items: center !important;
-    }
-    
-    .counter-number { font-size: 2.2rem !important; line-height: 1; }
-    .counter-label { font-size: 0.6rem !important; color: #1a4d2e !important; }
 
     .survey-card { 
         grid-template-columns: 280px 1fr !important; 
@@ -116,14 +131,9 @@
     .flow-header-row th, .obs-table-styled th {
         background: #f2f2f2 !important; color: #1a4d2e !important;
         border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
-        text-transform: none !important; 
         padding: 5px 2px !important;
         line-height: 1 !important;
         white-space: nowrap !important;
-    }
-
-    .flow-header-row th:first-child {
-        min-width: 65px !important;
     }
 
     .activity-row-card td, .obs-row td {
@@ -140,6 +150,7 @@
     .show-print { display: inline !important; }
     .hide-print { display: none !important; }
 
+    /* Elementos Ocultos */
     #editor-container, 
     #editor-toggle, 
     #presentation-controls, 
