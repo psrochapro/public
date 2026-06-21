@@ -80,7 +80,7 @@
     box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-/* Cores dos Botões Conforme Referência */
+/* Cores dos Botões */
 .tlb-btn-import { background: #5c8ae6; }
 .tlb-btn-export { background: #edbf47; }
 .tlb-btn-template { background: #6aa84f; }
@@ -89,11 +89,10 @@
 .tlb-btn-share { background: #4ba8b8; }
 .tlb-btn-pres { background: #e67e22; }
 
-@media screen and (max-width: 1024px) {
-    .toolbar-glass-bar {
-        flex-wrap: wrap;
-    }
-    .toolbar-nav-group {
-        flex: 1 1 45%;
-    }
+/* AJUSTE MOBILE: Apenas Apresentação acima */
+@media screen and (max-width: 768px) {
+    .toolbar-main-title { font-size: 1.2rem; }
+    .toolbar-glass-bar { padding: 10px; }
+    .group-files, .group-refs, .group-share { display: none !important; }
+    .group-pres { flex: 1 1 100%; }
 }

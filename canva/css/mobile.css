@@ -1,54 +1,103 @@
+/* 
+   ARQUIVO: css/mobile.css
+   FUNÇÃO: Responsividade e ajustes de transbordamento.
+*/
+
 @media screen and (max-width: 768px) {
-    body { padding: 10px; }
-
-    /* Toolbar Mobile */
-    .toolbar-master-container { margin: 5px 0 15px 0; }
-    .toolbar-main-title { font-size: 1.2rem; }
     
-    .toolbar-glass-bar {
+    /* Prevenir transbordamento lateral global */
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    /* OCULTAR EDITOR E LINGUETA NO MOBILE */
+    #editor-container, #editor-toggle {
+        display: none !important;
+    }
+
+    .glass-container {
         padding: 10px;
+        margin: 5px auto;
+        width: 98%;
+        max-width: 100%;
+        box-sizing: border-box;
+        border-radius: 12px;
+    }
+
+    /* Ajuste de Título e Dashboard para caber na largura */
+    .process-title-header h1 {
+        font-size: 1.1rem;
+        word-wrap: break-word;
+        padding: 0 10px;
+    }
+
+    .header-dashboard {
+        grid-template-columns: 1fr;
         gap: 10px;
-        border-radius: 15px;
     }
 
-    .toolbar-nav-group {
-        flex: 1 1 100%; /* Grupos ocupam a largura total no mobile */
-        padding: 8px;
+    .meta-card-label {
+        width: 80px;
+        font-size: 0.6rem;
+        padding: 5px;
     }
 
-    .toolbar-group-label { font-size: 0.6rem; }
-    
-    .tlb-btn {
-        padding: 12px 5px;
+    .meta-card-value {
+        font-size: 0.75rem;
+        padding: 5px;
+    }
+
+    .counter-side {
+        height: 80px;
+    }
+
+    .counter-number {
+        font-size: 2.2rem;
+    }
+
+    .survey-card {
+        grid-template-columns: 1fr;
+    }
+
+    .card-info-side {
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* REVERSÃO DA TABELA DE FLUXO: Mantendo estrutura original mas com scroll lateral */
+    .flow-container {
+        width: 100%;
+        overflow-x: auto; /* Permite scroll se a tabela for larga, sem quebrar o layout */
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 20px;
+    }
+
+    .flow-table-styled {
+        min-width: 700px; /* Garante que as colunas não se esmaguem */
         font-size: 0.75rem;
     }
 
-    /* Ajustes Gerais */
-    .glass-container { padding: 15px; border-radius: 15px; }
-    .header-dashboard { grid-template-columns: 1fr; }
-    .meta-card-label { width: 100px; font-size: 0.65rem; }
-    .survey-card { grid-template-columns: 1fr; }
-    
-    /* Transformação da Tabela em Cards */
-    .flow-table-styled thead { display: none; }
-    .activity-row-card {
-        display: block;
-        margin-bottom: 15px;
-        border-radius: 12px !important;
-    }
-    .activity-row-card td {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px !important;
-        text-align: right !important;
-        border: none !important;
-        border-bottom: 1px solid #eee !important;
-    }
-    .activity-row-card td::before {
-        content: attr(data-label);
-        font-weight: 800;
-        text-align: left;
-        color: #1a4d2e;
+    .flow-header-row th {
+        padding: 8px 4px;
         font-size: 0.65rem;
+    }
+
+    .activity-row-card td {
+        padding: 8px 5px;
+    }
+
+    /* Observações Gerais */
+    .obs-table-styled {
+        width: 100%;
+    }
+    
+    .obs-row td {
+        font-size: 0.75rem;
+        padding: 10px;
+        word-break: break-word;
     }
 }

@@ -1,11 +1,25 @@
+/* 
+   ARQUIVO: css/print.css
+   FUNÇÃO: Estilo de impressão e PDF com paginação X/Y.
+*/
+
 @media print {
-    /* Reset Global */
-    * { box-sizing: border-box !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page {
+        margin: 20mm 10mm; /* Margem de segurança para evitar sobreposição */
+        size: auto;
+    }
+
+    * { 
+        box-sizing: border-box !important; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact; 
+    }
     
     body { 
         background: white !important; 
-        padding: 15mm 0 !important; /* Espaço para cabeçalho e rodapé fixos */
+        padding: 0;
         margin: 0; 
+        counter-reset: page; /* Inicializa o contador */
     }
     
     .glass-container { 
@@ -13,15 +27,15 @@
         background: white !important; padding: 0 !important; width: 100% !important; margin: 0 !important;
     }
 
-    /* Cabeçalho Fixo do PDF */
-    .print-only-header {
+    /* Cabeçalho Fixo (Aparece em todas as páginas) */
+    .print-header {
         position: fixed;
-        top: 0;
+        top: -15mm; /* Posicionado dentro da margem superior do @page */
         left: 0;
         width: 100%;
         border-bottom: 1px solid #ddd;
-        padding-bottom: 5px;
-        margin-bottom: 10mm;
+        padding-bottom: 2px;
+        display: block;
     }
 
     .print-header-content {
@@ -33,58 +47,48 @@
 
     .print-app-title {
         font-weight: 800;
-        font-size: 10pt;
+        font-size: 9pt;
         color: #1a4d2e;
         text-transform: uppercase;
     }
 
-    /* Numeração de Página Estilo X/Y */
-    .print-page-number::after {
-        content: "Página " counter(page);
+    /* Numeração de Página */
+    .print-page-count {
         font-size: 9pt;
         color: #666;
     }
 
-    /* Rodapé Fixo do PDF */
-    .print-only-footer {
+    .page-num::after {
+        content: counter(page); /* O navegador gerencia o número da página atual */
+    }
+
+    /* Rodapé Fixo (Aparece em todas as páginas) */
+    .print-footer {
         position: fixed;
-        bottom: 0;
+        bottom: -15mm; /* Posicionado dentro da margem inferior do @page */
         left: 0;
         width: 100%;
         border-top: 1px solid #ddd;
-        padding-top: 5px;
+        padding-top: 2px;
         text-align: center;
+        display: block;
     }
 
     .print-footer-url {
-        font-size: 8pt;
+        font-size: 7pt;
         color: #0056b3;
         font-family: monospace;
     }
 
-    /* Ajustes de Conteúdo */
-    .process-title-header h1 { font-size: 1.2rem !important; color: #1a4d2e !important; }
-    .header-dashboard { display: grid !important; grid-template-columns: 1fr 130px !important; gap: 8px !important; margin-bottom: 15px; }
-    .meta-card-row { background: white !important; border: 1px solid #eee !important; }
-    .meta-card-value { font-size: 0.7rem !important; padding: 4px 8px !important; }
-
-    .activity-counter-card { 
-        background: #fdfdfd !important; color: #1a4d2e !important; 
-        border: 2px solid #1a4d2e !important; padding: 5px !important;
-    }
-    
-    .counter-number { font-size: 2.2rem !important; }
-
-    .survey-card { 
-        grid-template-columns: 280px 1fr !important; 
-        background: white !important; border: 1px solid #ddd !important; 
-        break-inside: avoid !important; margin-bottom: 5px !important;
+    /* Ajustes para evitar quebra de elementos no meio da página */
+    .survey-card, .activity-row-card, .obs-row, .header-dashboard {
+        break-inside: avoid;
     }
 
-    .flow-header-row th { background: #f2f2f2 !important; color: #1a4d2e !important; font-size: 7.5pt !important; padding: 5px 2px !important; }
-    .activity-row-card td { background: white !important; border: 1px solid #eee !important; font-size: 8pt !important; }
-    .activity-row-card { break-inside: avoid !important; }
+    /* Ocultar Elementos de Interface */
+    .no-print, #editor-container, .toolbar-master-container, #presentation-controls, .btn-step-control {
+        display: none !important;
+    }
 
     .show-print { display: block !important; }
-    .no-print, #editor-container, .toolbar-master-container { display: none !important; }
 }
