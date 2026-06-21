@@ -19,9 +19,7 @@
         <button id="editor-toggle" title="Alternar Editor">
             <span class="toggle-icon">❮</span>
         </button>
-        
         <div id="editor-resizer"></div>
-
         <div class="editor-content">
             <div class="editor-header">
                 <div class="header-main-info">
@@ -29,8 +27,8 @@
                     <span class="editor-status">Sync Ativo</span>
                 </div>
                 <div class="editor-actions">
-                    <button class="btn-editor-secondary" onclick="editor.insertActivity()" title="Adicionar nova atividade">➕ Atividade</button>
-                    <button class="btn-editor-secondary" onclick="editor.reorderActivities()" title="Renumerar atividades sequencialmente">🔢 Reordenar</button>
+                    <button class="btn-editor-secondary" onclick="editor.insertActivity()">➕ Atividade</button>
+                    <button class="btn-editor-secondary" onclick="editor.reorderActivities()">🔢 Reordenar</button>
                     <button class="btn-editor-template" onclick="editor.insertTemplate()">Inserir Template</button>
                 </div>
             </div>
@@ -41,45 +39,41 @@
         </div>
     </div>
 
-    <!-- TOOLBAR UNIFICADA (NO-PRINT) -->
+    <!-- TOOLBAR UNIFICADA REPROJETADA -->
     <div class="toolbar-wrapper no-print">
         <h1 class="app-main-title">Canvas de Processo Digital</h1>
         
-        <div class="unified-toolbar-bar">
+        <div class="main-unified-bar">
             <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
             
-            <!-- Grupo 1: Arquivos -->
-            <div class="toolbar-group">
-                <span class="group-label">Arquivos</span>
-                <div class="btn-cluster">
-                    <button class="nav-btn btn-blue" onclick="document.getElementById('fileInput').click()">Importar</button>
-                    <button class="nav-btn btn-yellow" onclick="persistence.exportCanvas()">Exportar</button>
+            <div class="nav-group-box">
+                <span class="nav-group-label">Arquivos</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-import-clr" onclick="document.getElementById('fileInput').click()">Importar</button>
+                    <button class="app-btn btn-export-clr" onclick="persistence.exportCanvas()">Exportar</button>
                 </div>
             </div>
 
-            <!-- Grupo 2: Referências -->
-            <div class="toolbar-group">
-                <span class="group-label">Referências</span>
-                <div class="btn-cluster">
-                    <button class="nav-btn btn-green" onclick="template.downloadTemplate()">Template</button>
-                    <button class="nav-btn btn-purple" onclick="template.downloadExample()">Exemplo</button>
+            <div class="nav-group-box">
+                <span class="nav-group-label">Referências</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-template-clr" onclick="template.downloadTemplate()">Template</button>
+                    <button class="app-btn btn-example-clr" onclick="template.downloadExample()">Exemplo</button>
                 </div>
             </div>
 
-            <!-- Grupo 3: Compartilhamento -->
-            <div class="toolbar-group">
-                <span class="group-label">Compartilhamento</span>
-                <div class="btn-cluster">
-                    <button class="nav-btn btn-dark" onclick="window.print()">PDF</button>
-                    <button class="nav-btn btn-cyan" onclick="share.generateShareLink()">🔗 Link</button>
+            <div class="nav-group-box">
+                <span class="nav-group-label">Compartilhamento</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-print-clr" onclick="window.print()">PDF</button>
+                    <button class="app-btn btn-share-clr" onclick="share.generateShareLink()">🔗 Link</button>
                 </div>
             </div>
 
-            <!-- Grupo 4: Apresentação -->
-            <div class="toolbar-group">
-                <span class="group-label">Apresentação</span>
-                <div class="btn-cluster">
-                    <button class="nav-btn btn-orange" id="btn-presentation">Apresentação</button>
+            <div class="nav-group-box">
+                <span class="nav-group-label">Apresentação</span>
+                <div class="nav-btn-cluster">
+                    <button class="app-btn btn-pres-clr" id="btn-presentation">Apresentação</button>
                 </div>
             </div>
         </div>
@@ -127,8 +121,8 @@
         <div class="flow-section-header">
             <span>DETALHAMENTO DO FLUXO</span>
             <div class="flow-controls no-print">
-                <button class="btn-step-control" onclick="renderer.toggleAllSteps(true)" title="Expandir todas as etapas">📂 Expandir Tudo</button>
-                <button class="btn-step-control" onclick="renderer.toggleAllSteps(false)" title="Recolher todas as etapas">📁 Recolher Tudo</button>
+                <button class="btn-step-control" onclick="renderer.toggleAllSteps(true)">📂 Expandir Tudo</button>
+                <button class="btn-step-control" onclick="renderer.toggleAllSteps(false)">📁 Recolher Tudo</button>
             </div>
         </div>
         
@@ -148,7 +142,6 @@
                 <tbody id="flow-items-container"></tbody>
             </table>
         </div>
-
         <div id="obs-section-container"></div>
     </div>
 

@@ -1,51 +1,48 @@
 /* 
    ARQUIVO: css/presentation.css
-   FUNÇÃO: Controle de Foco e HUD de Apresentação.
+   RESTAURAÇÃO DO EFEITO DE FOCO
 */
 
-body.presentation-mode .flow-table-styled {
-    border-spacing: 0 8px !important;
-    border-collapse: separate !important;
+/* Esmaecimento Total do Conteúdo */
+.presentation-mode .process-title-header,
+.presentation-mode .header-dashboard,
+.presentation-mode .survey-card,
+.presentation-mode .activity-row-card,
+.presentation-mode .flow-section-header,
+.presentation-mode .obs-table-styled,
+.presentation-mode .step-header-row {
+    opacity: 0.15 !important;
+    filter: blur(2px) grayscale(0.6) !important;
+    transition: all 0.4s ease !important;
 }
 
+/* DESTAQUE DO ITEM ATIVO */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
     filter: none !important;
-    z-index: 100 !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1000 !important;
     transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
 }
 
-/* HUD / Controles */
+/* HUD RESPONSIVO */
 #presentation-controls {
     display: none;
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
     padding: 12px 25px;
     border-radius: 50px;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
     z-index: 9999;
     gap: 15px;
     align-items: center;
-    border: 1px solid rgba(255,255,255,0.4);
 }
 
 body.presentation-mode #presentation-controls { display: flex; }
-
-#presentation-controls button {
-    padding: 10px 22px;
-    border-radius: 25px;
-    background: #1d4e3a;
-    border: none;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
 
 #pres-info {
     font-weight: 800;
@@ -53,31 +50,10 @@ body.presentation-mode #presentation-controls { display: flex; }
     min-width: 250px;
     text-align: center;
     font-size: 0.85rem;
-    text-transform: uppercase;
 }
 
-/* HUD RESPONSIVO MOBILE */
 @media screen and (max-width: 768px) {
-    #presentation-controls {
-        bottom: 15px;
-        width: 92%;
-        padding: 10px;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: center;
-        border-radius: 20px;
-    }
-
-    #pres-info {
-        min-width: 100%;
-        font-size: 0.65rem;
-        order: -1;
-        margin-bottom: 5px;
-    }
-
-    #presentation-controls button {
-        padding: 8px 10px;
-        font-size: 0.65rem;
-        flex: 1;
-    }
+    #presentation-controls { width: 95%; padding: 10px; flex-wrap: wrap; justify-content: center; bottom: 15px; }
+    #pres-info { min-width: 100%; font-size: 0.65rem; order: -1; }
+    #presentation-controls button { flex: 1; padding: 8px !important; font-size: 0.65rem !important; }
 }
