@@ -1,7 +1,7 @@
 /* 
    ARQUIVO: css/print.css
    FUNÇÃO: Configurações exclusivas para Impressão e PDF.
-   VERSÃO: 09 (Correção definitiva de Sobreposição e Numeração de Página)
+   VERSÃO: 10 (Correção Definitiva de Numeração e Proteção de Conteúdo)
 */
 
 @media print {
@@ -12,18 +12,18 @@
         print-color-adjust: exact !important; 
     }
     
-    html, body { 
+    body { 
         background: white !important; 
         margin: 0; 
         padding: 0; 
-        width: 100%;
-        /* O counter-reset precisa estar aqui no topo para Chrome */
-        counter-reset: page 0;
+        width: 100%; 
+        /* Reinicia o contador no body para que o navegador controle o incremento por folha física */
+        counter-reset: page; 
     }
     
     @page {
-        /* Margem inferior de 25mm reserva o espaço para o rodapé em todas as páginas */
-        margin: 15mm 10mm 25mm 10mm;
+        /* Margem de 20mm no rodapé garante que o conteúdo pare antes de chegar no footer fixed */
+        margin: 15mm 10mm 20mm 10mm;
     }
 
     .glass-container { 
@@ -35,8 +35,7 @@
         width: 100% !important; 
         max-width: 100% !important; 
         margin: 0 !important;
-        /* Garante que o conteúdo não invada a área reservada */
-        overflow: visible !important;
+        display: block !important;
     }
 
     /* 1. Cabeçalho de Impressão */
@@ -69,17 +68,15 @@
         margin-bottom: 10mm;
     }
 
-    /* 2. Rodapé Fixo (Posicionado no rodapé físico da folha) */
+    /* 2. Rodapé Fixo (Posicionado no final da folha) */
     .print-footer {
         display: block !important;
         position: fixed;
-        bottom: 0; /* Alinha no limite inferior da folha */
+        bottom: 0; 
         left: 0;
         width: 100%;
         background: white !important;
-        height: 15mm;
-        /* Força o incremento da página a cada renderização do elemento fixed */
-        counter-increment: page;
+        height: 12mm;
         z-index: 9999;
     }
 
@@ -87,12 +84,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 4mm 10mm;
+        padding: 2mm 10mm;
         font-size: 8pt !important;
         color: #666 !important;
+        border-top: 0.5pt solid #ccc;
     }
 
-    /* 3. Numeração de Páginas */
+    /* 3. Numeração de Páginas Nativas */
+    /* Removido counter-increment manual: o counter(page) é automático no print fixed */
     .page-num::after {
         content: counter(page);
     }
@@ -103,7 +102,6 @@
         grid-template-columns: 1fr 130px !important; 
         gap: 8px !important; 
         margin-bottom: 15px; 
-        break-inside: avoid;
     }
     
     .meta-card-row { border: 1px solid #ddd !important; }
@@ -112,9 +110,10 @@
     .activity-counter-card { 
         border: 2px solid #1a4d2e !important; 
         border-radius: 10px !important;
+        padding: 5px !important;
     }
     
-    .counter-number { font-size: 2.2rem !important; }
+    .counter-number { font-size: 2.2rem !important; line-height: 1; }
 
     /* Levantamento (Survey) */
     .survey-card { 
@@ -128,7 +127,7 @@
     .card-info-side { padding: 5px 10px !important; }
     .card-item-name { font-size: 0.75rem !important; }
 
-    /* Fluxo e Tabelas */
+    /* Tabelas de Fluxo */
     .flow-table-styled thead { 
         display: table-header-group !important; 
     }
@@ -148,18 +147,19 @@
         padding: 8px 5px !important;
     }
 
-    /* Proteção contra cortes de linha */
-    .activity-row-card, .obs-row, .step-header-row, .survey-card { 
+    /* PROTEÇÃO DE QUEBRA: Impede que o navegador corte uma linha ao meio */
+    .activity-row-card, .obs-row, .step-header-row, .survey-card, .header-dashboard { 
         break-inside: avoid !important; 
         page-break-inside: avoid !important;
     }
 
     .activity-row-card td.highlight-col { background: #fafafa !important; }
 
-    /* Esconde elementos de tela */
+    /* Exibição condicional */
     .show-print { display: block !important; }
     .hide-print { display: none !important; }
 
+    /* Ocultar elementos de tela */
     #editor-container, 
     #editor-toggle, 
     #presentation-controls, 
