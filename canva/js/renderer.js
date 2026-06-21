@@ -79,13 +79,15 @@ const renderer = {
                 const headerRow = document.createElement('tr');
                 headerRow.className = 'step-header-row';
                 headerRow.setAttribute('data-target-step', eNum);
+                
+                // MUDANÇA: O sinal ":" agora é concatenado ao rótulo "ETAPA X"
                 headerRow.innerHTML = `
                     <td colspan="7">
                         <div class="step-header-content">
                             <span class="step-header-indicator">▼</span>
                             <div class="step-header-label">
-                                <span>🏷️ ETAPA ${eNum}</span>
-                                ${etapaNome ? `<span class="step-name-text">: ${etapaNome}</span>` : warning}
+                                <span>🏷️ ETAPA ${eNum}${etapaNome ? ':' : ''}</span>
+                                ${etapaNome ? `<span class="step-name-text">${etapaNome}</span>` : warning}
                             </div>
                         </div>
                     </td>
@@ -124,7 +126,6 @@ const renderer = {
             });
         }
 
-        // 5. Seção de Observações
         const obsContainer = document.getElementById('obs-section-container');
         if (data.observacoes && data.observacoes.length > 0) {
             const obsRowsHtml = data.observacoes.map(o => `<tr class="obs-row"><td>${o}</td></tr>`).join('');

@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: css/steps.css
-   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e correções Mobile.
+   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e correções de alinhamento.
 */
 
 .step-header-row {
@@ -43,10 +43,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap; /* Permite que o nome quebre linha mas mantém o número fixo */
+    flex-wrap: wrap; 
 }
 
-/* Garante que "ETAPA X" nunca quebre */
+/* Garante que o rótulo e o sinal : nunca se separem */
 .step-header-label span:first-child {
     white-space: nowrap;
 }
@@ -115,14 +115,12 @@
 
 /* 📱 AJUSTES MOBILE REFINADOS */
 @media screen and (max-width: 768px) {
-    /* Ajuste do cabeçalho principal do fluxo */
     .flow-section-header {
         flex-direction: column;
         padding: 12px 10px !important;
         gap: 10px;
     }
 
-    /* Botões lado a lado ocupando a largura total */
     .flow-controls {
         position: static;
         width: 100%;
@@ -138,27 +136,30 @@
         text-align: center;
     }
 
-    /* Ajuste do conteúdo da Etapa */
     .step-header-content {
         padding: 12px 10px;
-        align-items: flex-start; /* Alinha no topo para nomes longos */
+        align-items: flex-start;
     }
 
     .step-header-indicator {
-        margin-top: 3px; /* Centraliza visualmente com a primeira linha */
+        margin-top: 4px;
     }
 
     .step-header-label {
         font-size: 0.8rem;
-        gap: 4px;
+        gap: 0px; /* Remove gap para não afastar o nome se quebrar */
     }
 
     .step-name-text {
         display: block;
         width: 100%;
-        margin-top: 2px;
+        margin-top: 4px;
+        /* Alinhamento visual: recua um pouco para alinhar com o texto da etapa acima */
+        padding-left: 2px; 
         color: #1e293b;
         font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: none; /* Mantém como digitado para clareza */
     }
 }
 
