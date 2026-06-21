@@ -1,7 +1,7 @@
 /* 
    ARQUIVO: css/print.css
-   FUNÇÃO: Formatação para PDF/Impressão.
-   VERSÃO: 07 (Correção de Vendor Prefix e Ajuste Fino de Rodapé)
+   FUNÇÃO: Formatação profissional para PDF/Impressão.
+   VERSÃO: 08 (Revisão total de larguras, células e rodapé)
 */
 
 @media print {
@@ -10,6 +10,8 @@
         box-sizing: border-box !important; 
         -webkit-print-color-adjust: exact !important; 
         print-color-adjust: exact !important; 
+        text-shadow: none !important;
+        box-shadow: none !important;
     }
     
     html, body { 
@@ -18,11 +20,12 @@
         margin: 0 !important;
         padding: 0 !important;
         counter-reset: page;
+        font-size: 10pt;
     }
     
-    /* Configuração de Página Física - Espaço para o rodapé fixo */
+    /* Configuração de Página Física A4 */
     @page {
-        margin: 10mm 10mm 25mm 10mm;
+        margin: 15mm 10mm 20mm 10mm;
         size: auto;
     }
 
@@ -33,18 +36,17 @@
         margin: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
-        /* Padding inferior para o conteúdo não bater no rodapé */
-        padding-bottom: 20mm !important; 
         display: block !important;
+        /* Respiro para não sobrepor o rodapé fixo */
+        padding-bottom: 10mm !important; 
     }
 
-    /* 1. Cabeçalho: Título Centralizado */
+    /* 1. Cabeçalho: Título Centralizado e Limpo */
     .print-header {
         display: block !important;
         width: 100%;
         text-align: center;
-        margin-bottom: 5mm;
-        padding-top: 5mm;
+        margin-bottom: 8mm;
     }
 
     .print-app-title {
@@ -52,25 +54,27 @@
         font-weight: 800;
         color: #1a4d2e !important;
         text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
     .process-title-header h1 { 
-        font-size: 1.3rem !important; 
-        margin: 10px 0 !important; 
+        font-size: 1.4rem !important; 
+        margin: 15px 0 !important; 
         color: #1a4d2e !important; 
         text-align: center;
+        line-height: 1.2;
     }
 
-    /* 2. Rodapé: Posicionamento fixo com margem de segurança */
+    /* 2. Rodapé: Posicionamento fixo elegante */
     .print-footer {
         display: block !important;
         position: fixed;
-        bottom: 5mm; 
+        bottom: 0;
         left: 0;
         width: 100%;
         background: white;
-        height: 10mm;
-        border-top: 1px solid #eee;
+        height: 12mm;
+        border-top: 1px solid #ddd;
         z-index: 9999;
     }
 
@@ -78,74 +82,79 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 8pt !important;
-        color: #666 !important;
+        font-size: 7.5pt !important;
+        color: #555 !important;
         padding: 2mm 10mm 0 10mm;
     }
 
-    /* Numeração de Páginas */
     .page-num::after {
         counter-increment: page;
         content: counter(page);
     }
     
-    /* Oculta o "de" e o total por limitação técnica de CSS puro em navegadores */
+    /* Ajuste da numeração para não mostrar o "de" vazio */
     .print-page-count span:last-child,
-    .page-total {
-        display: none !important;
+    .page-total,
+    .print-page-count {
+        font-weight: bold;
     }
+    .print-page-count span:nth-child(2) { display: none; }
 
-    /* 3. Dashboard */
+    /* 3. Dashboard Executivo */
     .header-dashboard { 
         display: grid !important; 
-        grid-template-columns: 1fr 140px !important; 
-        gap: 10px !important; 
-        margin-bottom: 15px; 
+        grid-template-columns: 1fr 150px !important; 
+        gap: 12px !important; 
+        margin-bottom: 20px; 
     }
     
-    .meta-card-row { background: white !important; border: 1px solid #ddd !important; }
-    .meta-card-value { font-size: 0.75rem !important; padding: 5px 10px !important; }
+    .meta-card-row { background: white !important; border: 1px solid #eee !important; border-radius: 6px; }
+    .meta-card-value { font-size: 0.8rem !important; padding: 6px 10px !important; }
 
     .activity-counter-card { 
         border: 2px solid #1a4d2e !important;
         border-radius: 12px !important; 
-        height: 100% !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
+        background: #fdfdfd !important;
     }
     
-    .counter-number { font-size: 2.5rem !important; font-weight: 900 !important; line-height: 1; }
+    .counter-number { font-size: 2.8rem !important; font-weight: 900 !important; line-height: 1; }
+    .counter-label { font-size: 0.7rem !important; font-weight: bold; }
 
-    /* 4. Levantamento (Cards 01 a 11) */
+    /* 4. Levantamento (Cards 01 a 11) - Largura Estável */
     .survey-card { 
-        grid-template-columns: 220px 1fr !important; 
-        border: 1px solid #ddd !important; 
+        grid-template-columns: 240px 1fr !important; 
+        border: 1px solid #eee !important; 
         break-inside: avoid !important;
-        margin-bottom: 4px !important;
-        width: 100% !important;
+        margin-bottom: 5px !important;
+        border-radius: 8px !important;
+        overflow: hidden;
     }
 
-    /* 5. Cores das Pílulas (Compatibilidade Total) */
+    .card-info-side { background: #f8faf8 !important; padding: 8px !important; }
+    .card-item-name { font-size: 0.85rem !important; }
+
+    /* 5. Pílulas (Cores Preservadas do Renderer) */
     .pill {
         font-size: 7.5pt !important; 
         border: 1px solid rgba(0,0,0,0.1) !important;
-        padding: 2px 6px !important;
-        margin: 1px !important;
+        padding: 2px 8px !important;
+        margin: 2px !important;
         display: inline-block !important;
         font-weight: 700 !important;
         color: #000 !important;
-        border-radius: 10px !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        border-radius: 12px !important;
     }
 
-    /* 6. Tabelas de Fluxo */
+    /* 6. Tabelas de Fluxo - RESOLUÇÃO DE INVASÃO DE CÉLULAS */
     .flow-table-styled {
         width: 100% !important;
         border-collapse: collapse !important;
-        table-layout: fixed !important;
+        table-layout: auto !important; /* Permite ajuste flexível para evitar sobreposição */
+        margin-top: 10px;
     }
 
     .flow-header-row th {
@@ -153,30 +162,50 @@
         color: #1a4d2e !important;
         border: 1px solid #ddd !important;
         font-size: 7.5pt !important;
-        padding: 6px 2px !important;
+        padding: 8px 4px !important;
+        text-transform: uppercase;
     }
 
     .activity-row-card td {
         border: 1px solid #eee !important;
-        font-size: 8pt !important; 
-        padding: 6px 4px !important;
+        font-size: 8.5pt !important; 
+        padding: 10px 6px !important;
+        vertical-align: top !important;
         word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
+    }
+
+    /* Ajuste específico para o Badge do Ator não invadir outras células */
+    .actor-cell {
+        min-width: 80px !important;
+    }
+
+    .actor-badge {
+        display: block !important;
+        white-space: normal !important; /* Permite que o nome do ator quebre linha */
+        width: 100% !important;
+        background: #f0f4f0 !important;
+        border: 1px solid #d0dec0 !important;
+        padding: 4px !important;
+        text-align: center;
     }
 
     .activity-row-card { break-inside: avoid !important; }
 
     .activity-row-card td.highlight-col { 
-        background: #f9f9f9 !important; 
-        border-left: 3px solid #1a4d2e !important;
+        background: #fafafa !important; 
+        border-left: 4px solid #1a4d2e !important;
     }
 
-    /* Estilo para as bolhas de etapa no print */
+    .regra-box {
+        background: #fffbe6 !important;
+        border-left: 3px solid #f1c232 !important;
+        margin-top: 5px;
+        padding: 4px 8px !important;
+    }
+
     .step-bubble {
         color: white !important;
         font-weight: bold !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
     }
 
     /* Visibilidade */
@@ -185,7 +214,8 @@
 
     /* Ocultar UI de Software */
     #editor-container, #editor-toggle, #presentation-controls, 
-    .toolbar-master-container, .flow-controls, #fileInput {
+    .toolbar-master-container, .flow-controls, #fileInput, 
+    .toolbar-glass-bar, .toolbar-main-title {
         display: none !important;
     }
 }
