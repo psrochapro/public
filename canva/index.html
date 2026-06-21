@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/toolbar.css">
     <link rel="stylesheet" href="css/print.css">
     <link rel="stylesheet" href="css/presentation.css">
     <link rel="stylesheet" href="css/steps.css">
@@ -14,6 +15,18 @@
     <link rel="stylesheet" href="css/editor.css">
 </head>
 <body>
+
+    <!-- Elementos exclusivos para Impressão (PDF) -->
+    <div class="print-only-header show-print">
+        <div class="print-header-content">
+            <span class="print-app-title">Canvas de Processo Digital</span>
+            <span class="print-page-number"></span>
+        </div>
+    </div>
+    
+    <div class="print-only-footer show-print">
+        <div class="print-footer-url" id="print-site-url"></div>
+    </div>
 
     <div id="editor-container" class="editor-collapsed no-print">
         <button id="editor-toggle" title="Alternar Editor">
@@ -39,41 +52,41 @@
         </div>
     </div>
 
-    <!-- TOOLBAR UNIFICADA REPROJETADA -->
-    <div class="toolbar-wrapper no-print">
-        <h1 class="app-main-title">Canvas de Processo Digital</h1>
+    <!-- TOOLBAR REESTRUTURADA -->
+    <div class="toolbar-master-container no-print">
+        <h1 class="toolbar-main-title">Canvas de Processo Digital</h1>
         
-        <div class="main-unified-bar">
+        <div class="toolbar-glass-bar">
             <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
             
-            <div class="nav-group-box">
-                <span class="nav-group-label">Arquivos</span>
-                <div class="nav-btn-cluster">
-                    <button class="app-btn btn-import-clr" onclick="document.getElementById('fileInput').click()">Importar</button>
-                    <button class="app-btn btn-export-clr" onclick="persistence.exportCanvas()">Exportar</button>
+            <div class="toolbar-nav-group">
+                <span class="toolbar-group-label">Gerenciamento de Arquivos</span>
+                <div class="toolbar-btn-cluster">
+                    <button class="tlb-btn tlb-btn-import" onclick="document.getElementById('fileInput').click()">Importar</button>
+                    <button class="tlb-btn tlb-btn-export" onclick="persistence.exportCanvas()">Exportar</button>
                 </div>
             </div>
 
-            <div class="nav-group-box">
-                <span class="nav-group-label">Referências</span>
-                <div class="nav-btn-cluster">
-                    <button class="app-btn btn-template-clr" onclick="template.downloadTemplate()">Template</button>
-                    <button class="app-btn btn-example-clr" onclick="template.downloadExample()">Exemplo</button>
+            <div class="toolbar-nav-group">
+                <span class="toolbar-group-label">Referências</span>
+                <div class="toolbar-btn-cluster">
+                    <button class="tlb-btn tlb-btn-template" onclick="template.downloadTemplate()">Template</button>
+                    <button class="tlb-btn tlb-btn-example" onclick="template.downloadExample()">Exemplo</button>
                 </div>
             </div>
 
-            <div class="nav-group-box">
-                <span class="nav-group-label">Compartilhamento</span>
-                <div class="nav-btn-cluster">
-                    <button class="app-btn btn-print-clr" onclick="window.print()">PDF</button>
-                    <button class="app-btn btn-share-clr" onclick="share.generateShareLink()">🔗 Link</button>
+            <div class="toolbar-nav-group">
+                <span class="toolbar-group-label">Compartilhamento</span>
+                <div class="toolbar-btn-cluster">
+                    <button class="tlb-btn tlb-btn-print" onclick="window.print()">PDF</button>
+                    <button class="tlb-btn tlb-btn-share" onclick="share.generateShareLink()">🔗 Link</button>
                 </div>
             </div>
 
-            <div class="nav-group-box">
-                <span class="nav-group-label">Apresentação</span>
-                <div class="nav-btn-cluster">
-                    <button class="app-btn btn-pres-clr" id="btn-presentation">Apresentação</button>
+            <div class="toolbar-nav-group">
+                <span class="toolbar-group-label">Apresentação</span>
+                <div class="toolbar-btn-cluster">
+                    <button class="tlb-btn tlb-btn-pres" id="btn-presentation">Apresentação</button>
                 </div>
             </div>
         </div>
@@ -131,12 +144,12 @@
                 <thead>
                     <tr class="flow-header-row">
                         <th style="width: 45px;">📋 <span class="hide-print">Etapa</span><span class="show-print">E</span></th>
-                        <th style="width: 12%;">👥 Fornecedor</th>
-                        <th style="width: 12%;">📥 Insumos</th>
-                        <th style="width: 12%;">👤 Ator</th>
+                        <th style="width: 12%;">Fornecedor</th>
+                        <th style="width: 12%;">Insumos</th>
+                        <th style="width: 12%;">Ator</th>
                         <th>✅ Atividades</th>
-                        <th style="width: 13%;">📦 Saídas</th>
-                        <th style="width: 12%;">👥 Cliente</th>
+                        <th style="width: 13%;">Saídas</th>
+                        <th style="width: 12%;">Cliente</th>
                     </tr>
                 </thead>
                 <tbody id="flow-items-container"></tbody>
@@ -151,6 +164,14 @@
         <button id="pres-next">Próximo ➡</button>
         <button id="pres-exit">Sair</button>
     </div>
+
+    <script>
+        // Script simples para injetar a URL atual no rodapé do PDF
+        window.addEventListener('load', () => {
+            const urlEl = document.getElementById('print-site-url');
+            if(urlEl) urlEl.innerText = window.location.href.split('#')[0];
+        });
+    </script>
 
     <script src="js/parser.js"></script>
     <script src="js/renderer.js"></script>

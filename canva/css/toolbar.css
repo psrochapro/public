@@ -1,0 +1,99 @@
+/* 
+   ARQUIVO: css/toolbar.css
+   FUNÇÃO: Estilização da barra de ferramentas superior (Master Toolbar).
+*/
+
+.toolbar-master-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 10px auto 20px auto;
+    text-align: center;
+}
+
+.toolbar-main-title {
+    color: #1a4d2e;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+.toolbar-glass-bar {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+.toolbar-nav-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.toolbar-group-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.toolbar-btn-cluster {
+    display: flex;
+    gap: 8px;
+    height: 100%;
+}
+
+.tlb-btn {
+    flex: 1;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 5px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.tlb-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Cores dos Botões Conforme Referência */
+.tlb-btn-import { background: #5c8ae6; }
+.tlb-btn-export { background: #edbf47; }
+.tlb-btn-template { background: #6aa84f; }
+.tlb-btn-example { background: #9686c7; }
+.tlb-btn-print { background: #333333; }
+.tlb-btn-share { background: #4ba8b8; }
+.tlb-btn-pres { background: #e67e22; }
+
+@media screen and (max-width: 1024px) {
+    .toolbar-glass-bar {
+        flex-wrap: wrap;
+    }
+    .toolbar-nav-group {
+        flex: 1 1 45%;
+    }
+}
