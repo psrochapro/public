@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: css/steps.css
-   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e correções de alinhamento.
+   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e botões de controle.
 */
 
 .step-header-row {
@@ -46,7 +46,6 @@
     flex-wrap: wrap; 
 }
 
-/* Garante que o rótulo e o sinal : nunca se separem */
 .step-header-label span:first-child {
     white-space: nowrap;
 }
@@ -57,7 +56,6 @@
     line-height: 1.2;
 }
 
-/* Cabeçalho da Seção de Fluxo */
 .flow-section-header {
     background: #1d4e3a !important; 
     color: #ffffff !important;
@@ -65,7 +63,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    padding: 6px 20px !important;
+    padding: 8px 20px !important;
     font-weight: 600 !important;
     font-size: 0.75rem !important;
     letter-spacing: 1.2px !important;
@@ -113,14 +111,12 @@
 
 .hl-step-num { color: #16a34a; font-weight: bold; }
 
-/* 📱 AJUSTES MOBILE REFINADOS */
 @media screen and (max-width: 768px) {
     .flow-section-header {
         flex-direction: column;
         padding: 12px 10px !important;
         gap: 10px;
     }
-
     .flow-controls {
         position: static;
         width: 100%;
@@ -128,38 +124,16 @@
         grid-template-columns: 1fr 1fr;
         gap: 8px;
     }
-
-    .btn-step-control {
-        padding: 8px;
-        font-size: 0.65rem;
-        justify-content: center;
-        text-align: center;
-    }
-
-    .step-header-content {
-        padding: 12px 10px;
-        align-items: flex-start;
-    }
-
-    .step-header-indicator {
-        margin-top: 4px;
-    }
-
-    .step-header-label {
-        font-size: 0.8rem;
-        gap: 0px; /* Remove gap para não afastar o nome se quebrar */
-    }
-
+    .step-header-content { padding: 12px 10px; align-items: flex-start; }
     .step-name-text {
         display: block;
         width: 100%;
         margin-top: 4px;
-        /* Alinhamento visual: recua um pouco para alinhar com o texto da etapa acima */
         padding-left: 2px; 
         color: #1e293b;
         font-size: 0.85rem;
         font-weight: 600;
-        text-transform: none; /* Mantém como digitado para clareza */
+        text-transform: none;
     }
 }
 
@@ -168,8 +142,6 @@
     .row-hidden { display: table-row !important; }
     .step-header-row { 
         background: #f8fafc !important; 
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
         border-bottom: 1px solid #e2e8f0 !important;
     }
 }

@@ -12,7 +12,6 @@ const parser = {
                 const tag = parts[0].substring(1).toLowerCase();
                 const inlineContent = parts.slice(1).join(' ').trim();
 
-                // Tratamento especial para o bloco de nomes de etapas
                 if (tag === 'etapas') {
                     currentSection = 'mapaEtapas';
                     currentAtividade = null;

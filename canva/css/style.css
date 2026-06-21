@@ -3,7 +3,6 @@
    FUNÇÃO: Estilização da Toolbar Unificada e Proteção das Pílulas.
 */
 
-/* 1. RESTAURAÇÃO DAS PÍLULAS (SACRED) */
 .pill-container { display: flex; flex-wrap: wrap; gap: 6px; }
 .pill { 
     background-color: #d9ead3 !important; 
@@ -14,39 +13,26 @@
     border: 1px solid #b7d7a8 !important; 
     color: #274e13 !important;
     display: inline-block !important;
-    width: auto !important;
-    min-width: 0 !important;
 }
 
-/* 2. TÍTULO DA APLICAÇÃO */
-.app-main-title {
-    text-align: center;
-    color: #1d4e3a;
-    font-size: 1.6rem;
-    font-weight: 800;
-    margin: 15px 0 12px 0;
-    letter-spacing: -0.5px;
-}
-
-/* 3. TOOLBAR UNIFICADA (ISOLADA) */
 .toolbar-wrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin: 20px 0 10px 0;
 }
 
 .main-unified-bar {
     display: flex;
     justify-content: space-around;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(10px);
     padding: 12px 20px;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     width: 100%;
-    max-width: 1200px; /* MESMA LARGURA DO CANVAS */
+    max-width: 1200px;
     box-sizing: border-box;
     box-shadow: 0 8px 32px rgba(0,0,0,0.05);
 }
@@ -72,7 +58,6 @@
 
 .nav-btn-cluster { display: flex; gap: 10px; }
 
-/* BOTÕES DA TOOLBAR (CLASSES EXCLUSIVAS) */
 .app-btn {
     padding: 8px 20px !important;
     border-radius: 25px !important;
@@ -90,12 +75,12 @@
 
 .app-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-.btn-import-clr { background-color: #5b8ae4 !important; }
-.btn-export-clr { background-color: #f1c430 !important; color: #444 !important; }
-.btn-template-clr { background-color: #6eb057 !important; }
+.btn-import-clr { background-color: #4a86e8 !important; }
+.btn-export-clr { background-color: #f1c232 !important; color: #333 !important; }
+.btn-template-clr { background-color: #6aa84f !important; }
 .btn-example-clr { background-color: #8e7cc3 !important; }
 .btn-print-clr { background-color: #333333 !important; }
-.btn-share-clr { background-color: #46a6b8 !important; }
+.btn-share-clr { background-color: #17a2b8 !important; }
 .btn-pres-clr { background-color: #e67e22 !important; min-width: 130px !important; }
 
 @media print { .no-print { display: none !important; } }

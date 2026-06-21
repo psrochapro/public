@@ -1,8 +1,3 @@
-/* 
-   ARQUIVO: js/editor.js
-   FUNÇÃO: Controle de interface, Redimensionamento, Highlighting e Utilitários de Edição.
-*/
-
 const editor = {
     container: null,
     input: null,
@@ -17,13 +12,9 @@ const editor = {
         this.highlight = document.getElementById('editor-highlight');
         this.toggleBtn = document.getElementById('editor-toggle');
         this.resizer = document.getElementById('editor-resizer');
-
         if (!this.input) return;
 
-        this.input.addEventListener('input', () => {
-            this.syncAndRender();
-        });
-
+        this.input.addEventListener('input', () => this.syncAndRender());
         this.input.addEventListener('scroll', () => {
             this.highlight.scrollTop = this.input.scrollTop;
         });
@@ -35,23 +26,18 @@ const editor = {
         this.resizer.addEventListener('mousedown', (e) => {
             this.isResizing = true;
             document.body.style.cursor = 'col-resize';
-            document.body.style.userSelect = 'none';
         });
 
         document.addEventListener('mousemove', (e) => {
             if (!this.isResizing) return;
             let newWidth = e.clientX;
             if (newWidth < 300) newWidth = 300;
-            if (newWidth > window.innerWidth * 0.8) newWidth = window.innerWidth * 0.8;
             this.container.style.width = `${newWidth}px`;
         });
 
         document.addEventListener('mouseup', () => {
-            if (this.isResizing) {
-                this.isResizing = false;
-                document.body.style.cursor = 'default';
-                document.body.style.userSelect = 'auto';
-            }
+            this.isResizing = false;
+            document.body.style.cursor = 'default';
         });
     },
 
@@ -61,32 +47,20 @@ const editor = {
         let match;
         let lastNum = 0;
         let lastMatchIndex = -1;
-
         while ((match = regex.exec(text)) !== null) {
             lastNum = parseInt(match[1]);
             lastMatchIndex = match.index;
         }
-
         const nextNum = lastNum + 1;
         const templateStr = `#atividade ${nextNum}\nEtapa: \nFornecedor: \nInsumos: \nAtor: \nAtividades: \nRegra: \nSaídas: \nCliente: \n`;
-
         let insertPos = text.length;
         if (lastMatchIndex !== -1) {
             const nextSection = text.indexOf('#', lastMatchIndex + 1);
-            if (nextSection !== -1) {
-                insertPos = nextSection;
-            }
+            if (nextSection !== -1) insertPos = nextSection;
         }
-
         const textBefore = text.substring(0, insertPos).trimEnd();
         const textAfter = text.substring(insertPos).trimStart();
-        
-        const newText = textBefore + 
-                        (textBefore ? "\n\n" : "") + 
-                        templateStr + 
-                        (textAfter ? "\n" : "") + 
-                        textAfter;
-
+        const newText = textBefore + (textBefore ? "\n\n" : "") + templateStr + (textAfter ? "\n" : "") + textAfter;
         this.setContent(newText);
         this.input.focus();
     },
@@ -94,21 +68,15 @@ const editor = {
     reorderActivities() {
         let text = this.input.value;
         let count = 1;
-        const newText = text.replace(/(#atividade\s+)(\d+)/g, (match, prefix, oldNumber) => {
-            const replaced = prefix + count;
-            count++;
-            return replaced;
+        const newText = text.replace(/(#atividade\s+)(\d+)/g, (match, prefix) => {
+            return prefix + (count++);
         });
         this.setContent(newText);
     },
 
     insertTemplate() {
         const templateText = template.getTemplateContent();
-        const currentText = this.input.value.trim();
-        if (currentText !== "") {
-            const confirmar = confirm("Isso substituirá o conteúdo atual pelo template. Deseja continuar?");
-            if (!confirmar) return;
-        }
+        if (this.input.value.trim() !== "" && !confirm("Substituir conteúdo atual?")) return;
         this.setContent(templateText);
     },
 
@@ -122,34 +90,18 @@ const editor = {
         const text = this.input.value;
         this.updateHighlight(text);
         persistence.saveToLocal(text);
-
         try {
             const data = parser.parse(text);
             renderer.render(data);
-        } catch (e) {
-            console.warn("Aguardando input válido...");
-        }
+        } catch (e) { console.warn("Erro no processamento."); }
     },
 
     updateHighlight(text) {
-        let html = text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-
-        // Tags (#)
-        html = html.replace(/(#[A-Za-zÀ-ÖØ-öø-ÿ0-9]+)/g, '<span class="hl-tag">$1</span>');
-        
-        // Rótulos (Labels)
-        html = html.replace(/(^|\n)([A-Za-zÀ-ÖØ-öø-ÿ\s]+:)/g, '$1<span class="hl-label">$2</span>');
-        
-        // Lógica de Negócio
+        let html = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        html = html.replace(/(#[A-Za-z0-9À-ÿ]+)/g, '<span class="hl-tag">$1</span>');
+        html = html.replace(/(^|\n)([A-Za-z0-9À-ÿ\s]+:)/g, '$1<span class="hl-label">$2</span>');
         html = html.replace(/(Regra:|Lógica:)/gi, '<span class="hl-logic">$1</span>');
-
-        // NOVAS REGRAS PARA ETAPAS NO EDITOR
-        // Realça "1: Nome da Etapa" se estiver logo após #etapas
         html = html.replace(/(^|\n)(\d+):/g, '$1<span class="hl-step-num">$2:</span>');
-
         this.highlight.innerHTML = html + "\n\n";
     }
 };

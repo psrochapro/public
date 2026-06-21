@@ -14,18 +14,15 @@ const renderer = {
     ],
 
     render(data) {
-        // 1. Cabeçalho e Metadados
         document.getElementById('val-nome').innerText = (data.nome || ['---']).join(' ');
         document.getElementById('val-macroprocesso').innerText = (data.macroprocesso || ['---']).join(' ');
         document.getElementById('val-area').innerText = (data.area || ['---']).join(' ');
         document.getElementById('val-dono').innerText = (data.dono || ['---']).join(' ');
         document.getElementById('val-objetivo').innerText = (data.objetivo || ['---']).join(' ');
 
-        // 2. Contador de Atividades
         const totalAtividades = data.fluxo ? data.fluxo.length : 0;
         document.getElementById('val-total-atividades').innerText = totalAtividades;
 
-        // 3. Cards de Levantamento (11 itens)
         const surveyContainer = document.getElementById('survey-container');
         surveyContainer.innerHTML = '';
         
@@ -60,7 +57,6 @@ const renderer = {
                 </div>`;
         });
 
-        // 4. Linhas de Fluxo com Agrupamento por Etapa (Sanfona)
         const flowItemsContainer = document.getElementById('flow-items-container');
         flowItemsContainer.innerHTML = '';
         
@@ -80,7 +76,6 @@ const renderer = {
                 headerRow.className = 'step-header-row';
                 headerRow.setAttribute('data-target-step', eNum);
                 
-                // MUDANÇA: O sinal ":" agora é concatenado ao rótulo "ETAPA X"
                 headerRow.innerHTML = `
                     <td colspan="7">
                         <div class="step-header-content">
@@ -142,7 +137,7 @@ const renderer = {
     toggleStep(stepNum) {
         const header = document.querySelector(`.step-header-row[data-target-step="${stepNum}"]`);
         const rows = document.querySelectorAll(`.activity-row-card[data-etapa="${stepNum}"]`);
-        
+        if (!header) return;
         const isCollapsed = header.classList.toggle('collapsed');
         rows.forEach(row => {
             if (isCollapsed) row.classList.add('row-hidden');
@@ -155,7 +150,6 @@ const renderer = {
         headers.forEach(header => {
             const stepNum = header.getAttribute('data-target-step');
             const rows = document.querySelectorAll(`.activity-row-card[data-etapa="${stepNum}"]`);
-            
             if (expand) {
                 header.classList.remove('collapsed');
                 rows.forEach(row => row.classList.remove('row-hidden'));
