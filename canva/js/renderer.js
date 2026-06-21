@@ -80,6 +80,7 @@ const renderer = {
                 headerRow.className = 'step-header-row';
                 headerRow.setAttribute('data-target-step', eNum);
                 
+                // MUDANÇA: O sinal ":" agora é concatenado ao rótulo "ETAPA X"
                 headerRow.innerHTML = `
                     <td colspan="7">
                         <div class="step-header-content">
