@@ -1,12 +1,13 @@
 /* 
    ARQUIVO: css/print.css
    FUNÇÃO: Impressão Profissional com Cabeçalho/Rodapé fixos e fidelidade visual.
+   VERSÃO: Corrigida para evitar quebra na coluna "Etapa".
 */
 
 @media print {
-    /* 1. Configurações de Página */
+    /* 1. Configurações de Página e Margens */
     @page {
-        margin: 20mm 12mm 20mm 12mm;
+        margin: 25mm 12mm 25mm 12mm;
         size: A4 portrait;
     }
 
@@ -15,6 +16,7 @@
         box-sizing: border-box !important; 
         -webkit-print-color-adjust: exact !important; 
         print-color-adjust: exact !important; 
+        text-shadow: none !important;
     }
     
     body { 
@@ -22,16 +24,17 @@
         padding: 0; 
         margin: 0; 
         width: 100%; 
-        counter-reset: page; /* Inicializa contador de páginas */
+        counter-reset: page; 
     }
     
-    /* 3. Containers de PDF Fixos */
+    /* 3. Containers de PDF Fixos (Baseados no seu index.html) */
     .print-header {
         position: fixed;
         top: -15mm;
         left: 0;
         width: 100%;
         display: block;
+        text-align: center;
     }
 
     .print-header-top {
@@ -42,10 +45,10 @@
     .print-app-title {
         font-family: 'Segoe UI', Tahoma, sans-serif;
         font-weight: 800;
-        font-size: 10pt;
+        font-size: 11pt;
         color: #1a4d2e;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .print-footer {
@@ -66,17 +69,16 @@
     }
 
     .print-line-divider {
-        height: 1px;
+        height: 1.5px;
         background-color: #1a4d2e;
         width: 100%;
-        opacity: 0.6;
     }
 
     /* Paginação Dinâmica */
     .page-num::after { content: counter(page); }
     .page-total::after { content: counter(pages); }
 
-    /* 4. Fidelidade do Canvas */
+    /* 4. Fidelidade do Canvas e Ajustes de Coluna */
     .glass-container { 
         box-shadow: none !important; 
         border: 1px solid #ddd !important; 
@@ -84,12 +86,27 @@
         padding: 0 5mm !important; 
         width: 100% !important; 
         max-width: 100% !important; 
-        margin: 5mm 0 0 0 !important; /* Respiro em relação ao cabeçalho */
+        margin: 5mm 0 0 0 !important;
+    }
+
+    /* CORREÇÃO "ETAPA E": Impede quebra de linha no cabeçalho da tabela */
+    .flow-header-row th:first-child {
+        min-width: 75px !important; /* Aumentado para caber ícone + texto */
+        white-space: nowrap !important;
+        text-align: center !important;
+    }
+
+    /* Garante que os spans de controle de impressão não quebrem a linha */
+    .show-print { 
+        display: inline-block !important; 
+    }
+    .hide-print { 
+        display: none !important; 
     }
 
     .process-title-header h1 { 
-        font-size: 1.3rem !important; 
-        margin: 5mm 0 !important; 
+        font-size: 1.4rem !important; 
+        margin: 8mm 0 !important; 
         color: #1a4d2e !important; 
     }
 
@@ -98,7 +115,7 @@
         display: grid !important; 
         grid-template-columns: 1fr 140px !important; 
         gap: 10px !important; 
-        margin-bottom: 15px; 
+        margin-bottom: 20px; 
         width: 100% !important;
         align-items: stretch !important;
     }
@@ -109,17 +126,14 @@
     .activity-counter-card { 
         background: #1a4d2e !important; 
         color: white !important;
-        border: none !important;
         border-radius: 10px !important;
-        padding: 10px !important;
     }
     
-    .counter-number { font-size: 2.5rem !important; }
-    .counter-label { font-size: 0.65rem !important; }
+    .counter-number { font-size: 2.8rem !important; }
 
     /* Levantamento e Pílulas */
     .survey-card { 
-        grid-template-columns: 300px 1fr !important; 
+        grid-template-columns: 320px 1fr !important; 
         background: white !important; 
         border: 1px solid #eee !important; 
         margin-bottom: 5px !important;
@@ -130,19 +144,28 @@
         font-size: 7.5pt !important;
         border: 1px solid rgba(0,0,0,0.1) !important;
         background: #fdfdfd !important;
-        padding: 2px 6px !important;
+        padding: 2px 8px !important;
         display: inline-block !important;
     }
 
-    /* Tabela de Fluxo e Linhas de Grade */
+    /* Tabela de Fluxo */
+    .flow-section-header {
+        background: #1a4d2e !important;
+        color: white !important;
+        font-size: 10pt !important;
+        padding: 8px !important;
+        text-align: center !important;
+    }
+
     .flow-table-styled thead { display: table-header-group; }
 
     .flow-header-row th {
         background: #f2f2f2 !important; 
         color: #1a4d2e !important;
         border: 1px solid #ddd !important;
-        font-size: 8pt !important;
-        padding: 8px 4px !important;
+        font-size: 8.5pt !important;
+        padding: 10px 5px !important;
+        vertical-align: middle !important;
     }
 
     .activity-row-card td {
@@ -150,6 +173,7 @@
         border: 1px solid #eee !important;
         font-size: 8.5pt !important; 
         padding: 10px 6px !important;
+        vertical-align: middle !important;
     }
 
     .activity-row-card td.highlight-col { background: #fcfcfc !important; }
@@ -159,6 +183,7 @@
         background: #fffdf0 !important;
         border: 1px solid #f1c232 !important;
         padding: 5px !important;
+        margin-top: 5px !important;
     }
 
     /* Ocultar Elementos de Interface */
@@ -167,9 +192,8 @@
     .toolbar-master-container, 
     #presentation-controls, 
     .flow-controls,
-    .btn-step-control { 
+    .btn-step-control,
+    #editor-toggle { 
         display: none !important; 
     }
-
-    .show-print { display: block !important; }
 }
