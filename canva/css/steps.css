@@ -1,6 +1,6 @@
 /* 
    ARQUIVO: css/steps.css
-   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e controles de fluxo.
+   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e correções Mobile.
 */
 
 .step-header-row {
@@ -18,7 +18,7 @@
 .step-header-content {
     display: flex;
     align-items: center;
-    padding: 8px 15px; /* Altura reduzida */
+    padding: 8px 15px;
     gap: 12px;
     font-weight: 700;
     color: #166534;
@@ -43,22 +43,29 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap; /* Permite que o nome quebre linha mas mantém o número fixo */
+}
+
+/* Garante que "ETAPA X" nunca quebre */
+.step-header-label span:first-child {
+    white-space: nowrap;
 }
 
 .step-name-text {
     color: #334155;
     font-weight: 500;
+    line-height: 1.2;
 }
 
-/* 🔄 RESTAURAÇÃO: Cabeçalho da Seção de Fluxo */
+/* Cabeçalho da Seção de Fluxo */
 .flow-section-header {
-    background: #1d4e3a !important; /* Verde padrão da aplicação */
+    background: #1d4e3a !important; 
     color: #ffffff !important;
     display: flex !important;
     justify-content: center;
     align-items: center;
     position: relative;
-    padding: 6px 20px !important; /* Altura slim solicitada */
+    padding: 6px 20px !important;
     font-weight: 600 !important;
     font-size: 0.75rem !important;
     letter-spacing: 1.2px !important;
@@ -72,7 +79,6 @@
     gap: 6px;
 }
 
-/* Botões Discretos e Elegantes */
 .btn-step-control {
     background: rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
@@ -107,16 +113,52 @@
 
 .hl-step-num { color: #16a34a; font-weight: bold; }
 
+/* 📱 AJUSTES MOBILE REFINADOS */
 @media screen and (max-width: 768px) {
-    .flow-controls {
-        position: static;
-        margin-top: 5px;
-        width: 100%;
-        justify-content: center;
-    }
+    /* Ajuste do cabeçalho principal do fluxo */
     .flow-section-header {
         flex-direction: column;
-        padding: 10px !important;
+        padding: 12px 10px !important;
+        gap: 10px;
+    }
+
+    /* Botões lado a lado ocupando a largura total */
+    .flow-controls {
+        position: static;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .btn-step-control {
+        padding: 8px;
+        font-size: 0.65rem;
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* Ajuste do conteúdo da Etapa */
+    .step-header-content {
+        padding: 12px 10px;
+        align-items: flex-start; /* Alinha no topo para nomes longos */
+    }
+
+    .step-header-indicator {
+        margin-top: 3px; /* Centraliza visualmente com a primeira linha */
+    }
+
+    .step-header-label {
+        font-size: 0.8rem;
+        gap: 4px;
+    }
+
+    .step-name-text {
+        display: block;
+        width: 100%;
+        margin-top: 2px;
+        color: #1e293b;
+        font-size: 0.85rem;
     }
 }
 
