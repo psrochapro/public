@@ -1,38 +1,37 @@
 /* 
    ARQUIVO: css/steps.css
-   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e lógica de visibilidade.
+   FUNÇÃO: Estilização dos cabeçalhos de etapa (sanfona) e correção de contraste do header.
 */
 
 .step-header-row {
-    /* Fundo Verde Clarinho (Emerald 100) com transparência Glass */
-    background: rgba(220, 252, 231, 0.85) !important; 
-    backdrop-filter: blur(5px);
+    /* Verde "Menta" muito sutil para não brigar com o fundo da página */
+    background: #f0fdf4 !important; 
     cursor: pointer;
     user-select: none;
     transition: background 0.3s ease;
-    border-bottom: 1px solid rgba(167, 243, 208, 0.5);
+    border-bottom: 2px solid #dcfce7 !important;
 }
 
 .step-header-row:hover {
-    background: rgba(187, 247, 208, 0.95) !important;
+    background: #dcfce7 !important;
 }
 
 .step-header-content {
     display: flex;
     align-items: center;
-    padding: 12px 15px;
+    padding: 10px 15px;
     gap: 15px;
     font-weight: 700;
-    color: #064e3b; /* Verde Escuro para alto contraste */
-    font-size: 0.95rem;
+    color: #166534; /* Verde floresta fechado para leitura */
+    font-size: 0.9rem;
 }
 
 .step-header-indicator {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     transition: transform 0.3s ease;
     width: 20px;
     text-align: center;
-    color: #059669;
+    color: #15803d;
 }
 
 .step-header-row.collapsed .step-header-indicator {
@@ -41,21 +40,62 @@
 
 .step-header-label {
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .step-name-text {
-    color: #065f46;
-    font-weight: 500;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Ajuste Crítico de Legibilidade no Título "Detalhamento do Fluxo" */
+.flow-section-header {
+    background: #064e3b !important; /* Verde ultra escuro sólido */
+    color: #ffffff !important;      /* Texto Branco Puro */
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 12px 20px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px !important;
+    height: auto !important;
+    min-height: 45px;
+}
+
+.flow-controls {
+    position: absolute;
+    right: 15px;
+    display: flex;
+    gap: 8px;
+}
+
+/* Botões com Contraste Máximo */
+.btn-step-control {
+    background: #ffffff !important; /* Fundo Branco Sólido */
+    color: #064e3b !important;      /* Texto no Verde do Header */
+    border: 1px solid #ffffff !important;
+    padding: 4px 12px;
+    border-radius: 4px; /* Formato mais sério */
+    font-size: 0.65rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.btn-step-control:hover {
+    background: #f0fdf4 !important;
+    transform: scale(1.05);
 }
 
 .step-warning {
     color: #b91c1c;
-    font-size: 0.75rem;
-    font-weight: normal;
+    font-size: 0.7rem;
+    font-weight: bold;
     background: #fee2e2;
     padding: 2px 8px;
     border-radius: 4px;
@@ -63,77 +103,32 @@
     border: 1px solid #fecaca;
 }
 
-/* Lógica de visibilidade das linhas */
 .row-hidden {
     display: none !important;
 }
 
-/* Controles Globais no Header do Fluxo */
-.flow-section-header {
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    color: #ffffff;
-}
+/* Ajuste syntax highlighting no editor */
+.hl-step-num { color: #16a34a; font-weight: bold; }
 
-.flow-controls {
-    position: absolute;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.btn-step-control {
-    background: rgba(255, 255, 255, 0.15); /* Fundo sutil */
-    border: 1px solid rgba(255, 255, 255, 0.5); /* Borda mais visível */
-    color: #ffffff !important; /* Texto branco puro */
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.btn-step-control:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: #ffffff;
-    transform: translateY(-1px);
-}
-
-/* Ajustes para o Editor Lateral */
-.hl-step-num { color: #059669; font-weight: bold; }
-
-/* Mobile */
 @media screen and (max-width: 768px) {
     .flow-controls {
         position: static;
         margin-top: 10px;
+        width: 100%;
         justify-content: center;
-        padding-bottom: 10px;
     }
     .flow-section-header {
         flex-direction: column;
-        height: auto !important;
-        padding: 15px 10px;
+        padding: 15px !important;
     }
 }
 
-/* Impressão: Forçar visibilidade e cores base */
 @media print {
     .step-header-indicator, .flow-controls { display: none !important; }
     .row-hidden { display: table-row !important; }
     .step-header-row { 
         background: #f0fdf4 !important; 
-        /* Propriedades de compatibilidade para cores em impressão */
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        border-bottom: 2px solid #dcfce7 !important;
     }
 }
