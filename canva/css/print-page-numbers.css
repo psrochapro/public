@@ -1,0 +1,71 @@
+/* 
+   Este arquivo habilita a numeração de páginas nativa.
+   O rodapé fixo é repetido em todas as páginas pelo motor de impressão do navegador.
+*/
+
+@media print {
+    /* 1. Sobrescreve o display:none do print.css original */
+    .print-footer.show-print,
+    .print-footer-container,
+    .page-num {
+        display: block !important;
+    }
+
+    .print-footer-container {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    /* 2. Fixa o rodapé na base de todas as páginas */
+    .print-footer {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 10mm;
+        background-color: white !important;
+        border-top: 0.5pt solid #eee !important;
+        z-index: 9999;
+    }
+
+    /* 3. Lógica do Contador de Páginas */
+    body {
+        counter-reset: page;
+    }
+
+    .page-num::after {
+        counter-increment: page;
+        content: counter(page);
+    }
+
+    /* 4. Estilização discreta */
+    .print-footer-url {
+        font-size: 7pt !important;
+        color: #999 !important;
+        font-family: sans-serif;
+    }
+
+    .print-page-count {
+        font-size: 8pt !important;
+        color: #666 !important;
+        font-weight: normal !important;
+    }
+
+    /* 5. Ajuste de margem no conteúdo para não ser cortado pelo rodapé fixo */
+    .glass-container {
+        padding-bottom: 15mm !important;
+    }
+
+    /* Evita quebras de linha dentro de elementos importantes */
+    .meta-card-row, .survey-card, .activity-row-card {
+        break-inside: avoid !important;
+    }
+}
+
+/* Garante que o rodapé nunca apareça na visualização do navegador (tela) */
+@media screen {
+    .print-footer.show-print {
+        display: none !important;
+    }
+}
