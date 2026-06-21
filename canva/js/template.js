@@ -7,6 +7,9 @@ const template = {
 #area 
 #dono 
 
+#etapas
+1: Nome da Etapa
+
 #atores 
 #entradas 
 #saidas 
@@ -45,6 +48,18 @@ Cliente:
 #macroprocesso Gestão de Suprimentos e Logística
 #area Departamento de Compras e Contratos
 #dono Diretoria de Operações
+
+#etapas
+1: Preparação da Demanda
+2: Cotação e Prospecção de Mercado
+3: Análise e Seleção Técnica
+4: Negociação Comercial e Compliance
+5: Formalização Jurídica e Contratual
+6: Aprovação e Assinatura Eletrônica
+7: Ativação no ERP e Ordem de Compra
+8: Execução, Entrega e Recebimento
+9: Processamento Fiscal e Financeiro
+10: Encerramento e Auditoria de Qualidade
 
 #atores Solicitante, Gestor da Área, Compras, Jurídico, Financeiro, Compliance, Almoxarifado
 #entradas Requisição de Compra, Especificação Técnica, Orçamentos de Mercado, Parecer de Compliance, Certidões do Fornecedor
@@ -334,7 +349,7 @@ Saídas: Painel de Indicadores de Suprimentos Atualizado
 Cliente: Diretoria Executiva
 
 #observacoes
-Ponto crítico identificado na Etapa
+Ponto crítico identificado na Etapa 4: O Compliance deve ser envolvido antes da negociação final se o fornecedor for internacional.
 `;
         this.saveFile(content, "exemplo.txt");
     },
