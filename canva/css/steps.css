@@ -4,15 +4,17 @@
 */
 
 .step-header-row {
-    background: rgba(224, 242, 254, 0.8) !important; /* Azul clarinho suave */
+    /* Fundo Verde Clarinho (Emerald 100) com transparência Glass */
+    background: rgba(220, 252, 231, 0.85) !important; 
     backdrop-filter: blur(5px);
     cursor: pointer;
     user-select: none;
     transition: background 0.3s ease;
+    border-bottom: 1px solid rgba(167, 243, 208, 0.5);
 }
 
 .step-header-row:hover {
-    background: rgba(186, 230, 253, 0.9) !important;
+    background: rgba(187, 247, 208, 0.95) !important;
 }
 
 .step-header-content {
@@ -20,8 +22,8 @@
     align-items: center;
     padding: 12px 15px;
     gap: 15px;
-    font-weight: 600;
-    color: #0c4a6e; /* Azul escuro para contraste */
+    font-weight: 700;
+    color: #064e3b; /* Verde Escuro para alto contraste */
     font-size: 0.95rem;
 }
 
@@ -30,7 +32,7 @@
     transition: transform 0.3s ease;
     width: 20px;
     text-align: center;
-    color: #0369a1;
+    color: #059669;
 }
 
 .step-header-row.collapsed .step-header-indicator {
@@ -46,18 +48,19 @@
 }
 
 .step-name-text {
-    color: #334155;
+    color: #065f46;
     font-weight: 500;
 }
 
 .step-warning {
-    color: #e74c3c;
+    color: #b91c1c;
     font-size: 0.75rem;
     font-weight: normal;
-    background: #fdeaea;
+    background: #fee2e2;
     padding: 2px 8px;
     border-radius: 4px;
     margin-left: 10px;
+    border: 1px solid #fecaca;
 }
 
 /* Lógica de visibilidade das linhas */
@@ -71,6 +74,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    color: #ffffff;
 }
 
 .flow-controls {
@@ -81,25 +85,30 @@
 }
 
 .btn-step-control {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: white;
-    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.15); /* Fundo sutil */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Borda mais visível */
+    color: #ffffff !important; /* Texto branco puro */
+    padding: 5px 14px;
     border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .btn-step-control:hover {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #ffffff;
     transform: translateY(-1px);
 }
 
 /* Ajustes para o Editor Lateral */
-.hl-step-num { color: #2563eb; font-weight: bold; }
+.hl-step-num { color: #059669; font-weight: bold; }
 
 /* Mobile */
 @media screen and (max-width: 768px) {
@@ -107,19 +116,24 @@
         position: static;
         margin-top: 10px;
         justify-content: center;
+        padding-bottom: 10px;
     }
     .flow-section-header {
         flex-direction: column;
-        padding: 15px;
+        height: auto !important;
+        padding: 15px 10px;
     }
 }
 
-/* Impressão */
+/* Impressão: Forçar visibilidade e cores base */
 @media print {
     .step-header-indicator, .flow-controls { display: none !important; }
     .row-hidden { display: table-row !important; }
     .step-header-row { 
-        background: #f1f5f9 !important; 
+        background: #f0fdf4 !important; 
+        /* Propriedades de compatibilidade para cores em impressão */
         -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        border-bottom: 2px solid #dcfce7 !important;
     }
 }
