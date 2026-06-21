@@ -104,3 +104,29 @@ body.presentation-mode #presentation-controls {
     font-size: 0.85rem;
     text-transform: uppercase;
 }
+
+/* 6. Ajustes de Responsividade para o HUD (Mobile) */
+@media screen and (max-width: 768px) {
+    #presentation-controls {
+        bottom: 15px;
+        width: 95%;
+        padding: 10px;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-radius: 20px;
+    }
+
+    #pres-info {
+        min-width: 100%;
+        font-size: 0.7rem;
+        order: -1; /* Posiciona o texto acima dos botões */
+        margin-bottom: 5px;
+    }
+
+    #presentation-controls button {
+        padding: 8px 12px;
+        font-size: 0.65rem;
+        flex: 1; /* Distribui os botões na largura disponível */
+    }
+}
