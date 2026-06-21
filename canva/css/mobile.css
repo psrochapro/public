@@ -189,6 +189,7 @@
     .obs-table-styled td {
         display: block;
         width: 100%;
+        box-sizing: border-box; /* Ajuste cirúrgico: impede vazamento de largura */
     }
 
     .obs-table-styled thead {
@@ -201,6 +202,8 @@
         border-radius: 10px !important;
         margin-bottom: 8px;
         line-height: 1.4;
+        word-wrap: break-word;     /* Ajuste cirúrgico: evita que textos longos estourem o card */
+        overflow-wrap: break-word; /* Ajuste cirúrgico: evita que textos longos estourem o card */
     }
 
     /* 7. Cabeçalhos de Seção */
