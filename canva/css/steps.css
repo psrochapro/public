@@ -4,7 +4,7 @@
 */
 
 .step-header-row {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(224, 242, 254, 0.8) !important; /* Azul clarinho suave */
     backdrop-filter: blur(5px);
     cursor: pointer;
     user-select: none;
@@ -12,7 +12,7 @@
 }
 
 .step-header-row:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(186, 230, 253, 0.9) !important;
 }
 
 .step-header-content {
@@ -21,7 +21,7 @@
     padding: 12px 15px;
     gap: 15px;
     font-weight: 600;
-    color: #2c3e50;
+    color: #0c4a6e; /* Azul escuro para contraste */
     font-size: 0.95rem;
 }
 
@@ -30,6 +30,7 @@
     transition: transform 0.3s ease;
     width: 20px;
     text-align: center;
+    color: #0369a1;
 }
 
 .step-header-row.collapsed .step-header-indicator {
@@ -45,7 +46,7 @@
 }
 
 .step-name-text {
-    color: #475569;
+    color: #334155;
     font-weight: 500;
 }
 
@@ -59,37 +60,66 @@
     margin-left: 10px;
 }
 
-/* Esconde linhas quando a etapa está recolhida */
-.step-header-row.collapsed + .activity-row-card,
-.step-header-row.collapsed ~ .activity-row-card[data-etapa-group] {
-    display: none;
-}
-
-/* Lógica de agrupamento via JS garantirá que apenas as linhas certas sumam */
+/* Lógica de visibilidade das linhas */
 .row-hidden {
     display: none !important;
 }
 
+/* Controles Globais no Header do Fluxo */
+.flow-section-header {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.flow-controls {
+    position: absolute;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-step-control {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.btn-step-control:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+}
+
 /* Ajustes para o Editor Lateral */
 .hl-step-num { color: #2563eb; font-weight: bold; }
-.hl-step-name { color: #0891b2; }
 
-/* Mobile: Ajuste de padding no header da etapa */
+/* Mobile */
 @media screen and (max-width: 768px) {
-    .step-header-content {
+    .flow-controls {
+        position: static;
+        margin-top: 10px;
+        justify-content: center;
+    }
+    .flow-section-header {
+        flex-direction: column;
         padding: 15px;
-        background: #f8fafc;
-        border-bottom: 1px solid #e2e8f0;
     }
 }
 
-/* Impressão: Forçar sanfonas abertas e esconder indicadores */
+/* Impressão */
 @media print {
-    .step-header-indicator { display: none; }
+    .step-header-indicator, .flow-controls { display: none !important; }
     .row-hidden { display: table-row !important; }
     .step-header-row { 
         background: #f1f5f9 !important; 
         -webkit-print-color-adjust: exact;
-        break-after: avoid;
     }
 }

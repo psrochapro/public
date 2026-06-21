@@ -65,7 +65,6 @@ const renderer = {
         flowItemsContainer.innerHTML = '';
         
         if (data.fluxo && data.fluxo.length > 0) {
-            // Agrupar atividades por etapa internamente
             const grupos = {};
             data.fluxo.forEach((item, index) => {
                 const eNum = item.etapa || "1";
@@ -73,12 +72,10 @@ const renderer = {
                 grupos[eNum].push({ ...item, originalIndex: index });
             });
 
-            // Renderizar Grupos
             Object.keys(grupos).sort((a, b) => parseInt(a) - parseInt(b)).forEach(eNum => {
                 const etapaNome = data.mapaEtapas[eNum];
                 const warning = !etapaNome ? `<span class="step-warning">Etapa ${eNum} não declarada no índice</span>` : '';
                 
-                // Inserir Header da Etapa (Sanfona)
                 const headerRow = document.createElement('tr');
                 headerRow.className = 'step-header-row';
                 headerRow.setAttribute('data-target-step', eNum);
@@ -87,7 +84,7 @@ const renderer = {
                         <div class="step-header-content">
                             <span class="step-header-indicator">▼</span>
                             <div class="step-header-label">
-                                <span>ETAPA ${eNum}</span>
+                                <span>🏷️ ETAPA ${eNum}</span>
                                 ${etapaNome ? `<span class="step-name-text">: ${etapaNome}</span>` : warning}
                             </div>
                         </div>
@@ -96,7 +93,6 @@ const renderer = {
                 headerRow.onclick = () => this.toggleStep(eNum);
                 flowItemsContainer.appendChild(headerRow);
 
-                // Inserir Atividades do Grupo
                 grupos[eNum].forEach(item => {
                     const activityId = (item.numero || (item.originalIndex + 1)).toString().padStart(3, '0');
                     const stepValue = parseInt(item.etapa) || 1;
@@ -150,6 +146,22 @@ const renderer = {
         rows.forEach(row => {
             if (isCollapsed) row.classList.add('row-hidden');
             else row.classList.remove('row-hidden');
+        });
+    },
+
+    toggleAllSteps(expand) {
+        const headers = document.querySelectorAll('.step-header-row');
+        headers.forEach(header => {
+            const stepNum = header.getAttribute('data-target-step');
+            const rows = document.querySelectorAll(`.activity-row-card[data-etapa="${stepNum}"]`);
+            
+            if (expand) {
+                header.classList.remove('collapsed');
+                rows.forEach(row => row.classList.remove('row-hidden'));
+            } else {
+                header.classList.add('collapsed');
+                rows.forEach(row => row.classList.add('row-hidden'));
+            }
         });
     }
 };

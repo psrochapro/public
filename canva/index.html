@@ -105,7 +105,13 @@
 
         <div class="survey-card-list" id="survey-container"></div>
 
-        <div class="flow-section-header">DETALHAMENTO DO FLUXO</div>
+        <div class="flow-section-header">
+            <span>DETALHAMENTO DO FLUXO</span>
+            <div class="flow-controls no-print">
+                <button class="btn-step-control" onclick="renderer.toggleAllSteps(true)" title="Expandir todas as etapas">📂 Expandir Tudo</button>
+                <button class="btn-step-control" onclick="renderer.toggleAllSteps(false)" title="Recolher todas as etapas">📁 Recolher Tudo</button>
+            </div>
+        </div>
         
         <div class="flow-container">
             <table class="flow-table-styled">
