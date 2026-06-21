@@ -1,59 +1,132 @@
 /* 
    ARQUIVO: css/presentation.css
-   RESTAURAÇÃO DO EFEITO DE FOCO
+   FUNÇÃO: Controle de Foco e Elevação para o Modo Apresentação.
+   ESTILO: Glassmorphism com elevação sutil (Soft Shadow) e Header flutuante.
 */
 
-/* Esmaecimento Total do Conteúdo */
+/* 1. Alinhamento Estrutural */
+body.presentation-mode .flow-table-styled {
+    border-spacing: 0 8px !important;
+    border-collapse: separate !important;
+}
+
+/* 2. Efeito de Esmaecimento (Contexto) */
 .presentation-mode .process-title-header,
 .presentation-mode .header-dashboard,
 .presentation-mode .survey-card,
 .presentation-mode .activity-row-card,
 .presentation-mode .flow-section-header,
-.presentation-mode .obs-table-styled,
-.presentation-mode .step-header-row {
-    opacity: 0.15 !important;
-    filter: blur(2px) grayscale(0.6) !important;
-    transition: all 0.4s ease !important;
+.presentation-mode .obs-table-styled {
+    opacity: 0.15;
+    filter: blur(2px) grayscale(0.5);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* DESTAQUE DO ITEM ATIVO */
+/* 3. Destaque e Elevação do Foco */
+/* Aplica uma sombra suave e uma elevação sutil para destacar o item ativo */
 .presentation-mode .pres-focus,
 .presentation-mode .pres-section-active {
     opacity: 1 !important;
     filter: none !important;
-    z-index: 1000 !important;
+    z-index: 100 !important;
+    /* Shadow suave para profundidade */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    /* Elevação sutil (opcional, remova se preferir estático) */
     transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
 }
 
-/* HUD RESPONSIVO */
+/* Garantia para as células da tabela em foco */
+.presentation-mode tr.activity-row-card.pres-focus td {
+    background: rgba(255, 255, 255, 0.65) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.8) !important;
+}
+
+/* 4. Cabeçalho Fixo (Sticky) com Respiro */
+.presentation-mode .flow-table-styled thead {
+    position: sticky;
+    top: 20px; /* RESPIRO: Distância do topo para não ficar grudado */
+    z-index: 1001;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+.presentation-mode .flow-header-row th {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--primary-elegant) !important;
+    color: var(--primary-elegant) !important;
+    padding: 15px 5px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Arredondamento das pontas do header para aspecto de pílula flutuante */
+.presentation-mode .flow-header-row th:first-child { border-radius: 12px 0 0 12px !important; }
+.presentation-mode .flow-header-row th:last-child { border-radius: 0 12px 12px 0 !important; }
+
+/* 5. Controles de Apresentação */
 #presentation-controls {
     display: none;
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(15px);
     padding: 12px 25px;
     border-radius: 50px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
     z-index: 9999;
     gap: 15px;
     align-items: center;
+    border: 1px solid rgba(255,255,255,0.4);
 }
 
-body.presentation-mode #presentation-controls { display: flex; }
+body.presentation-mode #presentation-controls {
+    display: flex;
+}
+
+#presentation-controls button {
+    padding: 10px 22px;
+    border-radius: 25px;
+    background: var(--primary-elegant);
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
 
 #pres-info {
     font-weight: 800;
-    color: #1d4e3a;
+    color: var(--primary-elegant);
     min-width: 250px;
     text-align: center;
     font-size: 0.85rem;
+    text-transform: uppercase;
 }
 
+/* 6. Ajustes de Responsividade para o HUD (Mobile) */
 @media screen and (max-width: 768px) {
-    #presentation-controls { width: 95%; padding: 10px; flex-wrap: wrap; justify-content: center; bottom: 15px; }
-    #pres-info { min-width: 100%; font-size: 0.65rem; order: -1; }
-    #presentation-controls button { flex: 1; padding: 8px !important; font-size: 0.65rem !important; }
+    #presentation-controls {
+        bottom: 15px;
+        width: 95%;
+        padding: 10px;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-radius: 20px;
+    }
+
+    #pres-info {
+        min-width: 100%;
+        font-size: 0.7rem;
+        order: -1; /* Posiciona o texto acima dos botões */
+        margin-bottom: 5px;
+    }
+
+    #presentation-controls button {
+        padding: 8px 12px;
+        font-size: 0.65rem;
+        flex: 1; /* Distribui os botões na largura disponível */
+    }
 }
