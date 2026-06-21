@@ -2,8 +2,9 @@ const persistence = {
     // Retorna o conteúdo atual do canvas formatado como string limpa
     getContentString() {
         let content = "";
-        const headerTags = ['nome', 'macroprocesso', 'area', 'dono', 'objetivo'];
         
+        // 1. Metadados de Cabeçalho
+        const headerTags = ['nome', 'macroprocesso', 'area', 'dono', 'objetivo'];
         headerTags.forEach(tag => {
             const el = document.getElementById(`val-${tag}`);
             if (el && el.innerText !== "---") {
@@ -12,6 +13,23 @@ const persistence = {
         });
         content += "\n";
 
+        // 2. Novo: Dicionário de Etapas (#etapas)
+        const stepHeaders = document.querySelectorAll('.step-header-row');
+        if (stepHeaders.length > 0) {
+            content += "#etapas\n";
+            stepHeaders.forEach(header => {
+                const num = header.getAttribute('data-target-step');
+                const nameEl = header.querySelector('.step-name-text');
+                if (nameEl) {
+                    // Remove o caractere ":" inicial se existir para exportação limpa
+                    const name = nameEl.innerText.replace(/^:\s*/, '').trim();
+                    content += `${num}: ${name}\n`;
+                }
+            });
+            content += "\n";
+        }
+
+        // 3. Cards de Levantamento (Pills)
         const surveyCards = document.querySelectorAll('.survey-card');
         renderer.config.forEach((conf, idx) => {
             const card = surveyCards[idx];
@@ -23,18 +41,24 @@ const persistence = {
             }
         });
 
-        const flowRows = document.querySelectorAll('#flow-items-container tr');
-        flowRows.forEach((row, idx) => {
+        // 4. Atividades do Fluxo (Seleção específica para evitar headers de sanfona)
+        const flowRows = document.querySelectorAll('.activity-row-card');
+        flowRows.forEach((row) => {
             const cells = row.querySelectorAll('td');
             if (cells.length >= 7) {
+                // Captura a Regra/Lógica limpando o prefixo
                 const regraEl = cells[4].querySelector('.regra-box');
                 let regraTxt = "";
                 if (regraEl) {
                     regraTxt = regraEl.innerText.replace(/^Lógica:\s*/i, '').trim();
                 }
 
-                content += `#atividade ${idx + 1}\n`;
-                content += `Etapa: ${cells[0].innerText}\n`;
+                // Captura o ID da Atividade limpando tags HTML
+                const activityId = row.querySelector('.activity-tag').innerText;
+                const etapaNum = row.getAttribute('data-etapa') || "1";
+
+                content += `#atividade ${activityId}\n`;
+                content += `Etapa: ${etapaNum}\n`;
                 content += `Fornecedor: ${cells[1].innerText}\n`;
                 content += `Insumos: ${cells[2].innerText}\n`;
                 content += `Ator: ${cells[3].innerText}\n`;
@@ -47,11 +71,11 @@ const persistence = {
             }
         });
 
+        // 5. Observações Gerais
         const obsItems = document.querySelectorAll('.obs-row td');
         if (obsItems.length > 0) {
             content += `#observacoes\n`;
             obsItems.forEach(td => {
-                // Removida a inserção automática do hífen para dar controle total ao usuário
                 content += `${td.innerText}\n`;
             });
         }
@@ -59,13 +83,13 @@ const persistence = {
         return content.trim();
     },
 
-    // Nova função: Salva rascunho no navegador
+    // Salva rascunho no navegador
     saveToLocal(content) {
         if (!content) return;
         localStorage.setItem('canvas_draft_txt', content);
     },
 
-    // Nova função: Recupera rascunho do navegador
+    // Recupera rascunho do navegador
     loadFromLocal() {
         return localStorage.getItem('canvas_draft_txt');
     },
