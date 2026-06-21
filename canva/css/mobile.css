@@ -46,6 +46,11 @@
         width: 100%;
     }
 
+    /* Respiro para o contador de atividades */
+    .counter-card {
+        margin: 15px 0;
+    }
+
     .meta-card-row {
         width: 100%;
         display: flex;
@@ -160,6 +165,7 @@
     .obs-table-styled td {
         display: block;
         width: 100%;
+        box-sizing: border-box; /* Previne vazamento lateral */
     }
 
     .obs-table-styled thead { display: none; }
@@ -170,6 +176,7 @@
         border-radius: 10px !important;
         margin-bottom: 10px;
         word-break: break-word;
+        box-sizing: border-box; /* Previne vazamento lateral */
     }
 
     /* 7. Survey Cards (01 a 11) */
