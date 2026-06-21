@@ -1,7 +1,7 @@
 /* 
    ARQUIVO: css/print.css
    FUNÇÃO: Configurações exclusivas para Impressão e PDF.
-   MODIFICAÇÕES: Linha divisória no header, rodapé otimizado e contagem de páginas.
+   VERSÃO: 06 (Ajuste de Margens e Proteção contra Sobreposição)
 */
 
 @media print {
@@ -21,8 +21,8 @@
     }
     
     @page {
-        /* Margem inferior aumentada para acomodar o rodapé fixo */
-        margin: 10mm 10mm 15mm 10mm;
+        /* Margem inferior aumentada para 25mm para garantir espaço total para o rodapé */
+        margin: 10mm 10mm 25mm 10mm;
     }
 
     .glass-container { 
@@ -30,7 +30,7 @@
         border: none !important; 
         backdrop-filter: none !important; 
         background: white !important; 
-        padding: 0 5mm 10mm 5mm !important; 
+        padding: 0 5mm 5mm 5mm !important; 
         width: 100% !important; 
         max-width: 100% !important; 
         margin: 0 !important;
@@ -55,7 +55,6 @@
         text-transform: uppercase;
     }
 
-    /* Linha divisória solicitada entre App e Processo */
     .print-line-divider {
         width: 100%;
         border-bottom: 1px solid #1a4d2e !important;
@@ -71,45 +70,35 @@
         line-height: 1.2;
     }
 
-    /* 2. Rodapé Fixo (Máxima profundidade inferior) */
+    /* 2. Rodapé Fixo (Posicionamento Seguro) */
     .print-footer {
         display: block !important;
         position: fixed;
-        bottom: -10mm; /* Posiciona o rodapé dentro da margem inferior da página */
+        bottom: 0; /* Cola no fundo da margem reservada pelo @page */
         left: 0;
         width: 100%;
         background: white;
-        padding-bottom: 5px;
     }
 
     .print-footer-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 5mm;
+        padding: 5px 5mm;
         font-size: 7.5pt !important;
         color: #666 !important;
+        border-top: 0.5pt solid #eee; /* Linha sutil no rodapé */
     }
 
-    /* 3. Correção da Numeração de Páginas */
-    /* Nota: O total de páginas 'page-total' depende de suporte do motor de PDF/Navegador */
+    /* 3. Numeração de Páginas */
+    /* Removemos o "de total" pois CSS puro não calcula o total global de forma confiável */
     .page-num::after {
         counter-increment: page;
         content: counter(page);
     }
 
-    .print-page-count {
-        font-weight: bold;
-    }
-
-    /* Cores das Pílulas: Preservar as cores dinâmicas no PDF */
-    .pill {
-        font-size: 7pt !important; 
-        border: 1px solid #ccc !important;
-        padding: 2px 5px !important;
-        display: inline-block !important;
-        font-weight: bold !important;
-        background-color: transparent; 
+    .page-total {
+        display: none !important; /* Esconde o total indefinido */
     }
 
     /* Dashboard e Metadados */
