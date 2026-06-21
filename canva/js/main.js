@@ -18,6 +18,25 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     this.value = '';
 });
 
+// Lógica para nomear o PDF corretamente sem alterar permanentemente o título da página na aba
+let originalTitle = document.title;
+
+window.addEventListener('beforeprint', () => {
+    originalTitle = document.title;
+    const nomeProcesso = document.getElementById('val-nome').innerText;
+    if (nomeProcesso && nomeProcesso !== "Nome do Processo" && nomeProcesso !== "---") {
+        const nomeLimpo = nomeProcesso
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, '-')
+            .toLowerCase();
+        document.title = nomeLimpo;
+    }
+});
+
+window.addEventListener('afterprint', () => {
+    document.title = originalTitle;
+});
+
 // Inicialização Orquestrada
 window.addEventListener('load', async () => {
     // 1. Inicia os componentes básicos
