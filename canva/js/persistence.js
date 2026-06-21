@@ -1,10 +1,15 @@
+/* 
+   ARQUIVO: js/persistence.js
+   FUNÇÃO: Gestão de Dados (Exportação TXT, Auto-save e Geração de String de Conteúdo).
+*/
+
 const persistence = {
-    // Retorna o conteúdo atual do canvas formatado como string limpa
+    // Retorna o conteúdo atual do canvas formatado como string limpa respeitando a ordem do template
     getContentString() {
         let content = "";
         
-        // 1. Metadados de Cabeçalho
-        const headerTags = ['nome', 'macroprocesso', 'area', 'dono', 'objetivo'];
+        // 1. Metadados de Cabeçalho (Ordem: Nome -> Objetivo -> Macro -> Area -> Dono)
+        const headerTags = ['nome', 'objetivo', 'macroprocesso', 'area', 'dono'];
         headerTags.forEach(tag => {
             const el = document.getElementById(`val-${tag}`);
             if (el && el.innerText !== "---") {
@@ -13,7 +18,19 @@ const persistence = {
         });
         content += "\n";
 
-        // 2. Novo: Dicionário de Etapas (#etapas)
+        // 2. Cards de Levantamento (Os 11 itens de survey)
+        const surveyCards = document.querySelectorAll('.survey-card');
+        renderer.config.forEach((conf, idx) => {
+            const card = surveyCards[idx];
+            if (card) {
+                const pills = Array.from(card.querySelectorAll('.pill')).map(p => p.innerText);
+                if (pills.length > 0 && pills[0] !== "---") {
+                    content += `#${conf.id} ${pills.join(', ')}\n\n`;
+                }
+            }
+        });
+
+        // 3. Dicionário de Etapas (#etapas) - Posicionado após os 11 itens
         const stepHeaders = document.querySelectorAll('.step-header-row');
         if (stepHeaders.length > 0) {
             content += "#etapas\n";
@@ -29,19 +46,7 @@ const persistence = {
             content += "\n";
         }
 
-        // 3. Cards de Levantamento (Pills)
-        const surveyCards = document.querySelectorAll('.survey-card');
-        renderer.config.forEach((conf, idx) => {
-            const card = surveyCards[idx];
-            if (card) {
-                const pills = Array.from(card.querySelectorAll('.pill')).map(p => p.innerText);
-                if (pills.length > 0 && pills[0] !== "---") {
-                    content += `#${conf.id} ${pills.join(', ')}\n\n`;
-                }
-            }
-        });
-
-        // 4. Atividades do Fluxo (Seleção específica para evitar headers de sanfona)
+        // 4. Atividades do Fluxo (#atividade)
         const flowRows = document.querySelectorAll('.activity-row-card');
         flowRows.forEach((row) => {
             const cells = row.querySelectorAll('td');
