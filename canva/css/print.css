@@ -1,3 +1,9 @@
+/* 
+   ARQUIVO: css/print.css
+   FUNÇÃO: Configurações exclusivas para Impressão e PDF.
+   MODIFICAÇÕES: Linha divisória no header, rodapé otimizado e contagem de páginas.
+*/
+
 @media print {
     /* Reset Global e Proteção de Margens */
     * { 
@@ -11,11 +17,12 @@
         padding: 0; 
         margin: 0; 
         width: 100%; 
-        counter-reset: page;
+        counter-reset: page; /* Inicializa o contador de páginas */
     }
     
     @page {
-        margin: 10mm 10mm 20mm 10mm;
+        /* Margem inferior aumentada para acomodar o rodapé fixo */
+        margin: 10mm 10mm 15mm 10mm;
     }
 
     .glass-container { 
@@ -23,18 +30,22 @@
         border: none !important; 
         backdrop-filter: none !important; 
         background: white !important; 
-        padding: 0 5mm 15mm 5mm !important; 
+        padding: 0 5mm 10mm 5mm !important; 
         width: 100% !important; 
         max-width: 100% !important; 
         margin: 0 !important;
     }
 
-    /* 1. Cabeçalho de Impressão Centralizado */
+    /* 1. Cabeçalho de Impressão */
     .print-header {
         display: block !important;
         text-align: center;
         width: 100%;
         margin-bottom: 5mm;
+    }
+
+    .print-header-top {
+        padding-bottom: 5px;
     }
 
     .print-app-title {
@@ -44,49 +55,64 @@
         text-transform: uppercase;
     }
 
-    .process-title-header h1 { 
-        font-size: 1.2rem !important; 
-        margin-top: 5mm; 
-        color: #1a4d2e !important; 
-        text-align: center;
+    /* Linha divisória solicitada entre App e Processo */
+    .print-line-divider {
+        width: 100%;
+        border-bottom: 1px solid #1a4d2e !important;
+        margin: 2px 0 8px 0;
+        opacity: 0.3;
     }
 
-    /* 2 e 3. Rodapé fixo: URL à esquerda, Página à direita */
+    .process-title-header h1 { 
+        font-size: 1.3rem !important; 
+        margin-top: 2mm; 
+        color: #1a4d2e !important; 
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    /* 2. Rodapé Fixo (Máxima profundidade inferior) */
     .print-footer {
         display: block !important;
         position: fixed;
-        bottom: 0;
+        bottom: -10mm; /* Posiciona o rodapé dentro da margem inferior da página */
         left: 0;
         width: 100%;
         background: white;
-        padding-top: 5px;
+        padding-bottom: 5px;
     }
 
     .print-footer-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 10mm;
+        padding: 0 5mm;
         font-size: 7.5pt !important;
         color: #666 !important;
     }
 
+    /* 3. Correção da Numeração de Páginas */
+    /* Nota: O total de páginas 'page-total' depende de suporte do motor de PDF/Navegador */
     .page-num::after {
         counter-increment: page;
         content: counter(page);
     }
 
-    /* 4. Cores das Pílulas: Remove o fundo fixo para preservar as cores do modo tela */
+    .print-page-count {
+        font-weight: bold;
+    }
+
+    /* Cores das Pílulas: Preservar as cores dinâmicas no PDF */
     .pill {
         font-size: 7pt !important; 
         border: 1px solid #ccc !important;
         padding: 2px 5px !important;
         display: inline-block !important;
         font-weight: bold !important;
-        background-color: transparent; /* Permite que a cor injetada pelo JS apareça */
+        background-color: transparent; 
     }
 
-    /* Restante do Layout Base Preservado */
+    /* Dashboard e Metadados */
     .header-dashboard { 
         display: grid !important; 
         grid-template-columns: 1fr 130px !important; 
@@ -116,30 +142,27 @@
     .counter-number { font-size: 2.2rem !important; line-height: 1; }
     .counter-label { font-size: 0.6rem !important; }
 
+    /* Levantamento */
     .survey-card { 
-        grid-template-columns: 280px 1fr !important; 
+        grid-template-columns: 260px 1fr !important; 
         background: white !important; 
         border: 1px solid #ddd !important; 
         break-inside: avoid !important;
         width: 100% !important; 
-        margin-bottom: 5px !important;
+        margin-bottom: 4px !important;
     }
 
-    .card-item-name { white-space: nowrap !important; }
+    .card-info-side { padding: 4px 10px !important; }
+    .card-item-name { white-space: nowrap !important; font-size: 0.75rem !important; }
+    .card-item-desc { font-size: 0.6rem !important; }
     
     .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
 
     .flow-header-row th, .obs-table-styled th {
         background: #f2f2f2 !important; color: #1a4d2e !important;
         border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
-        text-transform: none !important; 
         padding: 5px 2px !important;
         line-height: 1 !important;
-        white-space: nowrap !important;
-    }
-
-    .flow-header-row th:first-child {
-        min-width: 65px !important;
     }
 
     .activity-row-card td, .obs-row td {
@@ -153,14 +176,15 @@
 
     .obs-row td::before { content: "• "; color: #1a4d2e; font-weight: bold; }
 
+    /* Utilitários de Impressão */
     .show-print { display: inline !important; }
     .hide-print { display: none !important; }
 
     #editor-container, 
     #editor-toggle, 
     #presentation-controls, 
-    .toolbar-bubble,
-    .btn-group {
+    .toolbar-master-container,
+    .flow-controls {
         display: none !important;
     }
 }
