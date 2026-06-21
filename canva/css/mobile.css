@@ -1,62 +1,65 @@
 /* 
    ARQUIVO: css/mobile.css
-   FUNÇÃO: Responsividade completa.
+   FUNÇÃO: Responsividade.
 */
 
 @media screen and (max-width: 768px) {
     
-    body {
-        padding: 5px;
-    }
+    body { padding: 10px; }
 
     .app-main-title {
-        font-size: 1.1rem;
-        margin: 10px 0;
+        font-size: 1.2rem;
+        margin: 5px 0 10px 0;
     }
 
-    /* 2. Toolbar Agrupada no Mobile (Grid 2x2) */
-    .toolbar-wrapper {
-        margin: 0 0 15px 0;
-    }
-
-    .toolbar {
+    /* Toolbar Mobile (Grid 2x2) */
+    .unified-toolbar-bar {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Duas colunas */
+        grid-template-columns: 1fr 1fr;
         gap: 15px;
-        padding: 5px;
+        padding: 15px 10px;
+        border-radius: 15px;
     }
 
-    .btn-group-wrapper {
+    .toolbar-group { border-right: none; padding: 0; }
+    .btn-cluster { width: 100%; gap: 5px; }
+
+    .nav-btn {
+        min-width: 0;
         width: 100%;
+        padding: 10px 4px;
+        font-size: 0.65rem;
     }
 
-    .btn-group {
-        width: 100%;
-        box-sizing: border-box;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.7);
+    /* Restauração dos Rótulos Padrão do Canvas */
+    .activity-row-card td::before {
+        position: absolute;
+        left: 15px;
+        width: 30%;
+        font-weight: 800;
+        color: var(--primary-elegant);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        content: "";
+        opacity: 0.7;
     }
 
-    .toolbar button {
-        min-width: 0; /* No mobile o botão flui com o container */
-        width: 100%;
-        padding: 10px 5px;
-        font-size: 0.7rem;
-    }
+    .activity-row-card td:nth-of-type(1)::before { content: "Etapa"; }
+    .activity-row-card td:nth-of-type(2)::before { content: "Fornecedor"; }
+    .activity-row-card td:nth-of-type(3)::before { content: "Insumos"; }
+    .activity-row-card td:nth-of-type(4)::before { content: "Ator"; }
+    .activity-row-card td:nth-of-type(5)::before { content: "Atividades"; }
+    .activity-row-card td:nth-of-type(6)::before { content: "Saídas"; }
+    .activity-row-card td:nth-of-type(7)::before { content: "Cliente"; }
 
-    /* Resto das regras mobile mantidas para não quebrar funcionalidade anterior */
-    .glass-container { padding: 10px; border-radius: 10px; width: 100%; box-sizing: border-box; }
-    .header-dashboard { grid-template-columns: 1fr; gap: 10px; }
-    .survey-card { grid-template-columns: 1fr; transform: none !important; }
+    /* Blindagem do layout e observações */
+    .glass-container { width: 100%; box-sizing: border-box; overflow-x: hidden; }
+    .obs-table-styled { box-sizing: border-box; width: 100%; }
+    .obs-row td { word-wrap: break-word; overflow-wrap: break-word; padding: 15px !important; }
+    
     .flow-container { overflow-x: hidden; }
-    .flow-table-styled, .flow-table-styled thead, .flow-table-styled tbody, .flow-table-styled tr, .flow-table-styled td { display: block; width: 100%; box-sizing: border-box; }
-    .flow-table-styled thead { display: none; }
-    .activity-row-card { margin-bottom: 15px; border-radius: 12px !important; }
-    .activity-row-card td { padding: 10px 10px 10px 35% !important; font-size: 0.75rem; }
-    .activity-row-card td::before { left: 10px; font-size: 0.55rem; }
-    .activity-row-card td.highlight-col { padding-left: 10px !important; }
-    .obs-table-styled, .obs-table-styled thead, .obs-table-styled tbody, .obs-table-styled tr, .obs-table-styled td { display: block; width: 100%; box-sizing: border-box; }
-    .obs-row td { padding: 12px !important; font-size: 0.75rem; word-wrap: break-word; overflow-wrap: break-word; }
-    .process-title-header h1 { font-size: 1.1rem; }
+    .activity-row-card { display: block; width: 100%; margin-bottom: 20px; }
+    .activity-row-card td { display: flex; align-items: center; padding: 12px 15px 12px 35% !important; border: none; }
+    
     #editor-container { display: none !important; }
 }

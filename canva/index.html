@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Levantamento de Processos</title>
+    <title>Canvas de Processo Digital</title>
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/theme.css">
@@ -41,45 +41,45 @@
         </div>
     </div>
 
+    <!-- TOOLBAR UNIFICADA (NO-PRINT) -->
     <div class="toolbar-wrapper no-print">
-        <!-- Título da Aplicação -->
         <h1 class="app-main-title">Canvas de Processo Digital</h1>
-
-        <div class="toolbar">
+        
+        <div class="unified-toolbar-bar">
             <input type="file" id="fileInput" accept=".txt,.cnv" style="display: none;">
             
-            <!-- Grupo 1: Gerenciamento -->
-            <div class="btn-group-wrapper">
-                <span class="group-label">Gerenciamento de Arquivos</span>
-                <div class="btn-group">
-                    <button class="btn-import" onclick="document.getElementById('fileInput').click()">Importar</button>
-                    <button class="btn-export" onclick="persistence.exportCanvas()">Exportar</button>
+            <!-- Grupo 1: Arquivos -->
+            <div class="toolbar-group">
+                <span class="group-label">Arquivos</span>
+                <div class="btn-cluster">
+                    <button class="nav-btn btn-blue" onclick="document.getElementById('fileInput').click()">Importar</button>
+                    <button class="nav-btn btn-yellow" onclick="persistence.exportCanvas()">Exportar</button>
                 </div>
             </div>
 
             <!-- Grupo 2: Referências -->
-            <div class="btn-group-wrapper">
+            <div class="toolbar-group">
                 <span class="group-label">Referências</span>
-                <div class="btn-group">
-                    <button class="btn-template" onclick="template.downloadTemplate()">Template</button>
-                    <button class="btn-example" onclick="template.downloadExample()">Exemplo</button>
+                <div class="btn-cluster">
+                    <button class="nav-btn btn-green" onclick="template.downloadTemplate()">Template</button>
+                    <button class="nav-btn btn-purple" onclick="template.downloadExample()">Exemplo</button>
                 </div>
             </div>
 
             <!-- Grupo 3: Compartilhamento -->
-            <div class="btn-group-wrapper">
+            <div class="toolbar-group">
                 <span class="group-label">Compartilhamento</span>
-                <div class="btn-group">
-                    <button class="btn-print" onclick="window.print()">PDF</button>
-                    <button class="btn-share" onclick="share.generateShareLink()">🔗 Link</button>
+                <div class="btn-cluster">
+                    <button class="nav-btn btn-dark" onclick="window.print()">PDF</button>
+                    <button class="nav-btn btn-cyan" onclick="share.generateShareLink()">🔗 Link</button>
                 </div>
             </div>
 
             <!-- Grupo 4: Apresentação -->
-            <div class="btn-group-wrapper">
+            <div class="toolbar-group">
                 <span class="group-label">Apresentação</span>
-                <div class="btn-group">
-                    <button class="btn-presentation" id="btn-presentation">Apresentação</button>
+                <div class="btn-cluster">
+                    <button class="nav-btn btn-orange" id="btn-presentation">Apresentação</button>
                 </div>
             </div>
         </div>

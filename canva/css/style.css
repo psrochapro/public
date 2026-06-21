@@ -1,94 +1,94 @@
 /* 
    ARQUIVO: css/style.css
-   FUNÇÃO: Estilização da Toolbar, Botões, Grupos e Título Principal.
+   FUNÇÃO: Estilização da Toolbar Unificada, Botões e Grupos.
 */
 
-/* Título Principal da Aplicação */
 .app-main-title {
     text-align: center;
     color: #1d4e3a;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 800;
-    margin: 15px 0 10px 0;
-    letter-spacing: -0.5px;
+    margin: 10px 0 15px 0;
 }
 
-/* Container da Toolbar */
 .toolbar-wrapper {
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto 20px auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
-.toolbar {
+/* BARRA UNIFICADA - CONTAINER ESTILIZADO */
+.unified-toolbar-bar {
     display: flex;
-    justify-content: space-evenly;
-    align-items: flex-end;
+    justify-content: space-around;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
     width: 100%;
-    gap: 20px;
-    padding: 10px;
+    max-width: 1100px;
 }
 
-/* Grupos Nomeados */
-.btn-group-wrapper {
+.toolbar-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    padding: 0 15px;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.toolbar-group:last-child {
+    border-right: none;
 }
 
 .group-label {
     font-size: 0.65rem;
-    font-weight: 600;
-    color: #64748b;
+    font-weight: 700;
+    color: #475569;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.btn-group {
+.btn-cluster {
     display: flex;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
-    padding: 6px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    gap: 8px;
+    gap: 10px;
 }
 
-/* Botões da Toolbar */
-.toolbar button {
-    padding: 8px 15px;
+/* BOTÕES DA TOOLBAR (ISOLADOS) */
+.nav-btn {
+    padding: 8px 16px;
     border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: 700;
+    border-radius: 20px;
+    color: white !important;
+    font-weight: 800;
     font-size: 0.75rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 90px; /* Garante tamanho homogêneo */
+    transition: all 0.2s ease;
+    min-width: 100px; /* Equidistância e Equilíbrio */
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.toolbar button:hover {
+.nav-btn:hover {
     transform: translateY(-2px);
     filter: brightness(1.1);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* Cores dos Botões (Mantendo as originais solicitadas) */
-.btn-import { background-color: #5b8ae4; }
-.btn-export { background-color: #f1c430; }
-.btn-template { background-color: #6eb057; }
-.btn-example { background-color: #8e7cc3; }
-.btn-print { background-color: #333333; }
-.btn-share { background-color: #46a6b8; }
-.btn-presentation { background-color: #e67e22; min-width: 120px !important; }
-
-/* Outros componentes de UI genéricos podem ser adicionados abaixo sem alterar o acima */
+/* Cores dos Botões */
+.btn-blue { background-color: #5b8ae4; }
+.btn-yellow { background-color: #f1c430; }
+.btn-green { background-color: #6eb057; }
+.btn-purple { background-color: #8e7cc3; }
+.btn-dark { background-color: #333333; }
+.btn-cyan { background-color: #46a6b8; }
+.btn-orange { background-color: #e67e22; }
