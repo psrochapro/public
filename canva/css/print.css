@@ -1,199 +1,101 @@
-/* 
-   ARQUIVO: css/print.css
-   FUNÇÃO: Impressão Profissional com Cabeçalho/Rodapé fixos e fidelidade visual.
-   VERSÃO: Corrigida para evitar quebra na coluna "Etapa".
-*/
-
 @media print {
-    /* 1. Configurações de Página e Margens */
-    @page {
-        margin: 25mm 12mm 25mm 12mm;
-        size: A4 portrait;
-    }
-
-    /* 2. Forçar Cores e Reset */
-    * { 
-        box-sizing: border-box !important; 
-        -webkit-print-color-adjust: exact !important; 
-        print-color-adjust: exact !important; 
-        text-shadow: none !important;
-    }
+    /* Reset Global e Proteção de Margens */
+    * { box-sizing: border-box !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     
-    body { 
-        background: white !important; 
-        padding: 0; 
-        margin: 0; 
-        width: 100%; 
-        counter-reset: page; 
-    }
+    body { background: white !important; padding: 0; margin: 0; width: 100%; }
     
-    /* 3. Containers de PDF Fixos (Baseados no seu index.html) */
-    .print-header {
-        position: fixed;
-        top: -15mm;
-        left: 0;
-        width: 100%;
-        display: block;
-        text-align: center;
-    }
-
-    .print-header-top {
-        text-align: center;
-        padding-bottom: 5px;
-    }
-
-    .print-app-title {
-        font-family: 'Segoe UI', Tahoma, sans-serif;
-        font-weight: 800;
-        font-size: 11pt;
-        color: #1a4d2e;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .print-footer {
-        position: fixed;
-        bottom: -15mm;
-        left: 0;
-        width: 100%;
-        display: block;
-    }
-
-    .print-footer-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 5px;
-        font-size: 8pt;
-        color: #666;
-    }
-
-    .print-line-divider {
-        height: 1.5px;
-        background-color: #1a4d2e;
-        width: 100%;
-    }
-
-    /* Paginação Dinâmica */
-    .page-num::after { content: counter(page); }
-    .page-total::after { content: counter(pages); }
-
-    /* 4. Fidelidade do Canvas e Ajustes de Coluna */
     .glass-container { 
-        box-shadow: none !important; 
-        border: 1px solid #ddd !important; 
-        background: white !important; 
-        padding: 0 5mm !important; 
-        width: 100% !important; 
-        max-width: 100% !important; 
-        margin: 5mm 0 0 0 !important;
+        box-shadow: none !important; border: none !important; backdrop-filter: none !important; background: white !important; 
+        padding: 0 5mm !important; width: 100% !important; max-width: 100% !important; margin: 0 !important;
     }
 
-    /* CORREÇÃO "ETAPA E": Impede quebra de linha no cabeçalho da tabela */
-    .flow-header-row th:first-child {
-        min-width: 75px !important; /* Aumentado para caber ícone + texto */
-        white-space: nowrap !important;
-        text-align: center !important;
-    }
+    .process-title-header h1 { font-size: 1.2rem !important; margin-top: 5mm; color: #1a4d2e !important; }
 
-    /* Garante que os spans de controle de impressão não quebrem a linha */
-    .show-print { 
-        display: inline-block !important; 
-    }
-    .hide-print { 
-        display: none !important; 
-    }
-
-    .process-title-header h1 { 
-        font-size: 1.4rem !important; 
-        margin: 8mm 0 !important; 
-        color: #1a4d2e !important; 
-    }
-
-    /* Dashboard Profissional */
+    /* 1. Dashboard: Alinhamento do Contador e Redução do Objetivo */
     .header-dashboard { 
         display: grid !important; 
-        grid-template-columns: 1fr 140px !important; 
-        gap: 10px !important; 
-        margin-bottom: 20px; 
+        grid-template-columns: 1fr 130px !important; 
+        gap: 8px !important; 
+        margin-bottom: 15px; 
         width: 100% !important;
-        align-items: stretch !important;
+        align-items: stretch !important; /* Alinha o contador com os metadados */
     }
     
-    .meta-card-row { background: #f9f9f9 !important; border: 1px solid #eee !important; }
-    .meta-card-value { font-size: 0.75rem !important; color: #333 !important; }
+    .meta-card-row { background: white !important; border: 1px solid #eee !important; flex: 1; }
+    
+    .meta-card-value { 
+        font-size: 0.7rem !important; /* Redução da letra do objetivo e metadados */
+        line-height: 1.2 !important;
+        padding: 4px 8px !important;
+    }
 
     .activity-counter-card { 
-        background: #1a4d2e !important; 
-        color: white !important;
-        border-radius: 10px !important;
+        background: #fdfdfd !important; color: #1a4d2e !important; 
+        border: 2px solid #1a4d2e !important; box-shadow: none !important;
+        border-radius: 10px !important; padding: 5px !important;
+        height: 100% !important; /* Força a altura total do grid */
+        display: flex !important; flex-direction: column !important;
+        justify-content: center !important; align-items: center !important;
     }
     
-    .counter-number { font-size: 2.8rem !important; }
+    .counter-number { font-size: 2.2rem !important; line-height: 1; }
+    .counter-label { font-size: 0.6rem !important; }
 
-    /* Levantamento e Pílulas */
+    /* 2. Levantamento (1 a 11): Mantendo largura e bordas originais */
     .survey-card { 
-        grid-template-columns: 320px 1fr !important; 
+        grid-template-columns: 280px 1fr !important; 
         background: white !important; 
-        border: 1px solid #eee !important; 
+        border: 1px solid #ddd !important; 
+        break-inside: avoid !important; /* Evita quebra de página */
+        width: 100% !important; 
         margin-bottom: 5px !important;
-        break-inside: avoid;
     }
 
+    .card-item-name { white-space: nowrap !important; }
+    
+    /* 3. Tabelas e Fluxo: Correção da Etapa e Altura da Linha */
+    .flow-table-styled thead, .obs-table-styled thead { display: table-header-group; }
+
+    .flow-header-row th, .obs-table-styled th {
+        background: #f2f2f2 !important; color: #1a4d2e !important;
+        border-bottom: 2px solid #1a4d2e !important; font-size: 7.5pt !important;
+        text-transform: none !important; 
+        padding: 5px 2px !important; /* Emagrece a linha do cabeçalho */
+        line-height: 1 !important;
+        white-space: nowrap !important; /* Impede a quebra da coluna Etapa */
+    }
+
+    /* Garante que o ícone e o texto da Etapa fiquem alinhados */
+    .flow-header-row th:first-child {
+        min-width: 65px !important;
+    }
+
+    .activity-row-card td, .obs-row td {
+        background: white !important; border: 1px solid #eee !important;
+        font-size: 8pt !important; padding: 6px 4px !important;
+    }
+
+    .activity-row-card, .obs-row { break-inside: avoid !important; }
+
+    .activity-row-card td.highlight-col { background: #f4f4f4 !important; color: #000 !important; }
+
+    .obs-row td::before { content: "• "; color: #1a4d2e; font-weight: bold; }
+
     .pill {
-        font-size: 7.5pt !important;
-        border: 1px solid rgba(0,0,0,0.1) !important;
-        background: #fdfdfd !important;
-        padding: 2px 8px !important;
+        font-size: 7pt !important; border: 1px solid #ccc !important;
+        background: #f9f9f9 !important; padding: 2px 5px !important;
         display: inline-block !important;
     }
 
-    /* Tabela de Fluxo */
-    .flow-section-header {
-        background: #1a4d2e !important;
-        color: white !important;
-        font-size: 10pt !important;
-        padding: 8px !important;
-        text-align: center !important;
-    }
+    .show-print { display: inline !important; }
+    .hide-print { display: none !important; }
 
-    .flow-table-styled thead { display: table-header-group; }
-
-    .flow-header-row th {
-        background: #f2f2f2 !important; 
-        color: #1a4d2e !important;
-        border: 1px solid #ddd !important;
-        font-size: 8.5pt !important;
-        padding: 10px 5px !important;
-        vertical-align: middle !important;
-    }
-
-    .activity-row-card td {
-        background: white !important; 
-        border: 1px solid #eee !important;
-        font-size: 8.5pt !important; 
-        padding: 10px 6px !important;
-        vertical-align: middle !important;
-    }
-
-    .activity-row-card td.highlight-col { background: #fcfcfc !important; }
-    .activity-row-card { break-inside: avoid !important; }
-
-    .regra-box {
-        background: #fffdf0 !important;
-        border: 1px solid #f1c232 !important;
-        padding: 5px !important;
-        margin-top: 5px !important;
-    }
-
-    /* Ocultar Elementos de Interface */
-    .no-print, 
+    /* Ocultar Elementos de Software */
     #editor-container, 
-    .toolbar-master-container, 
+    #editor-toggle, 
     #presentation-controls, 
-    .flow-controls,
-    .btn-step-control,
-    #editor-toggle { 
-        display: none !important; 
+    .toolbar-bubble,
+    .btn-group {
+        display: none !important;
     }
 }
