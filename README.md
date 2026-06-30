@@ -20,7 +20,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Gantt** | Gerador de Gantt | [Acessar App](https://psrochapro.github.io/public/gantt/) |
 | **Cards** | Gerador de Cards | [Acessar App](https://apps-privados.vercel.app/cardstudiopro/) |
 | **Tabela Periídica** | Tabela Periódica dos Elementos | [Acessar App](https://psrochapro.github.io/public/pte/) |
-| **Canva** | Canva de Processos | [Acessar App](https://psrochapro.github.io/public/canva/)
+| **Canva** | Canva de Processos | [Acessar App](https://apps-privados.vercel.app/canva/)
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.
