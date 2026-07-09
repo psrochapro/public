@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Pro - Open Library</title>
+    <!-- Ícones para o coração e o tema -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variáveis de Cores (Suportam Dark Mode) */
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --primary-color: #3498db;
+            --fav-color: #e74c3c;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ecf0f1;
+            --primary-color: #5dade2;
+            --shadow: rgba(0,0,0,0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover { transform: scale(1.2); }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 650px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .btn-favs { background-color: var(--fav-color); }
+
+        #resultados {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Estilo do Card */
+        .card-livro {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 15px var(--shadow);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-livro:hover { transform: translateY(-8px); }
+
+        .card-livro img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #eee;
+        }
+
+        .card-livro h3 {
+            font-size: 1rem;
+            margin: 15px 0 5px 0;
+            height: 2.4em;
+            overflow: hidden;
+        }
+
+        .card-livro p { font-size: 0.85rem; color: #888; }
+
+        /* Botão Coração */
+        .fav-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .fav-btn.active { color: var(--fav-color); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            color: var(--text-color);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 25px; cursor: pointer;
+        }
+
+        .loading { grid-column: 1/-1; text-align: center; font-size: 1.2rem; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <i class="fas fa-moon theme-toggle" onclick="toggleTheme()" id="themeIcon"></i>
+
+    <header>
+        <h1>📚 Biblioteca Pro</h1>
+        <div class="search-container">
+            <input type="text" id="inputBusca" placeholder="Pesquisar por título ou autor...">
+            <button onclick="buscarLivros()">Buscar</button>
+            <button class="btn-favs" onclick="exibirFavoritos()">Ver Meus Favoritos</button>
+        </div>
+        <p id="contador-favs" style="margin-top: 15px; font-weight: bold;"></p>
+    </header>
+
+    <main id="resultados"></main>
+
+    <!-- Modal -->
+    <div id="modal" class="modal" onclick="if(event.target == this) fecharModal()">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializa favoritos vindo do LocalStorage
+        let favoritos = JSON.parse(localStorage.getItem('biblioteca_favs')) || [];
+
+        // 1. Alternar Dark Mode
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('themeIcon');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // 2. Buscar da API
+        async function buscarLivros() {
+            const termo = document.getElementById('inputBusca').value.trim();
+            const container = document.getElementById('resultados');
+            if (!termo) return alert("Digite algo para buscar!");
+
+            container.innerHTML = '<div class="loading">Buscando na Open Library... 🔍</div>';
+
+            try {
+                const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(termo)}&limit=12`);
+                const data = await response.json();
+                renderizarLivros(data.docs);
+            } catch (error) {
+                container.innerHTML = '<div class="loading">Erro ao conectar com a API. ❌</div>';
+            }
+        }
+
+        // 3. Renderizar Cards na Tela
+        function renderizarLivros(livros) {
+            const container = document.getElementById('resultados');
+            container.innerHTML = "";
+
+            if (livros.length === 0) {
+                container.innerHTML = '<div class="loading">Nenhum livro encontrado.</div>';
+                return;
+            }
+
+            livros.forEach(livro => {
+                const isFav = favoritos.some(f => f.key === livro.key);
+                const capaUrl = livro.cover_i 
+                    ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-M.jpg` 
+                    : 'https://via.placeholder.com/150x260?text=Sem+Capa';
+
+                const card = document.createElement('div');
+                card.className = 'card-livro';
+                
+                // Abre modal ao clicar (exceto se clicar no coração)
+                card.onclick = (e) => {
+                    if (!e.target.closest('.fav-btn')) abrirModal(livro);
+                };
+
+                // Montamos o HTML do card
+                card.innerHTML = `
+                    <div class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorito(event, ${JSON.stringify(livro).replace(/"/g, '&quot;')})">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <img src="${capaUrl}" alt="Capa" onerror="this.src='https://via.placeholder.com/150x260?text=Erro+na+Capa'">
+                    <h3>${livro.title}</h3>
+                    <p>Autor: ${livro.author_name ? livro.author_name[0] : 'Desconhecido'}</p>
+                `;
+                container.appendChild(card);
+            });
+            atualizarContador();
+        }
+
+        // 4. Adicionar/Remover Favorito
+        function toggleFavorito(event, livro) {
+            event.stopPropagation();
+            const index = favoritos.findIndex(f => f.key === livro.key);
+
+            if (index > -1) {
+                favoritos.splice(index, 1);
+                event.currentTarget.classList.remove('active');
+            } else {
+                favoritos.push(livro);
+                event.currentTarget.classList.add('active');
+            }
+
+            localStorage.setItem('biblioteca_favs', JSON.stringify(favoritos));
+            atualizarContador();
+        }
+
+        // 5. Mostrar apenas a lista de favoritos
+        function exibirFavoritos() {
+            if (favoritos.length === 0) {
+                alert("Você ainda não favoritou nenhum livro!");
+                return;
+            }
+            renderizarLivros(favoritos);
+        }
+
+        // 6. Contador de Favoritos
+        function atualizarContador() {
+            const cont = document.getElementById('contador-favs');
+            cont.innerHTML = `Você tem <span style="color: var(--fav-color)">❤️ ${favoritos.length}</span> livros na sua estante pessoal.`;
+        }
+
+        // 7. Modal de Detalhes
+        function abrirModal(livro) {
+            const body = document.getElementById('modal-body');
+            body.innerHTML = `
+                <h2 style="color: var(--primary-color)">${livro.title}</h2>
+                <hr>
+                <p><strong>Autor(es):</strong> ${livro.author_name ? livro.author_name.join(', ') : 'Não informado'}</p>
+                <p><strong>Primeira Publicação:</strong> ${livro.first_publish_year || 'N/A'}</p>
+                <p><strong>Idiomas:</strong> ${livro.language ? livro.language.slice(0,5).join(', ') : 'N/A'}</p>
+                <p><strong>Temas:</strong> ${livro.subject ? livro.subject.slice(0, 8).join(', ') : 'Informação não disponível'}</p>
+                <p><small>ID da Obra: ${livro.key}</small></p>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Atalho: Enter no teclado para buscar
+        document.getElementById('inputBusca').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') buscarLivros();
+        });
+
+        // Inicia o contador ao carregar a página
+        atualizarContador();
+
+    </script>
+</body>
+</html>
