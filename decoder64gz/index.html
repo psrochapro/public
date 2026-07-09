@@ -3,27 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base64 Gzip Decoder</title>
+    <title>Gzip Decoder - Glass Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
     <div class="glass-container">
-        <h1>Gzip Decoder</h1>
-        <p class="subtitle">Insira o link ou a string Base64 compactada</p>
-        
-        <div class="input-group">
-            <label for="inputData">Entrada</label>
-            <textarea id="inputData" placeholder="Cole aqui o link (ex: https://...#data=H4s...) ou a string Base64 pura"></textarea>
-        </div>
+        <header>
+            <h1>Gzip Decoder</h1>
+            <p>Decodifique links e strings Base64 instantaneamente</p>
+        </header>
 
-        <div class="actions">
-            <button id="decodeBtn">Decodificar</button>
-        </div>
+        <main class="decoder-grid">
+            <section class="panel">
+                <div class="panel-header">
+                    <label>Entrada</label>
+                    <button class="btn-text" id="clearBtn">Limpar</button>
+                </div>
+                <textarea id="inputData" placeholder="Cole o link ou a string Base64 aqui..."></textarea>
+            </section>
 
-        <div class="input-group">
-            <label for="outputData">Resultado</label>
-            <textarea id="outputData" readonly placeholder="O resultado aparecerá aqui..."></textarea>
-        </div>
+            <div class="divider">
+                <button id="decodeBtn" class="main-btn">
+                    <span class="icon">⚡</span>
+                </button>
+            </div>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <label>Resultado</label>
+                    <button class="btn-text" id="copyBtn">Copiar</button>
+                </div>
+                <textarea id="outputData" readonly placeholder="O resultado aparecerá aqui..."></textarea>
+            </section>
+        </main>
     </div>
 
     <script src="script.js"></script>
