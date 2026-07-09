@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Gzip Decoder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-container">
+        <h1>Gzip Decoder</h1>
+        <p class="subtitle">Insira o link ou a string Base64 compactada</p>
+        
+        <div class="input-group">
+            <label for="inputData">Entrada</label>
+            <textarea id="inputData" placeholder="Cole aqui o link (ex: https://...#data=H4s...) ou a string Base64 pura"></textarea>
+        </div>
+
+        <div class="actions">
+            <button id="decodeBtn">Decodificar</button>
+        </div>
+
+        <div class="input-group">
+            <label for="outputData">Resultado</label>
+            <textarea id="outputData" readonly placeholder="O resultado aparecerá aqui..."></textarea>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
