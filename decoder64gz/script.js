@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = new Response(decompressedStream);
             return await response.text();
         } catch (error) {
-            throw new Error('Formato inválido ou falha na descompressão.');
+            throw new Error('O conteúdo não é um Gzip Base64 válido.');
         }
     }
 
@@ -38,26 +38,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputVal = inputArea.value.trim();
         if (!inputVal) return;
 
-        outputArea.value = 'Processando...';
+        outputArea.value = 'Descompactando dados...';
         
         try {
             const base64Part = extractBase64(inputVal);
             const decodedText = await decodeGzipBase64(base64Part);
             outputArea.value = decodedText;
         } catch (error) {
-            outputArea.value = 'Erro: ' + error.message;
+            outputArea.value = '❌ Erro: ' + error.message;
         }
     };
 
     decodeBtn.addEventListener('click', handleDecode);
 
     copyBtn.addEventListener('click', () => {
-        if (!outputArea.value || outputArea.value.startsWith('Erro:')) return;
+        if (!outputArea.value || outputArea.value.includes('❌ Erro:')) return;
         
         navigator.clipboard.writeText(outputArea.value).then(() => {
             const originalText = copyBtn.innerText;
             copyBtn.innerText = 'Copiado!';
-            copyBtn.style.color = '#10b981';
+            copyBtn.style.color = '#34d399';
             setTimeout(() => {
                 copyBtn.innerText = originalText;
                 copyBtn.style.color = '';
