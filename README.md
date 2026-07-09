@@ -22,6 +22,8 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Tabela Periódica** | Tabela Periódica dos Elementos | [Acessar App](https://psrochapro.github.io/public/pte/) |
 | **Canva** | Canva de Processos | [Acessar App](https://apps-privados.vercel.app/canva/)
 | **Biblioteca** | Buscador de Livros | [Acessar App](https://psrochapro.github.io/public/biblioteca/)
+| **Decoder Base64 Gzip** | Decoder Base64 Gzip | [Acessar App](https://psrochapro.github.io/public/decoder64gz/)
+
 
 ### 🛠️ O que você encontra aqui:
 * **Aplicações Web:** Ferramentas funcionais criadas com JavaScript puro.
