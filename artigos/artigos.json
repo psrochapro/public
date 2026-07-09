@@ -1,5 +1,15 @@
 [
   {
+    "id": "artigo_004",
+    "titulo": "Uso efetivo de Inteligência Artificial",
+    "autor": "Paulo Sergio Rocha",
+    "data": "09/07/2026",
+    "descricao": "Como usar IA da forma correta.",
+    "pasta": "artigo_004",
+    "imagem": "artigo_004/headline.png",
+    "pdf": "artigo_004/artigo.pdf"
+  },
+  {
     "id": "artigo_003",
     "titulo": "Governança de Business Intelligence",
     "autor": "Paulo Sergio Rocha",
