@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Viewer - FAPESC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .stage-card:hover { transform: translateY(-2px); transition: all 0.2s; }
+        .activity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="app" class="min-h-screen">
+        <!-- Loading State -->
+        <div id="loader" class="flex items-center justify-center h-screen">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+
+        <!-- Main Content (Hidden until loaded) -->
+        <div id="content" class="hidden">
+            <!-- Top Header -->
+            <header class="bg-slate-900 text-white py-8 px-6 shadow-xl">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="bg-blue-600 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Macroprocesso: <span id="macroprocesso"></span></span>
+                            <h1 id="process-name" class="text-4xl font-bold mt-2 tracking-tight"></h1>
+                            <p id="process-objective" class="text-slate-400 mt-2 text-lg italic"></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-slate-400">Responsável</p>
+                            <p id="owner" class="font-semibold text-lg"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                            <div class="flex items-center text-blue-400 mb-1"><i data-lucide="users" class="w-4 h-4 mr-2"></i> <span class="text-xs uppercase font-bold text-slate-500">Atores</span></div>
+                            <p id="actors" class="text-xs truncate"></p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                            <div class="flex items-center text-green-400 mb-1"><i data-lucide="database" class="w-4 h-4 mr-2"></i> <span class="text-xs uppercase font-bold text-slate-500">Recursos</span></div>
+                            <p id="resources" class="text-xs truncate"></p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                            <div class="flex items-center text-purple-400 mb-1"><i data-lucide="settings" class="w-4 h-4 mr-2"></i> <span class="text-xs uppercase font-bold text-slate-500">Parâmetros</span></div>
+                            <p id="params" class="text-xs truncate"></p>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                            <div class="flex items-center text-orange-400 mb-1"><i data-lucide="file-text" class="w-4 h-4 mr-2"></i> <span class="text-xs uppercase font-bold text-slate-500">Documentos</span></div>
+                            <p id="docs" class="text-xs truncate"></p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="max-w-7xl mx-auto py-8 px-6">
+                <!-- Stages Navigation -->
+                <div class="mb-8 overflow-x-auto">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i data-lucide="layers" class="mr-2"></i> Etapas do Processo
+                    </h2>
+                    <div id="stage-tabs" class="flex space-x-2 pb-2">
+                        <!-- Tabs injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Activities Area -->
+                <div id="activities-container" class="activity-grid">
+                    <!-- Cards injected by JS -->
+                </div>
+            </main>
+
+            <footer class="max-w-7xl mx-auto py-12 px-6 border-t border-slate-200">
+                <div id="version-info" class="text-slate-400 text-sm italic text-center"></div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const FILENAME = 'elaborar-edital-de-chamada-publica-2026-07-10_18h03.txt';
+
+        async function init() {
+            try {
+                const response = await fetch(FILENAME);
+                const text = await response.text();
+                const data = parseProcessFile(text);
+                renderApp(data);
+                lucide.createIcons();
+            } catch (error) {
+                console.error("Error loading file:", error);
+                document.getElementById('loader').innerHTML = `
+                    <div class="text-center p-10 bg-red-50 rounded-lg">
+                        <p class="text-red-600 font-bold text-xl">Erro ao carregar arquivo!</p>
+                        <p class="text-red-500 mt-2 text-sm">Certifique-se que o arquivo existe e você está usando um servidor local.</p>
+                    </div>`;
+            }
+        }
+
+        function parseProcessFile(text) {
+            const lines = text.split('\n');
+            const data = {
+                metadata: {},
+                etapas: [],
+                atividades: [],
+                obs: ''
+            };
+
+            let currentActivity = null;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+
+                // Parse Metadata
+                if (line.startsWith('#') && !line.startsWith('#atividade') && !line.startsWith('#etapas')) {
+                    const firstSpace = line.indexOf(' ');
+                    const key = line.substring(1, firstSpace).trim();
+                    const val = line.substring(firstSpace).trim();
+                    data.metadata[key] = val;
+                }
+
+                // Parse Stages List
+                if (/^\d+:/.test(line)) {
+                    const parts = line.split(':');
+                    data.etapas.push({ id: parts[0].trim(), name: parts[1].trim() });
+                }
+
+                // Parse Activities
+                if (line.startsWith('#atividade')) {
+                    if (currentActivity) data.atividades.push(currentActivity);
+                    currentActivity = { id: line.replace('#atividade', '').trim() };
+                } else if (currentActivity && line.includes(':')) {
+                    const [key, ...val] = line.split(':');
+                    currentActivity[key.toLowerCase().trim()] = val.join(':').trim();
+                }
+
+                // Observations
+                if (line.toLowerCase().startsWith('versão')) {
+                    data.obs = line;
+                }
+            });
+
+            if (currentActivity) data.atividades.push(currentActivity);
+            return data;
+        }
+
+        function renderApp(data) {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('content').classList.remove('hidden');
+
+            // Header Info
+            document.getElementById('process-name').textContent = data.metadata.nome;
+            document.getElementById('process-objective').textContent = data.metadata.objetivo;
+            document.getElementById('macroprocesso').textContent = data.metadata.macroprocesso;
+            document.getElementById('owner').textContent = data.metadata.dono;
+            document.getElementById('actors').textContent = data.metadata.atores;
+            document.getElementById('resources').textContent = data.metadata.recursos;
+            document.getElementById('params').textContent = data.metadata.parametros;
+            document.getElementById('docs').textContent = data.metadata.documentos;
+            document.getElementById('version-info').textContent = data.obs;
+
+            // Stages Tabs
+            const tabsContainer = document.getElementById('stage-tabs');
+            const allBtn = document.createElement('button');
+            allBtn.className = "px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-md whitespace-nowrap";
+            allBtn.textContent = "Todas Atividades";
+            allBtn.onclick = () => filterStage('all', allBtn);
+            tabsContainer.appendChild(allBtn);
+
+            data.etapas.forEach(etapa => {
+                const btn = document.createElement('button');
+                btn.className = "px-4 py-2 rounded-full bg-white text-slate-600 hover:bg-slate-200 text-sm font-medium transition whitespace-nowrap shadow-sm border border-slate-200";
+                btn.textContent = `${etapa.id}. ${etapa.name}`;
+                btn.onclick = () => filterStage(etapa.id, btn);
+                tabsContainer.appendChild(btn);
+            });
+
+            // Initial render of all activities
+            window.allActivities = data.atividades;
+            filterStage('all', allBtn);
+        }
+
+        function filterStage(stageId, activeBtn) {
+            // Update Tab UI
+            document.querySelectorAll('#stage-tabs button').forEach(btn => {
+                btn.className = "px-4 py-2 rounded-full bg-white text-slate-600 hover:bg-slate-200 text-sm font-medium transition whitespace-nowrap shadow-sm border border-slate-200";
+            });
+            activeBtn.className = "px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-md whitespace-nowrap";
+
+            const container = document.getElementById('activities-container');
+            container.innerHTML = '';
+
+            const filtered = stageId === 'all' 
+                ? window.allActivities 
+                : window.allActivities.filter(a => a.etapa == stageId);
+
+            filtered.forEach(act => {
+                const card = document.createElement('div');
+                card.className = "glass p-6 rounded-xl border border-slate-200 shadow-sm stage-card";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">ATV ${act.id} / Etapa ${act.etapa}</span>
+                        <div class="flex items-center text-slate-500"><i data-lucide="user" class="w-4 h-4 mr-1"></i> <span class="text-xs font-semibold">${act.ator}</span></div>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-3 text-lg">${act.atividades}</h3>
+                    
+                    <div class="space-y-3 mt-4">
+                        <div class="bg-slate-50 p-2 rounded">
+                            <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Entradas (Insumos)</p>
+                            <p class="text-sm text-slate-600">${act.insumos || '-'}</p>
+                        </div>
+                        <div class="bg-blue-50/50 p-2 rounded border-l-4 border-blue-400">
+                            <p class="text-[10px] uppercase font-bold text-blue-400 mb-1">Saídas (Entregáveis)</p>
+                            <p class="text-sm text-slate-700 font-medium">${act.saídas || '-'}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+                        ${act.regra ? `<span class="text-[10px] bg-amber-50 text-amber-700 px-2 py-1 rounded flex items-center"><i data-lucide="alert-circle" class="w-3 h-3 mr-1"></i> ${act.regra}</span>` : ''}
+                        ${act.cliente ? `<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded flex items-center"><i data-lucide="arrow-right-circle" class="w-3 h-3 mr-1"></i> ${act.cliente}</span>` : ''}
+                    </div>
+                    
+                    ${act.obs ? `<p class="mt-3 text-xs text-slate-400 italic">Note: ${act.obs}</p>` : ''}
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        init();
+    </script>
+</body>
+</html>
