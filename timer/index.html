@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contagem Regressiva Premium</title>
+    <title>Contagem Regressiva Premium v10</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
@@ -83,7 +83,7 @@
             margin-bottom: 8px;
             background: linear-gradient(to bottom, #ffffff, #94a3b8);
             -webkit-background-clip: text;
-            background-clip: text; /* Correção para aviso de compatibilidade */
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
         }
@@ -92,7 +92,7 @@
             font-size: 1.1rem;
             color: #64748b;
             margin-bottom: 50px;
-            text-transform: none;
+            text-transform: none; /* Escrita natural */
             letter-spacing: 3px;
             text-align: center;
         }
@@ -161,7 +161,7 @@
         input[type="color"] {
             -webkit-appearance: none;
             -moz-appearance: none;
-            appearance: none; /* Correção para aviso de compatibilidade */
+            appearance: none;
             width: 50px; height: 50px; border: none; cursor: pointer; background: none; padding: 0;
         }
         input[type="color"]::-webkit-color-swatch { border-radius: 10px; border: 2px solid white; }
@@ -236,17 +236,25 @@
 
     <script>
         let ticker;
+        
+        // Função auxiliar para formatar data para o input datetime-local
+        function formatToInputDate(date) {
+            const z = date.getTimezoneOffset() * 60 * 1000;
+            const local = new Date(date - z);
+            return local.toISOString().slice(0, 16);
+        }
+
         let config = {
-            title: localStorage.getItem('v9_title') || "Apresentação",
-            subtitle: localStorage.getItem('v9_subtitle') || "Selecione as 5 forças mais impactantes",
-            finishMsg: localStorage.getItem('v9_finish') || "Finalizado 🚀",
-            targetDate: new Date(localStorage.getItem('v9_target') || new Date().getTime() + 3600000),
-            startDate: new Date(localStorage.getItem('v9_start') || new Date().getTime()),
-            color: localStorage.getItem('v9_color') || "#00f2fe",
-            scale: parseFloat(localStorage.getItem('v9_scale')) || 1,
+            title: localStorage.getItem('v10_title') || "Apresentação",
+            subtitle: localStorage.getItem('v10_subtitle') || "Selecione as 5 forças mais impactantes",
+            finishMsg: localStorage.getItem('v10_finish') || "Finalizado 🚀",
+            targetDate: new Date(localStorage.getItem('v10_target') || new Date().getTime() + 3600000),
+            startDate: new Date(localStorage.getItem('v10_start') || new Date().getTime()),
+            color: localStorage.getItem('v10_color') || "#00f2fe",
+            scale: parseFloat(localStorage.getItem('v10_scale')) || 1,
             show: {
-                d: localStorage.getItem('v9_d') !== 'false', h: localStorage.getItem('v9_h') !== 'false',
-                m: localStorage.getItem('v9_m') !== 'false', s: localStorage.getItem('v9_s') !== 'false'
+                d: localStorage.getItem('v10_d') !== 'false', h: localStorage.getItem('v10_h') !== 'false',
+                m: localStorage.getItem('v10_m') !== 'false', s: localStorage.getItem('v10_s') !== 'false'
             }
         };
 
@@ -258,6 +266,7 @@
             document.getElementById('in-finish').value = config.finishMsg;
             document.getElementById('in-color').value = config.color;
             document.getElementById('in-scale').value = config.scale;
+            document.getElementById('in-date').value = formatToInputDate(config.targetDate);
             document.getElementById('chk-d').checked = config.show.d;
             document.getElementById('chk-h').checked = config.show.h;
             document.getElementById('chk-m').checked = config.show.m;
@@ -266,6 +275,18 @@
         };
 
         document.getElementById('btn-save').onclick = () => {
+            const inputDateVal = document.getElementById('in-date').value;
+            if(inputDateVal) {
+                const newTarget = new Date(inputDateVal);
+                
+                // LÓGICA CORRIGIDA: Só muda o startDate (100%) se a data final mudou
+                if (newTarget.getTime() !== config.targetDate.getTime()) {
+                    config.targetDate = newTarget;
+                    config.startDate = new Date(); // Agora é o novo 100%
+                    localStorage.setItem('v10_start', config.startDate);
+                }
+            }
+
             config.title = document.getElementById('in-title').value;
             config.subtitle = document.getElementById('in-subtitle').value;
             config.finishMsg = document.getElementById('in-finish').value || "FIM!";
@@ -275,24 +296,17 @@
             config.show.h = document.getElementById('chk-h').checked;
             config.show.m = document.getElementById('chk-m').checked;
             config.show.s = document.getElementById('chk-s').checked;
-            
-            const dateVal = document.getElementById('in-date').value;
-            if(dateVal) {
-                config.targetDate = new Date(dateVal);
-                config.startDate = new Date();
-            }
 
-            localStorage.setItem('v9_title', config.title);
-            localStorage.setItem('v9_subtitle', config.subtitle);
-            localStorage.setItem('v9_finish', config.finishMsg);
-            localStorage.setItem('v9_color', config.color);
-            localStorage.setItem('v9_scale', config.scale);
-            localStorage.setItem('v9_target', config.targetDate);
-            localStorage.setItem('v9_start', config.startDate);
-            localStorage.setItem('v9_d', config.show.d);
-            localStorage.setItem('v9_h', config.show.h);
-            localStorage.setItem('v9_m', config.show.m);
-            localStorage.setItem('v9_s', config.show.s);
+            localStorage.setItem('v10_title', config.title);
+            localStorage.setItem('v10_subtitle', config.subtitle);
+            localStorage.setItem('v10_finish', config.finishMsg);
+            localStorage.setItem('v10_color', config.color);
+            localStorage.setItem('v10_scale', config.scale);
+            localStorage.setItem('v10_target', config.targetDate);
+            localStorage.setItem('v10_d', config.show.d);
+            localStorage.setItem('v10_h', config.show.h);
+            localStorage.setItem('v10_m', config.show.m);
+            localStorage.setItem('v10_s', config.show.s);
 
             modal.style.display = 'none';
             init();
@@ -325,11 +339,9 @@
                 document.getElementById('bar-fill').style.height = '0%';
                 document.getElementById('perc-val').innerText = '0%';
                 document.documentElement.style.setProperty('--bar-color', "#ef4444");
-
                 document.getElementById('timer-ui').style.display = 'none';
                 document.getElementById('view-subtitle').style.display = 'none';
                 document.getElementById('finish-display').style.display = 'block';
-                
                 confetti({ particleCount: 150, colors: [config.color, '#ffffff'] });
                 clearInterval(ticker);
                 return;
@@ -339,6 +351,7 @@
             document.getElementById('view-subtitle').style.display = 'block';
             document.getElementById('finish-display').style.display = 'none';
 
+            // Porcentagem calculada com base no startDate persistente
             let perc = Math.max(0, Math.min(100, (remaining / totalTime) * 100));
             document.getElementById('bar-fill').style.height = perc + '%';
             document.getElementById('perc-val').innerText = Math.round(perc) + '%';
@@ -366,8 +379,10 @@
 
         function setCircle(id, val, max) {
             const el = document.getElementById(id);
-            const circ = 502;
-            el.style.strokeDashoffset = circ - (Math.min(val, max) * circ) / max;
+            if(el) {
+                const circ = 502;
+                el.style.strokeDashoffset = circ - (Math.min(val, max) * circ) / max;
+            }
         }
 
         init();
