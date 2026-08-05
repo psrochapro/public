@@ -23,6 +23,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Canva** | Canva de Processos | [Acessar App](https://apps-privados.vercel.app/canva/)
 | **Biblioteca** | Buscador de Livros | [Acessar App](https://psrochapro.github.io/public/biblioteca/)
 | **Decoder Base64 Gzip** | Decoder Base64 Gzip | [Acessar App](https://psrochapro.github.io/public/decoder64gz/)
+| **Timer** | Timer Simples | [Acessar App](https://psrochapro.github.io/public/timer/)
 
 
 ### 🛠️ O que você encontra aqui:
