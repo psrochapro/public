@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contagem Regressiva Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --bg-color: #0f172a;
+            --global-scale: 1;
+            --bar-color: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-color);
+            color: white;
+            overflow: hidden;
+        }
+
+        /* BARRA DE PROGRESSO LATERAL */
+        .side-progress-container {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 70vh;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            padding: 4px;
+        }
+
+        .side-progress-fill {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            right: 4px;
+            height: 100%;
+            background: var(--bar-color);
+            border-radius: 50px;
+            box-shadow: 0 0 30px var(--bar-color);
+            transition: height 0.5s ease-out, background 1s ease;
+        }
+
+        .percent-tag {
+            position: absolute;
+            left: 55px;
+            top: -10px;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--bar-color);
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+            transition: color 1s ease;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        #main-wrapper {
+            transform: scale(var(--global-scale));
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-left: 100px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(to bottom, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text; /* Correção para aviso de compatibilidade */
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .sub-text {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 50px;
+            text-transform: none;
+            letter-spacing: 3px;
+            text-align: center;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .timer-item {
+            position: relative;
+            width: 170px; height: 170px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        svg {
+            position: absolute;
+            width: 220px; height: 220px;
+            overflow: visible !important;
+            transform: rotate(-90deg);
+        }
+
+        circle { cx: 110; cy: 110; r: 80; fill: none; stroke-width: 7; stroke-linecap: round; }
+        .circle-bg { stroke: rgba(255, 255, 255, 0.05); }
+        .circle-progress {
+            stroke: var(--primary);
+            stroke-dasharray: 502;
+            stroke-dashoffset: 502;
+            transition: stroke-dashoffset 1s linear, stroke 0.4s;
+            filter: drop-shadow(0 0 12px var(--primary));
+        }
+
+        .number { font-size: 3rem; font-weight: 800; display: block; line-height: 1; }
+        .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: #475569; }
+
+        .btn-settings {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 14px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-settings:hover { background: white; color: black; }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.97);
+            backdrop-filter: blur(15px); z-index: 1000; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal-card {
+            background: #1e293b; padding: 35px; border-radius: 30px; width: 100%; max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1); position: relative;
+        }
+        .input-group { margin-bottom: 18px; }
+        label { display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        input[type="text"], input[type="datetime-local"] {
+            width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 12px;
+        }
+        
+        input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; /* Correção para aviso de compatibilidade */
+            width: 50px; height: 50px; border: none; cursor: pointer; background: none; padding: 0;
+        }
+        input[type="color"]::-webkit-color-swatch { border-radius: 10px; border: 2px solid white; }
+
+        .units-box {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+            background: #0f172a; padding: 12px; border-radius: 12px; margin-bottom: 20px;
+        }
+        .unit-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; cursor: pointer; }
+
+        .btn-save {
+            width: 100%; padding: 18px; background: var(--primary); border: none;
+            border-radius: 12px; font-weight: 800; cursor: pointer; color: #000; font-size: 1rem;
+        }
+
+        #finish-display { display: none; text-align: center; }
+        #finish-display h2 { font-size: 4rem; color: var(--primary); font-weight: 800; }
+    </style>
+</head>
+<body>
+
+    <div class="side-progress-container">
+        <div class="side-progress-fill" id="bar-fill">
+            <span class="percent-tag" id="perc-val">100%</span>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <h1 id="view-title">Apresentação</h1>
+        <p id="view-subtitle" class="sub-text">Subtítulo do evento</p>
+        
+        <div class="timer-container" id="timer-ui">
+            <div class="timer-item" id="box-d"><svg><circle class="circle-bg"></circle><circle id="bar-d" class="circle-progress"></circle></svg><div style="text-align:center; z-index:5"><span class="number" id="val-d">00</span><span class="label">Dias</span></div></div>
+            <div class="timer-item" id="box-h"><svg><circle class="circle-bg"></circle><circle id="bar-h" class="circle-progress"></circle></svg><div style="text-align:center; z-index:5"><span class="number" id="val-h">00</span><span class="label">Horas</span></div></div>
+            <div class="timer-item" id="box-m"><svg><circle class="circle-bg"></circle><circle id="bar-m" class="circle-progress"></circle></svg><div style="text-align:center; z-index:5"><span class="number" id="val-m">00</span><span class="label">Minutos</span></div></div>
+            <div class="timer-item" id="box-s"><svg><circle class="circle-bg"></circle><circle id="bar-s" class="circle-progress"></circle></svg><div style="text-align:center; z-index:5"><span class="number" id="val-s">00</span><span class="label">Segundos</span></div></div>
+        </div>
+
+        <div id="finish-display"><h2 id="view-finish-msg">CONCLUÍDO! 🚀</h2></div>
+        <button class="btn-settings" id="btn-open">Configurar Cronômetro</button>
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-card">
+            <h2 style="margin-bottom:20px">Configurações</h2>
+            <div class="input-group"><label>Título</label><input type="text" id="in-title"></div>
+            <div class="input-group"><label>Subtítulo</label><input type="text" id="in-subtitle"></div>
+            
+            <div style="display:flex; gap:15px; align-items:flex-end; margin-bottom:18px;">
+                <div style="flex-grow:1"><label>Data Final</label><input type="datetime-local" id="in-date"></div>
+                <div><label>Cor</label><input type="color" id="in-color"></div>
+            </div>
+
+            <div class="input-group"><label>Mensagem ao Finalizar</label><input type="text" id="in-finish"></div>
+
+            <label>Mostrar Unidades</label>
+            <div class="units-box">
+                <label class="unit-item"><input type="checkbox" id="chk-d" checked> Dias</label>
+                <label class="unit-item"><input type="checkbox" id="chk-h" checked> Horas</label>
+                <label class="unit-item"><input type="checkbox" id="chk-m" checked> Min</label>
+                <label class="unit-item"><input type="checkbox" id="chk-s" checked> Seg</label>
+            </div>
+
+            <div class="input-group">
+                <label id="label-scale">Tamanho Global: 100%</label>
+                <input type="range" id="in-scale" min="0.4" max="2" step="0.05" style="width:100%">
+            </div>
+
+            <button class="btn-save" id="btn-save">Salvar e Aplicar</button>
+        </div>
+    </div>
+
+    <script>
+        let ticker;
+        let config = {
+            title: localStorage.getItem('v9_title') || "Apresentação",
+            subtitle: localStorage.getItem('v9_subtitle') || "Selecione as 5 forças mais impactantes",
+            finishMsg: localStorage.getItem('v9_finish') || "Finalizado 🚀",
+            targetDate: new Date(localStorage.getItem('v9_target') || new Date().getTime() + 3600000),
+            startDate: new Date(localStorage.getItem('v9_start') || new Date().getTime()),
+            color: localStorage.getItem('v9_color') || "#00f2fe",
+            scale: parseFloat(localStorage.getItem('v9_scale')) || 1,
+            show: {
+                d: localStorage.getItem('v9_d') !== 'false', h: localStorage.getItem('v9_h') !== 'false',
+                m: localStorage.getItem('v9_m') !== 'false', s: localStorage.getItem('v9_s') !== 'false'
+            }
+        };
+
+        const modal = document.getElementById('modal');
+        
+        document.getElementById('btn-open').onclick = () => {
+            document.getElementById('in-title').value = config.title;
+            document.getElementById('in-subtitle').value = config.subtitle;
+            document.getElementById('in-finish').value = config.finishMsg;
+            document.getElementById('in-color').value = config.color;
+            document.getElementById('in-scale').value = config.scale;
+            document.getElementById('chk-d').checked = config.show.d;
+            document.getElementById('chk-h').checked = config.show.h;
+            document.getElementById('chk-m').checked = config.show.m;
+            document.getElementById('chk-s').checked = config.show.s;
+            modal.style.display = 'flex';
+        };
+
+        document.getElementById('btn-save').onclick = () => {
+            config.title = document.getElementById('in-title').value;
+            config.subtitle = document.getElementById('in-subtitle').value;
+            config.finishMsg = document.getElementById('in-finish').value || "FIM!";
+            config.color = document.getElementById('in-color').value;
+            config.scale = document.getElementById('in-scale').value;
+            config.show.d = document.getElementById('chk-d').checked;
+            config.show.h = document.getElementById('chk-h').checked;
+            config.show.m = document.getElementById('chk-m').checked;
+            config.show.s = document.getElementById('chk-s').checked;
+            
+            const dateVal = document.getElementById('in-date').value;
+            if(dateVal) {
+                config.targetDate = new Date(dateVal);
+                config.startDate = new Date();
+            }
+
+            localStorage.setItem('v9_title', config.title);
+            localStorage.setItem('v9_subtitle', config.subtitle);
+            localStorage.setItem('v9_finish', config.finishMsg);
+            localStorage.setItem('v9_color', config.color);
+            localStorage.setItem('v9_scale', config.scale);
+            localStorage.setItem('v9_target', config.targetDate);
+            localStorage.setItem('v9_start', config.startDate);
+            localStorage.setItem('v9_d', config.show.d);
+            localStorage.setItem('v9_h', config.show.h);
+            localStorage.setItem('v9_m', config.show.m);
+            localStorage.setItem('v9_s', config.show.s);
+
+            modal.style.display = 'none';
+            init();
+        };
+
+        function init() {
+            document.getElementById('view-title').innerText = config.title;
+            document.getElementById('view-subtitle').innerText = config.subtitle;
+            document.getElementById('view-finish-msg').innerText = config.finishMsg;
+            document.documentElement.style.setProperty('--primary', config.color);
+            document.documentElement.style.setProperty('--global-scale', config.scale);
+            document.getElementById('label-scale').innerText = `Tamanho Global: ${Math.round(config.scale * 100)}%`;
+
+            document.getElementById('box-d').style.display = config.show.d ? 'flex' : 'none';
+            document.getElementById('box-h').style.display = config.show.h ? 'flex' : 'none';
+            document.getElementById('box-m').style.display = config.show.m ? 'flex' : 'none';
+            document.getElementById('box-s').style.display = config.show.s ? 'flex' : 'none';
+
+            clearInterval(ticker);
+            ticker = setInterval(update, 1000);
+            update();
+        }
+
+        function update() {
+            const now = new Date();
+            const totalTime = config.targetDate - config.startDate;
+            const remaining = config.targetDate - now;
+
+            if (remaining <= 0) {
+                document.getElementById('bar-fill').style.height = '0%';
+                document.getElementById('perc-val').innerText = '0%';
+                document.documentElement.style.setProperty('--bar-color', "#ef4444");
+
+                document.getElementById('timer-ui').style.display = 'none';
+                document.getElementById('view-subtitle').style.display = 'none';
+                document.getElementById('finish-display').style.display = 'block';
+                
+                confetti({ particleCount: 150, colors: [config.color, '#ffffff'] });
+                clearInterval(ticker);
+                return;
+            }
+
+            document.getElementById('timer-ui').style.display = 'flex';
+            document.getElementById('view-subtitle').style.display = 'block';
+            document.getElementById('finish-display').style.display = 'none';
+
+            let perc = Math.max(0, Math.min(100, (remaining / totalTime) * 100));
+            document.getElementById('bar-fill').style.height = perc + '%';
+            document.getElementById('perc-val').innerText = Math.round(perc) + '%';
+
+            let barCol = "#22c55e";
+            if (perc <= 50) barCol = "#eab308";
+            if (perc <= 20) barCol = "#ef4444";
+            document.documentElement.style.setProperty('--bar-color', barCol);
+
+            const d = Math.floor(remaining / 86400000);
+            const h = Math.floor((remaining % 86400000) / 3600000);
+            const m = Math.floor((remaining % 3600000) / 60000);
+            const s = Math.floor((remaining % 60000) / 1000);
+
+            document.getElementById('val-d').innerText = d.toString().padStart(2, '0');
+            document.getElementById('val-h').innerText = h.toString().padStart(2, '0');
+            document.getElementById('val-m').innerText = m.toString().padStart(2, '0');
+            document.getElementById('val-s').innerText = s.toString().padStart(2, '0');
+
+            if(config.show.d) setCircle('bar-d', d, 30);
+            if(config.show.h) setCircle('bar-h', h, 24);
+            if(config.show.m) setCircle('bar-m', m, 60);
+            if(config.show.s) setCircle('bar-s', s, 60);
+        }
+
+        function setCircle(id, val, max) {
+            const el = document.getElementById(id);
+            const circ = 502;
+            el.style.strokeDashoffset = circ - (Math.min(val, max) * circ) / max;
+        }
+
+        init();
+    </script>
+</body>
+</html>
