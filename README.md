@@ -24,7 +24,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Biblioteca** | Buscador de Livros | [Acessar App](https://psrochapro.github.io/public/biblioteca/) |
 | **Decoder Base64 Gzip** | Decoder Base64 Gzip | [Acessar App](https://psrochapro.github.io/public/decoder64gz/) |
 | **Timer** | Timer Simples | [Acessar App](https://psrochapro.github.io/public/timer/) |
-| **PDF para PNG** | Extrai páginas de PDF como imanges | [Acessar App](https://psrochapro.github.io/public/pdf2png/) |
+| **PDF para PNG** | Extrai páginas de PDF como imagens | [Acessar App](https://psrochapro.github.io/public/pdf2png/) |
 
 
 ### 🛠️ O que você encontra aqui:
