@@ -20,10 +20,11 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Gantt** | Gerador de Gantt | [Acessar App](https://psrochapro.github.io/public/gantt/) |
 | **Cards** | Gerador de Cards | [Acessar App](https://apps-privados.vercel.app/cardstudiopro/) |
 | **Tabela Periódica** | Tabela Periódica dos Elementos | [Acessar App](https://psrochapro.github.io/public/pte/) |
-| **Canva** | Canva de Processos | [Acessar App](https://apps-privados.vercel.app/canva/)
-| **Biblioteca** | Buscador de Livros | [Acessar App](https://psrochapro.github.io/public/biblioteca/)
-| **Decoder Base64 Gzip** | Decoder Base64 Gzip | [Acessar App](https://psrochapro.github.io/public/decoder64gz/)
-| **Timer** | Timer Simples | [Acessar App](https://psrochapro.github.io/public/timer/)
+| **Canva** | Canva de Processos | [Acessar App](https://apps-privados.vercel.app/canva/) |
+| **Biblioteca** | Buscador de Livros | [Acessar App](https://psrochapro.github.io/public/biblioteca/) |
+| **Decoder Base64 Gzip** | Decoder Base64 Gzip | [Acessar App](https://psrochapro.github.io/public/decoder64gz/) |
+| **Timer** | Timer Simples | [Acessar App](https://psrochapro.github.io/public/timer/) |
+| **PDF para PNG** | Extrai páginas de PDF como imanges | [Acessar App](https://psrochapro.github.io/public/pdf2png/) |
 
 
 ### 🛠️ O que você encontra aqui:

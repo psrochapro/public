@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF2Image Converter | Portfolio Project</title>
+    
+    <!-- Tailwind CSS para Estilização -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .canvas-card:hover .download-overlay { opacity: 1; }
+        .loader { border-top-color: #6366f1; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <div class="max-w-5xl mx-auto px-4 py-12">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-700 text-slate-800 mb-2 font-bold">PDF para Imagem</h1>
+            <p class="text-slate-500">Converta páginas de PDF em imagens PNG de alta qualidade localmente.</p>
+        </header>
+
+        <!-- Tool Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Upload Area -->
+                <div class="space-y-4">
+                    <label class="block text-sm font-semibold text-slate-700">Arquivo PDF</label>
+                    <div class="relative border-2 border-dashed border-slate-200 rounded-lg p-6 hover:border-indigo-400 transition-colors group text-center">
+                        <input type="file" id="file-input" accept="application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div class="text-slate-500">
+                            <svg class="mx-auto h-12 w-12 text-slate-400 group-hover:text-indigo-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <span id="file-name" class="text-sm">Clique para selecionar ou arraste o arquivo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configs Area -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Páginas</label>
+                        <input type="text" id="page-numbers" placeholder="Ex: 1, 3, 5-8" 
+                            class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Qualidade (DPI)</label>
+                        <select id="quality-scale" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                            <option value="1">Padrão (72 DPI)</option>
+                            <option value="2" selected>Boa (144 DPI)</option>
+                            <option value="3">Alta (216 DPI)</option>
+                            <option value="5">Ultra (360 DPI - Lento)</option>
+                        </select>
+                    </div>
+
+                    <button id="process-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition duration-200 shadow-lg shadow-indigo-200 flex items-center justify-center gap-2">
+                        <span>Processar PDF</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State (Hidden by default) -->
+        <div id="loader" class="hidden flex flex-col items-center my-10">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-200 h-12 w-12 mb-4"></div>
+            <p class="text-slate-600">Renderizando páginas...</p>
+        </div>
+
+        <!-- Output Grid -->
+        <div id="output-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- As imagens aparecerão aqui -->
+        </div>
+    </div>
+
+    <footer class="text-center pb-10 text-slate-400 text-sm">
+        <p>Desenvolvido com PDF.js e Tailwind CSS</p>
+    </footer>
+
+    <script>
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const fileInput = document.getElementById('file-input');
+        const fileNameLabel = document.getElementById('file-name');
+        const processBtn = document.getElementById('process-btn');
+        const loader = document.getElementById('loader');
+        const output = document.getElementById('output-container');
+
+        // Atualiza nome do arquivo ao selecionar
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) fileNameLabel.innerText = e.target.files[0].name;
+        });
+
+        // Função para parsear strings como "1, 3, 5-8"
+        function parsePageRanges(input, maxPages) {
+            const pages = new Set();
+            const parts = input.split(',');
+            
+            parts.forEach(part => {
+                const range = part.trim().split('-');
+                if (range.length === 2) {
+                    const start = parseInt(range[0]);
+                    const end = parseInt(range[1]);
+                    for (let i = start; i <= end; i++) if (i <= maxPages) pages.add(i);
+                } else {
+                    const num = parseInt(range[0]);
+                    if (!isNaN(num) && num <= maxPages) pages.add(num);
+                }
+            });
+            return pages.size > 0 ? Array.from(pages).sort((a, b) => a - b) : [];
+        }
+
+        processBtn.addEventListener('click', async () => {
+            if (!fileInput.files[0]) return alert("Por favor, selecione um arquivo.");
+            
+            const scale = parseFloat(document.getElementById('quality-scale').value);
+            const pageInputValue = document.getElementById('page-numbers').value;
+
+            loader.classList.remove('hidden');
+            output.innerHTML = "";
+            processBtn.disabled = true;
+
+            try {
+                const arrayBuffer = await fileInput.files[0].arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                
+                // Se o input estiver vazio, processa todas as páginas (limite de segurança de 20 para não travar o browser)
+                let targetPages = parsePageRanges(pageInputValue, pdf.numPages);
+                if (targetPages.length === 0) {
+                    const confirmAll = confirm(`Nenhuma página especificada. Processar todas as ${pdf.numPages} páginas?`);
+                    if (!confirmAll) { loader.classList.add('hidden'); processBtn.disabled = false; return; }
+                    targetPages = Array.from({length: pdf.numPages}, (_, i) => i + 1);
+                }
+
+                for (let pageNum of targetPages) {
+                    const page = await pdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: scale });
+
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                    // Criar Card da Imagem
+                    const imgData = canvas.toDataURL('image/png');
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-4 rounded-xl shadow-md border border-slate-100 hover:shadow-lg transition-shadow";
+                    card.innerHTML = `
+                        <div class="relative group mb-3 overflow-hidden rounded-lg border border-slate-200">
+                            <img src="${imgData}" class="w-full h-auto">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="${imgData}" download="pagina_${pageNum}.png" class="bg-white text-slate-800 px-4 py-2 rounded-full font-bold text-sm">Download</a>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-semibold text-slate-600">Página ${pageNum}</span>
+                            <span class="text-xs text-slate-400">${canvas.width}x${canvas.height}px</span>
+                        </div>
+                    `;
+                    output.appendChild(card);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao processar PDF.");
+            } finally {
+                loader.classList.add('hidden');
+                processBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
