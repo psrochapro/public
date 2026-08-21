@@ -41,17 +41,29 @@
             <!-- Coluna Direita: Controles -->
             <aside class="sidebar">
                 <div class="sidebar-section">
+                    <h3>Dimensões</h3>
+                    <div class="dimension-box">
+                        <div class="dim-label">Resolução do Corte: <span id="currentDim">0 x 0</span></div>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label>Largura de Saída (px)</label>
+                            <input type="number" id="targetWidth" class="form-control" placeholder="Original">
+                        </div>
+                        <div class="dim-label">Saída Final: <span id="finalDim">0 x 0</span></div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
                     <h3>Exportar</h3>
                     <div class="form-group">
                         <label>Formato de Saída</label>
                         <select id="exportFormat" class="form-control">
                             <option value="image/png">PNG (Transparência)</option>
-                            <option value="image/webp">WebP (Recomendado)</option>
+                            <option value="image/webp" selected>WebP (Recomendado)</option>
                             <option value="image/avif">AVIF (Alta Performance)</option>
                             <option value="image/jpeg">JPEG (Sem Transp.)</option>
                         </select>
                         <div id="formatWarning" class="warning-text" style="display: none;">
-                            ⚠️ Seu navegador não suporta exportar em AVIF nativamente. Ele salvará como PNG.
+                            ⚠️ O navegador salvará como PNG (AVIF não suportado).
                         </div>
                     </div>
                     <div class="form-group">
@@ -66,12 +78,11 @@
                         <label>Remover cor específica</label>
                         <div class="color-picker-wrapper">
                             <input type="color" id="removeColor" value="#ffffff">
-                            <button id="btnRemoveColor" class="btn btn-sm">Ativar Remoção</button>
+                            <button id="btnRemoveColor" class="btn btn-sm">Ativar</button>
                         </div>
                     </div>
-                    
                     <div class="form-group">
-                        <label>Tolerância (Sensibilidade): <span id="toleranceVal">40</span></label>
+                        <label>Tolerância: <span id="toleranceVal">40</span></label>
                         <input type="range" id="toleranceRange" min="1" max="150" value="40" class="form-control-range">
                     </div>
                 </div>
@@ -82,7 +93,7 @@
 
                 <div class="preview-info" id="previewInfo">
                     <div id="sizeBadge" class="info-badge" style="display: none;">
-                        Tamanho estimado: <strong id="fileSizeDisplay">--</strong>
+                        Peso estimado: <strong id="fileSizeDisplay">--</strong>
                     </div>
                 </div>
             </aside>

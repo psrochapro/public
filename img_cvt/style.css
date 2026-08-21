@@ -96,11 +96,30 @@ body {
     display: inline-block;
 }
 
+.dimension-box {
+    background: #fcfcfc;
+    border: 1px dashed var(--border);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.dim-label {
+    font-size: 0.8rem;
+    color: #636e72;
+    margin: 5px 0;
+}
+
+.dim-label span {
+    font-weight: bold;
+    color: var(--dark);
+}
+
 .form-group { margin-bottom: 15px; }
 .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
 
 .form-control {
     width: 100%;
+    box-sizing: border-box;
     padding: 8px;
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -148,10 +167,6 @@ input[type="color"] {
 .btn-outline.active { background: var(--primary); color: white; border-color: var(--primary); }
 .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
 .btn-large { width: 100%; padding: 15px; font-size: 1rem; }
-
-.preview-info {
-    margin-top: 20px;
-}
 
 .info-badge {
     background: #f8f9fa;
