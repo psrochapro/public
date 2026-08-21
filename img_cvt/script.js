@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileSizeDisplay = document.getElementById('fileSizeDisplay');
     const sizeBadge = document.getElementById('sizeBadge');
     
-    // Novos elementos de Dimensão
     const currentDimLabel = document.getElementById('currentDim');
     const finalDimLabel = document.getElementById('finalDim');
     const targetWidthInput = document.getElementById('targetWidth');
@@ -23,35 +22,39 @@ document.addEventListener('DOMContentLoaded', function () {
     let cropper = null;
     let colorRemovalActive = false;
 
+    // Helper: Verifica se o navegador suporta codificação nativa para o formato
     function isFormatSupported(format) {
         const canvas = document.createElement('canvas');
         canvas.width = canvas.height = 1;
         return canvas.toDataURL(format).indexOf(format) !== -1;
     }
 
-    // Função central de atualização de Preview e Dimensões
+    // Função central para atualizar dimensões e peso estimado
     function updatePreviews() {
         if (!cropper) return;
 
-        // 1. Pegar dados reais do corte (Pixels originais)
-        const cropData = cropper.getData(true); // true para pixels arredondados
+        // 1. Obter dimensões reais do corte atual
+        const cropData = cropper.getData(true);
         const cropW = Math.round(cropData.width);
         const cropH = Math.round(cropData.height);
         currentDimLabel.textContent = `${cropW} x ${cropH} px`;
 
-        // 2. Calcular dimensões de saída baseadas no input do usuário
+        // 2. Lógica de Redimensionamento com Validação
         let finalW = cropW;
         let finalH = cropH;
+        let userValue = parseInt(targetWidthInput.value);
         
-        const userTargetW = parseInt(targetWidthInput.value);
-        if (userTargetW && userTargetW > 0) {
-            finalW = userTargetW;
-            // Regra de três: altura proporcional ao corte
-            finalH = Math.round((userTargetW * cropH) / cropW);
+        if (!isNaN(userValue) && userValue > 0) {
+            finalW = userValue;
+            finalH = Math.round((userValue * cropH) / cropW);
+        } else if (targetWidthInput.value !== "" && userValue <= 0) {
+            // Resetar se o usuário digitar valores inválidos (ex: negativos)
+            targetWidthInput.value = "";
         }
+
         finalDimLabel.textContent = `${finalW} x ${finalH} px`;
 
-        // 3. Gerar o canvas para estimar o peso (KB/MB)
+        // 3. Gerar canvas temporário para calcular o peso (Blob)
         let canvas = cropper.getCroppedCanvas({
             width: finalW,
             height: finalH,
@@ -74,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, format, quality);
     }
 
-    // Eventos
+    // Inicialização ao carregar imagem
     imageInput.addEventListener('change', function (e) {
         const file = e.target.files[0];
         if (file) {
@@ -83,12 +86,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (cropper) cropper.destroy();
                 imageSource.src = event.target.result;
                 placeholder.style.display = 'none';
+                
                 cropper = new Cropper(imageSource, {
                     viewMode: 1,
                     dragMode: 'move',
                     autoCropArea: 1,
                     responsive: true,
-                    crop: updatePreviews // Dispara enquanto arrasta (throttle via toBlob)
+                    crop: updatePreviews, // Atualiza enquanto o usuário ajusta o corte
+                    ready: () => {
+                        const data = cropper.getData(true);
+                        targetWidthInput.placeholder = Math.round(data.width);
+                        checkFormatSupport();
+                        updatePreviews();
+                    }
                 });
                 downloadBtn.disabled = false;
             };
@@ -96,19 +106,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Listeners para controles da barra lateral
     targetWidthInput.addEventListener('input', updatePreviews);
+
     exportFormat.addEventListener('change', () => {
-        formatWarning.style.display = !isFormatSupported(exportFormat.value) ? 'block' : 'none';
+        checkFormatSupport();
         updatePreviews();
     });
+
     exportQuality.addEventListener('input', () => {
         qualityVal.textContent = Math.round(exportQuality.value * 100) + '%';
         updatePreviews();
     });
+
     toleranceRange.addEventListener('input', () => {
         toleranceVal.textContent = toleranceRange.value;
         updatePreviews();
     });
+
     btnRemoveColor.addEventListener('click', () => {
         colorRemovalActive = !colorRemovalActive;
         btnRemoveColor.textContent = colorRemovalActive ? "Remoção ATIVA" : "Ativar";
@@ -116,12 +131,20 @@ document.addEventListener('DOMContentLoaded', function () {
         updatePreviews();
     });
 
+    function checkFormatSupport() {
+        const selected = exportFormat.value;
+        formatWarning.style.display = !isFormatSupported(selected) ? 'block' : 'none';
+    }
+
+    // Processamento de pixels para transparência
     function applyTransparency(canvas) {
         const ctx = canvas.getContext('2d');
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
         const hex = removeColorInput.value;
-        const rT = parseInt(hex.slice(1, 3), 16), gT = parseInt(hex.slice(3, 5), 16), bT = parseInt(hex.slice(5, 7), 16);
+        const rT = parseInt(hex.slice(1, 3), 16), 
+              gT = parseInt(hex.slice(3, 5), 16), 
+              bT = parseInt(hex.slice(5, 7), 16);
         const tolerance = parseInt(toleranceRange.value);
 
         for (let i = 0; i < data.length; i += 4) {
@@ -132,17 +155,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return canvas;
     }
 
+    // Execução do Download
     downloadBtn.addEventListener('click', () => {
         if (!cropper) return;
         
         const cropData = cropper.getData(true);
         let finalW = Math.round(cropData.width);
         let finalH = Math.round(cropData.height);
-        const userTargetW = parseInt(targetWidthInput.value);
         
-        if (userTargetW > 0) {
-            finalW = userTargetW;
-            finalH = Math.round((userTargetW * cropData.height) / cropData.width);
+        const userValue = parseInt(targetWidthInput.value);
+        if (userValue > 0) {
+            finalW = userValue;
+            finalH = Math.round((userValue * cropData.height) / cropData.width);
         }
 
         let canvas = cropper.getCroppedCanvas({
@@ -168,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, format, quality);
     });
 
+    // Controles de Aspect Ratio
     ratioButtons.forEach(button => {
         button.addEventListener('click', () => {
             if (!cropper) return;

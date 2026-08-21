@@ -46,9 +46,10 @@
                         <div class="dim-label">Resolução do Corte: <span id="currentDim">0 x 0</span></div>
                         <div class="form-group" style="margin-top: 10px;">
                             <label>Largura de Saída (px)</label>
-                            <input type="number" id="targetWidth" class="form-control" placeholder="Original">
+                            <input type="number" id="targetWidth" class="form-control" min="1" placeholder="Ex: 1200">
+                            <small style="color: #7f8c8d; font-size: 0.7rem;">Deixe vazio para tamanho original.</small>
                         </div>
-                        <div class="dim-label">Saída Final: <span id="finalDim">0 x 0</span></div>
+                        <div class="dim-label">Saída Final: <strong id="finalDim" style="color: var(--primary);">0 x 0</strong></div>
                     </div>
                 </div>
 
