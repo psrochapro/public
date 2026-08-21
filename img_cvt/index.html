@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Master - Conversor & Crop</title>
+    <link rel="stylesheet" href="vendor/cropper.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Image Master <span>Conversor & Crop</span></h1>
+            <div class="upload-area">
+                <input type="file" id="imageInput" accept="image/*" hidden>
+                <button class="btn btn-primary" onclick="document.getElementById('imageInput').click()">
+                    Selecionar Imagem
+                </button>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <!-- Coluna Esquerda: Editor -->
+            <div class="editor-pane">
+                <div class="canvas-container">
+                    <img id="imageSource" style="max-width: 100%;">
+                    <div id="uploadPlaceholder" class="placeholder">
+                        <p>Nenhuma imagem carregada.</p>
+                    </div>
+                </div>
+                
+                <div class="ratio-controls" id="ratioControls">
+                    <button class="btn btn-sm btn-outline active" data-ratio="NaN">Livre</button>
+                    <button class="btn btn-sm btn-outline" data-ratio="1">1:1</button>
+                    <button class="btn btn-sm btn-outline" data-ratio="1.3333333333333333">4:3</button>
+                    <button class="btn btn-sm btn-outline" data-ratio="1.7777777777777777">16:9</button>
+                    <button class="btn btn-sm btn-outline" data-ratio="0.6666666666666666">2:3</button>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Controles -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>Exportar</h3>
+                    <div class="form-group">
+                        <label>Formato de Saída</label>
+                        <select id="exportFormat" class="form-control">
+                            <option value="image/png">PNG (Transparência)</option>
+                            <option value="image/webp">WebP (Equilibrado)</option>
+                            <option value="image/avif">AVIF (Alta Performance)</option>
+                            <option value="image/jpeg">JPEG (Sem Transparência)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Qualidade</label>
+                        <input type="range" id="exportQuality" min="0" max="1" step="0.1" value="0.9">
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Transparência</h3>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="keepTransparent" checked>
+                        <label for="keepTransparent">Preservar Transparência</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Remover cor específica</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="removeColor" value="#ffffff">
+                            <button id="btnRemoveColor" class="btn btn-sm">Remover</button>
+                        </div>
+                        <small>Torna a cor selecionada transparente.</small>
+                    </div>
+                </div>
+
+                <div class="sidebar-actions">
+                    <button id="downloadBtn" class="btn btn-success btn-large" disabled>Baixar Imagem</button>
+                </div>
+
+                <div class="preview-info" id="previewInfo">
+                    <!-- Info de tamanho será inserida aqui -->
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script src="vendor/cropper.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

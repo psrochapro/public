@@ -1,0 +1,149 @@
+:root {
+    --primary: #3498db;
+    --success: #2ecc71;
+    --dark: #2c3e50;
+    --light: #ecf0f1;
+    --border: #dcdde1;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f5f6fa;
+    margin: 0;
+    color: var(--dark);
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.app-header h1 { margin: 0; font-size: 1.5rem; }
+.app-header h1 span { font-weight: 300; color: #7f8c8d; }
+
+.app-content {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+    min-height: 500px;
+}
+
+/* Editor Area */
+.editor-pane {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.canvas-container {
+    flex-grow: 1;
+    background: #e1e4e8;
+    background-image: linear-gradient(45deg, #eee 25%, transparent 25%), 
+                      linear-gradient(-45deg, #eee 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, #eee 75%), 
+                      linear-gradient(-45deg, transparent 75%, #eee 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder { color: #95a5a6; text-align: center; }
+
+.ratio-controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Sidebar */
+.sidebar {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 20px;
+}
+
+.sidebar-section {
+    margin-bottom: 25px;
+}
+
+.sidebar-section h3 {
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary);
+    display: inline-block;
+}
+
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+.checkbox-group { display: flex; align-items: center; gap: 8px; }
+.checkbox-group label { margin-bottom: 0; }
+
+.color-picker-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+input[type="color"] {
+    border: none;
+    width: 40px;
+    height: 34px;
+    cursor: pointer;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-success { background: var(--success); color: white; }
+.btn-outline { background: transparent; border: 1px solid var(--border); }
+.btn-outline.active { background: var(--primary); color: white; border-color: var(--primary); }
+.btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+.btn-large { width: 100%; padding: 15px; font-size: 1rem; }
+
+.preview-info {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+@media (max-width: 900px) {
+    .app-content { grid-template-columns: 1fr; }
+    .sidebar { order: 2; }
+}
