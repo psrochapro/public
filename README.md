@@ -25,6 +25,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Decoder Base64 Gzip** | Decoder Base64 Gzip | [Acessar App](https://psrochapro.github.io/public/decoder64gz/) |
 | **Timer** | Timer Simples | [Acessar App](https://psrochapro.github.io/public/timer/) |
 | **PDF para PNG** | Extrai páginas de PDF como imagens | [Acessar App](https://psrochapro.github.io/public/pdf2png/) |
+| **Conversor de Imagens** | Converte imagens para formatos compactos | [Acessar App](https://psrochapro.github.io/public/img_cvt/) |
 
 
 ### 🛠️ O que você encontra aqui:
