@@ -26,6 +26,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Timer** | Timer Simples | [Acessar App](https://psrochapro.github.io/public/timer/) |
 | **PDF para PNG** | Extrai páginas de PDF como imagens | [Acessar App](https://psrochapro.github.io/public/pdf2png/) |
 | **Conversor de Imagens** | Converte imagens para formatos compactos | [Acessar App](https://psrochapro.github.io/public/img_cvt/) |
+| **BPMN Extrator** | Extrai atividades de diagramas BPMN | [Acessar App](https://psrochapro.github.io/public/bpmextractor/) |
 
 
 ### 🛠️ O que você encontra aqui:
