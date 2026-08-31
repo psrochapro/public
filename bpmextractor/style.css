@@ -27,7 +27,7 @@ header h1 {
 }
 
 .upload-section {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -50,6 +50,34 @@ input[type="file"] {
     background-color: #004494;
 }
 
+.actions-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-copy {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-copy:hover {
+    background-color: #218838;
+}
+
+.btn-copy.success {
+    background-color: #155724;
+}
+
 #fileName {
     font-style: italic;
     color: #666;
@@ -62,7 +90,7 @@ input[type="file"] {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 th, td {
