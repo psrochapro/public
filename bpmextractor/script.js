@@ -7,65 +7,98 @@ document.getElementById('bpmnFile').addEventListener('change', function(e) {
     const reader = new FileReader();
     reader.onload = function(e) {
         const xmlContent = e.target.result;
-        parseBPMN(xmlContent);
+        parseBPMNSequentially(xmlContent);
     };
     reader.readAsText(file);
 });
 
-function parseBPMN(xmlString) {
+function parseBPMNSequentially(xmlString) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-    const container = document.getElementById('tableContainer');
     
-    // Tipos de elementos que podem conter atividades
-    const taskTypes = [
-        'task', 'userTask', 'serviceTask', 'sendTask', 
-        'receiveTask', 'manualTask', 'businessRuleTask', 'scriptTask'
-    ];
+    // 1. Mapear Atores (Lanes) -> Atividades
+    const laneMap = {}; // elementId -> laneName
+    const lanes = xmlDoc.getElementsByTagNameNS('*', 'lane');
+    for (let lane of lanes) {
+        const actorName = lane.getAttribute('name') || 'N/A';
+        const nodeRefs = lane.getElementsByTagNameNS('*', 'flowNodeRef');
+        for (let ref of nodeRefs) {
+            laneMap[ref.textContent.trim()] = actorName;
+        }
+    }
 
-    // Mapear todas as tarefas por ID para busca rápida
-    const tasksMap = {};
+    // 2. Mapear detalhes de todas as Tasks
+    const taskTypes = ['task', 'userTask', 'serviceTask', 'sendTask', 'receiveTask', 'manualTask', 'businessRuleTask', 'scriptTask'];
+    const tasksDetails = {};
     taskTypes.forEach(type => {
         const elements = xmlDoc.getElementsByTagNameNS('*', type);
         for (let el of elements) {
             const id = el.getAttribute('id');
             const name = el.getAttribute('name') || 'Sem nome';
+            let obs = '';
+            const doc = el.getElementsByTagNameNS('*', 'documentation');
+            if (doc.length > 0) obs = doc[0].textContent.trim();
             
-            // Buscar documentação
-            let docText = '';
-            const docElements = el.getElementsByTagNameNS('*', 'documentation');
-            if (docElements.length > 0) {
-                docText = docElements[0].textContent.trim();
-            }
-
-            tasksMap[id] = {
-                name: name,
-                obs: docText
-            };
+            tasksDetails[id] = { name, obs, type };
         }
     });
 
-    // Buscar as Lanes (Atores)
-    const lanes = xmlDoc.getElementsByTagNameNS('*', 'lane');
-    const tableData = [];
+    // 3. Mapear Fluxos (sequenceFlow)
+    const flowMap = {}; // sourceRef -> [targetRefs]
+    const flows = xmlDoc.getElementsByTagNameNS('*', 'sequenceFlow');
+    for (let flow of flows) {
+        const src = flow.getAttribute('sourceRef');
+        const tgt = flow.getAttribute('targetRef');
+        if (!flowMap[src]) flowMap[src] = [];
+        flowMap[src].push(tgt);
+    }
 
-    if (lanes.length > 0) {
-        for (let lane of lanes) {
-            const actorName = lane.getAttribute('name') || 'Ator não definido';
-            const nodeRefs = lane.getElementsByTagNameNS('*', 'flowNodeRef');
-            
-            for (let ref of nodeRefs) {
-                const taskId = ref.textContent.trim();
-                if (tasksMap[taskId]) {
-                    tableData.push({
-                        ator: actorName,
-                        atividade: tasksMap[taskId].name,
-                        observacao: tasksMap[taskId].obs
-                    });
-                }
-            }
+    // 4. Encontrar Start Event(s)
+    const startEvents = xmlDoc.getElementsByTagNameNS('*', 'startEvent');
+    const tableData = [];
+    const visited = new Set();
+    const queue = [];
+
+    // Adicionar todos os pontos de partida na fila
+    for (let start of startEvents) {
+        queue.push(start.getAttribute('id'));
+    }
+
+    // 5. Travessia do Fluxo (BFS Adaptado para ordem temporal)
+    while (queue.length > 0) {
+        const currentId = queue.shift();
+        if (visited.has(currentId)) continue;
+        visited.add(currentId);
+
+        // Se o nó atual for uma Task, adiciona na tabela
+        if (tasksDetails[currentId]) {
+            tableData.push({
+                ator: laneMap[currentId] || 'Não identificado',
+                atividade: tasksDetails[currentId].name,
+                observacao: tasksDetails[currentId].obs
+            });
+        }
+
+        // Adiciona os próximos nós na fila baseado no SequenceFlow
+        const targets = flowMap[currentId];
+        if (targets) {
+            targets.forEach(tId => {
+                if (!visited.has(tId)) queue.push(tId);
+            });
         }
     }
+
+    // 6. Backup: Adicionar tasks que não foram alcançadas pelo fluxo (tasks órfãs)
+    Object.keys(tasksDetails).forEach(id => {
+        if (!visited.has(id)) {
+            tableData.push({
+                ator: laneMap[id] || 'Não identificado',
+                atividade: tasksDetails[id].name,
+                observacao: tasksDetails[id].obs
+            });
+            visited.add(id);
+        }
+    });
 
     renderTable(tableData);
 }
@@ -74,7 +107,7 @@ function renderTable(data) {
     const container = document.getElementById('tableContainer');
     
     if (data.length === 0) {
-        container.innerHTML = '<div class="empty-msg">Nenhuma atividade encontrada no arquivo selecionado.</div>';
+        container.innerHTML = '<div class="empty-msg">Nenhuma atividade encontrada no arquivo.</div>';
         return;
     }
 
@@ -82,20 +115,22 @@ function renderTable(data) {
         <table>
             <thead>
                 <tr>
-                    <th style="width: 20%;">Ator</th>
-                    <th style="width: 40%;">Atividade</th>
-                    <th style="width: 40%;">Observações</th>
+                    <th class="col-order">#</th>
+                    <th class="col-actor">Ator</th>
+                    <th class="col-activity">Atividade</th>
+                    <th class="col-obs">Observações</th>
                 </tr>
             </thead>
             <tbody>
     `;
 
-    data.forEach(item => {
+    data.forEach((item, index) => {
         html += `
             <tr>
-                <td><strong>${item.ator}</strong></td>
-                <td>${item.atividade}</td>
-                <td class="obs-text">${item.observacao || '-'}</td>
+                <td class="col-order">${index + 1}</td>
+                <td class="col-actor"><strong>${item.ator}</strong></td>
+                <td class="col-activity">${item.atividade}</td>
+                <td class="col-obs obs-text">${item.observacao || '-'}</td>
             </tr>
         `;
     });

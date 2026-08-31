@@ -87,6 +87,11 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
+.col-order { width: 50px; text-align: center; }
+.col-actor { width: 15%; }
+.col-activity { width: 40%; }
+.col-obs { width: 40%; }
+
 .obs-text {
     font-size: 0.9rem;
     color: #555;
