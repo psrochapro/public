@@ -83,7 +83,6 @@ function parseBPMNSequentially(xmlString) {
         }
     }
 
-    // Backup para tasks não conectadas
     Object.keys(tasksDetails).forEach(id => {
         if (!visited.has(id)) {
             tableData.push({
@@ -103,7 +102,7 @@ function renderTable(data) {
     const actions = document.getElementById('actionsContainer');
     
     if (data.length === 0) {
-        container.innerHTML = '<div class="empty-msg">Nenhuma atividade encontrada no arquivo.</div>';
+        container.innerHTML = '<div class="empty-msg">Nenhuma atividade encontrada.</div>';
         actions.style.display = 'none';
         return;
     }
@@ -114,9 +113,9 @@ function renderTable(data) {
         <table id="resultTable">
             <thead>
                 <tr>
-                    <th class="col-order">#</th>
+                    <th class="col-order">N.º</th>
                     <th class="col-actor">Ator</th>
-                    <th class="col-activity">Atividade</th>
+                    <th class="col-activity">Atividades no Diagrama</th>
                     <th class="col-obs">Observações</th>
                 </tr>
             </thead>
@@ -142,24 +141,32 @@ async function copyTableToClipboard() {
     const table = document.getElementById('resultTable');
     if (!table) return;
 
-    // Criar uma versão da tabela com estilos inline para o Google Docs
     const tableClone = table.cloneNode(true);
     tableClone.setAttribute('border', '1');
     tableClone.style.borderCollapse = 'collapse';
     tableClone.style.width = '100%';
     tableClone.style.fontFamily = 'Arial, sans-serif';
+    tableClone.style.fontSize = '11pt';
 
     const cells = tableClone.querySelectorAll('th, td');
     cells.forEach(cell => {
         cell.style.border = '1px solid #000000';
-        cell.style.padding = '8px';
-        cell.style.verticalAlign = 'top';
+        cell.style.padding = '10px';
+        cell.style.verticalAlign = 'middle';
+    });
+
+    // Estilo específico para coluna N.º (Centralizada)
+    const orderCells = tableClone.querySelectorAll('.col-order');
+    orderCells.forEach(c => {
+        c.style.textAlign = 'center';
+        c.style.width = '40pt';
     });
 
     const headers = tableClone.querySelectorAll('th');
     headers.forEach(th => {
-        th.style.backgroundColor = '#eeeeee';
+        th.style.backgroundColor = '#e0e0e0';
         th.style.fontWeight = 'bold';
+        th.style.textAlign = 'center';
     });
 
     const htmlContent = tableClone.outerHTML;
@@ -176,7 +183,7 @@ async function copyTableToClipboard() {
 
         const btn = document.getElementById('btnCopy');
         const originalText = btn.textContent;
-        btn.textContent = 'Copiado!';
+        btn.textContent = 'Tabela Copiada!';
         btn.classList.add('success');
         
         setTimeout(() => {
@@ -185,7 +192,6 @@ async function copyTableToClipboard() {
         }, 2000);
 
     } catch (err) {
-        console.error('Erro ao copiar:', err);
-        alert('Erro ao copiar para a área de transferência.');
+        alert('Erro ao copiar. Tente selecionar e copiar manualmente.');
     }
 }
