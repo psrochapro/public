@@ -141,32 +141,50 @@ async function copyTableToClipboard() {
     const table = document.getElementById('resultTable');
     if (!table) return;
 
+    // Clonagem e Preparação da Tabela para o Google Docs
     const tableClone = table.cloneNode(true);
+    
+    // Configurações Gerais da Tabela
     tableClone.setAttribute('border', '1');
     tableClone.style.borderCollapse = 'collapse';
     tableClone.style.width = '100%';
     tableClone.style.fontFamily = 'Arial, sans-serif';
-    tableClone.style.fontSize = '11pt';
+    tableClone.style.fontSize = '9pt';
+    tableClone.style.lineHeight = '1.0';
 
-    const cells = tableClone.querySelectorAll('th, td');
-    cells.forEach(cell => {
-        cell.style.border = '1px solid #000000';
-        cell.style.padding = '10px';
+    // Estilização das Células
+    const allCells = tableClone.querySelectorAll('th, td');
+    allCells.forEach(cell => {
+        cell.style.border = '1px solid #333333';
+        cell.style.padding = '4pt 6pt';
         cell.style.verticalAlign = 'middle';
+        cell.style.color = '#000000';
     });
 
-    // Estilo específico para coluna N.º (Centralizada)
-    const orderCells = tableClone.querySelectorAll('.col-order');
-    orderCells.forEach(c => {
-        c.style.textAlign = 'center';
-        c.style.width = '40pt';
-    });
-
+    // Cabeçalhos
     const headers = tableClone.querySelectorAll('th');
     headers.forEach(th => {
         th.style.backgroundColor = '#e0e0e0';
         th.style.fontWeight = 'bold';
         th.style.textAlign = 'center';
+    });
+
+    // Coluna N.º (Centralizada)
+    tableClone.querySelectorAll('.col-order').forEach(c => {
+        c.style.textAlign = 'center';
+        c.style.width = '30pt';
+    });
+
+    // Coluna Ator (Centralizada e Fundo Cinza)
+    tableClone.querySelectorAll('.col-actor').forEach(c => {
+        c.style.textAlign = 'center';
+        c.style.backgroundColor = '#f4f4f4';
+        c.style.width = '100pt';
+    });
+
+    // Colunas de Texto (Alinhadas à esquerda)
+    tableClone.querySelectorAll('.col-activity, .col-obs').forEach(c => {
+        c.style.textAlign = 'left';
     });
 
     const htmlContent = tableClone.outerHTML;
@@ -182,16 +200,15 @@ async function copyTableToClipboard() {
         ]);
 
         const btn = document.getElementById('btnCopy');
-        const originalText = btn.textContent;
-        btn.textContent = 'Tabela Copiada!';
+        btn.textContent = 'Tabela Pronta para o Docs!';
         btn.classList.add('success');
         
         setTimeout(() => {
-            btn.textContent = originalText;
+            btn.textContent = 'Copiar para Template Google Docs';
             btn.classList.remove('success');
         }, 2000);
 
     } catch (err) {
-        alert('Erro ao copiar. Tente selecionar e copiar manualmente.');
+        alert('Erro ao copiar automaticamente.');
     }
 }
