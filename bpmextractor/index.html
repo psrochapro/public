@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPMN to Table - FAPESC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Conversor BPMN para Atividades</h1>
+            <p>Selecione o arquivo exportado do Camunda para gerar a tabela de responsabilidades.</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <input type="file" id="bpmnFile" accept=".xml,.bpmn,.txt">
+                <label for="bpmnFile" class="btn-upload">Selecionar Arquivo</label>
+                <span id="fileName">Nenhum arquivo selecionado</span>
+            </div>
+
+            <div id="tableContainer" class="table-container">
+                <!-- A tabela será gerada aqui -->
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
