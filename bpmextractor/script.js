@@ -141,10 +141,9 @@ async function copyTableToClipboard() {
     const table = document.getElementById('resultTable');
     if (!table) return;
 
-    // Clonagem e Preparação da Tabela para o Google Docs
     const tableClone = table.cloneNode(true);
     
-    // Configurações Gerais da Tabela
+    // Configurações Gerais
     tableClone.setAttribute('border', '1');
     tableClone.style.borderCollapse = 'collapse';
     tableClone.style.width = '100%';
@@ -152,16 +151,15 @@ async function copyTableToClipboard() {
     tableClone.style.fontSize = '9pt';
     tableClone.style.lineHeight = '1.0';
 
-    // Estilização das Células
+    // Todas as Células (Geral)
     const allCells = tableClone.querySelectorAll('th, td');
     allCells.forEach(cell => {
         cell.style.border = '1px solid #333333';
         cell.style.padding = '4pt 6pt';
         cell.style.verticalAlign = 'middle';
-        cell.style.color = '#000000';
     });
 
-    // Cabeçalhos
+    // Ajuste de Cabeçalhos (th) - UNIFORMES
     const headers = tableClone.querySelectorAll('th');
     headers.forEach(th => {
         th.style.backgroundColor = '#e0e0e0';
@@ -169,22 +167,25 @@ async function copyTableToClipboard() {
         th.style.textAlign = 'center';
     });
 
-    // Coluna N.º (Centralizada)
-    tableClone.querySelectorAll('.col-order').forEach(c => {
-        c.style.textAlign = 'center';
-        c.style.width = '30pt';
-    });
-
-    // Coluna Ator (Centralizada e Fundo Cinza)
-    tableClone.querySelectorAll('.col-actor').forEach(c => {
-        c.style.textAlign = 'center';
-        c.style.backgroundColor = '#f4f4f4';
-        c.style.width = '100pt';
-    });
-
-    // Colunas de Texto (Alinhadas à esquerda)
-    tableClone.querySelectorAll('.col-activity, .col-obs').forEach(c => {
-        c.style.textAlign = 'left';
+    // Estilização das Células de Dados (td)
+    const rows = tableClone.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        
+        // N.º (Centralizado)
+        cells[0].style.textAlign = 'center';
+        cells[0].style.width = '30pt';
+        
+        // Ator (Centralizado + Fundo f4f4f4)
+        cells[1].style.textAlign = 'center';
+        cells[1].style.backgroundColor = '#f4f4f4';
+        cells[1].style.width = '100pt';
+        
+        // Atividade
+        cells[2].style.textAlign = 'left';
+        
+        // Observações
+        cells[3].style.textAlign = 'left';
     });
 
     const htmlContent = tableClone.outerHTML;
@@ -200,7 +201,7 @@ async function copyTableToClipboard() {
         ]);
 
         const btn = document.getElementById('btnCopy');
-        btn.textContent = 'Tabela Pronta para o Docs!';
+        btn.textContent = 'Pronto para o Docs!';
         btn.classList.add('success');
         
         setTimeout(() => {
@@ -209,6 +210,6 @@ async function copyTableToClipboard() {
         }, 2000);
 
     } catch (err) {
-        alert('Erro ao copiar automaticamente.');
+        alert('Erro ao copiar.');
     }
 }

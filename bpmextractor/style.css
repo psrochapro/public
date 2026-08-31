@@ -86,7 +86,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-    font-size: 12px; /* Visualização web um pouco maior que a cópia */
+    font-size: 12px;
 }
 
 th, td {
@@ -101,7 +101,13 @@ th {
 }
 
 .col-order { width: 50px; text-align: center; }
-.col-actor { width: 150px; text-align: center; background-color: #f4f4f4; }
+.col-actor { width: 150px; text-align: center; }
+
+/* Fundo cinza apenas para as células de dados do Ator */
+td.col-actor {
+    background-color: #f4f4f4;
+}
+
 .col-activity { width: auto; text-align: left; }
 .col-obs { width: auto; text-align: left; }
 
