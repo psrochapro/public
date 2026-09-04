@@ -104,9 +104,9 @@ header {
 
 .modal-content {
     background-color: white;
-    margin: 10% auto;
+    margin: 5% auto;
     padding: 20px;
-    width: 300px;
+    width: 340px;
     border-radius: 12px;
     text-align: center;
     position: relative;
@@ -120,14 +120,28 @@ header {
     cursor: pointer;
 }
 
-#qrcode {
-    margin: 20px auto;
+/* QR-Marker Hybrid Style */
+.qr-marker-wrapper {
+    background-color: black;
+    padding: 40px; 
     display: inline-block;
+    margin: 20px 0;
+}
+
+#qrcode {
+    background-color: white;
+    padding: 10px;
+    display: block;
+}
+
+#qrcode img {
+    display: block;
 }
 
 .instruction {
     font-size: 0.8rem;
     color: #64748b;
+    margin-top: 10px;
 }
 
 /* AR UI */
