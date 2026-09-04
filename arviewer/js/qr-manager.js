@@ -3,16 +3,21 @@ const closeBtn = document.querySelector('.close-button');
 const qrContainer = document.getElementById('qrcode');
 const qrTitle = document.getElementById('qrTitle');
 
-// Base URL provided by the user
-const BASE_URL = 'https://psrochapro.github.io/public/arviewer';
-
 function showQRCode(name, filePath) {
     qrTitle.innerText = name;
     qrContainer.innerHTML = '';
     
-    // Construct the AR link
-    const arLink = `${BASE_URL}/ar-view.html?img=${encodeURIComponent(filePath)}`;
+    // Dynamically calculate the absolute path for the AR viewer
+    // This ensures it works correctly on GitHub Pages regardless of subdirectory
+    const currentPath = window.location.pathname;
+    const directory = currentPath.substring(0, currentPath.lastIndexOf('/'));
+    const arViewPath = directory + '/ar-view.html';
     
+    // Create the full absolute URL
+    const arLink = window.location.origin + arViewPath + '?img=' + encodeURIComponent(filePath);
+    
+    console.log('Generating QR for:', arLink);
+
     new QRCode(qrContainer, {
         text: arLink,
         width: 200,
