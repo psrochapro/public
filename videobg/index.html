@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Fundo Animado (9:16)</title>
+  <style>
+    :root {
+      --bg-dark: #0b0d14;
+      --panel-bg: #151922;
+      --panel-border: rgba(255, 255, 255, 0.1);
+      --accent: #00d2ff;
+      --accent-glow: rgba(0, 210, 255, 0.35);
+      --text: #ffffff;
+      --text-muted: #8e99a8;
+      --danger: #ff4757;
+      --success: #2ed573;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      overflow-x: hidden;
+    }
+
+    .main-layout {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .preview-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      background: radial-gradient(circle at center, #171b26 0%, #0a0c12 100%);
+    }
+
+    .phone-viewport {
+      width: 360px;
+      height: 640px;
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.15);
+      background: #000;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .status-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff3b30;
+      box-shadow: 0 0 10px #ff3b30;
+      animation: livePulse 1.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    .status-dot.recording {
+      background: var(--danger);
+      box-shadow: 0 0 12px var(--danger);
+      animation: recordBlink 0.7s infinite alternate;
+    }
+
+    @keyframes livePulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes recordBlink {
+      from { opacity: 0.3; }
+      to { opacity: 1; }
+    }
+
+    .sidebar {
+      width: 410px;
+      background: var(--panel-bg);
+      border-left: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .sidebar-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .sidebar-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .sidebar-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-group label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .control-group label span {
+      color: var(--accent);
+    }
+
+    .text-input {
+      background: #1c222e;
+      color: #fff;
+      border: 1px solid var(--panel-border);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .text-input:focus {
+      border-color: var(--accent);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .file-dropzone {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .file-dropzone:hover {
+      border-color: var(--accent);
+      background: rgba(0, 210, 255, 0.05);
+    }
+
+    .file-dropzone span {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .image-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .btn-text-danger {
+      background: transparent;
+      border: none;
+      color: var(--danger);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .btn-text-danger:hover {
+      background: rgba(255, 71, 87, 0.15);
+    }
+
+    .image-list {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 6px 2px 8px 2px;
+    }
+
+    .image-thumb-wrapper {
+      position: relative;
+      width: 56px;
+      height: 86px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .image-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb-remove-btn {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255, 71, 87, 0.85);
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease;
+    }
+
+    .thumb-remove-btn:hover {
+      transform: scale(1.15);
+      background: var(--danger);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    select {
+      background: #1c222e;
+      color: #fff;
+      border: 1px solid var(--panel-border);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .color-swatch-input {
+      -webkit-appearance: none;
+      border: 1px solid var(--panel-border);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+      padding: 0;
+    }
+
+    .color-swatch-input::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    .color-swatch-input::-webkit-color-swatch {
+      border: none;
+      border-radius: 7px;
+    }
+
+    .color-preset-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .preset-pill {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .preset-pill:hover {
+      transform: scale(1.2);
+      border-color: #ffffff;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0b0d14;
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    .btn-danger:hover {
+      filter: brightness(1.1);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--danger);
+      transition: width 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-layout">
+    <div class="preview-container">
+      <div class="phone-viewport">
+        <div class="status-badge" id="previewBadge">
+          <div class="status-dot" id="statusDot"></div>
+          <span id="statusText">AO VIVO</span>
+        </div>
+        <canvas id="renderCanvas" width="1080" height="1920"></canvas>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>Gerador de Fundo 9:16</h2>
+        <p>Gere fundos dinâmicos cinematográficos para FFmpeg e n8n.</p>
+      </div>
+
+      <div class="sidebar-content">
+        <div class="control-group">
+          <label>Texto do Selo / Badge</label>
+          <input type="text" class="text-input" id="badgeTextInput" value="AO VIVO" placeholder="Ex: AO VIVO, PRINCIPAIS NOTÍCIAS...">
+          <label class="checkbox-row">
+            <input type="checkbox" id="badgeBurnCanvas" checked>
+            Gravar Selo no Vídeo Exportado
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label>
+            Imagens <span id="imageCountLabel">1 carregada</span>
+          </label>
+          <div class="file-dropzone" onclick="document.getElementById('fileInput').click()">
+            <span>+ Adicionar Imagens (cumulativo)</span>
+            <input type="file" id="fileInput" multiple accept="image/*">
+          </div>
+          <div class="image-actions-bar">
+            <span style="font-size: 11px; color: var(--text-muted);">Clique no × para remover</span>
+            <button class="btn-text-danger" onclick="clearAllImages()">Limpar Todas</button>
+          </div>
+          <div class="image-list" id="imageList"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Tempo por Imagem <span id="slideTimeVal">4.0s</span></label>
+          <input type="range" id="slideTime" min="2" max="12" step="0.5" value="4">
+        </div>
+
+        <div class="control-group">
+          <label>Tempo de Transição (Fade) <span id="transTimeVal">1.2s</span></label>
+          <input type="range" id="transTime" min="0.3" max="3.0" step="0.1" value="1.2">
+        </div>
+
+        <div class="control-group">
+          <label>Estilo do Movimento Ken Burns</label>
+          <select id="motionStyle">
+            <option value="cinematic-alternate">Cinematográfico Alternado (Zoom In / Out + Pan)</option>
+            <option value="zoom-in">Apenas Zoom In Progressivo</option>
+            <option value="zoom-out">Apenas Zoom Out Suave</option>
+            <option value="pan-horizontal">Pan Horizontal Contínuo</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Intensidade do Movimento <span id="motionVal">18%</span></label>
+          <input type="range" id="motionScale" min="5" max="35" step="1" value="18">
+        </div>
+
+        <div class="control-group">
+          <label>Efeito Atmosférico Extra</label>
+          <select id="atmosphereEffect">
+            <option value="none">Desligado (Nenhum)</option>
+            <option value="lightning">Tempestade com Raios e Clarão</option>
+            <option value="rain">Chuva Cinematográfica Intensa</option>
+            <option value="fog">Névoa / Fumaça Densa</option>
+            <option value="particles">Partículas de Luz / Brilhos (Bokeh)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Intensidade da Atmosfera <span id="atmosphereVal">70%</span></label>
+          <input type="range" id="atmosphereIntensity" min="10" max="100" step="5" value="70">
+        </div>
+
+        <div class="control-group">
+          <label>Overlay HUD / Cyberpunk</label>
+          <select id="hudEffect">
+            <option value="none">Desligado</option>
+            <option value="scanlines">Scanlines CRT (Varredura Cyber)</option>
+            <option value="cybergrid">Cyber Grid Matrix (Grade Neon)</option>
+            <option value="spectrum">Equalizador de Barras (Audio Spectrum)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Cor do Overlay HUD</label>
+          <div class="color-picker-row">
+            <input type="color" class="color-swatch-input" id="hudColorInput" value="#00ff66">
+            <div class="color-preset-pills">
+              <span class="preset-pill" style="background: #00ff66;" onclick="setHudColor('#00ff66')" title="Verde Matrix"></span>
+              <span class="preset-pill" style="background: #00d2ff;" onclick="setHudColor('#00d2ff')" title="Ciano Neon"></span>
+              <span class="preset-pill" style="background: #ff007f;" onclick="setHudColor('#ff007f')" title="Magenta Cyber"></span>
+              <span class="preset-pill" style="background: #ffaa00;" onclick="setHudColor('#ffaa00')" title="Âmbar / Ouro"></span>
+              <span class="preset-pill" style="background: #ffffff;" onclick="setHudColor('#ffffff')" title="Branco Gelo"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Intensidade do Overlay HUD <span id="hudVal">50%</span></label>
+          <input type="range" id="hudIntensity" min="10" max="100" step="5" value="50">
+        </div>
+
+        <div class="control-group">
+          <label>Vinheta e Sombra <span id="vignetteVal">55%</span></label>
+          <input type="range" id="vignetteIntensity" min="0" max="100" step="5" value="55">
+        </div>
+
+        <div class="control-group">
+          <label>Duração do Vídeo Gravado <span id="recordDurVal">12s</span></label>
+          <input type="range" id="recordDuration" min="4" max="60" step="1" value="12">
+        </div>
+
+        <button class="btn btn-primary" id="btnRecord" onclick="toggleRecording()">
+          Gravar Vídeo de Fundo
+        </button>
+
+        <div class="progress-bar-container" id="progressBarContainer">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("renderCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+    const badgeTextInput = document.getElementById("badgeTextInput");
+    const badgeBurnCanvas = document.getElementById("badgeBurnCanvas");
+    const previewBadge = document.getElementById("previewBadge");
+
+    const fileInput = document.getElementById("fileInput");
+    const imageList = document.getElementById("imageList");
+    const imageCountLabel = document.getElementById("imageCountLabel");
+
+    const slideTimeInput = document.getElementById("slideTime");
+    const transTimeInput = document.getElementById("transTime");
+    const motionStyleInput = document.getElementById("motionStyle");
+    const motionScaleInput = document.getElementById("motionScale");
+    const atmosphereEffectInput = document.getElementById("atmosphereEffect");
+    const atmosphereIntensityInput = document.getElementById("atmosphereIntensity");
+    const hudEffectInput = document.getElementById("hudEffect");
+    const hudColorInput = document.getElementById("hudColorInput");
+    const hudIntensityInput = document.getElementById("hudIntensity");
+    const vignetteInput = document.getElementById("vignetteIntensity");
+    const recordDurationInput = document.getElementById("recordDuration");
+    const btnRecord = document.getElementById("btnRecord");
+    const progressBarContainer = document.getElementById("progressBarContainer");
+    const progressBarFill = document.getElementById("progressBarFill");
+
+    let loadedImages = [];
+    let isRecording = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let recordingStartTime = 0;
+
+    function setHudColor(hex) {
+      hudColorInput.value = hex;
+    }
+
+    function hexToRgb(hex) {
+      let cleanHex = hex.replace("#", "");
+      if (cleanHex.length === 3) {
+        cleanHex = cleanHex.split("").map(c => c + c).join("");
+      }
+      const num = parseInt(cleanHex, 16);
+      return {
+        r: (num >> 16) & 255,
+        g: (num >> 8) & 255,
+        b: num & 255
+      };
+    }
+
+    badgeTextInput.addEventListener("input", () => {
+      const val = badgeTextInput.value.trim() || "AO VIVO";
+      statusText.textContent = val.toUpperCase();
+    });
+
+    const defaultImg = new Image();
+    defaultImg.crossOrigin = "anonymous";
+    defaultImg.src = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1080&q=80";
+    defaultImg.onload = () => {
+      if (loadedImages.length === 0) {
+        loadedImages.push(defaultImg);
+        renderThumbnails();
+      }
+    };
+
+    function updateLabels() {
+      document.getElementById("slideTimeVal").textContent = `${slideTimeInput.value}s`;
+      document.getElementById("transTimeVal").textContent = `${transTimeInput.value}s`;
+      document.getElementById("motionVal").textContent = `${motionScaleInput.value}%`;
+      document.getElementById("atmosphereVal").textContent = `${atmosphereIntensityInput.value}%`;
+      document.getElementById("hudVal").textContent = `${hudIntensityInput.value}%`;
+      document.getElementById("vignetteVal").textContent = `${vignetteInput.value}%`;
+      document.getElementById("recordDurVal").textContent = `${recordDurationInput.value}s`;
+    }
+
+    [slideTimeInput, transTimeInput, motionScaleInput, atmosphereIntensityInput, hudIntensityInput, vignetteInput, recordDurationInput].forEach(el => {
+      el.addEventListener("input", updateLabels);
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      let pending = files.length;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            loadedImages.push(img);
+            pending--;
+            if (pending === 0) {
+              renderThumbnails();
+            }
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+      fileInput.value = "";
+    });
+
+    function removeImage(index) {
+      loadedImages.splice(index, 1);
+      renderThumbnails();
+    }
+
+    function clearAllImages() {
+      loadedImages = [];
+      renderThumbnails();
+    }
+
+    function renderThumbnails() {
+      imageList.innerHTML = "";
+      imageCountLabel.textContent = `${loadedImages.length} carregada(s)`;
+      loadedImages.forEach((img, idx) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "image-thumb-wrapper";
+
+        const thumb = document.createElement("img");
+        thumb.className = "image-thumb";
+        thumb.src = img.src;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "thumb-remove-btn";
+        removeBtn.innerHTML = "&times;";
+        removeBtn.onclick = (e) => {
+          e.stopPropagation();
+          removeImage(idx);
+        };
+
+        wrapper.appendChild(thumb);
+        wrapper.appendChild(removeBtn);
+        imageList.appendChild(wrapper);
+      });
+    }
+
+    // Partículas de chuva
+    const rainDrops = [];
+    for (let i = 0; i < 180; i++) {
+      rainDrops.push({
+        x: Math.random() * 1080,
+        y: Math.random() * 1920,
+        length: 35 + Math.random() * 50,
+        speed: 38 + Math.random() * 32,
+        thickness: 2.0 + Math.random() * 2.5,
+        opacity: 0.5 + Math.random() * 0.4
+      });
+    }
+
+    // Partículas de luz (Bokeh)
+    const dustParticles = [];
+    for (let i = 0; i < 75; i++) {
+      dustParticles.push({
+        x: Math.random() * 1080,
+        y: Math.random() * 1920,
+        radius: 4 + Math.random() * 14,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: -0.8 - Math.random() * 1.8,
+        alpha: 0.4 + Math.random() * 0.5,
+        pulseSpeed: 0.02 + Math.random() * 0.05
+      });
+    }
+
+    // Névoa procedural volumétrica
+    const fogNodes = [];
+    for (let i = 0; i < 18; i++) {
+      fogNodes.push({
+        x: Math.random() * 1080,
+        y: Math.random() * 1920,
+        radius: 400 + Math.random() * 500,
+        vx: 0.6 + Math.random() * 1.0,
+        alpha: 0.35 + Math.random() * 0.3
+      });
+    }
+
+    // Raios (Lightning)
+    let lightningFlashAlpha = 0;
+    let lightningBolts = [];
+    let lastLightningTime = 0;
+
+    function triggerLightning(intensityFactor) {
+      lightningFlashAlpha = 0.55 + (intensityFactor * 0.4);
+      lightningBolts = [];
+
+      const mainBoltCount = 1 + (Math.random() < 0.4 ? 1 : 0);
+      for (let b = 0; b < mainBoltCount; b++) {
+        let curX = 180 + Math.random() * 720;
+        let curY = 0;
+        const boltPoints = [{ x: curX, y: curY }];
+
+        while (curY < 1400) {
+          curY += 25 + Math.random() * 45;
+          curX += (Math.random() - 0.5) * 90;
+          boltPoints.push({ x: curX, y: curY });
+
+          if (Math.random() < 0.32) {
+            let branchX = curX;
+            let branchY = curY;
+            const branchPoints = [{ x: branchX, y: branchY }];
+            for (let j = 0; j < 6; j++) {
+              branchY += 20 + Math.random() * 35;
+              branchX += (Math.random() - 0.45) * 70;
+              branchPoints.push({ x: branchX, y: branchY });
+            }
+            lightningBolts.push({ points: branchPoints, width: 2, alpha: 0.75 });
+          }
+        }
+        lightningBolts.push({ points: boltPoints, width: 5, alpha: 0.95 });
+      }
+    }
+
+    function renderAtmosphere(type, intensityFactor) {
+      if (type === "none" || intensityFactor <= 0) return;
+
+      ctx.save();
+      if (type === "rain") {
+        ctx.lineCap = "round";
+        for (let drop of rainDrops) {
+          ctx.lineWidth = drop.thickness;
+          ctx.strokeStyle = `rgba(220, 240, 255, ${Math.min(1.0, drop.opacity * intensityFactor * 1.2)})`;
+          ctx.beginPath();
+          ctx.moveTo(drop.x, drop.y);
+          ctx.lineTo(drop.x - 7, drop.y + drop.length);
+          ctx.stroke();
+
+          drop.y += drop.speed;
+          drop.x -= 7;
+          if (drop.y > 1920) {
+            drop.y = -drop.length;
+            drop.x = Math.random() * 1150;
+          }
+          if (drop.x < 0) drop.x = 1080;
+        }
+      } else if (type === "particles") {
+        for (let p of dustParticles) {
+          const currentAlpha = Math.min(1.0, p.alpha * intensityFactor * 1.3);
+          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+          grad.addColorStop(0, `rgba(255, 235, 170, ${currentAlpha})`);
+          grad.addColorStop(0.5, `rgba(255, 215, 120, ${currentAlpha * 0.6})`);
+          grad.addColorStop(1, "rgba(255, 200, 100, 0)");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.y < 0) {
+            p.y = 1920;
+            p.x = Math.random() * 1080;
+          }
+          if (p.x < 0) p.x = 1080;
+          if (p.x > 1080) p.x = 0;
+        }
+      } else if (type === "fog") {
+        for (let fog of fogNodes) {
+          const curAlpha = Math.min(0.85, fog.alpha * intensityFactor * 1.4);
+          const grad = ctx.createRadialGradient(fog.x, fog.y, 10, fog.x, fog.y, fog.radius);
+          grad.addColorStop(0, `rgba(230, 240, 255, ${curAlpha})`);
+          grad.addColorStop(0.6, `rgba(200, 215, 235, ${curAlpha * 0.4})`);
+          grad.addColorStop(1, "rgba(200, 215, 235, 0)");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(fog.x, fog.y, fog.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          fog.x += fog.vx;
+          if (fog.x - fog.radius > 1080) {
+            fog.x = -fog.radius;
+            fog.y = Math.random() * 1920;
+          }
+        }
+      } else if (type === "lightning") {
+        const now = performance.now();
+        const interval = Math.max(1200, 4200 - (intensityFactor * 3000));
+
+        if (now - lastLightningTime > interval) {
+          triggerLightning(intensityFactor);
+          lastLightningTime = now;
+        }
+
+        if (lightningFlashAlpha > 0.01) {
+          ctx.fillStyle = `rgba(240, 248, 255, ${lightningFlashAlpha})`;
+          ctx.fillRect(0, 0, 1080, 1920);
+
+          ctx.shadowColor = "#00d2ff";
+          ctx.shadowBlur = 25;
+          for (let bolt of lightningBolts) {
+            ctx.lineWidth = bolt.width;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${bolt.alpha * lightningFlashAlpha})`;
+            ctx.beginPath();
+            for (let i = 0; i < bolt.points.length; i++) {
+              const pt = bolt.points[i];
+              if (i === 0) ctx.moveTo(pt.x, pt.y);
+              else ctx.lineTo(pt.x, pt.y);
+            }
+            ctx.stroke();
+          }
+          ctx.shadowBlur = 0;
+          lightningFlashAlpha *= 0.88;
+        }
+      }
+      ctx.restore();
+    }
+
+    // Overlays HUD / Cyberpunk
+    let scanlineY = 0;
+    const spectrumBars = [];
+    for (let i = 0; i < 32; i++) {
+      spectrumBars.push({ height: 0.2, targetHeight: 0.2, speed: 0.1 });
+    }
+
+    function renderCyberHUD(type, intensityFactor, elapsedSeconds) {
+      if (type === "none" || intensityFactor <= 0) return;
+
+      ctx.save();
+      const factor = Math.min(1.0, intensityFactor);
+      const rgb = hexToRgb(hudColorInput.value);
+
+      if (type === "scanlines") {
+        ctx.fillStyle = `rgba(0, 0, 0, ${0.35 * factor})`;
+        for (let y = 0; y < 1920; y += 8) {
+          ctx.fillRect(0, y, 1080, 4);
+        }
+
+        scanlineY = (scanlineY + 7) % 1920;
+        const grad = ctx.createLinearGradient(0, scanlineY - 80, 0, scanlineY + 80);
+        grad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+        grad.addColorStop(0.5, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.5 * factor})`);
+        grad.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, scanlineY - 80, 1080, 160);
+
+        ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.85 * factor})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, scanlineY);
+        ctx.lineTo(1080, scanlineY);
+        ctx.stroke();
+
+      } else if (type === "cybergrid") {
+        const cellSize = 60;
+
+        ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.65 * factor})`;
+        ctx.shadowColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        ctx.shadowBlur = 10 * factor;
+        ctx.lineWidth = 3;
+
+        ctx.beginPath();
+        for (let x = 0; x <= 1080; x += cellSize) {
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, 1920);
+        }
+        for (let y = 0; y <= 1920; y += cellSize) {
+          ctx.moveTo(0, y);
+          ctx.lineTo(1080, y);
+        }
+        ctx.stroke();
+
+        ctx.shadowBlur = 16 * factor;
+        ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.9 * factor})`;
+        for (let x = 0; x <= 1080; x += cellSize * 3) {
+          for (let y = 0; y <= 1920; y += cellSize * 3) {
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.shadowBlur = 0;
+
+      } else if (type === "spectrum") {
+        const barWidth = 1080 / spectrumBars.length;
+        const baseHeight = 320;
+
+        for (let i = 0; i < spectrumBars.length; i++) {
+          const bar = spectrumBars[i];
+          if (Math.random() < 0.15) {
+            bar.targetHeight = 0.08 + Math.random() * 0.92;
+          }
+          bar.height += (bar.targetHeight - bar.height) * 0.22;
+
+          const h = bar.height * baseHeight * factor;
+          const x = i * barWidth;
+          const y = 1920 - h;
+
+          const grad = ctx.createLinearGradient(0, y, 0, 1920);
+          grad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.95 * factor})`);
+          grad.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.25 * factor})`);
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(x + 4, y, barWidth - 8, h);
+
+          ctx.fillStyle = "#ffffff";
+          ctx.shadowColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+          ctx.shadowBlur = 8 * factor;
+          ctx.fillRect(x + 4, y, barWidth - 8, 4);
+          ctx.shadowBlur = 0;
+        }
+      }
+
+      ctx.restore();
+    }
+
+    function drawBurnedBadge(text, elapsedSeconds) {
+      if (!badgeBurnCanvas.checked) return;
+
+      ctx.save();
+
+      // Proporções exatas calibradas para Canvas 1080x1920
+      const badgeX = 48;
+      const badgeY = 48;
+      const badgeH = 64;
+
+      ctx.font = "bold 30px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.letterSpacing = "1.5px";
+
+      const textMetrics = ctx.measureText(text);
+      const textW = textMetrics.width;
+
+      const dotMarginLeft = 24;
+      const dotDiameter = 18;
+      const dotToTextMargin = 16;
+      const rightPadding = 32;
+      const badgeW = dotMarginLeft + dotDiameter + dotToTextMargin + textW + rightPadding;
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
+      ctx.lineWidth = 2.5;
+
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 32);
+      ctx.fill();
+      ctx.stroke();
+
+      const pulsePhase = (Math.sin(elapsedSeconds * 4.5) + 1) / 2;
+      const dotAlpha = 0.45 + (pulsePhase * 0.55);
+      const dotRadius = 9 + (pulsePhase * 2.5);
+      const dotCenterX = badgeX + dotMarginLeft + (dotDiameter / 2);
+      const dotCenterY = badgeY + (badgeH / 2);
+
+      ctx.fillStyle = `rgba(255, 59, 48, ${dotAlpha})`;
+      ctx.shadowColor = "#ff3b30";
+      ctx.shadowBlur = 16 * dotAlpha;
+      ctx.beginPath();
+      ctx.arc(dotCenterX, dotCenterY, dotRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.textBaseline = "middle";
+      const textStartX = dotCenterX + (dotDiameter / 2) + dotToTextMargin;
+      ctx.fillText(text, textStartX, badgeY + (badgeH / 2) + 1);
+
+      ctx.restore();
+    }
+
+    function calculateKenBurns(progress, style, index, intensity) {
+      let scale = 1.0;
+      let panX = 0;
+      let panY = 0;
+
+      const isAlternate = (index % 2 === 0);
+      const clampedProg = Math.max(0, Math.min(1, progress));
+
+      switch (style) {
+        case "cinematic-alternate":
+          if (isAlternate) {
+            scale = 1.03 + (intensity * clampedProg);
+            panX = -(canvas.width * intensity * 0.28) * clampedProg;
+            panY = -(canvas.height * intensity * 0.18) * clampedProg;
+          } else {
+            scale = (1.03 + intensity) - (intensity * clampedProg);
+            panX = (canvas.width * intensity * 0.28) * clampedProg;
+            panY = (canvas.height * intensity * 0.14) * clampedProg;
+          }
+          break;
+        case "zoom-in":
+          scale = 1.02 + (intensity * clampedProg);
+          panX = -(canvas.width * intensity * 0.12) * clampedProg;
+          panY = -(canvas.height * intensity * 0.12) * clampedProg;
+          break;
+        case "zoom-out":
+          scale = (1.02 + intensity) - (intensity * clampedProg);
+          panX = (canvas.width * intensity * 0.12) * clampedProg;
+          panY = (canvas.height * intensity * 0.12) * clampedProg;
+          break;
+        case "pan-horizontal":
+          scale = 1.04 + intensity * 0.5;
+          const dir = isAlternate ? 1 : -1;
+          panX = dir * (canvas.width * intensity * 0.45) * (clampedProg - 0.5);
+          panY = 0;
+          break;
+        default:
+          scale = 1.03 + (intensity * clampedProg);
+      }
+
+      return { scale, panX, panY };
+    }
+
+    function drawCoverImage(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0) {
+      if (!img || !img.complete) return;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const imgRatio = img.width / img.height;
+      const canvasRatio = cw / ch;
+
+      let drawW, drawH;
+      if (imgRatio < canvasRatio) {
+        drawW = cw * scale;
+        drawH = (cw / imgRatio) * scale;
+      } else {
+        drawH = ch * scale;
+        drawW = (ch * imgRatio) * scale;
+      }
+
+      const offsetX = (cw - drawW) / 2 + panX;
+      const offsetY = (ch - drawH) / 2 + panY;
+
+      ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+      ctx.restore();
+    }
+
+    function drawVignette(intensity) {
+      if (intensity <= 0) return;
+      ctx.save();
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const radius = Math.max(cw, ch) * 0.72;
+      const grad = ctx.createRadialGradient(cw / 2, ch / 2, radius * 0.25, cw / 2, ch / 2, radius);
+      grad.addColorStop(0, "rgba(0,0,0,0)");
+      grad.addColorStop(1, `rgba(0,0,0,${intensity})`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, cw, ch);
+      ctx.restore();
+    }
+
+    let startTimestamp = null;
+
+    function renderFrame(timestamp) {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const elapsedTotal = (timestamp - startTimestamp) / 1000;
+
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (loadedImages.length > 0) {
+        const slideSec = parseFloat(slideTimeInput.value);
+        const transSec = Math.min(parseFloat(transTimeInput.value), slideSec * 0.85);
+        const motionPercent = parseFloat(motionScaleInput.value) / 100;
+        const motionStyle = motionStyleInput.value;
+        const atmoType = atmosphereEffectInput.value;
+        const atmoIntensity = parseFloat(atmosphereIntensityInput.value) / 100;
+        const hudType = hudEffectInput.value;
+        const hudIntensity = parseFloat(hudIntensityInput.value) / 100;
+        const vignetteAmount = parseFloat(vignetteInput.value) / 100;
+
+        const totalCycle = loadedImages.length * slideSec;
+        const currentCycleTime = elapsedTotal % totalCycle;
+        const currentIndex = Math.floor(currentCycleTime / slideSec);
+        const nextIndex = (currentIndex + 1) % loadedImages.length;
+        const currentSlideTime = currentCycleTime % slideSec;
+
+        const totalVisibleDuration = slideSec + transSec;
+        const currentImgProgress = (currentSlideTime + transSec) / totalVisibleDuration;
+
+        const currentMotion = calculateKenBurns(currentImgProgress, motionStyle, currentIndex, motionPercent);
+        drawCoverImage(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0);
+
+        const fadeStartTime = slideSec - transSec;
+        if (currentSlideTime > fadeStartTime && loadedImages.length > 1) {
+          const timeIntoFade = currentSlideTime - fadeStartTime;
+          const fadeAlpha = timeIntoFade / transSec;
+          const nextImgProgress = timeIntoFade / totalVisibleDuration;
+
+          const nextMotion = calculateKenBurns(nextImgProgress, motionStyle, nextIndex, motionPercent);
+          drawCoverImage(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha);
+        }
+
+        renderAtmosphere(atmoType, atmoIntensity);
+        renderCyberHUD(hudType, hudIntensity, elapsedTotal);
+        drawVignette(vignetteAmount);
+
+        const currentBadgeText = (badgeTextInput.value.trim() || "AO VIVO").toUpperCase();
+        drawBurnedBadge(currentBadgeText, elapsedTotal);
+
+        if (badgeBurnCanvas.checked) {
+          previewBadge.style.display = "none";
+        } else {
+          previewBadge.style.display = "flex";
+        }
+      }
+
+      if (isRecording) {
+        const recElapsed = (performance.now() - recordingStartTime) / 1000;
+        const targetDuration = parseFloat(recordDurationInput.value);
+        const percent = Math.min(100, (recElapsed / targetDuration) * 100);
+        progressBarFill.style.width = `${percent}%`;
+
+        if (recElapsed >= targetDuration) {
+          stopRecording();
+        }
+      }
+
+      requestAnimationFrame(renderFrame);
+    }
+
+    requestAnimationFrame(renderFrame);
+
+    function toggleRecording() {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+    }
+
+    let currentExportExtension = "webm";
+
+    function startRecording() {
+      if (loadedImages.length === 0) return;
+
+      recordedChunks = [];
+      const stream = canvas.captureStream(30);
+
+      let chosenMime = "video/webm;codecs=vp9";
+      currentExportExtension = "webm";
+
+      if (MediaRecorder.isTypeSupported("video/mp4;codecs=avc1")) {
+        chosenMime = "video/mp4;codecs=avc1";
+        currentExportExtension = "mp4";
+      } else if (MediaRecorder.isTypeSupported("video/mp4")) {
+        chosenMime = "video/mp4";
+        currentExportExtension = "mp4";
+      } else if (!MediaRecorder.isTypeSupported(chosenMime)) {
+        chosenMime = "video/webm";
+        currentExportExtension = "webm";
+      }
+
+      mediaRecorder = new MediaRecorder(stream, {
+        mimeType: chosenMime,
+        videoBitsPerSecond: 6000000
+      });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: chosenMime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `background_loop_9_16.${currentExportExtension}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        resetRecordingUI();
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      recordingStartTime = performance.now();
+
+      statusDot.className = "status-dot recording";
+      btnRecord.className = "btn btn-danger";
+      btnRecord.textContent = "Parar Gravação";
+      progressBarContainer.style.display = "block";
+      progressBarFill.style.width = "0%";
+    }
+
+    function stopRecording() {
+      if (!isRecording) return;
+      isRecording = false;
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+      }
+    }
+
+    function resetRecordingUI() {
+      statusDot.className = "status-dot";
+      btnRecord.className = "btn btn-primary";
+      btnRecord.textContent = "Gravar Vídeo de Fundo";
+      progressBarContainer.style.display = "none";
+      progressBarFill.style.width = "0%";
+    }
+  </script>
+</body>
+</html>
