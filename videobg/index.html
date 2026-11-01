@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerador de Fundo Animado (9:16)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <style>
     :root {
       --bg-dark: #0b0d14;
@@ -424,7 +425,7 @@
     }
   </style>
 
-  <!-- Novas classes isoladas para tempo customizado por imagem e sincronização de duração (Regra 01) -->
+  <!-- Novas seções e classes isoladas (Regra 01) -->
   <style>
     .thumb-item-container {
       display: flex;
@@ -432,6 +433,14 @@
       align-items: center;
       gap: 6px;
       flex-shrink: 0;
+      position: relative;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .thumb-item-container.dragging {
+      opacity: 0.4;
+      cursor: grabbing;
     }
 
     .thumb-duration-input {
@@ -457,6 +466,38 @@
       font-weight: 400;
     }
 
+    .thumb-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 2px;
+    }
+
+    .thumb-nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--panel-border);
+      color: #ffffff;
+      border-radius: 4px;
+      width: 24px;
+      height: 18px;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+    }
+
+    .thumb-nav-btn:hover {
+      background: var(--accent);
+      color: #0b0d14;
+    }
+
+    .thumb-nav-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+
     .btn-sync-dur {
       background: rgba(0, 210, 255, 0.12);
       border: 1px solid rgba(0, 210, 255, 0.3);
@@ -472,6 +513,104 @@
     .btn-sync-dur:hover {
       background: rgba(0, 210, 255, 0.22);
       border-color: var(--accent);
+    }
+
+    .btn-text-action {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .btn-text-action:hover {
+      background: rgba(0, 210, 255, 0.15);
+    }
+
+    .btn-project-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .btn-secondary {
+      background: #1c222e;
+      color: #ffffff;
+      border: 1px solid var(--panel-border);
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Modal de Colar Tempos em Lote */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      width: 90%;
+      max-width: 440px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-box h3 {
+      font-size: 15px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-textarea {
+      width: 100%;
+      height: 120px;
+      background: #1c222e;
+      color: #ffffff;
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+      font-family: monospace;
+      line-height: 1.5;
+    }
+
+    .modal-textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
     }
   </style>
 </head>
@@ -495,6 +634,17 @@
       </div>
 
       <div class="sidebar-content">
+        <!-- Gerenciamento de Projeto (ZIP) -->
+        <div class="btn-project-row">
+          <button type="button" class="btn btn-secondary" onclick="exportProjectZip()" title="Exportar todas as imagens e configurações em arquivo .zip">
+            💾 Salvar Projeto (ZIP)
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('projectZipInput').click()" title="Carregar projeto salvo em .zip">
+            📂 Abrir Projeto
+          </button>
+          <input type="file" id="projectZipInput" accept=".zip" style="display:none">
+        </div>
+
         <div class="control-group">
           <label>Texto do Selo / Badge</label>
           <input type="text" class="text-input" id="badgeTextInput" value="AO VIVO" placeholder="Ex: AO VIVO, PRINCIPAIS NOTÍCIAS...">
@@ -513,7 +663,8 @@
             <input type="file" id="fileInput" multiple accept="image/*">
           </div>
           <div class="image-actions-bar">
-            <span style="font-size: 11px; color: var(--text-muted);">Defina o tempo (s) sob cada miniatura</span>
+            <button type="button" class="btn-text-action" onclick="openBulkTimeModal()">📋 Colar Tempos</button>
+            <span style="font-size: 11px; color: var(--text-muted);">Arraste para reordenar</span>
             <button class="btn-text-danger" onclick="clearAllImages()">Limpar Todas</button>
           </div>
           <div class="image-list" id="imageList"></div>
@@ -540,8 +691,8 @@
         </div>
 
         <div class="control-group">
-          <label>Intensidade do Movimento <span id="motionVal">18%</span></label>
-          <input type="range" id="motionScale" min="5" max="50" step="1" value="18">
+          <label>Intensidade do Movimento <span id="motionVal">28%</span></label>
+          <input type="range" id="motionScale" min="5" max="50" step="1" value="28">
         </div>
 
         <div class="control-group">
@@ -601,7 +752,7 @@
               Sincronizar (<span id="totalCycleLabel">4.0s</span>)
             </button>
           </label>
-          <input type="range" id="recordDuration" min="2" max="60" step="0.5" value="12">
+          <input type="range" id="recordDuration" min="2" max="120" step="0.1" value="12">
         </div>
 
         <button class="btn btn-primary" id="btnRecord" onclick="toggleRecording()">
@@ -611,6 +762,27 @@
         <div class="progress-bar-container" id="progressBarContainer">
           <div class="progress-bar-fill" id="progressBarFill"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Colar Tempos em Lote -->
+  <div class="modal-overlay" id="bulkTimeModal">
+    <div class="modal-box">
+      <h3>📋 Colar Tempos das Cenas</h3>
+      <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+        Cole a lista de números do Telegram (um por linha) ou a mensagem completa.
+      </p>
+      <textarea class="modal-textarea" id="bulkTimeText" placeholder="Exemplo simples:
+15.4
+13.2
+
+Ou a mensagem inteira do Telegram:
+• Imagem 1: 15.4s
+• Imagem 2: 13.2s"></textarea>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeBulkTimeModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="applyBulkTimings()">Aplicar Tempos</button>
       </div>
     </div>
   </div>
@@ -626,6 +798,7 @@
     const previewBadge = document.getElementById("previewBadge");
 
     const fileInput = document.getElementById("fileInput");
+    const projectZipInput = document.getElementById("projectZipInput");
     const imageList = document.getElementById("imageList");
     const imageCountLabel = document.getElementById("imageCountLabel");
 
@@ -645,11 +818,15 @@
     const progressBarContainer = document.getElementById("progressBarContainer");
     const progressBarFill = document.getElementById("progressBarFill");
 
+    const bulkTimeModal = document.getElementById("bulkTimeModal");
+    const bulkTimeText = document.getElementById("bulkTimeText");
+
     let loadedImages = [];
     let isRecording = false;
     let mediaRecorder = null;
     let recordedChunks = [];
     let recordingStartTime = 0;
+    let draggedIndex = null;
 
     function setHudColor(hex) {
       hudColorInput.value = hex;
@@ -706,7 +883,7 @@
       const total = getTotalCycleDuration();
       if (total > 0) {
         const rounded = Math.round(total * 10) / 10;
-        recordDurationInput.max = Math.max(parseFloat(recordDurationInput.max), Math.ceil(rounded + 5));
+        recordDurationInput.max = Math.max(parseFloat(recordDurationInput.max), Math.ceil(rounded + 10));
         recordDurationInput.value = rounded;
         updateLabels();
       }
@@ -733,6 +910,7 @@
 
     slideTimeInput.addEventListener("input", () => {
       renderThumbnailsPlaceholders();
+      syncRecordDurationWithTotal();
     });
 
     function renderThumbnailsPlaceholders() {
@@ -757,6 +935,7 @@
             pending--;
             if (pending === 0) {
               renderThumbnails();
+              syncRecordDurationWithTotal();
             }
           };
           img.src = event.target.result;
@@ -769,10 +948,19 @@
     function removeImage(index) {
       loadedImages.splice(index, 1);
       renderThumbnails();
+      syncRecordDurationWithTotal();
     }
 
     function clearAllImages() {
       loadedImages = [];
+      renderThumbnails();
+      syncRecordDurationWithTotal();
+    }
+
+    function moveImage(fromIdx, toIdx) {
+      if (toIdx < 0 || toIdx >= loadedImages.length) return;
+      const item = loadedImages.splice(fromIdx, 1)[0];
+      loadedImages.splice(toIdx, 0, item);
       renderThumbnails();
     }
 
@@ -784,6 +972,30 @@
       loadedImages.forEach((img, idx) => {
         const container = document.createElement("div");
         container.className = "thumb-item-container";
+        container.draggable = true;
+
+        container.addEventListener("dragstart", (e) => {
+          draggedIndex = idx;
+          container.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+        });
+
+        container.addEventListener("dragend", () => {
+          container.classList.remove("dragging");
+          draggedIndex = null;
+        });
+
+        container.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        });
+
+        container.addEventListener("drop", (e) => {
+          e.preventDefault();
+          if (draggedIndex !== null && draggedIndex !== idx) {
+            moveImage(draggedIndex, idx);
+          }
+        });
 
         const wrapper = document.createElement("div");
         wrapper.className = "image-thumb-wrapper";
@@ -795,6 +1007,7 @@
         const removeBtn = document.createElement("button");
         removeBtn.className = "thumb-remove-btn";
         removeBtn.innerHTML = "&times;";
+        removeBtn.title = "Remover imagem";
         removeBtn.onclick = (e) => {
           e.stopPropagation();
           removeImage(idx);
@@ -807,7 +1020,7 @@
         durInput.type = "number";
         durInput.step = "0.1";
         durInput.min = "0.5";
-        durInput.max = "60";
+        durInput.max = "120";
         durInput.className = "thumb-duration-input";
         durInput.placeholder = globalSec;
         durInput.title = `Duração customizada da Imagem ${idx + 1} em segundos`;
@@ -822,16 +1035,233 @@
           } else {
             img._customDuration = null;
           }
-          updateLabels();
+          syncRecordDurationWithTotal();
         });
+
+        const navBar = document.createElement("div");
+        navBar.className = "thumb-nav-bar";
+
+        const leftBtn = document.createElement("button");
+        leftBtn.type = "button";
+        leftBtn.className = "thumb-nav-btn";
+        leftBtn.innerHTML = "&#9664;";
+        leftBtn.title = "Mover para a esquerda";
+        leftBtn.disabled = (idx === 0);
+        leftBtn.onclick = (e) => {
+          e.stopPropagation();
+          moveImage(idx, idx - 1);
+        };
+
+        const rightBtn = document.createElement("button");
+        rightBtn.type = "button";
+        rightBtn.className = "thumb-nav-btn";
+        rightBtn.innerHTML = "&#9654;";
+        rightBtn.title = "Mover para a direita";
+        rightBtn.disabled = (idx === loadedImages.length - 1);
+        rightBtn.onclick = (e) => {
+          e.stopPropagation();
+          moveImage(idx, idx + 1);
+        };
+
+        navBar.appendChild(leftBtn);
+        navBar.appendChild(rightBtn);
 
         container.appendChild(wrapper);
         container.appendChild(durInput);
+        container.appendChild(navBar);
         imageList.appendChild(container);
       });
 
       updateLabels();
     }
+
+    function openBulkTimeModal() {
+      bulkTimeText.value = "";
+      bulkTimeModal.style.display = "flex";
+      bulkTimeText.focus();
+    }
+
+    function closeBulkTimeModal() {
+      bulkTimeModal.style.display = "none";
+    }
+
+    function applyBulkTimings() {
+      const rawText = bulkTimeText.value.trim();
+      if (!rawText) {
+        closeBulkTimeModal();
+        return;
+      }
+
+      const numbers = [];
+      const lines = rawText.split(/\r?\n/);
+
+      for (let line of lines) {
+        line = line.trim();
+        if (!line) continue;
+        if (/total|duraç|tempo|passo|próximo|copie|bloco/i.test(line)) continue;
+
+        // Remove prefixos como "• Imagem 1:", "Imagem 1 -", "Cena 1:"
+        const cleaned = line.replace(/^[•\s\-\*]*(?:imagem|cena)?\s*\d+\s*[:\-\s]*/i, '').trim();
+
+        // Extrai o número correspondente aos segundos
+        const m = cleaned.match(/(\d+(?:[.,]\d+)?)/);
+        if (m) {
+          const val = parseFloat(m[1].replace(',', '.'));
+          if (!isNaN(val) && val > 0) {
+            numbers.push(val);
+          }
+        }
+      }
+
+      // Fallback para caso tenha sido colado em formato texto contínuo
+      if (numbers.length === 0) {
+        const matches = Array.from(rawText.matchAll(/(\d+(?:[.,]\d+)?)\s*s\b/gi));
+        for (const m of matches) {
+          const val = parseFloat(m[1].replace(',', '.'));
+          if (!isNaN(val) && val > 0) numbers.push(val);
+        }
+      }
+
+      if (numbers.length > 0) {
+        for (let i = 0; i < loadedImages.length; i++) {
+          if (i < numbers.length) {
+            loadedImages[i]._customDuration = numbers[i];
+          }
+        }
+        renderThumbnails();
+        syncRecordDurationWithTotal();
+      }
+
+      closeBulkTimeModal();
+    }
+
+    async function exportProjectZip() {
+      if (typeof JSZip === "undefined") {
+        alert("Biblioteca JSZip não carregada.");
+        return;
+      }
+      if (loadedImages.length === 0) {
+        alert("Carregue ao menos uma imagem para salvar o projeto.");
+        return;
+      }
+
+      const zip = new JSZip();
+      const assetsFolder = zip.folder("assets");
+
+      const projectData = {
+        version: "1.0",
+        created_at: new Date().toISOString(),
+        settings: {
+          badgeText: badgeTextInput.value,
+          badgeBurnCanvas: badgeBurnCanvas.checked,
+          slideTime: parseFloat(slideTimeInput.value),
+          transTime: parseFloat(transTimeInput.value),
+          motionStyle: motionStyleInput.value,
+          motionScale: parseFloat(motionScaleInput.value),
+          atmosphereEffect: atmosphereEffectInput.value,
+          atmosphereIntensity: parseFloat(atmosphereIntensityInput.value),
+          hudEffect: hudEffectInput.value,
+          hudColor: hudColorInput.value,
+          hudIntensity: parseFloat(hudIntensityInput.value),
+          vignetteIntensity: parseFloat(vignetteInput.value),
+          recordDuration: parseFloat(recordDurationInput.value)
+        },
+        images: []
+      };
+
+      for (let i = 0; i < loadedImages.length; i++) {
+        const img = loadedImages[i];
+        const filename = `image_${i}.png`;
+
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = img.naturalWidth || img.width;
+        tempCanvas.height = img.naturalHeight || img.height;
+        const tCtx = tempCanvas.getContext("2d");
+        tCtx.drawImage(img, 0, 0);
+
+        const blob = await new Promise(resolve => tempCanvas.toBlob(resolve, "image/png"));
+        assetsFolder.file(filename, blob);
+
+        projectData.images.push({
+          index: i,
+          filename: `assets/${filename}`,
+          customDuration: (img._customDuration !== undefined) ? img._customDuration : null
+        });
+      }
+
+      zip.file("project.json", JSON.stringify(projectData, null, 2));
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "projeto_fundo_animado.zip";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    projectZipInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file || typeof JSZip === "undefined") return;
+
+      try {
+        const zip = await JSZip.loadAsync(file);
+        const projectJsonFile = zip.file("project.json");
+        if (!projectJsonFile) {
+          alert("Arquivo project.json não encontrado no ZIP.");
+          return;
+        }
+
+        const jsonStr = await projectJsonFile.async("string");
+        const projectData = JSON.parse(jsonStr);
+
+        const s = projectData.settings || {};
+        if (s.badgeText !== undefined) {
+          badgeTextInput.value = s.badgeText;
+          statusText.textContent = s.badgeText.toUpperCase();
+        }
+        if (s.badgeBurnCanvas !== undefined) badgeBurnCanvas.checked = s.badgeBurnCanvas;
+        if (s.slideTime !== undefined) slideTimeInput.value = s.slideTime;
+        if (s.transTime !== undefined) transTimeInput.value = s.transTime;
+        if (s.motionStyle !== undefined) motionStyleInput.value = s.motionStyle;
+        if (s.motionScale !== undefined) motionScaleInput.value = s.motionScale;
+        if (s.atmosphereEffect !== undefined) atmosphereEffectInput.value = s.atmosphereEffect;
+        if (s.atmosphereIntensity !== undefined) atmosphereIntensityInput.value = s.atmosphereIntensity;
+        if (s.hudEffect !== undefined) hudEffectInput.value = s.hudEffect;
+        if (s.hudColor !== undefined) hudColorInput.value = s.hudColor;
+        if (s.hudIntensity !== undefined) hudIntensityInput.value = s.hudIntensity;
+        if (s.vignetteIntensity !== undefined) vignetteInput.value = s.vignetteIntensity;
+        if (s.recordDuration !== undefined) recordDurationInput.value = s.recordDuration;
+
+        loadedImages = [];
+        const imagesMeta = projectData.images || [];
+        imagesMeta.sort((a, b) => a.index - b.index);
+
+        for (const meta of imagesMeta) {
+          const zipImgFile = zip.file(meta.filename);
+          if (zipImgFile) {
+            const blob = await zipImgFile.async("blob");
+            const img = new Image();
+            img._customDuration = (meta.customDuration !== undefined) ? meta.customDuration : null;
+            await new Promise(resolve => {
+              img.onload = resolve;
+              img.src = URL.createObjectURL(blob);
+            });
+            loadedImages.push(img);
+          }
+        }
+
+        renderThumbnails();
+        updateLabels();
+        syncRecordDurationWithTotal();
+      } catch (err) {
+        alert("Erro ao importar projeto ZIP: " + err.message);
+      } finally {
+        projectZipInput.value = "";
+      }
+    });
 
     // Partículas de chuva
     const rainDrops = [];
@@ -1343,11 +1773,9 @@
 
       recordedChunks = [];
 
-      // Reinício obrigatório no tempo zero exato (Frame 0 da Imagem 1)
       const now = performance.now();
       startTimestamp = now;
       recordingStartTime = now;
-      renderFrame(now);
 
       const stream = canvas.captureStream(30);
 
@@ -1381,7 +1809,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `background.${currentExportExtension}`;
+        a.download = "background.mp4";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
