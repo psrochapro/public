@@ -423,6 +423,57 @@
       transition: width 0.1s linear;
     }
   </style>
+
+  <!-- Novas classes isoladas para tempo customizado por imagem e sincronização de duração (Regra 01) -->
+  <style>
+    .thumb-item-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .thumb-duration-input {
+      width: 56px;
+      background: #1c222e;
+      color: var(--accent);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      padding: 4px 2px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .thumb-duration-input:focus {
+      border-color: var(--accent);
+    }
+
+    .thumb-duration-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .btn-sync-dur {
+      background: rgba(0, 210, 255, 0.12);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 3px 8px;
+      border-radius: 6px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-sync-dur:hover {
+      background: rgba(0, 210, 255, 0.22);
+      border-color: var(--accent);
+    }
+  </style>
 </head>
 <body>
 
@@ -462,14 +513,14 @@
             <input type="file" id="fileInput" multiple accept="image/*">
           </div>
           <div class="image-actions-bar">
-            <span style="font-size: 11px; color: var(--text-muted);">Clique no × para remover</span>
+            <span style="font-size: 11px; color: var(--text-muted);">Defina o tempo (s) sob cada miniatura</span>
             <button class="btn-text-danger" onclick="clearAllImages()">Limpar Todas</button>
           </div>
           <div class="image-list" id="imageList"></div>
         </div>
 
         <div class="control-group">
-          <label>Tempo por Imagem <span id="slideTimeVal">4.0s</span></label>
+          <label>Tempo Padrão por Imagem <span id="slideTimeVal">4.0s</span></label>
           <input type="range" id="slideTime" min="2" max="12" step="0.5" value="4">
         </div>
 
@@ -544,8 +595,13 @@
         </div>
 
         <div class="control-group">
-          <label>Duração do Vídeo Gravado <span id="recordDurVal">12s</span></label>
-          <input type="range" id="recordDuration" min="4" max="60" step="1" value="12">
+          <label>
+            Duração do Vídeo Gravado <span id="recordDurVal">12s</span>
+            <button type="button" class="btn-sync-dur" onclick="syncRecordDurationWithTotal()" title="Ajustar duração da gravação à soma de todas as imagens">
+              Sincronizar (<span id="totalCycleLabel">4.0s</span>)
+            </button>
+          </label>
+          <input type="range" id="recordDuration" min="2" max="60" step="0.5" value="12">
         </div>
 
         <button class="btn btn-primary" id="btnRecord" onclick="toggleRecording()">
@@ -584,6 +640,7 @@
     const hudIntensityInput = document.getElementById("hudIntensity");
     const vignetteInput = document.getElementById("vignetteIntensity");
     const recordDurationInput = document.getElementById("recordDuration");
+    const totalCycleLabel = document.getElementById("totalCycleLabel");
     const btnRecord = document.getElementById("btnRecord");
     const progressBarContainer = document.getElementById("progressBarContainer");
     const progressBarFill = document.getElementById("progressBarFill");
@@ -618,6 +675,7 @@
 
     const defaultImg = new Image();
     defaultImg.crossOrigin = "anonymous";
+    defaultImg._customDuration = null;
     defaultImg.src = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1080&q=80";
     defaultImg.onload = () => {
       if (loadedImages.length === 0) {
@@ -625,6 +683,34 @@
         renderThumbnails();
       }
     };
+
+    function getImageDuration(index) {
+      if (!loadedImages[index]) return parseFloat(slideTimeInput.value);
+      const custom = loadedImages[index]._customDuration;
+      if (custom !== null && custom !== undefined && !isNaN(custom) && custom > 0) {
+        return custom;
+      }
+      return parseFloat(slideTimeInput.value);
+    }
+
+    function getTotalCycleDuration() {
+      if (loadedImages.length === 0) return 0;
+      let total = 0;
+      for (let i = 0; i < loadedImages.length; i++) {
+        total += getImageDuration(i);
+      }
+      return total;
+    }
+
+    function syncRecordDurationWithTotal() {
+      const total = getTotalCycleDuration();
+      if (total > 0) {
+        const rounded = Math.round(total * 10) / 10;
+        recordDurationInput.max = Math.max(parseFloat(recordDurationInput.max), Math.ceil(rounded + 5));
+        recordDurationInput.value = rounded;
+        updateLabels();
+      }
+    }
 
     function updateLabels() {
       document.getElementById("slideTimeVal").textContent = `${slideTimeInput.value}s`;
@@ -634,11 +720,27 @@
       document.getElementById("hudVal").textContent = `${hudIntensityInput.value}%`;
       document.getElementById("vignetteVal").textContent = `${vignetteInput.value}%`;
       document.getElementById("recordDurVal").textContent = `${recordDurationInput.value}s`;
+
+      const total = getTotalCycleDuration();
+      if (totalCycleLabel) {
+        totalCycleLabel.textContent = `${(Math.round(total * 10) / 10)}s`;
+      }
     }
 
     [slideTimeInput, transTimeInput, motionScaleInput, atmosphereIntensityInput, hudIntensityInput, vignetteInput, recordDurationInput].forEach(el => {
       el.addEventListener("input", updateLabels);
     });
+
+    slideTimeInput.addEventListener("input", () => {
+      renderThumbnailsPlaceholders();
+    });
+
+    function renderThumbnailsPlaceholders() {
+      const globalSec = `${slideTimeInput.value}s`;
+      document.querySelectorAll(".thumb-duration-input").forEach((inp) => {
+        inp.placeholder = globalSec;
+      });
+    }
 
     fileInput.addEventListener("change", (e) => {
       const files = Array.from(e.target.files);
@@ -649,6 +751,7 @@
         const reader = new FileReader();
         reader.onload = (event) => {
           const img = new Image();
+          img._customDuration = null;
           img.onload = () => {
             loadedImages.push(img);
             pending--;
@@ -676,7 +779,12 @@
     function renderThumbnails() {
       imageList.innerHTML = "";
       imageCountLabel.textContent = `${loadedImages.length} carregada(s)`;
+      const globalSec = `${slideTimeInput.value}s`;
+
       loadedImages.forEach((img, idx) => {
+        const container = document.createElement("div");
+        container.className = "thumb-item-container";
+
         const wrapper = document.createElement("div");
         wrapper.className = "image-thumb-wrapper";
 
@@ -694,8 +802,35 @@
 
         wrapper.appendChild(thumb);
         wrapper.appendChild(removeBtn);
-        imageList.appendChild(wrapper);
+
+        const durInput = document.createElement("input");
+        durInput.type = "number";
+        durInput.step = "0.1";
+        durInput.min = "0.5";
+        durInput.max = "60";
+        durInput.className = "thumb-duration-input";
+        durInput.placeholder = globalSec;
+        durInput.title = `Duração customizada da Imagem ${idx + 1} em segundos`;
+        if (img._customDuration !== null && img._customDuration !== undefined) {
+          durInput.value = img._customDuration;
+        }
+
+        durInput.addEventListener("input", () => {
+          const val = parseFloat(durInput.value);
+          if (!isNaN(val) && val > 0) {
+            img._customDuration = val;
+          } else {
+            img._customDuration = null;
+          }
+          updateLabels();
+        });
+
+        container.appendChild(wrapper);
+        container.appendChild(durInput);
+        imageList.appendChild(container);
       });
+
+      updateLabels();
     }
 
     // Partículas de chuva
@@ -973,7 +1108,6 @@
 
       ctx.save();
 
-      // Proporções exatas calibradas para Canvas 1080x1920
       const badgeX = 48;
       const badgeY = 48;
       const badgeH = 64;
@@ -1108,14 +1242,13 @@
 
     function renderFrame(timestamp) {
       if (!startTimestamp) startTimestamp = timestamp;
-      const elapsedTotal = (timestamp - startTimestamp) / 1000;
+      const elapsedTotal = Math.max(0, (timestamp - startTimestamp) / 1000);
 
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       if (loadedImages.length > 0) {
-        const slideSec = parseFloat(slideTimeInput.value);
-        const transSec = Math.min(parseFloat(transTimeInput.value), slideSec * 0.85);
+        const totalCycle = getTotalCycleDuration();
         const motionPercent = parseFloat(motionScaleInput.value) / 100;
         const motionStyle = motionStyleInput.value;
         const atmoType = atmosphereEffectInput.value;
@@ -1124,26 +1257,45 @@
         const hudIntensity = parseFloat(hudIntensityInput.value) / 100;
         const vignetteAmount = parseFloat(vignetteInput.value) / 100;
 
-        const totalCycle = loadedImages.length * slideSec;
-        const currentCycleTime = elapsedTotal % totalCycle;
-        const currentIndex = Math.floor(currentCycleTime / slideSec);
-        const nextIndex = (currentIndex + 1) % loadedImages.length;
-        const currentSlideTime = currentCycleTime % slideSec;
+        if (totalCycle > 0) {
+          const currentCycleTime = elapsedTotal % totalCycle;
 
-        const totalVisibleDuration = slideSec + transSec;
-        const currentImgProgress = (currentSlideTime + transSec) / totalVisibleDuration;
+          let accumulated = 0;
+          let currentIndex = 0;
+          let currentSlideTime = 0;
+          let currentSlideDuration = getImageDuration(0);
 
-        const currentMotion = calculateKenBurns(currentImgProgress, motionStyle, currentIndex, motionPercent);
-        drawCoverImage(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0);
+          for (let i = 0; i < loadedImages.length; i++) {
+            const dur = getImageDuration(i);
+            if (currentCycleTime >= accumulated && currentCycleTime < accumulated + dur) {
+              currentIndex = i;
+              currentSlideTime = currentCycleTime - accumulated;
+              currentSlideDuration = dur;
+              break;
+            }
+            accumulated += dur;
+          }
 
-        const fadeStartTime = slideSec - transSec;
-        if (currentSlideTime > fadeStartTime && loadedImages.length > 1) {
-          const timeIntoFade = currentSlideTime - fadeStartTime;
-          const fadeAlpha = timeIntoFade / transSec;
-          const nextImgProgress = timeIntoFade / totalVisibleDuration;
+          const nextIndex = (currentIndex + 1) % loadedImages.length;
+          const transSec = Math.min(parseFloat(transTimeInput.value), currentSlideDuration * 0.85);
 
-          const nextMotion = calculateKenBurns(nextImgProgress, motionStyle, nextIndex, motionPercent);
-          drawCoverImage(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha);
+          const totalVisibleDuration = currentSlideDuration + transSec;
+          const currentImgProgress = (currentSlideTime + transSec) / totalVisibleDuration;
+
+          const currentMotion = calculateKenBurns(currentImgProgress, motionStyle, currentIndex, motionPercent);
+          drawCoverImage(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0);
+
+          const fadeStartTime = currentSlideDuration - transSec;
+          if (currentSlideTime > fadeStartTime && loadedImages.length > 1) {
+            const timeIntoFade = currentSlideTime - fadeStartTime;
+            const fadeAlpha = timeIntoFade / transSec;
+            const nextSlideDuration = getImageDuration(nextIndex);
+            const nextTotalVisible = nextSlideDuration + transSec;
+            const nextImgProgress = timeIntoFade / nextTotalVisible;
+
+            const nextMotion = calculateKenBurns(nextImgProgress, motionStyle, nextIndex, motionPercent);
+            drawCoverImage(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha);
+          }
         }
 
         renderAtmosphere(atmoType, atmoIntensity);
@@ -1190,6 +1342,13 @@
       if (loadedImages.length === 0) return;
 
       recordedChunks = [];
+
+      // Reinício obrigatório no tempo zero exato (Frame 0 da Imagem 1)
+      const now = performance.now();
+      startTimestamp = now;
+      recordingStartTime = now;
+      renderFrame(now);
+
       const stream = canvas.captureStream(30);
 
       let chosenMime = "video/webm;codecs=vp9";
@@ -1233,7 +1392,6 @@
 
       mediaRecorder.start();
       isRecording = true;
-      recordingStartTime = performance.now();
 
       statusDot.className = "status-dot recording";
       btnRecord.className = "btn btn-danger";
