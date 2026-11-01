@@ -425,7 +425,6 @@
     }
   </style>
 
-  <!-- Novas seções e classes isoladas (Regra 01) -->
   <style>
     .thumb-item-container {
       display: flex;
@@ -552,7 +551,6 @@
       color: var(--accent);
     }
 
-    /* Modal de Colar Tempos em Lote */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -613,6 +611,71 @@
       gap: 10px;
     }
   </style>
+
+  <style>
+    .thumb-mode-btn {
+      width: 56px;
+      background: #151a24;
+      border: 1px solid var(--panel-border);
+      border-radius: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding: 3px 2px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .thumb-mode-btn:hover {
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .thumb-mode-btn.mode-glass {
+      color: #00d2ff;
+      border-color: rgba(0, 210, 255, 0.45);
+      background: rgba(0, 210, 255, 0.08);
+    }
+
+    .thumb-mode-btn.mode-cover {
+      color: #ffaa00;
+      border-color: rgba(255, 170, 0, 0.45);
+      background: rgba(255, 170, 0, 0.08);
+    }
+
+    .thumb-mode-btn.mode-contain {
+      color: #a4b0be;
+      border-color: rgba(164, 176, 190, 0.45);
+      background: rgba(164, 176, 190, 0.08);
+    }
+  </style>
+
+  <!-- Estilos para Divisor Redimensionável da Barra Lateral (Regra 01) -->
+  <style>
+    .sidebar-resizer {
+      width: 7px;
+      cursor: col-resize;
+      background: rgba(255, 255, 255, 0.05);
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 100;
+    }
+
+    .sidebar-resizer:hover,
+    .sidebar-resizer.resizing {
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    body.is-resizing {
+      cursor: col-resize;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -627,7 +690,10 @@
       </div>
     </div>
 
-    <div class="sidebar">
+    <!-- Divisor Interativo de Redimensionamento -->
+    <div class="sidebar-resizer" id="sidebarResizer" title="Arraste para ajustar a largura da barra de ferramentas"></div>
+
+    <div class="sidebar" id="sidebarPanel" style="width: 460px;">
       <div class="sidebar-header">
         <h2>Gerador de Fundo 9:16</h2>
         <p>Gere fundos dinâmicos cinematográficos para FFmpeg e n8n.</p>
@@ -671,6 +737,15 @@
         </div>
 
         <div class="control-group">
+          <label>Enquadramento Padrão</label>
+          <select id="fitModeSelect">
+            <option value="glass">Efeito Glass / Ambient Blur (Pôster sem cortes)</option>
+            <option value="cover">Preencher Tela Cheia (Cover / Corte Suave)</option>
+            <option value="contain">Pôster Centralizado com Bordas Pretas</option>
+          </select>
+        </div>
+
+        <div class="control-group">
           <label>Tempo Padrão por Imagem <span id="slideTimeVal">4.0s</span></label>
           <input type="range" id="slideTime" min="2" max="12" step="0.5" value="4">
         </div>
@@ -683,7 +758,8 @@
         <div class="control-group">
           <label>Estilo do Movimento Ken Burns</label>
           <select id="motionStyle">
-            <option value="cinematic-alternate">Cinematográfico Alternado (Zoom In / Out + Pan)</option>
+            <option value="none">Estático (Sem Movimento / Ideal para Pôster)</option>
+            <option value="cinematic-alternate" selected>Cinematográfico Alternado (Zoom In / Out + Pan)</option>
             <option value="zoom-in">Apenas Zoom In Progressivo</option>
             <option value="zoom-out">Apenas Zoom Out Suave</option>
             <option value="pan-horizontal">Pan Horizontal Contínuo</option>
@@ -692,7 +768,7 @@
 
         <div class="control-group">
           <label>Intensidade do Movimento <span id="motionVal">28%</span></label>
-          <input type="range" id="motionScale" min="5" max="50" step="1" value="28">
+          <input type="range" id="motionScale" min="0" max="50" step="1" value="28">
         </div>
 
         <div class="control-group">
@@ -704,6 +780,20 @@
             <option value="fog">Névoa / Fumaça Densa</option>
             <option value="particles">Partículas de Luz / Brilhos (Bokeh)</option>
           </select>
+        </div>
+
+        <div class="control-group">
+          <label>Cor da Atmosfera Extra</label>
+          <div class="color-picker-row">
+            <input type="color" class="color-swatch-input" id="atmosphereColorInput" value="#ffaa00">
+            <div class="color-preset-pills">
+              <span class="preset-pill" style="background: #00ff66;" onclick="setAtmosphereColor('#00ff66')" title="Verde Matrix"></span>
+              <span class="preset-pill" style="background: #00d2ff;" onclick="setAtmosphereColor('#00d2ff')" title="Ciano Neon"></span>
+              <span class="preset-pill" style="background: #ff007f;" onclick="setAtmosphereColor('#ff007f')" title="Magenta Cyber"></span>
+              <span class="preset-pill" style="background: #ffaa00;" onclick="setAtmosphereColor('#ffaa00')" title="Âmbar / Ouro"></span>
+              <span class="preset-pill" style="background: #ffffff;" onclick="setAtmosphereColor('#ffffff')" title="Branco Gelo"></span>
+            </div>
+          </div>
         </div>
 
         <div class="control-group">
@@ -794,16 +884,21 @@
     const badgeBurnCanvas = document.getElementById("badgeBurnCanvas");
     const previewBadge = document.getElementById("previewBadge");
 
+    const sidebarPanel = document.getElementById("sidebarPanel");
+    const sidebarResizer = document.getElementById("sidebarResizer");
+
     const fileInput = document.getElementById("fileInput");
     const projectZipInput = document.getElementById("projectZipInput");
     const imageList = document.getElementById("imageList");
     const imageCountLabel = document.getElementById("imageCountLabel");
 
+    const fitModeSelect = document.getElementById("fitModeSelect");
     const slideTimeInput = document.getElementById("slideTime");
     const transTimeInput = document.getElementById("transTime");
     const motionStyleInput = document.getElementById("motionStyle");
     const motionScaleInput = document.getElementById("motionScale");
     const atmosphereEffectInput = document.getElementById("atmosphereEffect");
+    const atmosphereColorInput = document.getElementById("atmosphereColorInput");
     const atmosphereIntensityInput = document.getElementById("atmosphereIntensity");
     const hudEffectInput = document.getElementById("hudEffect");
     const hudColorInput = document.getElementById("hudColorInput");
@@ -825,8 +920,38 @@
     let recordingStartTime = 0;
     let draggedIndex = null;
 
+    // Lógica do Redimensionamento da Barra Lateral por Arraste
+    let isResizingSidebar = false;
+
+    sidebarResizer.addEventListener("mousedown", (e) => {
+      isResizingSidebar = true;
+      sidebarResizer.classList.add("resizing");
+      document.body.classList.add("is-resizing");
+      e.preventDefault();
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isResizingSidebar) return;
+      const newWidth = window.innerWidth - e.clientX;
+      if (newWidth >= 360 && newWidth <= 720) {
+        sidebarPanel.style.width = `${newWidth}px`;
+      }
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (isResizingSidebar) {
+        isResizingSidebar = false;
+        sidebarResizer.classList.remove("resizing");
+        document.body.classList.remove("is-resizing");
+      }
+    });
+
     function setHudColor(hex) {
       hudColorInput.value = hex;
+    }
+
+    function setAtmosphereColor(hex) {
+      atmosphereColorInput.value = hex;
     }
 
     function hexToRgb(hex) {
@@ -850,6 +975,7 @@
     const defaultImg = new Image();
     defaultImg.crossOrigin = "anonymous";
     defaultImg._customDuration = null;
+    defaultImg._customFitMode = "auto";
     defaultImg.src = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1080&q=80";
     defaultImg.onload = () => {
       if (loadedImages.length === 0) {
@@ -865,6 +991,23 @@
         return custom;
       }
       return parseFloat(slideTimeInput.value);
+    }
+
+    function getImageFitMode(index) {
+      if (!loadedImages[index]) return fitModeSelect.value;
+      const custom = loadedImages[index]._customFitMode;
+      if (custom && custom !== "auto") {
+        return custom;
+      }
+      return fitModeSelect.value;
+    }
+
+    function toggleImageFitMode(index) {
+      const modes = ["auto", "glass", "cover", "contain"];
+      const current = loadedImages[index]._customFitMode || "auto";
+      const nextIndex = (modes.indexOf(current) + 1) % modes.length;
+      loadedImages[index]._customFitMode = modes[nextIndex];
+      renderThumbnails();
     }
 
     function getTotalCycleDuration() {
@@ -901,7 +1044,7 @@
       }
     }
 
-    [slideTimeInput, transTimeInput, motionScaleInput, atmosphereIntensityInput, hudIntensityInput, vignetteInput, recordDurationInput].forEach(el => {
+    [slideTimeInput, transTimeInput, motionScaleInput, atmosphereIntensityInput, hudIntensityInput, vignetteInput, recordDurationInput, fitModeSelect].forEach(el => {
       el.addEventListener("input", updateLabels);
     });
 
@@ -927,6 +1070,7 @@
         reader.onload = (event) => {
           const img = new Image();
           img._customDuration = null;
+          img._customFitMode = "auto";
           img.onload = () => {
             loadedImages.push(img);
             pending--;
@@ -1020,7 +1164,7 @@
         durInput.max = "120";
         durInput.className = "thumb-duration-input";
         durInput.placeholder = globalSec;
-        durInput.title = `Duração customizada da Imagem ${idx + 1} em segundos`;
+        durInput.title = `Duração da imagem ${idx + 1} em segundos`;
         if (img._customDuration !== null && img._customDuration !== undefined) {
           durInput.value = img._customDuration;
         }
@@ -1034,6 +1178,24 @@
           }
           syncRecordDurationWithTotal();
         });
+
+        const fitBtn = document.createElement("button");
+        fitBtn.type = "button";
+        const currentMode = img._customFitMode || "auto";
+        fitBtn.className = `thumb-mode-btn mode-${currentMode}`;
+
+        const modeLabels = {
+          auto: "AUTO",
+          glass: "GLASS",
+          cover: "COVER",
+          contain: "LETTER"
+        };
+        fitBtn.textContent = modeLabels[currentMode] || "AUTO";
+        fitBtn.title = `Modo atual: ${fitBtn.textContent}. Clique para alternar entre Auto, Glass, Cover e Letterbox`;
+        fitBtn.onclick = (e) => {
+          e.stopPropagation();
+          toggleImageFitMode(idx);
+        };
 
         const navBar = document.createElement("div");
         navBar.className = "thumb-nav-bar";
@@ -1065,6 +1227,7 @@
 
         container.appendChild(wrapper);
         container.appendChild(durInput);
+        container.appendChild(fitBtn);
         container.appendChild(navBar);
         imageList.appendChild(container);
       });
@@ -1132,17 +1295,20 @@
         settings: {
           badgeText: badgeTextInput.value,
           badgeBurnCanvas: badgeBurnCanvas.checked,
+          fitMode: fitModeSelect.value,
           slideTime: parseFloat(slideTimeInput.value),
           transTime: parseFloat(transTimeInput.value),
           motionStyle: motionStyleInput.value,
           motionScale: parseFloat(motionScaleInput.value),
           atmosphereEffect: atmosphereEffectInput.value,
+          atmosphereColor: atmosphereColorInput.value,
           atmosphereIntensity: parseFloat(atmosphereIntensityInput.value),
           hudEffect: hudEffectInput.value,
           hudColor: hudColorInput.value,
           hudIntensity: parseFloat(hudIntensityInput.value),
           vignetteIntensity: parseFloat(vignetteInput.value),
-          recordDuration: parseFloat(recordDurationInput.value)
+          recordDuration: parseFloat(recordDurationInput.value),
+          sidebarWidth: sidebarPanel.style.width
         },
         images: []
       };
@@ -1163,7 +1329,8 @@
         projectData.images.push({
           index: i,
           filename: `assets/${filename}`,
-          customDuration: (img._customDuration !== undefined) ? img._customDuration : null
+          customDuration: (img._customDuration !== undefined) ? img._customDuration : null,
+          customFitMode: img._customFitMode || "auto"
         });
       }
 
@@ -1201,17 +1368,20 @@
           statusText.textContent = s.badgeText.toUpperCase();
         }
         if (s.badgeBurnCanvas !== undefined) badgeBurnCanvas.checked = s.badgeBurnCanvas;
+        if (s.fitMode !== undefined) fitModeSelect.value = s.fitMode;
         if (s.slideTime !== undefined) slideTimeInput.value = s.slideTime;
         if (s.transTime !== undefined) transTimeInput.value = s.transTime;
         if (s.motionStyle !== undefined) motionStyleInput.value = s.motionStyle;
         if (s.motionScale !== undefined) motionScaleInput.value = s.motionScale;
         if (s.atmosphereEffect !== undefined) atmosphereEffectInput.value = s.atmosphereEffect;
+        if (s.atmosphereColor !== undefined) atmosphereColorInput.value = s.atmosphereColor;
         if (s.atmosphereIntensity !== undefined) atmosphereIntensityInput.value = s.atmosphereIntensity;
         if (s.hudEffect !== undefined) hudEffectInput.value = s.hudEffect;
         if (s.hudColor !== undefined) hudColorInput.value = s.hudColor;
         if (s.hudIntensity !== undefined) hudIntensityInput.value = s.hudIntensity;
         if (s.vignetteIntensity !== undefined) vignetteInput.value = s.vignetteIntensity;
         if (s.recordDuration !== undefined) recordDurationInput.value = s.recordDuration;
+        if (s.sidebarWidth) sidebarPanel.style.width = s.sidebarWidth;
 
         loadedImages = [];
         const imagesMeta = projectData.images || [];
@@ -1223,6 +1393,7 @@
             const blob = await zipImgFile.async("blob");
             const img = new Image();
             img._customDuration = (meta.customDuration !== undefined) ? meta.customDuration : null;
+            img._customFitMode = meta.customFitMode || "auto";
             await new Promise(resolve => {
               img.onload = resolve;
               img.src = URL.createObjectURL(blob);
@@ -1241,7 +1412,6 @@
       }
     });
 
-    // Partículas de chuva
     const rainDrops = [];
     for (let i = 0; i < 180; i++) {
       rainDrops.push({
@@ -1254,7 +1424,6 @@
       });
     }
 
-    // Partículas de luz (Bokeh)
     const dustParticles = [];
     for (let i = 0; i < 75; i++) {
       dustParticles.push({
@@ -1268,7 +1437,6 @@
       });
     }
 
-    // Névoa procedural volumétrica
     const fogNodes = [];
     for (let i = 0; i < 18; i++) {
       fogNodes.push({
@@ -1280,7 +1448,6 @@
       });
     }
 
-    // Raios (Lightning)
     let lightningFlashAlpha = 0;
     let lightningBolts = [];
     let lastLightningTime = 0;
@@ -1320,11 +1487,13 @@
       if (type === "none" || intensityFactor <= 0) return;
 
       ctx.save();
+      const atmoRgb = hexToRgb(atmosphereColorInput.value);
+
       if (type === "rain") {
         ctx.lineCap = "round";
         for (let drop of rainDrops) {
           ctx.lineWidth = drop.thickness;
-          ctx.strokeStyle = `rgba(220, 240, 255, ${Math.min(1.0, drop.opacity * intensityFactor * 1.2)})`;
+          ctx.strokeStyle = `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${Math.min(1.0, drop.opacity * intensityFactor * 1.2)})`;
           ctx.beginPath();
           ctx.moveTo(drop.x, drop.y);
           ctx.lineTo(drop.x - 7, drop.y + drop.length);
@@ -1342,9 +1511,12 @@
         for (let p of dustParticles) {
           const currentAlpha = Math.min(1.0, p.alpha * intensityFactor * 1.3);
           const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-          grad.addColorStop(0, `rgba(255, 235, 170, ${currentAlpha})`);
-          grad.addColorStop(0.5, `rgba(255, 215, 120, ${currentAlpha * 0.6})`);
-          grad.addColorStop(1, "rgba(255, 200, 100, 0)");
+          const coreR = Math.min(255, Math.floor(atmoRgb.r * 0.4 + 255 * 0.6));
+          const coreG = Math.min(255, Math.floor(atmoRgb.g * 0.4 + 255 * 0.6));
+          const coreB = Math.min(255, Math.floor(atmoRgb.b * 0.4 + 255 * 0.6));
+          grad.addColorStop(0, `rgba(${coreR}, ${coreG}, ${coreB}, ${currentAlpha})`);
+          grad.addColorStop(0.5, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${currentAlpha * 0.6})`);
+          grad.addColorStop(1, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, 0)`);
 
           ctx.fillStyle = grad;
           ctx.beginPath();
@@ -1365,9 +1537,9 @@
         for (let fog of fogNodes) {
           const curAlpha = Math.min(0.85, fog.alpha * intensityFactor * 1.4);
           const grad = ctx.createRadialGradient(fog.x, fog.y, 10, fog.x, fog.y, fog.radius);
-          grad.addColorStop(0, `rgba(230, 240, 255, ${curAlpha})`);
-          grad.addColorStop(0.6, `rgba(200, 215, 235, ${curAlpha * 0.4})`);
-          grad.addColorStop(1, "rgba(200, 215, 235, 0)");
+          grad.addColorStop(0, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${curAlpha})`);
+          grad.addColorStop(0.6, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${curAlpha * 0.4})`);
+          grad.addColorStop(1, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, 0)`);
 
           ctx.fillStyle = grad;
           ctx.beginPath();
@@ -1390,10 +1562,10 @@
         }
 
         if (lightningFlashAlpha > 0.01) {
-          ctx.fillStyle = `rgba(240, 248, 255, ${lightningFlashAlpha})`;
+          ctx.fillStyle = `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${lightningFlashAlpha * 0.8})`;
           ctx.fillRect(0, 0, 1080, 1920);
 
-          ctx.shadowColor = "#00d2ff";
+          ctx.shadowColor = `rgb(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b})`;
           ctx.shadowBlur = 25;
           for (let bolt of lightningBolts) {
             ctx.lineWidth = bolt.width;
@@ -1413,7 +1585,6 @@
       ctx.restore();
     }
 
-    // Overlays HUD / Cyberpunk
     let scanlineY = 0;
     const spectrumBars = [];
     for (let i = 0; i < 32; i++) {
@@ -1564,6 +1735,10 @@
     }
 
     function calculateKenBurns(progress, style, index, intensity) {
+      if (style === "none" || intensity <= 0) {
+        return { scale: 1.0, panX: 0, panY: 0 };
+      }
+
       let scale = 1.0;
       let panX = 0;
       let panY = 0;
@@ -1606,7 +1781,7 @@
       return { scale, panX, panY };
     }
 
-    function drawCoverImage(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0) {
+    function drawImageLayer(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0, fitMode = "glass") {
       if (!img || !img.complete) return;
       ctx.save();
       ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
@@ -1616,19 +1791,68 @@
       const imgRatio = img.width / img.height;
       const canvasRatio = cw / ch;
 
-      let drawW, drawH;
-      if (imgRatio < canvasRatio) {
-        drawW = cw * scale;
-        drawH = (cw / imgRatio) * scale;
+      if (fitMode === "glass") {
+        ctx.save();
+        ctx.filter = "blur(42px) brightness(0.55)";
+        let bgW, bgH;
+        if (imgRatio < canvasRatio) {
+          bgW = cw * 1.25;
+          bgH = (cw / imgRatio) * 1.25;
+        } else {
+          bgH = ch * 1.25;
+          bgW = (ch * imgRatio) * 1.25;
+        }
+        const bgOffsetX = (cw - bgW) / 2;
+        const bgOffsetY = (ch - bgH) / 2;
+        ctx.drawImage(img, bgOffsetX, bgOffsetY, bgW, bgH);
+        ctx.restore();
+
+        let drawW, drawH;
+        if (imgRatio > canvasRatio) {
+          drawW = cw * scale;
+          drawH = (cw / imgRatio) * scale;
+        } else {
+          drawH = ch * scale;
+          drawW = (ch * imgRatio) * scale;
+        }
+
+        const offsetX = (cw - drawW) / 2 + panX;
+        const offsetY = (ch - drawH) / 2 + panY;
+
+        ctx.shadowColor = "rgba(0, 0, 0, 0.75)";
+        ctx.shadowBlur = 45;
+        ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+        ctx.shadowBlur = 0;
+
+      } else if (fitMode === "contain") {
+        let drawW, drawH;
+        if (imgRatio > canvasRatio) {
+          drawW = cw * scale;
+          drawH = (cw / imgRatio) * scale;
+        } else {
+          drawH = ch * scale;
+          drawW = (ch * imgRatio) * scale;
+        }
+
+        const offsetX = (cw - drawW) / 2 + panX;
+        const offsetY = (ch - drawH) / 2 + panY;
+        ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+
       } else {
-        drawH = ch * scale;
-        drawW = (ch * imgRatio) * scale;
+        let drawW, drawH;
+        if (imgRatio < canvasRatio) {
+          drawW = cw * scale;
+          drawH = (cw / imgRatio) * scale;
+        } else {
+          drawH = ch * scale;
+          drawW = (ch * imgRatio) * scale;
+        }
+
+        const offsetX = (cw - drawW) / 2 + panX;
+        const offsetY = (ch - drawH) / 2 + panY;
+        ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
       }
 
-      const offsetX = (cw - drawW) / 2 + panX;
-      const offsetY = (ch - drawH) / 2 + panY;
-
-      ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
       ctx.restore();
     }
 
@@ -1690,8 +1914,9 @@
           const totalVisibleDuration = currentSlideDuration + transSec;
           const currentImgProgress = (currentSlideTime + transSec) / totalVisibleDuration;
 
+          const currentFit = getImageFitMode(currentIndex);
           const currentMotion = calculateKenBurns(currentImgProgress, motionStyle, currentIndex, motionPercent);
-          drawCoverImage(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0);
+          drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
 
           const fadeStartTime = currentSlideDuration - transSec;
           if (currentSlideTime > fadeStartTime && loadedImages.length > 1) {
@@ -1701,8 +1926,9 @@
             const nextTotalVisible = nextSlideDuration + transSec;
             const nextImgProgress = timeIntoFade / nextTotalVisible;
 
+            const nextFit = getImageFitMode(nextIndex);
             const nextMotion = calculateKenBurns(nextImgProgress, motionStyle, nextIndex, motionPercent);
-            drawCoverImage(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha);
+            drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
           }
         }
 
