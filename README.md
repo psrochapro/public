@@ -28,7 +28,7 @@ Bem-vindo ao meu espaço de experimentações e aprendizado! Este repositório c
 | **Conversor de Imagens** | Converte imagens para formatos compactos | [Acessar App](https://psrochapro.github.io/public/img_cvt/) |
 | **BPMN Extrator** | Extrai atividades de diagramas BPMN | [Acessar App](https://psrochapro.github.io/public/bpmextractor/) |
 | **Video Background Generator** | Gera Videos de Fundo 9:16 | [Acessar App](https://psrochapro.github.io/public/videobg/) |
-| **Video Background Generator Pro** | Gera Videos de Fundo Pro 9:16 | [Acessar App](https://psrochapro.github.io/public/videobg/) |
+| **Video Background Generator Pro** | Gera Videos de Fundo Pro 9:16 | [Acessar App](https://psrochapro.github.io/public/videobgpro/) |
 
 
 ### 🛠️ O que você encontra aqui:
