@@ -37,6 +37,10 @@ const hudIntensityInput = document.getElementById("hudIntensity");
 
 const tickerEnabled = document.getElementById("tickerEnabled");
 const tickerTextInput = document.getElementById("tickerTextInput");
+const tickerBgColorInput = document.getElementById("tickerBgColorInput");
+const tickerTextColorInput = document.getElementById("tickerTextColorInput");
+const tickerFontSize = document.getElementById("tickerFontSize");
+const tickerFontSizeVal = document.getElementById("tickerFontSizeVal");
 
 const vignetteInput = document.getElementById("vignetteIntensity");
 const recordDurationInput = document.getElementById("recordDuration");
@@ -93,6 +97,14 @@ window.addEventListener("mouseup", () => {
 
 function setColorGradeColor(hex) {
   colorGradeColorInput.value = hex;
+}
+
+function setTickerBgColor(hex) {
+  if (tickerBgColorInput) tickerBgColorInput.value = hex;
+}
+
+function setTickerTextColor(hex) {
+  if (tickerTextColorInput) tickerTextColorInput.value = hex;
 }
 
 badgeTextInput.addEventListener("input", () => {
@@ -167,13 +179,17 @@ function updateLabels() {
   document.getElementById("vignetteVal").textContent = `${vignetteInput.value}%`;
   document.getElementById("recordDurVal").textContent = `${recordDurationInput.value}s`;
 
+  if (tickerFontSizeVal && tickerFontSize) {
+    tickerFontSizeVal.textContent = `${tickerFontSize.value}px`;
+  }
+
   const total = getTotalCycleDuration();
   if (totalCycleLabel) {
     totalCycleLabel.textContent = `${(Math.round(total * 10) / 10)}s`;
   }
 }
 
-[slideTimeInput, transTimeInput, motionScaleInput, colorGradeIntensity, atmosphereIntensityInput, hudIntensityInput, vignetteInput, recordDurationInput, fitModeSelect].forEach(el => {
+[slideTimeInput, transTimeInput, motionScaleInput, colorGradeIntensity, atmosphereIntensityInput, hudIntensityInput, tickerFontSize, vignetteInput, recordDurationInput, fitModeSelect].forEach(el => {
   el.addEventListener("input", updateLabels);
 });
 
@@ -463,7 +479,14 @@ function renderFrame(timestamp) {
     renderCyberHUD(hudType, hudIntensity, elapsedTotal);
     drawVignette(vignetteAmount);
 
-    drawTicker(tickerTextInput.value, elapsedTotal, tickerEnabled.checked);
+    drawTicker(
+      tickerTextInput.value,
+      elapsedTotal,
+      tickerEnabled.checked,
+      tickerBgColorInput ? tickerBgColorInput.value : "#0a0c12",
+      tickerTextColorInput ? tickerTextColorInput.value : "#ffffff",
+      tickerFontSize ? parseInt(tickerFontSize.value, 10) : 24
+    );
 
     const currentBadgeText = (badgeTextInput.value.trim() || "AO VIVO").toUpperCase();
     drawBurnedBadge(currentBadgeText, elapsedTotal);

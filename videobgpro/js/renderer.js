@@ -229,40 +229,34 @@ function applyColorGrading(preset, customHex, intensityFactor) {
   ctx.restore();
 }
 
-function drawTicker(text, elapsedSeconds, isEnabled) {
+function drawTicker(text, elapsedSeconds, isEnabled, bgColorHex = "#0a0c12", textColorHex = "#ffffff", fontSize = 24) {
   if (!isEnabled || !text || !text.trim()) return;
 
   const cleanText = text.trim();
   ctx.save();
 
-  const barH = 58;
+  const numFontSize = parseInt(fontSize, 10) || 24;
+  const barH = Math.max(52, numFontSize + 26);
   const barY = 1920 - barH - 40;
 
-  ctx.fillStyle = "rgba(10, 12, 18, 0.88)";
+  const bgRgb = hexToRgb(bgColorHex || "#0a0c12");
+  ctx.fillStyle = `rgba(${bgRgb.r}, ${bgRgb.g}, ${bgRgb.b}, 0.88)`;
   ctx.fillRect(0, barY, 1080, barH);
-
-  ctx.fillStyle = "#ff3b30";
-  ctx.fillRect(0, barY, 160, barH);
-
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-  ctx.textBaseline = "middle";
-  ctx.fillText("AO VIVO", 36, barY + (barH / 2));
 
   ctx.save();
   ctx.beginPath();
-  ctx.rect(170, barY, 1080 - 170, barH);
+  ctx.rect(0, barY, 1080, barH);
   ctx.clip();
 
-  ctx.font = "600 22px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  ctx.font = `600 ${numFontSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
   const textWidth = ctx.measureText(cleanText).width;
-  const scrollArea = 1080 - 170;
-  const totalTravel = textWidth + scrollArea;
+  const totalTravel = textWidth + 1080;
   const speed = 140;
   const offset = ((elapsedSeconds * speed) % totalTravel);
   const textX = 1080 - offset;
 
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = textColorHex || "#ffffff";
+  ctx.textBaseline = "middle";
   ctx.fillText(cleanText, textX, barY + (barH / 2) + 1);
   ctx.restore();
 

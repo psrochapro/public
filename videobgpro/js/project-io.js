@@ -56,7 +56,7 @@ async function exportProjectZip() {
   const assetsFolder = zip.folder("assets");
 
   const projectData = {
-    version: "2.0",
+    version: "2.1",
     created_at: new Date().toISOString(),
     settings: {
       badgeText: badgeTextInput.value,
@@ -78,6 +78,9 @@ async function exportProjectZip() {
       hudIntensity: parseFloat(hudIntensityInput.value),
       tickerEnabled: document.getElementById("tickerEnabled").checked,
       tickerText: document.getElementById("tickerTextInput").value,
+      tickerBgColor: document.getElementById("tickerBgColorInput") ? document.getElementById("tickerBgColorInput").value : "#0a0c12",
+      tickerTextColor: document.getElementById("tickerTextColorInput") ? document.getElementById("tickerTextColorInput").value : "#ffffff",
+      tickerFontSize: document.getElementById("tickerFontSize") ? parseInt(document.getElementById("tickerFontSize").value, 10) : 24,
       vignetteIntensity: parseFloat(vignetteInput.value),
       recordDuration: parseFloat(recordDurationInput.value),
       sidebarLeftWidth: document.getElementById("sidebarLeft").style.width,
@@ -169,6 +172,17 @@ function initProjectIO() {
       if (s.hudIntensity !== undefined) hudIntensityInput.value = s.hudIntensity;
       if (s.tickerEnabled !== undefined) document.getElementById("tickerEnabled").checked = s.tickerEnabled;
       if (s.tickerText !== undefined) document.getElementById("tickerTextInput").value = s.tickerText;
+
+      if (s.tickerBgColor !== undefined && document.getElementById("tickerBgColorInput")) {
+        document.getElementById("tickerBgColorInput").value = s.tickerBgColor;
+      }
+      if (s.tickerTextColor !== undefined && document.getElementById("tickerTextColorInput")) {
+        document.getElementById("tickerTextColorInput").value = s.tickerTextColor;
+      }
+      if (s.tickerFontSize !== undefined && document.getElementById("tickerFontSize")) {
+        document.getElementById("tickerFontSize").value = s.tickerFontSize;
+      }
+
       if (s.vignetteIntensity !== undefined) vignetteInput.value = s.vignetteIntensity;
       if (s.recordDuration !== undefined) recordDurationInput.value = s.recordDuration;
 

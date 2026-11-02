@@ -231,6 +231,39 @@
         </div>
 
         <div class="control-group">
+          <label>Cor de Fundo do Letreiro</label>
+          <div class="color-picker-row">
+            <input type="color" class="color-swatch-input" id="tickerBgColorInput" value="#0a0c12">
+            <div class="color-preset-pills">
+              <span class="preset-pill" style="background: #0a0c12;" onclick="setTickerBgColor('#0a0c12')" title="Preto Escuro"></span>
+              <span class="preset-pill" style="background: #ff3b30;" onclick="setTickerBgColor('#ff3b30')" title="Vermelho Notícia"></span>
+              <span class="preset-pill" style="background: #00d2ff;" onclick="setTickerBgColor('#00d2ff')" title="Ciano"></span>
+              <span class="preset-pill" style="background: #ffaa00;" onclick="setTickerBgColor('#ffaa00')" title="Dourado"></span>
+              <span class="preset-pill" style="background: #ffffff;" onclick="setTickerBgColor('#ffffff')" title="Branco"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Cor da Fonte do Letreiro</label>
+          <div class="color-picker-row">
+            <input type="color" class="color-swatch-input" id="tickerTextColorInput" value="#ffffff">
+            <div class="color-preset-pills">
+              <span class="preset-pill" style="background: #ffffff;" onclick="setTickerTextColor('#ffffff')" title="Branco"></span>
+              <span class="preset-pill" style="background: #000000;" onclick="setTickerTextColor('#000000')" title="Preto"></span>
+              <span class="preset-pill" style="background: #ffaa00;" onclick="setTickerTextColor('#ffaa00')" title="Amarelo / Ouro"></span>
+              <span class="preset-pill" style="background: #00ff66;" onclick="setTickerTextColor('#00ff66')" title="Verde"></span>
+              <span class="preset-pill" style="background: #00d2ff;" onclick="setTickerTextColor('#00d2ff')" title="Ciano"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Tamanho da Fonte do Letreiro <span id="tickerFontSizeVal">24px</span></label>
+          <input type="range" id="tickerFontSize" min="16" max="48" step="1" value="24">
+        </div>
+
+        <div class="control-group">
           <label>Vinheta e Sombra <span id="vignetteVal">55%</span></label>
           <input type="range" id="vignetteIntensity" min="0" max="100" step="5" value="55">
         </div>
