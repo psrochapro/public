@@ -81,7 +81,7 @@ async function exportProjectZip() {
 
   for (let i = 0; i < loadedImages.length; i++) {
     const img = loadedImages[i];
-    const filename = `image_${i}.png`;
+    const filename = `image_${i}.webp`;
 
     const tempCanvas = document.createElement("canvas");
     tempCanvas.width = img.naturalWidth || img.width;
@@ -89,7 +89,7 @@ async function exportProjectZip() {
     const tCtx = tempCanvas.getContext("2d");
     tCtx.drawImage(img, 0, 0);
 
-    const blob = await new Promise(resolve => tempCanvas.toBlob(resolve, "image/png"));
+    const blob = await new Promise(resolve => tempCanvas.toBlob(resolve, "image/webp", 0.92));
     assetsFolder.file(filename, blob);
 
     projectData.images.push({
@@ -102,11 +102,21 @@ async function exportProjectZip() {
 
   zip.file("project.json", JSON.stringify(projectData, null, 2));
 
+  const rawBadge = badgeTextInput ? badgeTextInput.value.trim() : "";
+  const sanitizedBadge = rawBadge
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9_-]/g, "_")
+    .replace(/_+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+  const downloadName = (sanitizedBadge || "projeto_fundo_animado") + ".zip";
+
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const url = URL.createObjectURL(zipBlob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "projeto_fundo_animado.zip";
+  a.download = downloadName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
