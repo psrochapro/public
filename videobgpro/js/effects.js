@@ -34,16 +34,36 @@ for (let i = 0; i < 18; i++) {
   });
 }
 
+const noiseCanvas = document.createElement("canvas");
+noiseCanvas.width = 256;
+noiseCanvas.height = 256;
+const noiseCtx = noiseCanvas.getContext("2d");
+
+function updateNoisePattern() {
+  const imgData = noiseCtx.createImageData(256, 256);
+  const data = imgData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const val = Math.floor(Math.random() * 255);
+    data[i] = val;
+    data[i + 1] = val;
+    data[i + 2] = val;
+    data[i + 3] = 45;
+  }
+  noiseCtx.putImageData(imgData, 0, 0);
+}
+
 let lightningFlashAlpha = 0;
 let lightningBolts = [];
 let lastLightningTime = 0;
 
 function setHudColor(hex) {
-  document.getElementById("hudColorInput").value = hex;
+  const el = document.getElementById("hudColorInput");
+  if (el) el.value = hex;
 }
 
 function setAtmosphereColor(hex) {
-  document.getElementById("atmosphereColorInput").value = hex;
+  const el = document.getElementById("atmosphereColorInput");
+  if (el) el.value = hex;
 }
 
 function hexToRgb(hex) {
@@ -90,7 +110,7 @@ function triggerLightning(intensityFactor) {
   }
 }
 
-function renderAtmosphere(type, intensityFactor) {
+function renderAtmosphere(type, intensityFactor, elapsedSeconds) {
   if (type === "none" || intensityFactor <= 0) return;
 
   ctx.save();
@@ -188,6 +208,57 @@ function renderAtmosphere(type, intensityFactor) {
       ctx.shadowBlur = 0;
       lightningFlashAlpha *= 0.88;
     }
+  } else if (type === "grain") {
+    if (Math.random() < 0.6) updateNoisePattern();
+    ctx.save();
+    ctx.globalAlpha = Math.min(0.5, intensityFactor * 0.45);
+    ctx.globalCompositeOperation = "overlay";
+    const pattern = ctx.createPattern(noiseCanvas, "repeat");
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, 1080, 1920);
+    ctx.restore();
+  } else if (type === "lightleaks") {
+    const t = elapsedSeconds || 0;
+    const leakX1 = 540 + Math.sin(t * 0.6) * 480;
+    const leakY1 = 300 + Math.cos(t * 0.4) * 280;
+    const leakR1 = 520 + Math.sin(t * 0.8) * 120;
+    const alpha1 = Math.min(0.7, (0.35 + Math.sin(t * 1.2) * 0.18) * intensityFactor);
+
+    const grad1 = ctx.createRadialGradient(leakX1, leakY1, 20, leakX1, leakY1, leakR1);
+    grad1.addColorStop(0, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${alpha1})`);
+    grad1.addColorStop(0.5, `rgba(${atmoRgb.r}, ${Math.floor(atmoRgb.g * 0.5)}, 0, ${alpha1 * 0.45})`);
+    grad1.addColorStop(1, `rgba(0, 0, 0, 0)`);
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = grad1;
+    ctx.fillRect(0, 0, 1080, 1920);
+    ctx.restore();
+  } else if (type === "anamorphic") {
+    const t = elapsedSeconds || 0;
+    const flareY = 960 + Math.sin(t * 0.5) * 600;
+    const flareAlpha = Math.min(0.85, (0.45 + Math.sin(t * 1.8) * 0.25) * intensityFactor);
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+
+    const lineGrad = ctx.createLinearGradient(0, flareY - 8, 0, flareY + 8);
+    lineGrad.addColorStop(0, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, 0)`);
+    lineGrad.addColorStop(0.5, `rgba(255, 255, 255, ${flareAlpha})`);
+    lineGrad.addColorStop(1, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, 0)`);
+    ctx.fillStyle = lineGrad;
+    ctx.fillRect(0, flareY - 8, 1080, 16);
+
+    const haloGrad = ctx.createRadialGradient(540, flareY, 5, 540, flareY, 380);
+    haloGrad.addColorStop(0, `rgba(255, 255, 255, ${flareAlpha * 0.9})`);
+    haloGrad.addColorStop(0.3, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${flareAlpha * 0.5})`);
+    haloGrad.addColorStop(1, `rgba(0, 0, 0, 0)`);
+    ctx.fillStyle = haloGrad;
+    ctx.beginPath();
+    ctx.arc(540, flareY, 380, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
   }
   ctx.restore();
 }

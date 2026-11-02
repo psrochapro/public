@@ -56,7 +56,7 @@ async function exportProjectZip() {
   const assetsFolder = zip.folder("assets");
 
   const projectData = {
-    version: "1.0",
+    version: "2.0",
     created_at: new Date().toISOString(),
     settings: {
       badgeText: badgeTextInput.value,
@@ -64,17 +64,24 @@ async function exportProjectZip() {
       fitMode: fitModeSelect.value,
       slideTime: parseFloat(slideTimeInput.value),
       transTime: parseFloat(transTimeInput.value),
+      transStyle: document.getElementById("transStyle").value,
       motionStyle: motionStyleInput.value,
       motionScale: parseFloat(motionScaleInput.value),
+      colorGradePreset: document.getElementById("colorGradePreset").value,
+      colorGradeColor: document.getElementById("colorGradeColorInput").value,
+      colorGradeIntensity: parseFloat(document.getElementById("colorGradeIntensity").value),
       atmosphereEffect: atmosphereEffectInput.value,
       atmosphereColor: atmosphereColorInput.value,
       atmosphereIntensity: parseFloat(atmosphereIntensityInput.value),
       hudEffect: hudEffectInput.value,
       hudColor: hudColorInput.value,
       hudIntensity: parseFloat(hudIntensityInput.value),
+      tickerEnabled: document.getElementById("tickerEnabled").checked,
+      tickerText: document.getElementById("tickerTextInput").value,
       vignetteIntensity: parseFloat(vignetteInput.value),
       recordDuration: parseFloat(recordDurationInput.value),
-      sidebarWidth: sidebarPanel.style.width
+      sidebarLeftWidth: document.getElementById("sidebarLeft").style.width,
+      sidebarRightWidth: document.getElementById("sidebarRight").style.width
     },
     images: []
   };
@@ -148,17 +155,25 @@ function initProjectIO() {
       if (s.fitMode !== undefined) fitModeSelect.value = s.fitMode;
       if (s.slideTime !== undefined) slideTimeInput.value = s.slideTime;
       if (s.transTime !== undefined) transTimeInput.value = s.transTime;
+      if (s.transStyle !== undefined) document.getElementById("transStyle").value = s.transStyle;
       if (s.motionStyle !== undefined) motionStyleInput.value = s.motionStyle;
       if (s.motionScale !== undefined) motionScaleInput.value = s.motionScale;
+      if (s.colorGradePreset !== undefined) document.getElementById("colorGradePreset").value = s.colorGradePreset;
+      if (s.colorGradeColor !== undefined) document.getElementById("colorGradeColorInput").value = s.colorGradeColor;
+      if (s.colorGradeIntensity !== undefined) document.getElementById("colorGradeIntensity").value = s.colorGradeIntensity;
       if (s.atmosphereEffect !== undefined) atmosphereEffectInput.value = s.atmosphereEffect;
       if (s.atmosphereColor !== undefined) atmosphereColorInput.value = s.atmosphereColor;
       if (s.atmosphereIntensity !== undefined) atmosphereIntensityInput.value = s.atmosphereIntensity;
       if (s.hudEffect !== undefined) hudEffectInput.value = s.hudEffect;
       if (s.hudColor !== undefined) hudColorInput.value = s.hudColor;
       if (s.hudIntensity !== undefined) hudIntensityInput.value = s.hudIntensity;
+      if (s.tickerEnabled !== undefined) document.getElementById("tickerEnabled").checked = s.tickerEnabled;
+      if (s.tickerText !== undefined) document.getElementById("tickerTextInput").value = s.tickerText;
       if (s.vignetteIntensity !== undefined) vignetteInput.value = s.vignetteIntensity;
       if (s.recordDuration !== undefined) recordDurationInput.value = s.recordDuration;
-      if (s.sidebarWidth) sidebarPanel.style.width = s.sidebarWidth;
+
+      if (s.sidebarLeftWidth) document.getElementById("sidebarLeft").style.width = s.sidebarLeftWidth;
+      if (s.sidebarRightWidth) document.getElementById("sidebarRight").style.width = s.sidebarRightWidth;
 
       loadedImages = [];
       const imagesMeta = projectData.images || [];

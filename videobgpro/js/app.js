@@ -7,8 +7,10 @@ const badgeTextInput = document.getElementById("badgeTextInput");
 const badgeBurnCanvas = document.getElementById("badgeBurnCanvas");
 const previewBadge = document.getElementById("previewBadge");
 
-const sidebarPanel = document.getElementById("sidebarPanel");
-const sidebarResizer = document.getElementById("sidebarResizer");
+const sidebarLeft = document.getElementById("sidebarLeft");
+const sidebarRight = document.getElementById("sidebarRight");
+const resizerLeft = document.getElementById("sidebarResizerLeft");
+const resizerRight = document.getElementById("sidebarResizerRight");
 
 const fileInput = document.getElementById("fileInput");
 const projectZipInput = document.getElementById("projectZipInput");
@@ -18,14 +20,24 @@ const imageCountLabel = document.getElementById("imageCountLabel");
 const fitModeSelect = document.getElementById("fitModeSelect");
 const slideTimeInput = document.getElementById("slideTime");
 const transTimeInput = document.getElementById("transTime");
+const transStyleSelect = document.getElementById("transStyle");
 const motionStyleInput = document.getElementById("motionStyle");
 const motionScaleInput = document.getElementById("motionScale");
+
+const colorGradePreset = document.getElementById("colorGradePreset");
+const colorGradeColorInput = document.getElementById("colorGradeColorInput");
+const colorGradeIntensity = document.getElementById("colorGradeIntensity");
+
 const atmosphereEffectInput = document.getElementById("atmosphereEffect");
 const atmosphereColorInput = document.getElementById("atmosphereColorInput");
 const atmosphereIntensityInput = document.getElementById("atmosphereIntensity");
 const hudEffectInput = document.getElementById("hudEffect");
 const hudColorInput = document.getElementById("hudColorInput");
 const hudIntensityInput = document.getElementById("hudIntensity");
+
+const tickerEnabled = document.getElementById("tickerEnabled");
+const tickerTextInput = document.getElementById("tickerTextInput");
+
 const vignetteInput = document.getElementById("vignetteIntensity");
 const recordDurationInput = document.getElementById("recordDuration");
 const totalCycleLabel = document.getElementById("totalCycleLabel");
@@ -35,30 +47,53 @@ const progressBarFill = document.getElementById("progressBarFill");
 
 let loadedImages = [];
 let draggedIndex = null;
-let isResizingSidebar = false;
 
-sidebarResizer.addEventListener("mousedown", (e) => {
-  isResizingSidebar = true;
-  sidebarResizer.classList.add("resizing");
+let isResizingLeft = false;
+let isResizingRight = false;
+
+resizerLeft.addEventListener("mousedown", (e) => {
+  isResizingLeft = true;
+  resizerLeft.classList.add("resizing");
+  document.body.classList.add("is-resizing");
+  e.preventDefault();
+});
+
+resizerRight.addEventListener("mousedown", (e) => {
+  isResizingRight = true;
+  resizerRight.classList.add("resizing");
   document.body.classList.add("is-resizing");
   e.preventDefault();
 });
 
 window.addEventListener("mousemove", (e) => {
-  if (!isResizingSidebar) return;
-  const newWidth = window.innerWidth - e.clientX;
-  if (newWidth >= 360 && newWidth <= 720) {
-    sidebarPanel.style.width = `${newWidth}px`;
+  if (isResizingLeft) {
+    const newWidth = e.clientX;
+    if (newWidth >= 300 && newWidth <= 580) {
+      sidebarLeft.style.width = `${newWidth}px`;
+    }
+  } else if (isResizingRight) {
+    const newWidth = window.innerWidth - e.clientX;
+    if (newWidth >= 320 && newWidth <= 640) {
+      sidebarRight.style.width = `${newWidth}px`;
+    }
   }
 });
 
 window.addEventListener("mouseup", () => {
-  if (isResizingSidebar) {
-    isResizingSidebar = false;
-    sidebarResizer.classList.remove("resizing");
-    document.body.classList.remove("is-resizing");
+  if (isResizingLeft) {
+    isResizingLeft = false;
+    resizerLeft.classList.remove("resizing");
   }
+  if (isResizingRight) {
+    isResizingRight = false;
+    resizerRight.classList.remove("resizing");
+  }
+  document.body.classList.remove("is-resizing");
 });
+
+function setColorGradeColor(hex) {
+  colorGradeColorInput.value = hex;
+}
 
 badgeTextInput.addEventListener("input", () => {
   const val = badgeTextInput.value.trim() || "AO VIVO";
@@ -126,6 +161,7 @@ function updateLabels() {
   document.getElementById("slideTimeVal").textContent = `${slideTimeInput.value}s`;
   document.getElementById("transTimeVal").textContent = `${transTimeInput.value}s`;
   document.getElementById("motionVal").textContent = `${motionScaleInput.value}%`;
+  document.getElementById("colorGradeVal").textContent = `${colorGradeIntensity.value}%`;
   document.getElementById("atmosphereVal").textContent = `${atmosphereIntensityInput.value}%`;
   document.getElementById("hudVal").textContent = `${hudIntensityInput.value}%`;
   document.getElementById("vignetteVal").textContent = `${vignetteInput.value}%`;
@@ -137,7 +173,7 @@ function updateLabels() {
   }
 }
 
-[slideTimeInput, transTimeInput, motionScaleInput, atmosphereIntensityInput, hudIntensityInput, vignetteInput, recordDurationInput, fitModeSelect].forEach(el => {
+[slideTimeInput, transTimeInput, motionScaleInput, colorGradeIntensity, atmosphereIntensityInput, hudIntensityInput, vignetteInput, recordDurationInput, fitModeSelect].forEach(el => {
   el.addEventListener("input", updateLabels);
 });
 
@@ -341,11 +377,16 @@ function renderFrame(timestamp) {
     const totalCycle = getTotalCycleDuration();
     const motionPercent = parseFloat(motionScaleInput.value) / 100;
     const motionStyle = motionStyleInput.value;
+    const transStyle = transStyleSelect.value;
     const atmoType = atmosphereEffectInput.value;
     const atmoIntensity = parseFloat(atmosphereIntensityInput.value) / 100;
     const hudType = hudEffectInput.value;
     const hudIntensity = parseFloat(hudIntensityInput.value) / 100;
     const vignetteAmount = parseFloat(vignetteInput.value) / 100;
+
+    const colorGradeType = colorGradePreset.value;
+    const colorGradeColor = colorGradeColorInput.value;
+    const colorGradeAmount = parseFloat(colorGradeIntensity.value) / 100;
 
     if (totalCycle > 0) {
       const currentCycleTime = elapsedTotal % totalCycle;
@@ -374,25 +415,55 @@ function renderFrame(timestamp) {
 
       const currentFit = getImageFitMode(currentIndex);
       const currentMotion = calculateKenBurns(currentImgProgress, motionStyle, currentIndex, motionPercent);
-      drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
 
       const fadeStartTime = currentSlideDuration - transSec;
-      if (currentSlideTime > fadeStartTime && loadedImages.length > 1) {
-        const timeIntoFade = currentSlideTime - fadeStartTime;
-        const fadeAlpha = timeIntoFade / transSec;
+      const isInTransition = (currentSlideTime > fadeStartTime && loadedImages.length > 1);
+      const timeIntoFade = isInTransition ? (currentSlideTime - fadeStartTime) : 0;
+      const fadeAlpha = isInTransition ? (timeIntoFade / transSec) : 0;
+
+      if (!isInTransition) {
+        drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
+      } else {
         const nextSlideDuration = getImageDuration(nextIndex);
         const nextTotalVisible = nextSlideDuration + transSec;
         const nextImgProgress = timeIntoFade / nextTotalVisible;
-
         const nextFit = getImageFitMode(nextIndex);
         const nextMotion = calculateKenBurns(nextImgProgress, motionStyle, nextIndex, motionPercent);
-        drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
+
+        if (transStyle === "dip-black") {
+          if (fadeAlpha < 0.5) {
+            const outAlpha = 1.0 - (fadeAlpha * 2.0);
+            drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, outAlpha, currentFit);
+          } else {
+            const inAlpha = (fadeAlpha - 0.5) * 2.0;
+            drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, inAlpha, nextFit);
+          }
+        } else if (transStyle === "light-flash") {
+          drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
+          drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
+          const flashIntensity = Math.sin(fadeAlpha * Math.PI) * 0.95;
+          ctx.save();
+          ctx.fillStyle = `rgba(255, 255, 255, ${flashIntensity})`;
+          ctx.fillRect(0, 0, 1080, 1920);
+          ctx.restore();
+        } else if (transStyle === "zoom-push") {
+          const pushScaleOut = currentMotion.scale * (1.0 + fadeAlpha * 0.35);
+          drawImageLayer(loadedImages[currentIndex], pushScaleOut, currentMotion.panX, currentMotion.panY, 1.0 - fadeAlpha, currentFit);
+          const pushScaleIn = nextMotion.scale * (1.35 - fadeAlpha * 0.35);
+          drawImageLayer(loadedImages[nextIndex], pushScaleIn, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
+        } else {
+          drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
+          drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
+        }
       }
     }
 
-    renderAtmosphere(atmoType, atmoIntensity);
+    renderAtmosphere(atmoType, atmoIntensity, elapsedTotal);
+    applyColorGrading(colorGradeType, colorGradeColor, colorGradeAmount);
     renderCyberHUD(hudType, hudIntensity, elapsedTotal);
     drawVignette(vignetteAmount);
+
+    drawTicker(tickerTextInput.value, elapsedTotal, tickerEnabled.checked);
 
     const currentBadgeText = (badgeTextInput.value.trim() || "AO VIVO").toUpperCase();
     drawBurnedBadge(currentBadgeText, elapsedTotal);

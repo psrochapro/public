@@ -173,6 +173,106 @@ function drawImageLayer(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0, fitMo
   ctx.restore();
 }
 
+function applyColorGrading(preset, customHex, intensityFactor) {
+  if (preset === "none" || intensityFactor <= 0) return;
+
+  const factor = Math.min(1.0, intensityFactor);
+  ctx.save();
+
+  if (preset === "teal-orange") {
+    ctx.globalCompositeOperation = "color";
+    ctx.fillStyle = `rgba(0, 160, 200, ${0.42 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.fillStyle = `rgba(255, 120, 20, ${0.45 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+  } else if (preset === "matrix") {
+    ctx.globalCompositeOperation = "color";
+    ctx.fillStyle = `rgba(0, 255, 80, ${0.48 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    ctx.globalCompositeOperation = "multiply";
+    ctx.fillStyle = `rgba(10, 35, 15, ${0.3 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+  } else if (preset === "sepia") {
+    ctx.globalCompositeOperation = "color";
+    ctx.fillStyle = `rgba(180, 130, 70, ${0.6 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.fillStyle = `rgba(120, 80, 30, ${0.35 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+  } else if (preset === "noir") {
+    ctx.globalCompositeOperation = "color";
+    ctx.fillStyle = `rgba(128, 128, 128, ${0.95 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.fillStyle = `rgba(0, 0, 0, ${0.4 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+  } else if (preset === "cyber-blue") {
+    ctx.globalCompositeOperation = "color";
+    ctx.fillStyle = `rgba(0, 110, 255, ${0.5 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = `rgba(0, 210, 255, ${0.25 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+  } else if (preset === "custom") {
+    const rgb = hexToRgb(customHex || "#00d2ff");
+    ctx.globalCompositeOperation = "color";
+    ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.65 * factor})`;
+    ctx.fillRect(0, 0, 1080, 1920);
+  }
+
+  ctx.restore();
+}
+
+function drawTicker(text, elapsedSeconds, isEnabled) {
+  if (!isEnabled || !text || !text.trim()) return;
+
+  const cleanText = text.trim();
+  ctx.save();
+
+  const barH = 58;
+  const barY = 1920 - barH - 40;
+
+  ctx.fillStyle = "rgba(10, 12, 18, 0.88)";
+  ctx.fillRect(0, barY, 1080, barH);
+
+  ctx.fillStyle = "#ff3b30";
+  ctx.fillRect(0, barY, 160, barH);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  ctx.textBaseline = "middle";
+  ctx.fillText("AO VIVO", 36, barY + (barH / 2));
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(170, barY, 1080 - 170, barH);
+  ctx.clip();
+
+  ctx.font = "600 22px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  const textWidth = ctx.measureText(cleanText).width;
+  const scrollArea = 1080 - 170;
+  const totalTravel = textWidth + scrollArea;
+  const speed = 140;
+  const offset = ((elapsedSeconds * speed) % totalTravel);
+  const textX = 1080 - offset;
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(cleanText, textX, barY + (barH / 2) + 1);
+  ctx.restore();
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+  ctx.fillRect(0, barY, 1080, 1.5);
+  ctx.fillRect(0, barY + barH - 1.5, 1080, 1.5);
+
+  ctx.restore();
+}
+
 function drawVignette(intensity) {
   if (intensity <= 0) return;
   ctx.save();

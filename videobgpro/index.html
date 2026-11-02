@@ -11,23 +11,11 @@
 <body>
 
   <div class="main-layout">
-    <div class="preview-container">
-      <div class="phone-viewport">
-        <div class="status-badge" id="previewBadge">
-          <div class="status-dot" id="statusDot"></div>
-          <span id="statusText">AO VIVO</span>
-        </div>
-        <canvas id="renderCanvas" width="1080" height="1920"></canvas>
-      </div>
-    </div>
-
-    <!-- Divisor Interativo de Redimensionamento -->
-    <div class="sidebar-resizer" id="sidebarResizer" title="Arraste para ajustar a largura da barra de ferramentas"></div>
-
-    <div class="sidebar" id="sidebarPanel" style="width: 460px;">
+    <!-- PAINEL ESQUERDO: Mídia e Configuração de Cenas -->
+    <div class="sidebar sidebar-left" id="sidebarLeft" style="width: 380px;">
       <div class="sidebar-header">
-        <h2>Gerador de Fundo 9:16</h2>
-        <p>Gere fundos dinâmicos cinematográficos para FFmpeg e n8n.</p>
+        <h2>Mídia & Projeto</h2>
+        <p>Gerenciamento de cenas, tempos e selo.</p>
       </div>
 
       <div class="sidebar-content">
@@ -82,14 +70,51 @@
         </div>
 
         <div class="control-group">
-          <label>Tempo de Transição (Fade) <span id="transTimeVal">1.2s</span></label>
+          <label>Duração da Transição <span id="transTimeVal">1.2s</span></label>
           <input type="range" id="transTime" min="0.3" max="3.0" step="0.1" value="1.2">
+        </div>
+      </div>
+    </div>
+
+    <!-- Divisor Redimensionável Esquerdo -->
+    <div class="sidebar-resizer" id="sidebarResizerLeft" title="Arraste para ajustar o painel esquerdo"></div>
+
+    <!-- CENTRO: Visualizador 9:16 -->
+    <div class="preview-container">
+      <div class="phone-viewport">
+        <div class="status-badge" id="previewBadge">
+          <div class="status-dot" id="statusDot"></div>
+          <span id="statusText">AO VIVO</span>
+        </div>
+        <canvas id="renderCanvas" width="1080" height="1920"></canvas>
+      </div>
+    </div>
+
+    <!-- Divisor Redimensionável Direito -->
+    <div class="sidebar-resizer" id="sidebarResizerRight" title="Arraste para ajustar o painel direito"></div>
+
+    <!-- PAINEL DIREITO: Efeitos, Cor, Transição e Exportação -->
+    <div class="sidebar sidebar-right" id="sidebarRight" style="width: 420px;">
+      <div class="sidebar-header">
+        <h2>Efeitos & Renderização</h2>
+        <p>Color grading, transições, atmosfera e exportação.</p>
+      </div>
+
+      <div class="sidebar-content">
+        <div class="control-group">
+          <label>Tipo de Transição</label>
+          <select id="transStyle">
+            <option value="crossfade" selected>Dissolve Suave (Crossfade)</option>
+            <option value="dip-black">Fade para Preto (Dip to Black)</option>
+            <option value="light-flash">Clarão de Luz (Light Flash)</option>
+            <option value="zoom-push">Zoom Push Dinâmico</option>
+          </select>
         </div>
 
         <div class="control-group">
-          <label>Estilo do Movimento Ken Burns</label>
+          <label>Movimento Ken Burns</label>
           <select id="motionStyle">
-            <option value="none">Estático (Sem Movimento / Ideal para Pôster)</option>
+            <option value="none">Estático (Sem Movimento)</option>
             <option value="cinematic-alternate" selected>Cinematográfico Alternado (Zoom In / Out + Pan)</option>
             <option value="zoom-in">Apenas Zoom In Progressivo</option>
             <option value="zoom-out">Apenas Zoom Out Suave</option>
@@ -103,13 +128,48 @@
         </div>
 
         <div class="control-group">
-          <label>Efeito Atmosférico Extra</label>
+          <label>Color Grading / Tonalização</label>
+          <select id="colorGradePreset">
+            <option value="none" selected>Original (Sem Tonalização)</option>
+            <option value="teal-orange">Teal & Orange (Cinema Blockbuster)</option>
+            <option value="matrix">Matrix Green (Ficção Científica)</option>
+            <option value="sepia">Vintage Sépia 35mm</option>
+            <option value="noir">Noir Monocromático (P&B)</option>
+            <option value="cyber-blue">Cyber Blue / Gélido</option>
+            <option value="custom">Tonalidade Personalizada</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Cor de Tonalização Livre</label>
+          <div class="color-picker-row">
+            <input type="color" class="color-swatch-input" id="colorGradeColorInput" value="#00d2ff">
+            <div class="color-preset-pills">
+              <span class="preset-pill" style="background: #00ff66;" onclick="setColorGradeColor('#00ff66')" title="Verde"></span>
+              <span class="preset-pill" style="background: #00d2ff;" onclick="setColorGradeColor('#00d2ff')" title="Ciano"></span>
+              <span class="preset-pill" style="background: #ffaa00;" onclick="setColorGradeColor('#ffaa00')" title="Ouro"></span>
+              <span class="preset-pill" style="background: #ff0055;" onclick="setColorGradeColor('#ff0055')" title="Vermelho"></span>
+              <span class="preset-pill" style="background: #a4b0be;" onclick="setColorGradeColor('#a4b0be')" title="Cinza"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Intensidade da Cor <span id="colorGradeVal">50%</span></label>
+          <input type="range" id="colorGradeIntensity" min="10" max="100" step="5" value="50">
+        </div>
+
+        <div class="control-group">
+          <label>Efeito Atmosférico</label>
           <select id="atmosphereEffect">
             <option value="none">Desligado (Nenhum)</option>
             <option value="lightning">Tempestade com Raios e Clarão</option>
             <option value="rain">Chuva Cinematográfica Intensa</option>
             <option value="fog">Névoa / Fumaça Densa</option>
             <option value="particles">Partículas de Luz / Brilhos (Bokeh)</option>
+            <option value="grain">Granulação de Película 35mm (Film Grain)</option>
+            <option value="lightleaks">Vazamento de Luz Orgânico (Light Leaks)</option>
+            <option value="anamorphic">Reflexo Horizontal (Anamorphic Flare)</option>
           </select>
         </div>
 
@@ -162,14 +222,23 @@
         </div>
 
         <div class="control-group">
+          <label>Letreiro Rodapé (Breaking News Ticker)</label>
+          <input type="text" class="text-input" id="tickerTextInput" value="" placeholder="Ex: NOTÍCIA DE ÚLTIMA HORA: NOVO LANÇAMENTO...">
+          <label class="checkbox-row">
+            <input type="checkbox" id="tickerEnabled">
+            Ativar Letreiro Animado no Rodapé
+          </label>
+        </div>
+
+        <div class="control-group">
           <label>Vinheta e Sombra <span id="vignetteVal">55%</span></label>
           <input type="range" id="vignetteIntensity" min="0" max="100" step="5" value="55">
         </div>
 
         <div class="control-group">
           <label>
-            Duração do Vídeo Gravado <span id="recordDurVal">12s</span>
-            <button type="button" class="btn-sync-dur" onclick="syncRecordDurationWithTotal()" title="Ajustar duração da gravação à soma de todas as imagens">
+            Duração da Gravação <span id="recordDurVal">12s</span>
+            <button type="button" class="btn-sync-dur" onclick="syncRecordDurationWithTotal()" title="Ajustar duração à soma das imagens">
               Sincronizar (<span id="totalCycleLabel">4.0s</span>)
             </button>
           </label>

@@ -492,3 +492,13 @@ body.is-resizing {
   cursor: col-resize;
   user-select: none;
 }
+
+.sidebar-left {
+  border-left: none;
+  border-right: 1px solid var(--panel-border);
+}
+
+.sidebar-right {
+  border-left: 1px solid var(--panel-border);
+  border-right: none;
+}
