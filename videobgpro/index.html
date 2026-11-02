@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Fundo Animado (9:16)</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/modal.css">
+</head>
+<body>
+
+  <div class="main-layout">
+    <div class="preview-container">
+      <div class="phone-viewport">
+        <div class="status-badge" id="previewBadge">
+          <div class="status-dot" id="statusDot"></div>
+          <span id="statusText">AO VIVO</span>
+        </div>
+        <canvas id="renderCanvas" width="1080" height="1920"></canvas>
+      </div>
+    </div>
+
+    <!-- Divisor Interativo de Redimensionamento -->
+    <div class="sidebar-resizer" id="sidebarResizer" title="Arraste para ajustar a largura da barra de ferramentas"></div>
+
+    <div class="sidebar" id="sidebarPanel" style="width: 460px;">
+      <div class="sidebar-header">
+        <h2>Gerador de Fundo 9:16</h2>
+        <p>Gere fundos dinâmicos cinematográficos para FFmpeg e n8n.</p>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Gerenciamento de Projeto (ZIP) -->
+        <div class="btn-project-row">
+          <button type="button" class="btn btn-secondary" onclick="exportProjectZip()" title="Exportar todas as imagens e configurações em arquivo .zip">
+            💾 Salvar Projeto (ZIP)
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('projectZipInput').click()" title="Carregar projeto salvo em .zip">
+            📂 Abrir Projeto
+          </button>
+          <input type="file" id="projectZipInput" accept=".zip" style="display:none">
+        </div>
+
+        <div class="control-group">
+          <label>Texto do Selo / Badge</label>
+          <input type="text" class="text-input" id="badgeTextInput" value="AO VIVO" placeholder="Ex: AO VIVO, PRINCIPAIS NOTÍCIAS...">
+          <label class="checkbox-row">
+            <input type="checkbox" id="badgeBurnCanvas" checked>
+            Gravar Selo no Vídeo Exportado
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label>
+            Imagens <span id="imageCountLabel">1 carregada</span>
+          </label>
+          <div class="file-dropzone" onclick="document.getElementById('fileInput').click()">
+            <span>+ Adicionar Imagens (cumulativo)</span>
+            <input type="file" id="fileInput" multiple accept="image/*">
+          </div>
+          <div class="image-actions-bar">
+            <button type="button" class="btn-text-action" onclick="openBulkTimeModal()">📋 Colar Tempos</button>
+            <span style="font-size: 11px; color: var(--text-muted);">Arraste para reordenar</span>
+            <button class="btn-text-danger" onclick="clearAllImages()">Limpar Todas</button>
+          </div>
+          <div class="image-list" id="imageList"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Enquadramento Padrão</label>
+          <select id="fitModeSelect">
+            <option value="glass">Efeito Glass / Ambient Blur (Pôster sem cortes)</option>
+            <option value="cover">Preencher Tela Cheia (Cover / Corte Suave)</option>
+            <option value="contain">Pôster Centralizado com Bordas Pretas</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Tempo Padrão por Imagem <span id="slideTimeVal">4.0s</span></label>
+          <input type="range" id="slideTime" min="2" max="12" step="0.5" value="4">
+        </div>
+
+        <div class="control-group">
+          <label>Tempo de Transição (Fade) <span id="transTimeVal">1.2s</span></label>
+          <input type="range" id="transTime" min="0.3" max="3.0" step="0.1" value="1.2">
+        </div>
+
+        <div class="control-group">
+          <label>Estilo do Movimento Ken Burns</label>
+          <select id="motionStyle">
+            <option value="none">Estático (Sem Movimento / Ideal para Pôster)</option>
+            <option value="cinematic-alternate" selected>Cinematográfico Alternado (Zoom In / Out + Pan)</option>
+            <option value="zoom-in">Apenas Zoom In Progressivo</option>
+            <option value="zoom-out">Apenas Zoom Out Suave</option>
+            <option value="pan-horizontal">Pan Horizontal Contínuo</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Intensidade do Movimento <span id="motionVal">28%</span></label>
+          <input type="range" id="motionScale" min="0" max="50" step="1" value="28">
+        </div>
+
+        <div class="control-group">
+          <label>Efeito Atmosférico Extra</label>
+          <select id="atmosphereEffect">
+            <option value="none">Desligado (Nenhum)</option>
+            <option value="lightning">Tempestade com Raios e Clarão</option>
+            <option value="rain">Chuva Cinematográfica Intensa</option>
+            <option value="fog">Névoa / Fumaça Densa</option>
+            <option value="particles">Partículas de Luz / Brilhos (Bokeh)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Cor da Atmosfera Extra</label>
+          <div class="color-picker-row">
+            <input type="color" class="color-swatch-input" id="atmosphereColorInput" value="#ffaa00">
+            <div class="color-preset-pills">
+              <span class="preset-pill" style="background: #00ff66;" onclick="setAtmosphereColor('#00ff66')" title="Verde Matrix"></span>
+              <span class="preset-pill" style="background: #00d2ff;" onclick="setAtmosphereColor('#00d2ff')" title="Ciano Neon"></span>
+              <span class="preset-pill" style="background: #ff007f;" onclick="setAtmosphereColor('#ff007f')" title="Magenta Cyber"></span>
+              <span class="preset-pill" style="background: #ffaa00;" onclick="setAtmosphereColor('#ffaa00')" title="Âmbar / Ouro"></span>
+              <span class="preset-pill" style="background: #ffffff;" onclick="setAtmosphereColor('#ffffff')" title="Branco Gelo"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Intensidade da Atmosfera <span id="atmosphereVal">70%</span></label>
+          <input type="range" id="atmosphereIntensity" min="10" max="100" step="5" value="70">
+        </div>
+
+        <div class="control-group">
+          <label>Overlay HUD / Cyberpunk</label>
+          <select id="hudEffect">
+            <option value="none">Desligado</option>
+            <option value="scanlines">Scanlines CRT (Varredura Cyber)</option>
+            <option value="cybergrid">Cyber Grid Matrix (Grade Neon)</option>
+            <option value="spectrum">Equalizador de Barras (Audio Spectrum)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Cor do Overlay HUD</label>
+          <div class="color-picker-row">
+            <input type="color" class="color-swatch-input" id="hudColorInput" value="#00ff66">
+            <div class="color-preset-pills">
+              <span class="preset-pill" style="background: #00ff66;" onclick="setHudColor('#00ff66')" title="Verde Matrix"></span>
+              <span class="preset-pill" style="background: #00d2ff;" onclick="setHudColor('#00d2ff')" title="Ciano Neon"></span>
+              <span class="preset-pill" style="background: #ff007f;" onclick="setHudColor('#ff007f')" title="Magenta Cyber"></span>
+              <span class="preset-pill" style="background: #ffaa00;" onclick="setHudColor('#ffaa00')" title="Âmbar / Ouro"></span>
+              <span class="preset-pill" style="background: #ffffff;" onclick="setHudColor('#ffffff')" title="Branco Gelo"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Intensidade do Overlay HUD <span id="hudVal">50%</span></label>
+          <input type="range" id="hudIntensity" min="10" max="100" step="5" value="50">
+        </div>
+
+        <div class="control-group">
+          <label>Vinheta e Sombra <span id="vignetteVal">55%</span></label>
+          <input type="range" id="vignetteIntensity" min="0" max="100" step="5" value="55">
+        </div>
+
+        <div class="control-group">
+          <label>
+            Duração do Vídeo Gravado <span id="recordDurVal">12s</span>
+            <button type="button" class="btn-sync-dur" onclick="syncRecordDurationWithTotal()" title="Ajustar duração da gravação à soma de todas as imagens">
+              Sincronizar (<span id="totalCycleLabel">4.0s</span>)
+            </button>
+          </label>
+          <input type="range" id="recordDuration" min="2" max="120" step="0.1" value="12">
+        </div>
+
+        <button class="btn btn-primary" id="btnRecord" onclick="toggleRecording()">
+          Gravar Vídeo de Fundo
+        </button>
+
+        <div class="progress-bar-container" id="progressBarContainer">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Colar Tempos em Lote -->
+  <div class="modal-overlay" id="bulkTimeModal">
+    <div class="modal-box">
+      <h3>📋 Colar Tempos das Cenas</h3>
+      <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+        Cole a lista de números (um por linha). Cada linha definirá o tempo da imagem correspondente.
+      </p>
+      <textarea class="modal-textarea" id="bulkTimeText" placeholder="16.1&#10;15.6&#10;14.6&#10;15.8"></textarea>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeBulkTimeModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="applyBulkTimings()">Aplicar Tempos</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/jszip.min.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/recorder.js"></script>
+  <script src="js/project-io.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
