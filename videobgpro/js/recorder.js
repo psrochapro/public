@@ -4,6 +4,9 @@ let recordedChunks = [];
 let recordingStartTime = 0;
 let currentExportExtension = "webm";
 
+window.__recordingFinished = false;
+window.__recordedVideoBase64 = null;
+
 function toggleRecording() {
   if (isRecording) {
     stopRecording();
@@ -16,6 +19,8 @@ function startRecording() {
   if (loadedImages.length === 0) return;
 
   recordedChunks = [];
+  window.__recordingFinished = false;
+  window.__recordedVideoBase64 = null;
 
   const now = performance.now();
   startTimestamp = now;
@@ -58,6 +63,21 @@ function startRecording() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+
+    // Integração Headless (Browserless / Puppeteer)
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64Data = reader.result ? reader.result.split(',')[1] : '';
+      window.__recordedVideoBase64 = base64Data;
+      window.__recordingFinished = true;
+      document.dispatchEvent(new CustomEvent('recording-finished', {
+        detail: {
+          base64: base64Data,
+          mimeType: chosenMime
+        }
+      }));
+    };
+    reader.readAsDataURL(blob);
 
     resetRecordingUI();
   };
