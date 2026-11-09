@@ -23,6 +23,19 @@ for (let i = 0; i < 75; i++) {
   });
 }
 
+const fireEmbers = [];
+for (let i = 0; i < 95; i++) {
+  fireEmbers.push({
+    x: Math.random() * 1080,
+    y: Math.random() * 1920,
+    radius: 2 + Math.random() * 4.5,
+    speedY: 2.8 + Math.random() * 4.2,
+    driftSpeed: 1.4 + Math.random() * 2.2,
+    driftOffset: Math.random() * Math.PI * 2,
+    baseAlpha: 0.55 + Math.random() * 0.45
+  });
+}
+
 const fogNodes = [];
 for (let i = 0; i < 18; i++) {
   fogNodes.push({
@@ -160,6 +173,38 @@ function renderAtmosphere(type, intensityFactor, elapsedSeconds) {
       if (p.x < 0) p.x = 1080;
       if (p.x > 1080) p.x = 0;
     }
+  } else if (type === "embers") {
+    const t = elapsedSeconds || 0;
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+
+    for (let ember of fireEmbers) {
+      const flicker = 0.68 + Math.sin(t * 14 + ember.driftOffset) * 0.32;
+      const currentAlpha = Math.min(1.0, ember.baseAlpha * intensityFactor * 1.35 * flicker);
+      if (currentAlpha <= 0.02) continue;
+
+      const grad = ctx.createRadialGradient(ember.x, ember.y, 0, ember.x, ember.y, ember.radius * 2.6);
+      grad.addColorStop(0, `rgba(255, 255, 240, ${currentAlpha})`);
+      grad.addColorStop(0.3, `rgba(${atmoRgb.r}, ${atmoRgb.g}, ${atmoRgb.b}, ${currentAlpha * 0.9})`);
+      grad.addColorStop(0.7, `rgba(${Math.min(255, Math.floor(atmoRgb.r * 0.85))}, ${Math.floor(atmoRgb.g * 0.3)}, 0, ${currentAlpha * 0.4})`);
+      grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(ember.x, ember.y, ember.radius * 2.6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ember.y -= ember.speedY * (0.85 + intensityFactor * 0.4);
+      ember.x += Math.sin(t * ember.driftSpeed + ember.driftOffset) * 1.7;
+
+      if (ember.y < -30) {
+        ember.y = 1930;
+        ember.x = Math.random() * 1080;
+      }
+      if (ember.x < -30) ember.x = 1110;
+      if (ember.x > 1110) ember.x = -30;
+    }
+    ctx.restore();
   } else if (type === "fog") {
     for (let fog of fogNodes) {
       const curAlpha = Math.min(0.85, fog.alpha * intensityFactor * 1.4);
