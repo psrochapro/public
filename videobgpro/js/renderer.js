@@ -1,3 +1,5 @@
+/* js/renderer.js - Renderização do Canvas e Camadas */
+
 function drawBurnedBadge(text, elapsedSeconds) {
   const badgeBurnCanvas = document.getElementById("badgeBurnCanvas");
   if (!badgeBurnCanvas.checked) return;
@@ -51,15 +53,26 @@ function drawBurnedBadge(text, elapsedSeconds) {
   ctx.restore();
 }
 
-function calculateKenBurns(progress, style, index, intensity) {
+function calculateKenBurns(progress, style, index, intensity, elapsedSeconds = 0) {
+  if (typeof computeEnhancedMotion === "function") {
+    return computeEnhancedMotion(
+      progress,
+      style,
+      index,
+      intensity,
+      elapsedSeconds,
+      canvas.width,
+      canvas.height
+    );
+  }
+
   if (style === "none" || intensity <= 0) {
-    return { scale: 1.0, panX: 0, panY: 0 };
+    return { scale: 1.0, panX: 0, panY: 0, rotation: 0, bgScale: 1.0, bgPanX: 0, bgPanY: 0 };
   }
 
   let scale = 1.0;
   let panX = 0;
   let panY = 0;
-
   const isAlternate = (index % 2 === 0);
   const clampedProg = Math.max(0, Math.min(1, progress));
 
@@ -85,21 +98,51 @@ function calculateKenBurns(progress, style, index, intensity) {
       panX = (canvas.width * intensity * 0.12) * clampedProg;
       panY = (canvas.height * intensity * 0.12) * clampedProg;
       break;
-    case "pan-horizontal":
+    case "pan-horizontal": {
       scale = 1.04 + intensity * 0.5;
       const dir = isAlternate ? 1 : -1;
       panX = dir * (canvas.width * intensity * 0.45) * (clampedProg - 0.5);
       panY = 0;
       break;
+    }
     default:
       scale = 1.03 + (intensity * clampedProg);
   }
 
-  return { scale, panX, panY };
+  return { scale, panX, panY, rotation: 0, bgScale: 1.0, bgPanX: 0, bgPanY: 0 };
 }
 
-function drawImageLayer(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0, fitMode = "glass") {
+function drawImageLayer(img, motionOrScale = 1.0, panXOrAlpha = 0, panYOrFitMode = 0, maybeAlpha = 1.0, maybeFitMode = "glass") {
   if (!img || !img.complete) return;
+
+  let scale = 1.0;
+  let panX = 0;
+  let panY = 0;
+  let rotation = 0;
+  let bgScale = 1.0;
+  let bgPanX = 0;
+  let bgPanY = 0;
+  let alpha = 1.0;
+  let fitMode = "glass";
+
+  if (typeof motionOrScale === "object" && motionOrScale !== null) {
+    scale = motionOrScale.scale !== undefined ? motionOrScale.scale : 1.0;
+    panX = motionOrScale.panX !== undefined ? motionOrScale.panX : 0;
+    panY = motionOrScale.panY !== undefined ? motionOrScale.panY : 0;
+    rotation = motionOrScale.rotation !== undefined ? motionOrScale.rotation : 0;
+    bgScale = motionOrScale.bgScale !== undefined ? motionOrScale.bgScale : 1.0;
+    bgPanX = motionOrScale.bgPanX !== undefined ? motionOrScale.bgPanX : 0;
+    bgPanY = motionOrScale.bgPanY !== undefined ? motionOrScale.bgPanY : 0;
+    alpha = (typeof panXOrAlpha === "number") ? panXOrAlpha : 1.0;
+    fitMode = (typeof panYOrFitMode === "string") ? panYOrFitMode : "glass";
+  } else {
+    scale = motionOrScale;
+    panX = panXOrAlpha;
+    panY = panYOrFitMode;
+    alpha = maybeAlpha;
+    fitMode = maybeFitMode;
+  }
+
   ctx.save();
   ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
 
@@ -111,16 +154,21 @@ function drawImageLayer(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0, fitMo
   if (fitMode === "glass") {
     ctx.save();
     ctx.filter = "blur(42px) brightness(0.55)";
-    let bgW, bgH;
+    let baseBgW, baseBgH;
     if (imgRatio < canvasRatio) {
-      bgW = cw * 1.25;
-      bgH = (cw / imgRatio) * 1.25;
+      baseBgW = cw * 1.25;
+      baseBgH = (cw / imgRatio) * 1.25;
     } else {
-      bgH = ch * 1.25;
-      bgW = (ch * imgRatio) * 1.25;
+      baseBgH = ch * 1.25;
+      baseBgW = (ch * imgRatio) * 1.25;
     }
-    const bgOffsetX = (cw - bgW) / 2;
-    const bgOffsetY = (ch - bgH) / 2;
+
+    const appliedBgScale = bgScale || 1.0;
+    const bgW = baseBgW * appliedBgScale;
+    const bgH = baseBgH * appliedBgScale;
+    const bgOffsetX = (cw - bgW) / 2 + (bgPanX || 0);
+    const bgOffsetY = (ch - bgH) / 2 + (bgPanY || 0);
+
     ctx.drawImage(img, bgOffsetX, bgOffsetY, bgW, bgH);
     ctx.restore();
 
@@ -133,13 +181,18 @@ function drawImageLayer(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0, fitMo
       drawW = (ch * imgRatio) * scale;
     }
 
-    const offsetX = (cw - drawW) / 2 + panX;
-    const offsetY = (ch - drawH) / 2 + panY;
+    const centerX = (cw / 2) + panX;
+    const centerY = (ch / 2) + panY;
 
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    if (rotation) {
+      ctx.rotate(rotation);
+    }
     ctx.shadowColor = "rgba(0, 0, 0, 0.75)";
     ctx.shadowBlur = 45;
-    ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
-    ctx.shadowBlur = 0;
+    ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+    ctx.restore();
 
   } else if (fitMode === "contain") {
     let drawW, drawH;
@@ -151,9 +204,16 @@ function drawImageLayer(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0, fitMo
       drawW = (ch * imgRatio) * scale;
     }
 
-    const offsetX = (cw - drawW) / 2 + panX;
-    const offsetY = (ch - drawH) / 2 + panY;
-    ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+    const centerX = (cw / 2) + panX;
+    const centerY = (ch / 2) + panY;
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    if (rotation) {
+      ctx.rotate(rotation);
+    }
+    ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+    ctx.restore();
 
   } else {
     let drawW, drawH;
@@ -165,9 +225,16 @@ function drawImageLayer(img, scale = 1.0, panX = 0, panY = 0, alpha = 1.0, fitMo
       drawW = (ch * imgRatio) * scale;
     }
 
-    const offsetX = (cw - drawW) / 2 + panX;
-    const offsetY = (ch - drawH) / 2 + panY;
-    ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+    const centerX = (cw / 2) + panX;
+    const centerY = (ch / 2) + panY;
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    if (rotation) {
+      ctx.rotate(rotation);
+    }
+    ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+    ctx.restore();
   }
 
   ctx.restore();

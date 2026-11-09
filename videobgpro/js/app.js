@@ -1,3 +1,5 @@
+/* js/app.js - Orquestrador Principal do Aplicativo */
+
 const canvas = document.getElementById("renderCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -430,7 +432,7 @@ function renderFrame(timestamp) {
       const currentImgProgress = (currentSlideTime + transSec) / totalVisibleDuration;
 
       const currentFit = getImageFitMode(currentIndex);
-      const currentMotion = calculateKenBurns(currentImgProgress, motionStyle, currentIndex, motionPercent);
+      const currentMotion = calculateKenBurns(currentImgProgress, motionStyle, currentIndex, motionPercent, elapsedTotal);
 
       const fadeStartTime = currentSlideDuration - transSec;
       const isInTransition = (currentSlideTime > fadeStartTime && loadedImages.length > 1);
@@ -438,38 +440,43 @@ function renderFrame(timestamp) {
       const fadeAlpha = isInTransition ? (timeIntoFade / transSec) : 0;
 
       if (!isInTransition) {
-        drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
+        drawImageLayer(loadedImages[currentIndex], currentMotion, 1.0, currentFit);
       } else {
         const nextSlideDuration = getImageDuration(nextIndex);
         const nextTotalVisible = nextSlideDuration + transSec;
         const nextImgProgress = timeIntoFade / nextTotalVisible;
         const nextFit = getImageFitMode(nextIndex);
-        const nextMotion = calculateKenBurns(nextImgProgress, motionStyle, nextIndex, motionPercent);
+        const nextMotion = calculateKenBurns(nextImgProgress, motionStyle, nextIndex, motionPercent, elapsedTotal);
 
         if (transStyle === "dip-black") {
           if (fadeAlpha < 0.5) {
             const outAlpha = 1.0 - (fadeAlpha * 2.0);
-            drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, outAlpha, currentFit);
+            drawImageLayer(loadedImages[currentIndex], currentMotion, outAlpha, currentFit);
           } else {
             const inAlpha = (fadeAlpha - 0.5) * 2.0;
-            drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, inAlpha, nextFit);
+            drawImageLayer(loadedImages[nextIndex], nextMotion, inAlpha, nextFit);
           }
         } else if (transStyle === "light-flash") {
-          drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
-          drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
+          drawImageLayer(loadedImages[currentIndex], currentMotion, 1.0, currentFit);
+          drawImageLayer(loadedImages[nextIndex], nextMotion, fadeAlpha, nextFit);
           const flashIntensity = Math.sin(fadeAlpha * Math.PI) * 0.95;
           ctx.save();
           ctx.fillStyle = `rgba(255, 255, 255, ${flashIntensity})`;
           ctx.fillRect(0, 0, 1080, 1920);
           ctx.restore();
         } else if (transStyle === "zoom-push") {
-          const pushScaleOut = currentMotion.scale * (1.0 + fadeAlpha * 0.35);
-          drawImageLayer(loadedImages[currentIndex], pushScaleOut, currentMotion.panX, currentMotion.panY, 1.0 - fadeAlpha, currentFit);
-          const pushScaleIn = nextMotion.scale * (1.35 - fadeAlpha * 0.35);
-          drawImageLayer(loadedImages[nextIndex], pushScaleIn, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
+          const pushMotionOut = Object.assign({}, currentMotion, {
+            scale: currentMotion.scale * (1.0 + fadeAlpha * 0.35)
+          });
+          drawImageLayer(loadedImages[currentIndex], pushMotionOut, 1.0 - fadeAlpha, currentFit);
+
+          const pushMotionIn = Object.assign({}, nextMotion, {
+            scale: nextMotion.scale * (1.35 - fadeAlpha * 0.35)
+          });
+          drawImageLayer(loadedImages[nextIndex], pushMotionIn, fadeAlpha, nextFit);
         } else {
-          drawImageLayer(loadedImages[currentIndex], currentMotion.scale, currentMotion.panX, currentMotion.panY, 1.0, currentFit);
-          drawImageLayer(loadedImages[nextIndex], nextMotion.scale, nextMotion.panX, nextMotion.panY, fadeAlpha, nextFit);
+          drawImageLayer(loadedImages[currentIndex], currentMotion, 1.0, currentFit);
+          drawImageLayer(loadedImages[nextIndex], nextMotion, fadeAlpha, nextFit);
         }
       }
     }
